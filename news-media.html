@@ -464,6 +464,7 @@ function closeMediaModal() {
 document.addEventListener('keydown', function(e) { if (e.key === 'Escape') closeMediaModal(); });
 
 // ── 動態載入後台內容 ──
+var _mediaItemsStore = [];
 (function() {
   try {
     var all = JSON.parse(localStorage.getItem('ipcc_news') || '[]');
@@ -476,7 +477,22 @@ document.addEventListener('keydown', function(e) { if (e.key === 'Escape') close
     var grid = document.getElementById('mediaGrid');
     if (!grid) return;
 
-    grid.innerHTML = items.map(function(n) {
+    // 儲存到全域變數，onclick 用 index 查詢（避免把大型 base64 圖片嵌在 HTML 屬性裡）
+    _mediaItemsStore = items.map(function(n) {
+      var caseLabel = '';
+      if (n.relatedCaseId) {
+        var c = allCases.find(function(c){ return c.id === n.relatedCaseId; });
+        if (c) caseLabel = c.client;
+      }
+      return {
+        title: n.title||'', mediaType: n.mediaType||'', mediaSource: n.mediaSource||'',
+        date: n.date||'', description: n.description||'', content: n.content||'',
+        externalUrl: n.externalUrl||'', linkText: n.linkText||'', image: n.image||'',
+        relatedCaseLabel: caseLabel, relatedService: n.relatedService||''
+      };
+    });
+
+    grid.innerHTML = items.map(function(n, idx) {
       var mt = MEDIA_TYPE_MAP[n.mediaType] || {};
       var typeBadgeHtml = n.mediaType
         ? '<span class="media-type-badge ' + (mt.cls||'mt-other') + '">' + (mt.label||n.mediaType) + '</span>'
@@ -485,10 +501,10 @@ document.addEventListener('keydown', function(e) { if (e.key === 'Escape') close
         ? '<img src="' + n.image + '" alt="" loading="lazy">'
         : '<div class="media-card-placeholder">' + (mt.icon||'📸') + '</div>';
 
-      // 相關案例標籤
+      var allCasesLocal = JSON.parse(localStorage.getItem('ipcc_cases') || '[]');
       var caseLabel = '';
       if (n.relatedCaseId) {
-        var c = allCases.find(function(c){ return c.id === n.relatedCaseId; });
+        var c = allCasesLocal.find(function(c){ return c.id === n.relatedCaseId; });
         if (c) caseLabel = c.client;
       }
       var tagsHtml = '';
@@ -498,22 +514,7 @@ document.addEventListener('keydown', function(e) { if (e.key === 'Escape') close
         tagsHtml += '<span class="media-tag media-tag-service">🛠 ' + esc(svcLabels[n.relatedService]||'服務') + '</span>';
       }
 
-      // 傳給 Modal 的資料（JSON 安全序列化）
-      var modalData = JSON.stringify({
-        title: n.title||'',
-        mediaType: n.mediaType||'',
-        mediaSource: n.mediaSource||'',
-        date: n.date||'',
-        description: n.description||'',
-        content: n.content||'',
-        externalUrl: n.externalUrl||'',
-        linkText: n.linkText||'',
-        image: n.image||'',
-        relatedCaseLabel: caseLabel,
-        relatedService: n.relatedService||''
-      });
-
-      return '<div class="media-card" onclick=\'openMediaModal(' + modalData.replace(/'/g, '&#39;') + ')\'>'
+      return '<div class="media-card" onclick="openMediaModal(_mediaItemsStore[' + idx + '])">'
         + '<div class="media-card-img">' + imgHtml + typeBadgeHtml + '</div>'
         + '<div class="media-card-body">'
         + '<div class="media-card-meta">'
@@ -535,7 +536,7 @@ document.addEventListener('keydown', function(e) { if (e.key === 'Escape') close
 // 支援 [顯示文字](網址) 格式，以及純網址自動偵測
 function renderContent(text) {
   if (!text) return '';
-  var re = /[([^]]*)]((https?://[^)]+))|(https?://[^s<>"&]+)/g;
+  var re = /\[([^\]]*)\]\((https?:\/\/[^)]+)\)|(https?:\/\/[^\s<>"&]+)/g;
   var result = '';
   var lastIdx = 0;
   var m;

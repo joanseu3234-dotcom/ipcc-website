@@ -333,7 +333,7 @@ document.addEventListener('keydown', function(e){ if(e.key==='Escape') closeCase
 // 支援 [顯示文字](網址) 格式，以及純網址自動偵測
 function renderContent(text) {
   if (!text) return '';
-  var re = /[([^]]*)]((https?://[^)]+))|(https?://[^s<>"&]+)/g;
+  var re = /\[([^\]]*)\]\((https?:\/\/[^)]+)\)|(https?:\/\/[^\s<>"&]+)/g;
   var result = '';
   var lastIdx = 0;
   var m;
