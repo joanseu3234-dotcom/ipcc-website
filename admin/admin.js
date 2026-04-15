@@ -259,9 +259,22 @@ function generateContentData() {
 // 寫入 content-data.js 到本機資料夾
 function makeUsersConfigContent(users) {
   var frontendUrl = window.IPCC_FRONTEND_URL || 'https://ipcc.zeabur.app';
-  return '// IPCC 後台用戶設定\n// 此檔案由後台帳號管理自動產生，請勿手動修改\n\n'
-    + "window.IPCC_FRONTEND_URL = '" + frontendUrl + "';\n\n"
-    + 'window.IPCC_USERS_CONFIG = ' + JSON.stringify(users, null, 2) + ';\n';
+  // 嵌入部署設定（非敏感資訊），讓任何電腦打開後台都能自動讀到
+  var zeaburHook = localStorage.getItem('ipcc_zeabur_hook') || (window.IPCC_ZEABUR_HOOK || '');
+  var ghRepo     = localStorage.getItem('ipcc_github_repo')   || (window.IPCC_GITHUB_REPO || '');
+  var ghBranch   = localStorage.getItem('ipcc_github_branch') || (window.IPCC_GITHUB_BRANCH || 'main');
+  var lines = [
+    '// IPCC 後台用戶設定',
+    '// 此檔案由後台帳號管理自動產生，請勿手動修改',
+    '',
+    "window.IPCC_FRONTEND_URL = '" + frontendUrl + "';"
+  ];
+  if (ghRepo)     lines.push("window.IPCC_GITHUB_REPO   = '" + ghRepo + "';");
+  if (ghBranch)   lines.push("window.IPCC_GITHUB_BRANCH = '" + ghBranch + "';");
+  if (zeaburHook) lines.push("window.IPCC_ZEABUR_HOOK   = '" + zeaburHook.replace(/'/g,"\\'") + "';");
+  lines.push('');
+  lines.push('window.IPCC_USERS_CONFIG = ' + JSON.stringify(users, null, 2) + ';');
+  return lines.join('\n') + '\n';
 }
 
 async function _writeAllFiles(dirHandle) {
@@ -314,7 +327,12 @@ async function publishToLive() {
       try { await _writeAllFiles(_publishDirHandle); } catch(_) {}
     }
     var ts = new Date().toLocaleString('zh-TW', {timeZone:'Asia/Taipei', hour12:false});
-    showPublishToast('✅ 發布完成！已推送到 GitHub\n官網約 30 秒後自動更新\n時間：' + ts, 'success');
+    var hasHook = !!(localStorage.getItem('ipcc_zeabur_hook') || window.IPCC_ZEABUR_HOOK);
+    if (hasHook) {
+      showPublishToast('✅ 發布完成！\n已推送 GitHub 並觸發 Zeabur 重新部署\n官網約 30 秒後更新\n時間：' + ts, 'success');
+    } else {
+      showPublishToast('⚠️ GitHub 已推送，但尚未設定 Zeabur Deploy Hook\n請到「系統設定」→「Zeabur 部署設定」取得 Hook URL\n設定後按 🚀 即可全自動部署', '');
+    }
     return;
   }
 
@@ -371,42 +389,65 @@ async function publishToLive() {
   );
 }
 
-// ── GitHub API：把 content-data.js 推到 GitHub（任何裝置都能用）──
-// 回傳：true=成功，false=失敗，null=未設定
-async function _tryGitHubDeploy(content) {
-  var token  = localStorage.getItem('ipcc_github_token');
-  var repo   = localStorage.getItem('ipcc_github_repo');
-  var branch = localStorage.getItem('ipcc_github_branch') || 'main';
-  if (!token || !repo) return null;
-
-  var apiUrl = 'https://api.github.com/repos/' + repo + '/contents/content-data.js';
+// ── GitHub API：推檔案到 GitHub ──
+async function _ghPushFile(repo, branch, token, filePath, fileContent) {
+  var apiUrl = 'https://api.github.com/repos/' + repo + '/contents/' + filePath;
   var headers = {
     'Authorization': 'token ' + token,
     'Accept':        'application/vnd.github.v3+json',
     'Content-Type':  'application/json'
   };
+  var sha = null;
+  try {
+    var headRes = await fetch(apiUrl + '?ref=' + branch, { headers: headers });
+    if (headRes.ok) { var info = await headRes.json(); sha = info.sha; }
+  } catch(e) {}
+  var b64 = btoa(unescape(encodeURIComponent(fileContent)));
+  var ts  = new Date().toISOString().slice(0, 16).replace('T', ' ');
+  var body = { message: 'content: update ' + filePath + ' via admin ' + ts, content: b64, branch: branch };
+  if (sha) body.sha = sha;
+  var res = await fetch(apiUrl, { method: 'PUT', headers: headers, body: JSON.stringify(body) });
+  return res.ok;
+}
+
+// ── Zeabur Deploy Hook：推送後觸發重新部署 ──
+// 回傳：true=成功，false=失敗，null=未設定
+async function _triggerZeaburDeploy() {
+  var hookUrl = localStorage.getItem('ipcc_zeabur_hook') || (window.IPCC_ZEABUR_HOOK || '');
+  if (!hookUrl) return null;
+  try {
+    var res = await fetch(hookUrl, { method: 'POST' });
+    // Zeabur hook 成功通常回 200/204
+    return res.ok || res.status === 200 || res.status === 204;
+  } catch(e) {
+    return false;
+  }
+}
+
+// ── 主流程：推 content-data.js + users-config.js 到 GitHub，再觸發 Zeabur ──
+// 回傳：true=成功，false=失敗，null=未設定（GitHub token/repo 未填）
+async function _tryGitHubDeploy(content) {
+  var token  = localStorage.getItem('ipcc_github_token');
+  var repo   = localStorage.getItem('ipcc_github_repo')   || (window.IPCC_GITHUB_REPO || '');
+  var branch = localStorage.getItem('ipcc_github_branch') || (window.IPCC_GITHUB_BRANCH || 'main');
+  if (!token || !repo) return null;
 
   try {
-    // 取得現有檔案的 SHA（更新時需要）
-    var sha = null;
-    var headRes = await fetch(apiUrl + '?ref=' + branch, { headers: headers });
-    if (headRes.ok) {
-      var info = await headRes.json();
-      sha = info.sha;
-    }
+    // 1. 推 content-data.js
+    var ok = await _ghPushFile(repo, branch, token, 'content-data.js', content);
+    if (!ok) return false;
 
-    // Base64 編碼內容
-    var b64 = btoa(unescape(encodeURIComponent(content)));
-    var ts  = new Date().toISOString().slice(0, 16).replace('T', ' ');
-    var body = { message: 'content: update via admin ' + ts, content: b64, branch: branch };
-    if (sha) body.sha = sha;
+    // 2. 同時推 admin/users-config.js（嵌入 hook URL 與 repo，讓其他電腦自動讀到）
+    try {
+      var usersJs = makeUsersConfigContent(getUsers());
+      await _ghPushFile(repo, branch, token, 'admin/users-config.js', usersJs);
+    } catch(e) { /* 非致命，繼續 */ }
 
-    var putRes = await fetch(apiUrl, {
-      method: 'PUT',
-      headers: headers,
-      body: JSON.stringify(body)
-    });
-    return putRes.ok;
+    // 3. 觸發 Zeabur 重新部署
+    var zeaburResult = await _triggerZeaburDeploy();
+    // zeaburResult = null 表示未設定 hook，不影響成功狀態
+
+    return true;
   } catch(e) {
     return false;
   }

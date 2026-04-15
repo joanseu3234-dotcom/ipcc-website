@@ -92,45 +92,85 @@
           <div id="importMsg" style="margin-top:12px;"></div>
         </div>
 
-        <!-- GitHub 自動部署 -->
-        <div class="section-card" style="max-width:520px; border-color:#d1d5db;">
-          <h2 class="section-card-title">🚀 GitHub 自動部署設定</h2>
-          <p style="color:var(--text-sub); font-size:0.88rem; margin-bottom:16px; line-height:1.6;">
-            設定後，任何電腦在後台按「發布上線」，官網都會在 <b>30 秒內</b>自動更新，不需要任何本機工具。<br>
-            <a href="https://github.com/settings/tokens/new?scopes=repo&description=IPCC+Admin" target="_blank" style="color:var(--navy); text-decoration:underline;">點此前往 GitHub 建立 Token（勾選 repo 權限）</a>
-          </p>
+        <!-- GitHub + Zeabur 全自動部署 -->
+        <div class="section-card" style="max-width:560px; border-color:#d1d5db;">
+          <h2 class="section-card-title">🚀 發布上線設定（任何電腦都能用）</h2>
+
+          <!-- 狀態指示器 -->
+          <div id="deployStatusBar" style="margin-bottom:20px; padding:12px 14px; border-radius:8px; font-size:0.85rem; line-height:1.7;"></div>
+
           <div id="ghMsg"></div>
-          <div class="form-group">
-            <label class="form-label">GitHub Repository（格式：帳號/倉庫名稱）</label>
-            <input type="text" class="form-control" id="ghRepo" placeholder="例：joan-company/ipcc-website">
+
+          <!-- Step 1: GitHub -->
+          <div style="margin-bottom:20px; padding:16px; border:1.5px solid #E5E7EB; border-radius:10px;">
+            <div style="font-weight:700; font-size:0.88rem; color:#1E40AF; margin-bottom:12px;">
+              第 ① 步 — GitHub 設定（每台電腦需輸入一次 Token）
+            </div>
+            <div class="form-group">
+              <label class="form-label">GitHub Repository（帳號/倉庫名稱）</label>
+              <input type="text" class="form-control" id="ghRepo" placeholder="例：joanseu3234-dotcom/ipcc-website">
+              <div style="font-size:0.72rem; color:var(--text-sub); margin-top:4px;">此設定儲存後會自動同步到所有電腦，<b>只需填一次</b>。</div>
+            </div>
+            <div class="form-group">
+              <label class="form-label">GitHub 分支</label>
+              <input type="text" class="form-control" id="ghBranch" placeholder="main">
+            </div>
+            <div class="form-group">
+              <label class="form-label">Personal Access Token <span style="color:#9CA3AF;font-weight:400;">（每台電腦需輸入，不會上傳）</span></label>
+              <input type="password" class="form-control" id="ghToken" placeholder="ghp_xxxxxxxxxxxxxxxxxxxx">
+              <div style="font-size:0.72rem; color:var(--text-sub); margin-top:4px;">
+                Token 只存此瀏覽器，不公開。
+                <a href="https://github.com/settings/tokens/new?scopes=repo&description=IPCC+Admin" target="_blank" style="color:var(--navy);">點此建立 Token（勾選 repo 權限）</a>
+              </div>
+            </div>
+            <div style="display:flex; gap:10px; flex-wrap:wrap;">
+              <button class="btn-outline" onclick="testGitHubConnection()" id="ghTestBtn">🔍 測試 GitHub 連線</button>
+            </div>
           </div>
-          <div class="form-group">
-            <label class="form-label">GitHub 分支</label>
-            <input type="text" class="form-control" id="ghBranch" placeholder="main">
+
+          <!-- Step 2: Zeabur Deploy Hook -->
+          <div style="margin-bottom:20px; padding:16px; border:1.5px solid #E5E7EB; border-radius:10px;">
+            <div style="font-weight:700; font-size:0.88rem; color:#047857; margin-bottom:12px;">
+              第 ② 步 — Zeabur Deploy Hook（只需設定一次，全電腦共用）
+            </div>
+            <div class="form-group">
+              <label class="form-label">Zeabur Deploy Hook URL</label>
+              <input type="text" class="form-control" id="zeaburHook" placeholder="https://api.zeabur.com/webhook/service/...">
+              <div style="font-size:0.72rem; color:var(--text-sub); margin-top:4px;">
+                設定後自動嵌入部署檔案，<b>任何電腦無需重設</b>。
+              </div>
+            </div>
+            <div style="padding:10px 12px; background:#ECFDF5; border-radius:8px; font-size:0.8rem; color:#065F46; line-height:1.7;">
+              <b>如何取得 Deploy Hook URL：</b><br>
+              1. 開啟 <a href="https://dash.zeabur.com" target="_blank" style="color:#047857;">dash.zeabur.com</a><br>
+              2. 進入你的 Project → 點選 ipcc-website 服務<br>
+              3. 上方點「Settings」→ 找到「Deploy Hook」→ 點「Create」<br>
+              4. 複製產生的 URL 貼到上方欄位
+            </div>
           </div>
-          <div class="form-group">
-            <label class="form-label">Personal Access Token</label>
-            <input type="password" class="form-control" id="ghToken" placeholder="ghp_xxxxxxxxxxxxxxxxxxxx">
-            <div style="font-size:0.72rem; color:var(--text-sub); margin-top:4px;">Token 只存在此瀏覽器，不會上傳到任何地方。</div>
+
+          <!-- Step 3: Connect Zeabur to GitHub -->
+          <div style="margin-bottom:20px; padding:16px; border:1.5px dashed #FCD34D; border-radius:10px; background:#FFFBEB;">
+            <div style="font-weight:700; font-size:0.88rem; color:#92400E; margin-bottom:8px;">
+              第 ③ 步 — 連結 Zeabur 與 GitHub（只需做一次）
+            </div>
+            <div style="font-size:0.8rem; color:#78350F; line-height:1.7;">
+              1. Zeabur Dashboard → 你的服務 → Settings → Git Source<br>
+              2. 點「Connect GitHub」→ 選擇 <b>joanseu3234-dotcom/ipcc-website</b><br>
+              3. 選 Branch: <b>main</b> → Save<br>
+              完成後，🚀 按下時 GitHub 有新內容，Zeabur 即自動重新部署。
+            </div>
           </div>
-          <div style="display:flex; gap:10px; flex-wrap:wrap;">
-            <button class="btn-primary" onclick="saveGitHubSettings()">💾 儲存設定</button>
-            <button class="btn-outline" onclick="testGitHubConnection()" id="ghTestBtn">🔍 測試連線</button>
-          </div>
-          <div style="margin-top:16px; padding:12px 14px; background:#F0F9FF; border-radius:8px; font-size:0.82rem; color:#0369A1; line-height:1.7;" id="ghGuide">
-            <b>設定步驟（只需做一次）：</b><br>
-            1. 到 <a href="https://github.com/new" target="_blank" style="color:#0369A1;">github.com/new</a> 建立 Repository（名稱如 <code>ipcc-website</code>，Public 或 Private 皆可）<br>
-            2. 上方填入 Repository 名稱與 Token → 儲存<br>
-            3. 點下方「📁 上傳所有檔案到 GitHub」，選擇 IPCC 資料夾<br>
-            4. 到 <a href="https://zeabur.com" target="_blank" style="color:#0369A1;">Zeabur 後台</a> → 找到此服務 → Settings → Git Source → 連結剛才的 GitHub Repo<br>
-            完成後，每次按 🚀 發布上線，官網自動 30 秒更新。
+
+          <div style="display:flex; gap:10px; flex-wrap:wrap; margin-bottom:10px;">
+            <button class="btn-primary" onclick="saveGitHubSettings()">💾 儲存所有設定並推送</button>
           </div>
 
           <!-- 首次上傳全部檔案到 GitHub -->
-          <div style="margin-top:20px; padding:16px; border:1.5px dashed #93C5FD; border-radius:10px; background:#F8FBFF;">
-            <div style="font-weight:700; font-size:0.9rem; color:#1E40AF; margin-bottom:6px;">📁 首次設定 — 上傳所有檔案到 GitHub</div>
-            <div style="font-size:0.82rem; color:var(--text-sub); margin-bottom:12px; line-height:1.6;">
-              不需要安裝 git。點按鈕後選擇桌面的 IPCC 資料夾，系統會自動把所有檔案上傳到你的 GitHub Repository。
+          <div style="margin-top:16px; padding:16px; border:1.5px dashed #93C5FD; border-radius:10px; background:#F8FBFF;">
+            <div style="font-weight:700; font-size:0.88rem; color:#1E40AF; margin-bottom:6px;">📁 首次設定 — 上傳所有檔案到 GitHub</div>
+            <div style="font-size:0.8rem; color:var(--text-sub); margin-bottom:12px; line-height:1.6;">
+              第一次使用時點此按鈕，選擇 IPCC 資料夾，把所有靜態檔案推到 GitHub Repository。
             </div>
             <div id="ghUploadProgress" style="display:none; margin-bottom:10px; font-size:0.82rem; color:#1E40AF; background:#EFF6FF; padding:8px 12px; border-radius:6px; line-height:1.6;"></div>
             <button class="btn-primary" onclick="uploadAllToGitHub()" id="ghUploadBtn">📁 上傳所有檔案到 GitHub</button>
@@ -212,26 +252,73 @@
       reader.readAsText(file);
     }
 
-    // ── GitHub 設定 ──
-    function loadGitHubSettings() {
-      document.getElementById('ghRepo').value   = localStorage.getItem('ipcc_github_repo')   || '';
-      document.getElementById('ghBranch').value = localStorage.getItem('ipcc_github_branch') || 'main';
-      document.getElementById('ghToken').value  = localStorage.getItem('ipcc_github_token')  || '';
+    // ── 狀態列 ──
+    function updateDeployStatus() {
+      var bar = document.getElementById('deployStatusBar');
+      var hasToken  = !!localStorage.getItem('ipcc_github_token');
+      var hasRepo   = !!(localStorage.getItem('ipcc_github_repo') || window.IPCC_GITHUB_REPO);
+      var hasHook   = !!(localStorage.getItem('ipcc_zeabur_hook') || window.IPCC_ZEABUR_HOOK);
+      var allOk = hasToken && hasRepo && hasHook;
+      if (allOk) {
+        bar.style.background = '#ECFDF5'; bar.style.color = '#065F46';
+        bar.innerHTML = '✅ <b>全部設定完成</b>！按 🚀 發布上線即可自動更新官網（任何電腦皆有效）';
+      } else {
+        var missing = [];
+        if (!hasRepo)   missing.push('GitHub Repository');
+        if (!hasToken)  missing.push('GitHub Token（此電腦）');
+        if (!hasHook)   missing.push('Zeabur Deploy Hook');
+        bar.style.background = '#FEF3C7'; bar.style.color = '#92400E';
+        bar.innerHTML = '⚠️ <b>尚未完成設定：</b>' + missing.join('、') + '<br>'
+          + ((!hasToken && hasRepo) ? '👉 此電腦只需輸入 GitHub Token 即可使用' : '');
+      }
     }
 
-    function saveGitHubSettings() {
-      var repo   = document.getElementById('ghRepo').value.trim();
-      var branch = document.getElementById('ghBranch').value.trim() || 'main';
-      var token  = document.getElementById('ghToken').value.trim();
-      var msg    = document.getElementById('ghMsg');
+    // ── GitHub 設定 ──
+    function loadGitHubSettings() {
+      // 優先從 localStorage，備用從 users-config.js（window.IPCC_*）
+      document.getElementById('ghRepo').value    = localStorage.getItem('ipcc_github_repo')   || (window.IPCC_GITHUB_REPO   || '');
+      document.getElementById('ghBranch').value  = localStorage.getItem('ipcc_github_branch') || (window.IPCC_GITHUB_BRANCH || 'main');
+      document.getElementById('ghToken').value   = localStorage.getItem('ipcc_github_token')  || '';
+      document.getElementById('zeaburHook').value = localStorage.getItem('ipcc_zeabur_hook')  || (window.IPCC_ZEABUR_HOOK   || '');
+      updateDeployStatus();
+    }
+
+    async function saveGitHubSettings() {
+      var repo    = document.getElementById('ghRepo').value.trim();
+      var branch  = document.getElementById('ghBranch').value.trim() || 'main';
+      var token   = document.getElementById('ghToken').value.trim();
+      var hook    = document.getElementById('zeaburHook').value.trim();
+      var msg     = document.getElementById('ghMsg');
+
       if (!repo || !token) {
         msg.innerHTML = '<div class="alert alert-error">請填寫 Repository 和 Token</div>';
         return;
       }
+
       localStorage.setItem('ipcc_github_repo',   repo);
       localStorage.setItem('ipcc_github_branch', branch);
       localStorage.setItem('ipcc_github_token',  token);
-      msg.innerHTML = '<div class="alert alert-success">✅ 設定已儲存！下次按發布上線即會自動部署。</div>';
+      if (hook) localStorage.setItem('ipcc_zeabur_hook', hook);
+
+      msg.innerHTML = '<div class="alert alert-success">⏳ 儲存中，正在推送設定到 GitHub…</div>';
+
+      // 推 users-config.js 到 GitHub，讓 hook URL 和 repo 同步到所有電腦
+      try {
+        var usersJs = makeUsersConfigContent(getUsers());
+        var ok = await _ghPushFile(repo, branch, token, 'admin/users-config.js', usersJs);
+        if (ok) {
+          msg.innerHTML = '<div class="alert alert-success">✅ 設定已儲存並推送到 GitHub！<br>'
+            + '其他電腦打開後台時將自動讀取 Repository 與 Hook URL。<br>'
+            + (hook ? '🚀 現在可從任何電腦按「發布上線」全自動更新官網。' : '⚠️ 建議也填入 Zeabur Deploy Hook URL 以完成全自動部署。')
+            + '</div>';
+        } else {
+          msg.innerHTML = '<div class="alert alert-error">❌ GitHub 推送失敗，請確認 Token 與 Repository 名稱正確</div>';
+        }
+      } catch(e) {
+        msg.innerHTML = '<div class="alert alert-success">✅ 設定已儲存（本機），GitHub 推送失敗：' + e.message + '</div>';
+      }
+
+      updateDeployStatus();
     }
 
     async function testGitHubConnection() {
@@ -392,6 +479,7 @@
     }
 
     loadGitHubSettings();
+    updateDeployStatus();
 
     function clearAllData() {
       if (!confirm('確定要清除所有消息和案例資料嗎？此操作無法復原！')) return;
