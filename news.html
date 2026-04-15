@@ -1,0 +1,452 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>最新消息 — IPCC 東州集團</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+  <style>
+    /* ── 消息卡片 Grid ── */
+    .news-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 28px;
+      margin-bottom: 56px;
+    }
+    @media (max-width: 1024px) { .news-grid { grid-template-columns: repeat(2,1fr); } }
+    @media (max-width: 640px)  { .news-grid { grid-template-columns: 1fr; } }
+
+    .news-card {
+      background: var(--white);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      overflow: hidden;
+      cursor: pointer;
+      display: flex;
+      flex-direction: column;
+      transition: transform 0.25s, box-shadow 0.25s;
+    }
+    .news-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 16px 40px rgba(0,0,0,0.11);
+    }
+
+    /* 圖片區 */
+    .news-card-img {
+      width: 100%;
+      height: 185px;
+      flex-shrink: 0;
+      overflow: hidden;
+      background: linear-gradient(135deg, #EEF2FF, #E5E0D6);
+      position: relative;
+    }
+    .news-card-img img { width:100%; height:100%; object-fit:cover; display:block; }
+    .news-card-placeholder {
+      position: absolute; inset: 0;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 3.5rem; color: rgba(30,42,94,0.18);
+    }
+    .news-badge {
+      position: absolute; top: 12px; left: 12px;
+      padding: 4px 10px; border-radius: 100px;
+      font-size: 0.72rem; font-weight: 700;
+      background: rgba(30,42,94,0.85); color: #fff;
+      backdrop-filter: blur(8px);
+    }
+
+    /* 內容區 */
+    .news-card-body {
+      padding: 20px 22px 18px;
+      display: flex; flex-direction: column; flex: 1;
+    }
+    .news-card-meta {
+      display: flex; align-items: center; gap: 8px;
+      margin-bottom: 10px; flex-wrap: wrap;
+    }
+    .news-card-date {
+      font-size: 0.75rem; color: var(--text-sub);
+    }
+    .news-card-title {
+      font-size: 0.98rem; font-weight: 800;
+      color: var(--navy-dark, #12193A);
+      line-height: 1.5; margin-bottom: 10px;
+      overflow-wrap: break-word; word-break: break-word;
+      display: -webkit-box; -webkit-line-clamp: 3;
+      -webkit-box-orient: vertical; overflow: hidden;
+    }
+    .news-card-desc {
+      font-size: 0.83rem; color: var(--text-sub);
+      line-height: 1.8; flex: 1; margin-bottom: 14px;
+      overflow-wrap: break-word; word-break: break-word;
+      display: -webkit-box; -webkit-line-clamp: 3;
+      -webkit-box-orient: vertical; overflow: hidden;
+    }
+    .news-card-footer {
+      display: flex; align-items: center;
+      justify-content: flex-end;
+    }
+    .news-read-btn {
+      font-size: 0.78rem; font-weight: 700;
+      color: var(--navy, #1E2A5E); white-space: nowrap;
+    }
+
+    /* ── 詳情 Modal ── */
+    #newsModal {
+      display: none; position: fixed; inset: 0;
+      background: rgba(0,0,0,0.6); z-index: 9000;
+      align-items: center; justify-content: center; padding: 20px;
+    }
+    #newsModal.open { display: flex; }
+    .news-modal-box {
+      background: #fff; border-radius: 16px;
+      max-width: 680px; width: 100%;
+      max-height: 90vh; overflow-y: auto;
+      box-shadow: 0 24px 60px rgba(0,0,0,0.28);
+      position: relative;
+    }
+    .news-modal-img {
+      width: 100%; height: 260px; overflow: hidden;
+      border-radius: 16px 16px 0 0; display: none;
+    }
+    .news-modal-img img { width:100%; height:100%; object-fit:cover; }
+    .news-modal-body { padding: 32px; }
+    .news-modal-close {
+      position: absolute; top: 14px; right: 16px;
+      background: rgba(0,0,0,0.12); border: none; border-radius: 50%;
+      width: 32px; height: 32px; font-size: 1rem;
+      cursor: pointer; color: #333; line-height: 1;
+    }
+    .news-modal-badge { font-size:0.72rem; font-weight:700; letter-spacing:0.1em; color:#1E2A5E; margin-bottom:8px; }
+    .news-modal-title { font-size:1.3rem; font-weight:800; color:#12193A; line-height:1.45; margin-bottom:10px; overflow-wrap:break-word; word-break:break-word; }
+    .news-modal-meta  { font-size:0.82rem; color:#6B7280; margin-bottom:18px; }
+    .news-modal-desc  { font-size:0.92rem; color:#374151; line-height:2; overflow-wrap:break-word; word-break:break-word; white-space:pre-wrap; }
+    .news-modal-divider { border:none; border-top:1px solid #E5E7EB; margin:20px 0; }
+    .news-modal-content { font-size:0.9rem; color:#4B5563; line-height:2.1; overflow-wrap:break-word; word-break:break-word; white-space:pre-wrap; }
+    .news-modal-link {
+      display: inline-flex; align-items: center; gap: 8px;
+      margin-top: 24px; padding: 12px 24px;
+      border-radius: 10px; font-size: 0.92rem; font-weight: 700;
+      text-decoration: none; transition: opacity 0.2s;
+      background: var(--navy-dark,#12193A); color: #fff;
+    }
+    .news-modal-link:hover { opacity: 0.85; }
+    .content-link { color: #1E2A5E; font-weight: 600; text-decoration: underline; text-underline-offset: 2px; }
+    .content-link:hover { color: #E85D04; }
+  </style>
+</head>
+<body>
+<script src="content-data.js"></script>
+
+<nav class="navbar" id="navbar">
+  <div class="container">
+    <div class="nav-inner">
+      <a href="index.html" class="nav-logo">
+        <img src="IPCCLOGO.png" alt="IPCC">
+        <div class="nav-logo-right">
+          <div class="nav-logo-group">東州集團</div>
+          <div class="nav-logo-companies">
+            <span>東州互聯網實業有限公司</span>
+            <span>顯榮國際股份有限公司</span>
+          </div>
+        </div>
+      </a>
+      <ul class="nav-menu" id="navMenu">
+        <li><a href="index.html" class="nav-link">首頁</a></li>
+        <li><a href="news.html" class="nav-link active">最新消息</a></li>
+        <li><a href="about.html" class="nav-link">關於我們</a></li>
+        <li><a href="services.html" class="nav-link">專案服務</a></li>
+        <li><a href="cases.html" class="nav-link">成功案例</a></li>
+      </ul>
+      <a href="contact.html" class="nav-cta">與我們聯繫</a>
+      <div class="nav-hamburger" onclick="toggleMenu()"><span></span><span></span><span></span></div>
+    </div>
+  </div>
+</nav>
+
+<div class="page-hero">
+  <div class="page-hero-signal">
+    <div class="page-hero-phone"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="rgba(220,80,80,0.95)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" style="display:block"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.26 13a19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 3.17 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L7.91 9.91a16 16 0 0 0 6.18 6.18l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg></div>
+    <div class="page-hero-ring"></div><div class="page-hero-ring"></div>
+    <div class="page-hero-ring"></div><div class="page-hero-ring"></div>
+    <div class="page-hero-ring"></div>
+  </div>
+  <div class="container">
+    <div class="breadcrumb">
+      <a href="index.html">首頁</a><span>›</span>
+      <span>最新消息</span>
+    </div>
+    <h1>最新消息</h1>
+    <p>掌握東州集團最新動態與重要公告</p>
+  </div>
+</div>
+
+<nav class="about-subnav">
+  <div class="container">
+    <a href="news.html" class="active">最新消息</a>
+    <a href="news-media.html">媒體採訪</a>
+    <a href="news-event.html">活動</a>
+  </div>
+</nav>
+
+<section class="section">
+  <div class="container">
+    <div class="text-center" style="margin-bottom:48px;">
+      <span class="section-label">Latest News</span>
+      <h2 class="section-title">最新消息</h2>
+      <p class="section-sub">集團最新公告、合作動態與產業資訊</p>
+    </div>
+
+    <div id="newsGrid" class="news-grid">
+      <!-- 預設靜態卡片 -->
+      <div class="news-card" onclick="openNewsModal({title:'東州集團持續深化多渠道客服解決方案，助企業打造全天候服務能力',badge:'公告',date:'2025年3月',description:'面對數位化浪潮，東州集團積極整合電話、文字、社群與AI客服渠道，提供企業一站式的客服委外解決方案。',content:'',externalUrl:'',linkText:''})">
+        <div class="news-card-img">
+          <div class="news-card-placeholder">📢</div>
+          <span class="news-badge">公告</span>
+        </div>
+        <div class="news-card-body">
+          <div class="news-card-meta">
+            <span class="news-card-date">2025年3月</span>
+          </div>
+          <h3 class="news-card-title">東州集團持續深化多渠道客服解決方案，助企業打造全天候服務能力</h3>
+          <p class="news-card-desc">面對數位化浪潮，東州集團積極整合電話、文字、社群與AI客服渠道，提供企業一站式的客服委外解決方案。</p>
+          <div class="news-card-footer"><span class="news-read-btn">閱讀詳情 →</span></div>
+        </div>
+      </div>
+      <div class="news-card" onclick="openNewsModal({title:'顯榮國際與多家政府單位合作，提供公部門客服委外服務',badge:'合作',date:'2025年1月',description:'顯榮國際持續擴大公部門服務版圖，攜手多家政府機關建置高效客服中心，有效降低民眾等待時間。',content:'',externalUrl:'',linkText:''})">
+        <div class="news-card-img">
+          <div class="news-card-placeholder">🤝</div>
+          <span class="news-badge">合作</span>
+        </div>
+        <div class="news-card-body">
+          <div class="news-card-meta">
+            <span class="news-card-date">2025年1月</span>
+          </div>
+          <h3 class="news-card-title">顯榮國際與多家政府單位合作，提供公部門客服委外服務</h3>
+          <p class="news-card-desc">顯榮國際持續擴大公部門服務版圖，攜手多家政府機關建置高效客服中心，有效降低民眾等待時間。</p>
+          <div class="news-card-footer"><span class="news-read-btn">閱讀詳情 →</span></div>
+        </div>
+      </div>
+      <div class="news-card" onclick="openNewsModal({title:'集團導入 AI 輔助分析系統，提升客服效率與數據洞察能力',badge:'動態',date:'2024年12月',description:'東州集團正式導入 AI 輔助客服分析平台，透過大數據技術分析客戶行為與服務品質。',content:'',externalUrl:'',linkText:''})">
+        <div class="news-card-img">
+          <div class="news-card-placeholder">📈</div>
+          <span class="news-badge">動態</span>
+        </div>
+        <div class="news-card-body">
+          <div class="news-card-meta">
+            <span class="news-card-date">2024年12月</span>
+          </div>
+          <h3 class="news-card-title">集團導入 AI 輔助分析系統，提升客服效率與數據洞察能力</h3>
+          <p class="news-card-desc">東州集團正式導入 AI 輔助客服分析平台，透過大數據技術分析客戶行為與服務品質。</p>
+          <div class="news-card-footer"><span class="news-read-btn">閱讀詳情 →</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 詳情 Modal -->
+<div id="newsModal" onclick="if(event.target===this)closeNewsModal()">
+  <div class="news-modal-box">
+    <button class="news-modal-close" onclick="closeNewsModal()">✕</button>
+    <div class="news-modal-img" id="nmImg"><img id="nmImgEl" src="" alt=""></div>
+    <div class="news-modal-body">
+      <div class="news-modal-badge" id="nmBadge"></div>
+      <h2 class="news-modal-title" id="nmTitle"></h2>
+      <div class="news-modal-meta" id="nmDate"></div>
+      <p class="news-modal-desc" id="nmDesc"></p>
+      <div id="nmContentWrap" style="display:none;">
+        <hr class="news-modal-divider">
+        <div class="news-modal-content" id="nmContent"></div>
+      </div>
+      <div id="nmLinkWrap" style="margin-top:24px; display:none;">
+        <a id="nmLink" href="#" target="_blank" rel="noopener" class="news-modal-link"></a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<section class="cta-section">
+  <div class="container" style="position:relative; z-index:1; text-align:center;">
+    <h2 class="section-title" style="color:#fff;">訂閱最新消息</h2>
+    <p style="color:rgba(255,255,255,0.6); margin:16px auto 36px; max-width:400px;">掌握東州集團最新動態與產業趨勢分析</p>
+    <a href="contact.html" class="btn btn-primary">聯繫我們取得最新資訊</a>
+  </div>
+</section>
+
+<footer class="footer">
+  <div class="container">
+    <div class="footer-grid">
+      <div class="footer-brand">
+        <div class="footer-logo">
+          <div class="footer-logo-box"><img src="IPCCLOGO.png" alt="IPCC"></div>
+          <div>
+            <span class="footer-logo-name">東州集團</span>
+            <div class="footer-logo-companies">
+              <span>東州互聯網實業有限公司</span>
+              <span>顯榮國際股份有限公司</span>
+            </div>
+          </div>
+        </div>
+        <p>整合系統、服務與數據，協助企業打造永續競爭力。</p>
+        <div class="footer-socials">
+          <a href="https://www.facebook.com/easy.ipcc/" target="_blank" rel="noopener" class="footer-social" title="Facebook">f</a>
+          <a href="#" class="footer-social">▶</a>
+          <a href="https://www.1111.com.tw/corp/8563" target="_blank" rel="noopener" class="footer-social" title="1111人力銀行">人</a>
+        </div>
+      </div>
+      <div class="footer-col">
+        <h4>快速連結</h4>
+        <ul>
+          <li><a href="news.html">最新消息</a></li>
+          <li><a href="about.html">關於我們</a></li>
+          <li><a href="services.html">專案服務</a></li>
+          <li><a href="cases.html">成功案例</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>服務項目</h4>
+        <ul>
+          <li><a href="services.html">客服委外</a></li>
+          <li><a href="services-training.html">客服訓練</a></li>
+          <li><a href="services-it.html">資訊服務</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>聯絡地址</h4>
+        <div class="footer-companies">
+          <div>東州互聯網實業有限公司</div>
+          <div>顯榮國際股份有限公司</div>
+        </div>
+        <div class="footer-address" style="margin-top:12px;"><span>北區</span><br>台北市松山區民權東路三段102號10樓</div>
+        <div class="footer-address" style="margin-top:16px;"><span>中區</span><br>台中市西區台灣大道二段307號9樓之2</div>
+        <div style="margin-top:16px; color:rgba(255,255,255,0.55);">☎ 0800-666-080</div>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span>© 2025 東州互聯網實業有限公司 / 顯榮國際股份有限公司 版權所有</span>
+      <span>IPCC Group — 創新服務．永續經營</span>
+    </div>
+  </div>
+</footer>
+
+<script>
+window.addEventListener('scroll', function() {
+  document.getElementById('navbar').classList.toggle('scrolled', window.scrollY > 20);
+});
+function toggleMenu() {
+  document.getElementById('navMenu').classList.toggle('open');
+}
+
+// ── Modal ──
+function openNewsModal(item) {
+  var imgWrap = document.getElementById('nmImg');
+  if (item.image) {
+    document.getElementById('nmImgEl').src = item.image;
+    imgWrap.style.display = 'block';
+  } else { imgWrap.style.display = 'none'; }
+
+  var badgeEl = document.getElementById('nmBadge');
+  if (item.badge) { badgeEl.textContent = '【' + item.badge + '】'; badgeEl.style.display = ''; }
+  else { badgeEl.style.display = 'none'; }
+
+  document.getElementById('nmTitle').textContent = item.title || '';
+  document.getElementById('nmDate').textContent = item.date || '';
+  document.getElementById('nmDesc').innerHTML = renderContent(item.description || '');
+
+  var contentWrap = document.getElementById('nmContentWrap');
+  if (item.content) {
+    document.getElementById('nmContent').innerHTML = renderContent(item.content);
+    contentWrap.style.display = 'block';
+  } else { contentWrap.style.display = 'none'; }
+
+  var linkWrap = document.getElementById('nmLinkWrap');
+  if (item.externalUrl) {
+    var linkEl = document.getElementById('nmLink');
+    linkEl.textContent = item.linkText || '閱讀全文 →';
+    linkEl.href = item.externalUrl;
+    linkWrap.style.display = 'block';
+  } else { linkWrap.style.display = 'none'; }
+
+  document.getElementById('newsModal').classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+
+function closeNewsModal() {
+  document.getElementById('newsModal').classList.remove('open');
+  document.body.style.overflow = '';
+}
+document.addEventListener('keydown', function(e) { if (e.key === 'Escape') closeNewsModal(); });
+
+// ── 動態載入後台內容 ──
+(function() {
+  try {
+    var all = JSON.parse(localStorage.getItem('ipcc_news') || '[]');
+    var items = all.filter(function(n){ return n.published && n.tab === 'news'; });
+    if (items.length === 0) return;
+    items.sort(function(a, b){ return (b.createdAt||0) - (a.createdAt||0); });
+
+    var grid = document.getElementById('newsGrid');
+    if (!grid) return;
+
+    grid.innerHTML = items.map(function(n) {
+      var imgHtml = n.image
+        ? '<img src="' + n.image + '" alt="" loading="lazy">'
+        : '<div class="news-card-placeholder">📢</div>';
+      var badgeHtml = n.badge ? '<span class="news-badge">' + esc(n.badge) + '</span>' : '';
+
+      var modalData = JSON.stringify({
+        title: n.title||'',
+        badge: n.badge||'',
+        date: n.date||'',
+        description: n.description||'',
+        content: n.content||'',
+        externalUrl: n.externalUrl||'',
+        linkText: n.linkText||'',
+        image: n.image||''
+      });
+
+      return '<div class="news-card" onclick=\'openNewsModal(' + modalData.replace(/'/g, '&#39;') + ')\'>'
+        + '<div class="news-card-img">' + imgHtml + badgeHtml + '</div>'
+        + '<div class="news-card-body">'
+        + '<div class="news-card-meta">'
+        + (n.date ? '<span class="news-card-date">' + esc(n.date) + '</span>' : '')
+        + '</div>'
+        + '<h3 class="news-card-title">' + esc(n.title||'') + '</h3>'
+        + '<p class="news-card-desc">' + esc(n.description||'') + '</p>'
+        + '<div class="news-card-footer"><span class="news-read-btn">閱讀詳情 →</span></div>'
+        + '</div></div>';
+    }).join('');
+  } catch(e) { console.error(e); }
+})();
+
+
+// 將文字中的連結轉成可點擊超連結
+// 支援 [顯示文字](網址) 格式，以及純網址自動偵測
+function renderContent(text) {
+  if (!text) return '';
+  var re = /[([^]]*)]((https?://[^)]+))|(https?://[^s<>"&]+)/g;
+  var result = '';
+  var lastIdx = 0;
+  var m;
+  while ((m = re.exec(text)) !== null) {
+    if (m.index > lastIdx) result += esc(text.slice(lastIdx, m.index));
+    if (m[1] !== undefined) {
+      result += '<a href="' + esc(m[2]) + '" target="_blank" rel="noopener" class="content-link">' + esc(m[1]) + '</a>';
+    } else {
+      result += '<a href="' + esc(m[3]) + '" target="_blank" rel="noopener" class="content-link">' + esc(m[3]) + '</a>';
+    }
+    lastIdx = m.index + m[0].length;
+  }
+  if (lastIdx < text.length) result += esc(text.slice(lastIdx));
+  return result;
+}
+function esc(s) {
+  return String(s)
+    .replace(/&/g,'&amp;').replace(/</g,'&lt;')
+    .replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+</script>
+</body>
+</html>

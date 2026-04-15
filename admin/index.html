@@ -1,0 +1,199 @@
+﻿<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>後台登入 | IPCC 東州集團</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --red: #C8161D;
+      --navy: #1E2A5E;
+      --navy-dark: #12193A;
+      --bg: #F4F2EE;
+      --white: #FFFFFF;
+      --border: #DDD0C2;
+      --text: #1A1008;
+      --text-sub: #564E3C;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: 'Noto Sans TC', 'Microsoft JhengHei', sans-serif;
+      background: linear-gradient(135deg, var(--navy-dark) 0%, #1E2A5E 60%, #2d1a5e 100%);
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 24px;
+    }
+    .login-wrap {
+      background: var(--white);
+      border-radius: 20px;
+      padding: 48px 40px;
+      width: 100%;
+      max-width: 420px;
+      box-shadow: 0 32px 80px rgba(0,0,0,0.35);
+    }
+    .login-logo {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 32px;
+      padding-bottom: 28px;
+      border-bottom: 1px solid var(--border);
+    }
+    .login-logo img { height: 40px; width: auto; }
+    .login-logo-text { font-size: 1.1rem; font-weight: 800; color: var(--navy-dark); }
+    .login-logo-sub { font-size: 0.72rem; color: #888; margin-top: 2px; }
+    .login-badge {
+      display: inline-block;
+      background: rgba(200,22,29,0.08);
+      color: var(--red);
+      border: 1px solid rgba(200,22,29,0.2);
+      border-radius: 100px;
+      padding: 4px 14px;
+      font-size: 0.72rem;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      margin-bottom: 16px;
+    }
+    h1 { font-size: 1.6rem; font-weight: 800; color: var(--navy-dark); margin-bottom: 8px; }
+    .login-sub { font-size: 0.88rem; color: var(--text-sub); margin-bottom: 32px; }
+    label { display: block; font-size: 0.8rem; font-weight: 700; color: var(--text); margin-bottom: 6px; letter-spacing: 0.05em; }
+    input {
+      width: 100%;
+      padding: 12px 16px;
+      border: 1.5px solid var(--border);
+      border-radius: 10px;
+      font-size: 0.95rem;
+      font-family: inherit;
+      color: var(--text);
+      background: #FAFAF9;
+      transition: border-color 0.2s, box-shadow 0.2s;
+      margin-bottom: 20px;
+    }
+    input:focus { outline: none; border-color: var(--navy); box-shadow: 0 0 0 3px rgba(30,42,94,0.1); }
+    .btn-login {
+      width: 100%;
+      padding: 14px;
+      background: var(--navy-dark);
+      color: #fff;
+      border: none;
+      border-radius: 10px;
+      font-size: 1rem;
+      font-weight: 700;
+      font-family: inherit;
+      cursor: pointer;
+      transition: background 0.2s, transform 0.1s;
+      letter-spacing: 0.05em;
+    }
+    .btn-login:hover { background: var(--navy); }
+    .btn-login:active { transform: scale(0.99); }
+    .error-msg {
+      background: #FFF2F2;
+      border: 1px solid #FFB3B5;
+      color: var(--red);
+      border-radius: 8px;
+      padding: 10px 14px;
+      font-size: 0.85rem;
+      margin-bottom: 16px;
+      display: none;
+    }
+    .back-link {
+      text-align: center;
+      margin-top: 20px;
+      font-size: 0.82rem;
+      color: var(--text-sub);
+    }
+    .back-link a { color: var(--navy); font-weight: 600; text-decoration: none; }
+    .back-link a:hover { text-decoration: underline; }
+  </style>
+</head>
+<body>
+  <div class="login-wrap">
+    <div class="login-logo">
+      <img src="../IPCCLOGO-transparent.png" alt="IPCC" onerror="this.style.display='none'">
+      <div>
+        <div class="login-logo-text">東州集團</div>
+        <div class="login-logo-sub">東州互聯網 × 顯榮國際</div>
+      </div>
+    </div>
+
+    <div class="login-badge">Admin Panel</div>
+    <h1>後台管理系統</h1>
+    <p class="login-sub">請輸入管理員帳號密碼登入</p>
+
+    <div class="error-msg" id="errorMsg">帳號或密碼錯誤，請重新輸入</div>
+
+    <form onsubmit="doLogin(event)">
+      <label>帳號</label>
+      <input type="text" id="username" placeholder="請輸入帳號" autocomplete="username">
+      <label>密碼</label>
+      <input type="password" id="password" placeholder="請輸入密碼" autocomplete="current-password">
+      <button type="submit" class="btn-login">登入後台</button>
+    </form>
+
+    <div class="back-link">
+      <a href="../index.html">← 返回官方網站</a>
+    </div>
+  </div>
+
+  <script src="users-config.js"></script>
+  <script>
+    // 已登入就直接跳轉
+    if (sessionStorage.getItem('ipcc_admin_logged') === '1') {
+      location.href = 'dashboard.html';
+    }
+
+    function getUsers() {
+      try {
+        var u = JSON.parse(localStorage.getItem('ipcc_users') || 'null');
+        if (u && u.length > 0) return u;
+      } catch(e) {}
+      // 讀取已部署的用戶設定（跨電腦共用）
+      if (window.IPCC_USERS_CONFIG && window.IPCC_USERS_CONFIG.length > 0) {
+        return window.IPCC_USERS_CONFIG;
+      }
+      return [{
+        id: 'admin-root',
+        username: 'admin',
+        password: 'ipcc2024',
+        displayName: '超級管理員',
+        isSuper: true,
+        permissions: { home:true, about:true, services:true, news:true, cases:true, settings:true, users:true, contacts:true },
+        createdAt: 0,
+        lastLogin: null
+      }];
+    }
+
+    function doLogin(e) {
+      e.preventDefault();
+      var u = document.getElementById('username').value.trim();
+      var p = document.getElementById('password').value;
+      var users = getUsers();
+      var found = null;
+      for (var i = 0; i < users.length; i++) {
+        if (users[i].username === u && users[i].password === p) { found = users[i]; break; }
+      }
+      if (found) {
+        sessionStorage.setItem('ipcc_admin_logged', '1');
+        sessionStorage.setItem('ipcc_current_uid', found.id);
+        // 更新 lastLogin（若 ipcc_users 尚未存入 localStorage，先以目前清單建立）
+        try {
+          var all = JSON.parse(localStorage.getItem('ipcc_users') || 'null');
+          if (!all || !all.length) all = getUsers();
+          var idx = all.findIndex(function(u){ return u.id === found.id; });
+          if (idx < 0) { all.push(found); idx = all.length - 1; }
+          all[idx].lastLogin = Date.now();
+          localStorage.setItem('ipcc_users', JSON.stringify(all));
+        } catch(e) {}
+        location.href = 'dashboard.html';
+      } else {
+        document.getElementById('errorMsg').style.display = 'block';
+      }
+    }
+  </script>
+</body>
+</html>

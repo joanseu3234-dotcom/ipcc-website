@@ -1,0 +1,741 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>案例管理 | IPCC 後台</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="admin.css">
+<style>
+  /* cases-manage 用 compact 水平上傳框 */
+  .img-upload-box { padding:12px 16px; display:flex; align-items:center; gap:12px; }
+  /* Tags grid */
+  .tags-grid { display:flex; flex-wrap:wrap; gap:8px; margin-top:4px; }
+  .tag-check-item { display:flex; align-items:center; gap:6px; padding:6px 12px; border:1.5px solid var(--border); border-radius:100px; cursor:pointer; font-size:0.82rem; font-weight:600; transition:all 0.2s; background:#fff; }
+  .tag-check-item:hover { border-color:var(--navy); }
+  .tag-check-item input[type=checkbox] { accent-color:var(--navy); width:14px; height:14px; cursor:pointer; }
+  .tag-check-item.checked { background:rgba(30,42,94,0.08); border-color:var(--navy); color:var(--navy); }
+  /* Stats grid */
+  .stats-edit-grid { display:grid; grid-template-columns:1fr 1fr; gap:16px; }
+  .stat-edit-card { background:#FAFAF9; border:1.5px solid var(--border); border-radius:10px; padding:16px; }
+  .stat-edit-card-label { font-size:0.72rem; font-weight:700; text-transform:uppercase; letter-spacing:0.08em; color:var(--text-sub); margin-bottom:10px; }
+  .stat-edit-row { display:flex; gap:8px; align-items:center; }
+  .stat-edit-row input { flex:1; }
+  /* Partner logos */
+  .logo-grid { display:grid; grid-template-columns:repeat(auto-fill, minmax(140px,1fr)); gap:12px; margin-top:8px; }
+  .logo-card { border:1.5px solid var(--border); border-radius:10px; overflow:hidden; background:#fff; position:relative; }
+  .logo-card img { width:100%; height:80px; object-fit:contain; display:block; padding:8px; background:#F8F9FA; }
+  .logo-card-body { padding:8px 10px; }
+  .logo-card-name { font-size:0.78rem; font-weight:600; color:var(--text-main); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+  .logo-card-actions { display:flex; gap:4px; margin-top:6px; }
+  .logo-add-card { border:2px dashed var(--border); border-radius:10px; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:6px; min-height:120px; cursor:pointer; transition:border-color 0.2s; color:var(--text-sub); font-size:0.82rem; font-weight:600; }
+  .logo-add-card:hover { border-color:var(--navy); color:var(--navy); }
+</style>
+</head>
+<body>
+<div class="sidebar-overlay" id="sidebarOverlay" onclick="toggleSidebar()"></div>
+<div class="admin-layout">
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-logo">
+      <img src="../IPCCLOGO-transparent.png" alt="IPCC" onerror="this.style.display='none'">
+      <div class="sidebar-logo-text">
+        <div class="co-name">IPCC 東州集團</div>
+        <div class="co-sub">後台管理系統</div>
+      </div>
+    </div>
+        <nav class="sidebar-nav">
+      <a href="dashboard.html" class="nav-item">📊 儀表板</a>
+      <a href="home-manage.html" class="nav-item" data-perm="home">🏠 首頁管理</a>
+      <a href="news-manage.html" class="nav-item" data-perm="news">📰 最新消息</a>
+      <a href="about-manage.html" class="nav-item" data-perm="about">🏢 關於我們</a>
+      <a href="services-manage.html" class="nav-item" data-perm="services">🛠 專案服務</a>
+      <a href="cases-manage.html" class="nav-item active" data-perm="cases">🏆 成功案例</a>
+      <a href="contacts-manage.html" class="nav-item" data-perm="contacts">📋 聯絡表單</a>
+      <a href="settings.html" class="nav-item" data-perm="settings">⚙️ 系統設定</a>
+      <a href="users-manage.html" class="nav-item" data-perm="users">👥 帳號管理</a>
+    </nav>
+    <div class="sidebar-footer">
+      <a class="btn-view-site" href="../index.html" target="_blank"><span>&#127760;</span>查看前台網站</a>
+      <button class="btn-logout" onclick="logout()"><span>&#128682;</span>登出</button>
+    </div>
+  </aside>
+  <div class="main-content">
+    <header class="topbar">
+      <button class="topbar-hamburger" onclick="toggleSidebar()">&#9776;</button>
+      <div class="topbar-title">案例管理</div>
+      <div class="topbar-user"><div class="topbar-avatar">A</div><span>管理員</span></div>
+    </header>
+    <div class="page-content">
+      <div class="page-header page-header-row">
+        <div>
+          <h1>&#128188; 案例管理</h1>
+          <p class="page-subtitle">管理東州互聯網與顯榮國際的成功案例、合作客戶與數字統計。</p>
+        </div>
+        <button class="btn-red" onclick="openAddModal()">&#43; 新增案例</button>
+      </div>
+
+      <!-- ── 案例列表 ── -->
+      <div class="section-card">
+        <div class="section-card-header" style="flex-wrap:wrap;gap:12px;">
+          <div class="filter-tabs" id="filterTabs">
+            <button class="filter-tab active" data-type="all" onclick="setFilter(this,'all')">全部</button>
+            <button class="filter-tab" data-type="dongzhou" onclick="setFilter(this,'dongzhou')">東州互聯網</button>
+            <button class="filter-tab" data-type="xianrong" onclick="setFilter(this,'xianrong')">顯榮國際</button>
+          </div>
+          <div id="caseStats" style="font-size:13px;color:var(--text-sub);"></div>
+        </div>
+        <div class="table-wrapper">
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th style="width:60px;">圖片</th>
+                <th>公司</th>
+                <th>客戶名稱</th>
+                <th>行業分類</th>
+                <th>標籤</th>
+                <th>狀態</th>
+                <th>操作</th>
+              </tr>
+            </thead>
+            <tbody id="casesTableBody"></tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- ── 數字統計管理 ── -->
+      <div class="section-card" style="margin-top:24px;">
+        <div class="section-card-header">
+          <h2>📊 數字統計管理</h2>
+          <button class="btn-ghost btn-sm" onclick="saveStats()">儲存統計</button>
+        </div>
+        <div class="section-card-body">
+          <p style="font-size:0.82rem;color:var(--text-sub);margin-bottom:16px;">這些數字顯示在成功案例頁面的頂部統計欄。</p>
+          <div class="stats-edit-grid" id="statsEditGrid">
+            <!-- 動態生成 -->
+          </div>
+        </div>
+      </div>
+
+      <!-- ── 合作客戶 Logo ── -->
+      <div class="section-card" style="margin-top:24px;">
+        <div class="section-card-header">
+          <h2>🤝 合作客戶 Logo</h2>
+          <div style="font-size:0.82rem;color:var(--text-sub);" id="logoCount"></div>
+        </div>
+        <div class="section-card-body">
+          <p style="font-size:0.82rem;color:var(--text-sub);margin-bottom:16px;">在前台成功案例頁面展示合作客戶的品牌 Logo。</p>
+          <div class="logo-grid" id="logoGrid"></div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<!-- ── 案例 Modal ── -->
+<div class="modal-overlay" id="caseModal">
+  <div class="modal modal-lg">
+    <div class="modal-header">
+      <h3 id="modalTitle">新增案例</h3>
+      <button class="modal-close" onclick="closeModal()">&#215;</button>
+    </div>
+    <div class="modal-body">
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:0 20px;">
+        <div class="form-group">
+          <label class="form-label">所屬案例分類（決定顯示在哪個頁面）</label>
+          <select class="form-select" id="fServiceType">
+            <option value="outsource">客服委外（東州互聯網）</option>
+            <option value="training">客服訓練（顯榮國際）</option>
+            <option value="it">資訊服務解決方案</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label class="form-label">封面圖片</label>
+          <div class="img-upload-box" onclick="document.getElementById('caseImgFile').click()">
+            <input type="file" id="caseImgFile" accept="image/*" onchange="handleCaseImg(this)" style="display:none;">
+            <div id="caseImgThumbWrap"><div class="img-upload-placeholder">🏆</div></div>
+            <div>
+              <div style="font-weight:600;font-size:0.88rem;color:var(--navy-dark);" id="caseImgName">點擊上傳圖片</div>
+              <div style="font-size:0.75rem;color:var(--text-sub);">支援 JPG / PNG，自動壓縮</div>
+              <button type="button" class="btn-outline btn-sm" style="margin-top:6px;display:none;" id="caseImgClearBtn" onclick="clearCaseImg(event)">✕ 移除</button>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="form-group">
+        <label class="form-label">行業分類</label>
+        <input type="text" class="form-control" id="fCategory" placeholder="例：電商平台 × 客服委外">
+      </div>
+      <div class="form-group">
+        <label class="form-label">客戶名稱</label>
+        <input type="text" class="form-control" id="fClient" placeholder="例：大型電商平台 A">
+      </div>
+      <div class="form-group">
+        <label class="form-label">服務標籤</label>
+        <div class="tags-grid" id="fTagsGrid"></div>
+        <input type="hidden" id="fTagsCustom" style="margin-top:8px;">
+        <input type="text" class="form-control" id="fTagsInput" placeholder="自訂標籤（用逗號分隔）" style="margin-top:8px;">
+        <div style="font-size:0.72rem;color:var(--text-sub);margin-top:4px;">從專案服務勾選，或在下方輸入自訂標籤</div>
+      </div>
+      <div class="form-group">
+        <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:4px;">
+          <label class="form-label" style="margin:0;">面臨問題</label>
+          <button type="button" class="btn-outline btn-sm" onclick="insertLink('fChallenge')" title="在游標位置插入超連結語法 [文字](網址)">🔗 插入連結</button>
+        </div>
+        <textarea class="form-textarea" id="fChallenge" rows="3" placeholder="客戶面臨的挑戰或問題..."></textarea>
+      </div>
+      <div class="form-group">
+        <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:4px;">
+          <label class="form-label" style="margin:0;">解決方案</label>
+          <button type="button" class="btn-outline btn-sm" onclick="insertLink('fSolution')" title="在游標位置插入超連結語法 [文字](網址)">🔗 插入連結</button>
+        </div>
+        <textarea class="form-textarea" id="fSolution" rows="3" placeholder="我們提供的解決方案..."></textarea>
+        <div style="font-size:0.72rem; color:var(--text-sub); margin-top:4px;">提示：可用 <code style="background:#F3F4F6; padding:1px 4px; border-radius:3px;">[顯示文字](https://網址)</code> 格式插入超連結，前台將自動轉換為可點擊連結。</div>
+      </div>
+      <div class="form-group">
+        <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:4px;">
+          <label class="form-label" style="margin:0;">卡片摘要（顯示在案例卡片，建議 80 字內）</label>
+          <button type="button" class="btn-outline btn-sm" onclick="autoSummaryCase()" title="從「面臨問題」自動擷取前 80 字作為摘要">✨ 自動摘要</button>
+        </div>
+        <textarea class="form-textarea" id="fDescription" rows="2" placeholder="不填則自動以「面臨問題」前段作為摘要..."></textarea>
+      </div>
+      <div class="form-group">
+        <label class="form-label" style="margin-bottom:10px;">成果展示</label>
+        <div class="results-list" id="resultsList"></div>
+        <button type="button" class="btn-ghost btn-sm" style="margin-top:8px;" onclick="addResultRow()">&#43; 新增成果項目</button>
+      </div>
+      <div class="form-group">
+        <label class="form-check">
+          <input type="checkbox" id="fPublished" checked>
+          立即發布
+        </label>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn-outline" onclick="closeModal()">取消</button>
+      <button class="btn-red" onclick="saveItem()">儲存案例</button>
+    </div>
+  </div>
+</div>
+
+<!-- ── Logo Modal ── -->
+<div class="modal-overlay" id="logoModal">
+  <div class="modal">
+    <div class="modal-header">
+      <h3 id="logoModalTitle">新增合作客戶</h3>
+      <button class="modal-close" onclick="closeLogoModal()">&#215;</button>
+    </div>
+    <div class="modal-body">
+      <div class="form-group">
+        <label class="form-label">客戶名稱</label>
+        <input type="text" class="form-control" id="fLogoName" placeholder="例：中華電信">
+      </div>
+      <div class="form-group">
+        <label class="form-label">Logo 圖片</label>
+        <div class="img-upload-box" onclick="document.getElementById('logoImgFile').click()">
+          <input type="file" id="logoImgFile" accept="image/*" onchange="handleLogoImg(this)" style="display:none;">
+          <div id="logoImgThumbWrap"><div class="img-upload-placeholder">🤝</div></div>
+          <div>
+            <div style="font-weight:600;font-size:0.88rem;color:var(--navy-dark);" id="logoImgName">點擊上傳 Logo</div>
+            <div style="font-size:0.75rem;color:var(--text-sub);">建議使用透明背景 PNG，寬度 300px 以上</div>
+            <button type="button" class="btn-outline btn-sm" style="margin-top:6px;display:none;" id="logoImgClearBtn" onclick="clearLogoImg(event)">✕ 移除</button>
+          </div>
+        </div>
+      </div>
+      <div class="form-group">
+        <label class="form-label">連結網址（選填）</label>
+        <input type="url" class="form-control" id="fLogoLink" placeholder="https://...">
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn-outline" onclick="closeLogoModal()">取消</button>
+      <button class="btn-red" onclick="saveLogo()">儲存</button>
+    </div>
+  </div>
+</div>
+
+<script src="users-config.js"></script>
+<script src="admin.js"></script>
+<script>
+// ── localStorage helpers ──────────────────────────────────────
+function getPartnerLogos() {
+  try { return JSON.parse(localStorage.getItem('ipcc_partner_logos') || '[]'); } catch(e) { return []; }
+}
+function savePartnerLogos(arr) { localStorage.setItem('ipcc_partner_logos', JSON.stringify(arr)); }
+
+function getCaseStatsData() {
+  try {
+    var d = JSON.parse(localStorage.getItem('ipcc_case_stats') || 'null');
+    if (d) return d;
+  } catch(e) {}
+  return {
+    stat1: { value: '50', suffix: '+', label: '累計服務客戶' },
+    stat2: { value: '1996', type: 'founded', suffix: '年', label: '豐富經驗' },
+    stat3: { value: '95', suffix: '%+', label: '客戶滿意度' },
+    stat4: { value: '5000', suffix: '通', label: '每日平均話務量' }
+  };
+}
+function saveCaseStatsData(d) { localStorage.setItem('ipcc_case_stats', JSON.stringify(d)); }
+
+// ── Auth & UI init ────────────────────────────────────────────
+requireLogin();
+initAdminUI();
+
+// ── Cases state ───────────────────────────────────────────────
+var currentFilter = "all";
+var editingId = null;
+var currentCaseImage = '';
+
+// ── Company labels ────────────────────────────────────────────
+function companyLabel(c) {
+  if (c === 'xianrong') return '顯榮國際';
+  if (c === 'dongzhou') return '東州互聯網';
+  // backward compat
+  if (c === 'training') return '顯榮國際';
+  if (c === 'it') return '資訊服務';
+  return '東州互聯網';
+}
+function companyBadgeClass(c) {
+  if (c === 'xianrong' || c === 'training') return 'badge-training';
+  if (c === 'it') return 'badge-it';
+  return 'badge-outsource';
+}
+
+// ── Cases table ───────────────────────────────────────────────
+function setFilter(btn, type) {
+  currentFilter = type;
+  document.querySelectorAll(".filter-tab").forEach(function(b){ b.classList.remove("active"); });
+  btn.classList.add("active");
+  renderTable();
+}
+
+function renderTable() {
+  var all = getCases();
+  var items = currentFilter === "all" ? all : all.filter(function(c){
+    var co = c.company || c.caseType || 'dongzhou';
+    if (currentFilter === 'dongzhou') return co === 'dongzhou' || co === 'outsource';
+    if (currentFilter === 'xianrong') return co === 'xianrong' || co === 'training' || co === 'it';
+    return true;
+  });
+  var pub = all.filter(function(c){ return c.published; }).length;
+  document.getElementById("caseStats").textContent = "共 " + all.length + " 筆，已發布 " + pub + " 筆，草稿 " + (all.length - pub) + " 筆";
+  var tbody = document.getElementById("casesTableBody");
+  if (items.length === 0) {
+    tbody.innerHTML = '<tr><td colspan="7"><div class="empty-state"><div class="empty-icon">&#128188;</div><p>尚無案例</p></div></td></tr>';
+    return;
+  }
+  tbody.innerHTML = items.map(function(item) {
+    var co = item.company || item.caseType || 'dongzhou';
+    var statusCls = item.published ? "published" : "draft";
+    var statusTxt = item.published ? "已發布" : "草稿";
+    var toggleTxt = item.published ? "設為草稿" : "發布";
+    var tags = (item.tags || []).slice(0,3).map(function(t){ return '<span class="badge badge-outsource" style="font-size:0.68rem;padding:2px 7px;">'+t+'</span>'; }).join('');
+    return '<tr>' +
+      '<td>' + (item.image ? '<img class="thumb" src="'+item.image+'">' : '<div class="thumb-placeholder">🏆</div>') + '</td>' +
+      '<td><span class="badge ' + companyBadgeClass(co) + '">' + companyLabel(co) + '</span></td>' +
+      '<td class="td-title">' + (item.client||"") + '</td>' +
+      '<td>' + (item.category||"") + '</td>' +
+      '<td>' + (tags||'<span style="color:var(--text-sub);font-size:0.78rem;">—</span>') + '</td>' +
+      '<td><span class="status-dot ' + statusCls + '">' + statusTxt + '</span></td>' +
+      '<td><div class="td-actions">' +
+        '<button class="btn-ghost btn-sm" onclick="editItem(\'' + item.id + '\')">編輯</button>' +
+        '<button class="btn-ghost btn-sm" onclick="togglePublish(\'' + item.id + '\')">' + toggleTxt + '</button>' +
+        '<button class="btn-icon-red btn-sm" onclick="deleteItem(\'' + item.id + '\')">刪除</button>' +
+      '</div></td>' +
+    '</tr>';
+  }).join("");
+}
+
+// ── Case image handling ───────────────────────────────────────
+function handleCaseImg(input) {
+  if (!input.files || !input.files[0]) return;
+  var file = input.files[0];
+  if (file.size > 5 * 1024 * 1024) { alert('圖片上限 5MB'); input.value=''; return; }
+  var reader = new FileReader();
+  reader.onload = function(e) {
+    var img = new Image();
+    img.onload = function() {
+      var MAX = 800;
+      var w = img.width, h = img.height;
+      if (w > MAX) { h = Math.round(h*MAX/w); w = MAX; }
+      var canvas = document.createElement('canvas');
+      canvas.width = w; canvas.height = h;
+      canvas.getContext('2d').drawImage(img,0,0,w,h);
+      currentCaseImage = canvas.toDataURL('image/jpeg', 0.82);
+      document.getElementById('caseImgThumbWrap').innerHTML = '<img class="img-upload-preview" src="'+currentCaseImage+'">';
+      document.getElementById('caseImgName').textContent = file.name;
+      document.getElementById('caseImgClearBtn').style.display = '';
+    };
+    img.src = e.target.result;
+  };
+  reader.readAsDataURL(file);
+}
+function clearCaseImg(e) {
+  if (e) e.stopPropagation();
+  currentCaseImage = '';
+  document.getElementById('caseImgFile').value = '';
+  document.getElementById('caseImgThumbWrap').innerHTML = '<div class="img-upload-placeholder">🏆</div>';
+  document.getElementById('caseImgName').textContent = '點擊上傳圖片';
+  document.getElementById('caseImgClearBtn').style.display = 'none';
+}
+
+// ── Tags from services ────────────────────────────────────────
+function renderTagsGrid(selected) {
+  var svcs = getServices();
+  var grid = document.getElementById('fTagsGrid');
+  if (!svcs || svcs.length === 0) { grid.innerHTML = '<div style="color:var(--text-sub);font-size:0.82rem;">尚未設定專案服務，請先至「專案服務」管理頁新增。</div>'; return; }
+  grid.innerHTML = svcs.map(function(s) {
+    var checked = selected && selected.indexOf(s.title) >= 0;
+    return '<label class="tag-check-item' + (checked?' checked':'') + '" id="tagitem-'+s.id+'">' +
+      '<input type="checkbox" value="'+s.title+'" ' + (checked?'checked':'') + ' onchange="updateTagItem(this)">' +
+      s.icon + ' ' + s.title + '</label>';
+  }).join('');
+}
+function updateTagItem(input) {
+  var label = input.closest('label');
+  if (input.checked) label.classList.add('checked');
+  else label.classList.remove('checked');
+}
+function getSelectedTags() {
+  var tags = [];
+  document.querySelectorAll('#fTagsGrid input[type=checkbox]:checked').forEach(function(cb){ tags.push(cb.value); });
+  var custom = document.getElementById('fTagsInput').value.trim();
+  if (custom) {
+    custom.split(',').forEach(function(t){ var tt = t.trim(); if (tt) tags.push(tt); });
+  }
+  return tags;
+}
+
+// ── 插入超連結語法 [文字](網址) ──────────────────────────────
+function insertLink(taId) {
+  var ta = document.getElementById(taId);
+  var start = ta.selectionStart;
+  var end = ta.selectionEnd;
+  var selected = ta.value.substring(start, end) || '連結文字';
+  var url = prompt('請輸入連結網址：', 'https://');
+  if (!url || url === 'https://') return;
+  var link = '[' + selected + '](' + url + ')';
+  ta.value = ta.value.substring(0, start) + link + ta.value.substring(end);
+  ta.focus();
+  ta.selectionStart = ta.selectionEnd = start + link.length;
+}
+
+// ── Modal open/close ──────────────────────────────────────────
+function autoSummaryCase() {
+  var ch = document.getElementById('fChallenge').value.trim();
+  if (!ch) { alert('請先填寫「面臨問題」，再點自動摘要'); return; }
+  var summary = ch.replace(/\s+/g,' ').trim().substring(0, 80);
+  if (ch.length > 80) summary += '⋯';
+  document.getElementById('fDescription').value = summary;
+}
+
+function openAddModal() {
+  editingId = null;
+  document.getElementById("modalTitle").textContent = "新增案例";
+  document.getElementById("fServiceType").value = "outsource";
+  clearCaseImg();
+  document.getElementById("fCategory").value = "";
+  document.getElementById("fClient").value = "";
+  document.getElementById("fChallenge").value = "";
+  document.getElementById("fSolution").value = "";
+  document.getElementById("fDescription").value = "";
+  document.getElementById("fTagsInput").value = "";
+  document.getElementById("fPublished").checked = true;
+  document.getElementById("resultsList").innerHTML = "";
+  renderTagsGrid([]);
+  addResultRow();
+  document.getElementById("caseModal").classList.add("open");
+}
+
+function editItem(id) {
+  var item = getCases().find(function(c){ return c.id === id; });
+  if (!item) return;
+  editingId = id;
+  document.getElementById("modalTitle").textContent = "編輯案例";
+  var st = item.serviceType || item.caseType || '';
+  if (!st) {
+    var co = item.company || '';
+    if (co === 'xianrong' || co === 'training') st = 'training';
+    else if (co === 'it') st = 'it';
+    else st = 'outsource';
+  }
+  document.getElementById("fServiceType").value = st;
+  currentCaseImage = item.image || '';
+  if (item.image) {
+    document.getElementById('caseImgThumbWrap').innerHTML = '<img class="img-upload-preview" src="'+item.image+'">';
+    document.getElementById('caseImgName').textContent = '已上傳圖片';
+    document.getElementById('caseImgClearBtn').style.display = '';
+  } else { clearCaseImg(); }
+  document.getElementById("fCategory").value = item.category || "";
+  document.getElementById("fClient").value = item.client || "";
+  document.getElementById("fChallenge").value = item.challenge || "";
+  document.getElementById("fSolution").value = item.solution || "";
+  document.getElementById("fDescription").value = item.description || "";
+  var tags = item.tags || [];
+  renderTagsGrid(tags);
+  // custom tags: those not from services
+  var svcTitles = getServices().map(function(s){ return s.title; });
+  var customTags = tags.filter(function(t){ return svcTitles.indexOf(t) < 0; });
+  document.getElementById("fTagsInput").value = customTags.join(', ');
+  document.getElementById("fPublished").checked = !!item.published;
+  document.getElementById("resultsList").innerHTML = "";
+  var results = item.results || [];
+  if (results.length === 0) { addResultRow(); }
+  else { results.forEach(function(r){ addResultRow(r.value, r.label); }); }
+  document.getElementById("caseModal").classList.add("open");
+}
+
+function closeModal() {
+  document.getElementById("caseModal").classList.remove("open");
+  editingId = null;
+}
+
+// ── Result rows ───────────────────────────────────────────────
+function addResultRow(val, lbl) {
+  var list = document.getElementById("resultsList");
+  var row = document.createElement("div");
+  row.className = "result-row";
+  row.innerHTML = '<input type="text" class="form-control" placeholder="數值，例：&#8593;60%" value="' + (val||"") + '">' +
+    '<input type="text" class="form-control" placeholder="說明，例：回應效率" value="' + (lbl||"") + '">' +
+    '<button type="button" class="btn-icon-red btn-sm" onclick="this.parentElement.remove()">&#8722;</button>';
+  list.appendChild(row);
+}
+function getResultRows() {
+  var rows = document.querySelectorAll("#resultsList .result-row");
+  var results = [];
+  rows.forEach(function(row) {
+    var inputs = row.querySelectorAll("input");
+    var v = inputs[0].value.trim();
+    var l = inputs[1].value.trim();
+    if (v || l) results.push({ value: v, label: l });
+  });
+  return results;
+}
+
+// ── Save case ─────────────────────────────────────────────────
+function saveItem() {
+  var client = document.getElementById("fClient").value.trim();
+  if (!client) { alert("請輸入客戶名稱"); return; }
+  var arr = getCases();
+  var serviceType = document.getElementById("fServiceType").value;
+  var co = serviceType === 'outsource' ? 'dongzhou' : 'xianrong';
+  var data = {
+    company: co,
+    serviceType: serviceType,
+    image: currentCaseImage || '',
+    category: document.getElementById("fCategory").value.trim(),
+    client: client,
+    tags: getSelectedTags(),
+    challenge: document.getElementById("fChallenge").value.trim(),
+    solution: document.getElementById("fSolution").value.trim(),
+    description: document.getElementById("fDescription").value.trim(),
+    results: getResultRows(),
+    published: document.getElementById("fPublished").checked
+  };
+  if (editingId) {
+    arr = arr.map(function(c) {
+      if (c.id !== editingId) return c;
+      return Object.assign({}, c, data);
+    });
+  } else {
+    data.id = genId();
+    data.createdAt = Date.now();
+    arr.push(data);
+  }
+  saveCases(arr);
+  closeModal();
+  renderTable();
+  showToast("&#9989; 儲存成功", "success");
+}
+
+function togglePublish(id) {
+  var arr = getCases().map(function(c) {
+    if (c.id !== id) return c;
+    return Object.assign({}, c, { published: !c.published });
+  });
+  saveCases(arr);
+  renderTable();
+  showToast("狀態已更新");
+}
+function deleteItem(id) {
+  if (!confirm("確定要刪除這個案例嗎？此操作無法復原。")) return;
+  saveCases(getCases().filter(function(c){ return c.id !== id; }));
+  renderTable();
+  showToast("已刪除", "error");
+}
+
+// ── Stats management ──────────────────────────────────────────
+var STATS_DEF = [
+  { key: 'stat1', icon: '🏢', label_label: '說明文字', hint_value: '例：50', hint_suffix: '例：+', hint_label: '例：累計服務客戶' },
+  { key: 'stat2', icon: '📅', label_label: '說明文字（年份：輸入成立年，自動計算年資）', hint_value: '例：1996（或直接輸入年資數字）', hint_suffix: '例：年', hint_label: '例：豐富經驗' },
+  { key: 'stat3', icon: '😊', label_label: '說明文字', hint_value: '例：95', hint_suffix: '例：%+', hint_label: '例：客戶滿意度' },
+  { key: 'stat4', icon: '📞', label_label: '說明文字', hint_value: '例：5000', hint_suffix: '例：通', hint_label: '例：每日平均話務量' }
+];
+
+function renderStatsEditor() {
+  var data = getCaseStatsData();
+  var grid = document.getElementById('statsEditGrid');
+  grid.innerHTML = STATS_DEF.map(function(def) {
+    var s = data[def.key] || {};
+    var isYear = def.key === 'stat2';
+    return '<div class="stat-edit-card">' +
+      '<div class="stat-edit-card-label">' + def.icon + ' 統計 ' + def.key.replace('stat','') + (isYear ? '（年份自動計算）' : '') + '</div>' +
+      '<div class="form-group" style="margin-bottom:8px;">' +
+        '<label class="form-label" style="font-size:0.72rem;">數值' + (isYear ? '（成立年份或直接填年資）' : '') + '</label>' +
+        '<input type="text" class="form-control form-control-sm" id="sv_' + def.key + '" value="' + (s.value||'') + '" placeholder="' + def.hint_value + '">' +
+      '</div>' +
+      '<div class="form-group" style="margin-bottom:8px;">' +
+        '<label class="form-label" style="font-size:0.72rem;">後綴符號</label>' +
+        '<input type="text" class="form-control form-control-sm" id="ss_' + def.key + '" value="' + (s.suffix||'') + '" placeholder="' + def.hint_suffix + '">' +
+      '</div>' +
+      '<div class="form-group" style="margin-bottom:0;">' +
+        '<label class="form-label" style="font-size:0.72rem;">說明文字</label>' +
+        '<input type="text" class="form-control form-control-sm" id="sl_' + def.key + '" value="' + (s.label||'') + '" placeholder="' + def.hint_label + '">' +
+      '</div>' +
+    '</div>';
+  }).join('');
+}
+
+function saveStats() {
+  var data = {};
+  STATS_DEF.forEach(function(def) {
+    data[def.key] = {
+      value: document.getElementById('sv_' + def.key).value.trim(),
+      suffix: document.getElementById('ss_' + def.key).value.trim(),
+      label: document.getElementById('sl_' + def.key).value.trim(),
+      type: def.key === 'stat2' ? 'founded' : undefined
+    };
+  });
+  saveCaseStatsData(data);
+  showToast('&#9989; 統計數字已儲存', 'success');
+}
+
+// ── Partner logos ─────────────────────────────────────────────
+var currentLogoImage = '';
+var editingLogoId = null;
+
+function renderLogoGrid() {
+  var logos = getPartnerLogos();
+  document.getElementById('logoCount').textContent = logos.length + ' 家客戶';
+  var grid = document.getElementById('logoGrid');
+  var html = logos.map(function(logo) {
+    return '<div class="logo-card">' +
+      (logo.image ? '<img src="' + logo.image + '" alt="' + (logo.name||'') + '">' : '<div style="height:80px;background:#F3F4F6;display:flex;align-items:center;justify-content:center;font-size:2rem;">🤝</div>') +
+      '<div class="logo-card-body">' +
+        '<div class="logo-card-name">' + (logo.name || '未命名') + '</div>' +
+        '<div class="logo-card-actions">' +
+          '<button class="btn-ghost btn-sm" onclick="editLogo(\'' + logo.id + '\')">編輯</button>' +
+          '<button class="btn-icon-red btn-sm" onclick="deleteLogo(\'' + logo.id + '\')">刪除</button>' +
+        '</div>' +
+      '</div>' +
+    '</div>';
+  }).join('');
+  html += '<div class="logo-add-card" onclick="openLogoModal()"><span style="font-size:1.5rem;">+</span><span>新增客戶 Logo</span></div>';
+  grid.innerHTML = html;
+}
+
+function openLogoModal(id) {
+  editingLogoId = id || null;
+  document.getElementById('logoModalTitle').textContent = id ? '編輯合作客戶' : '新增合作客戶';
+  currentLogoImage = '';
+  document.getElementById('fLogoName').value = '';
+  document.getElementById('fLogoLink').value = '';
+  document.getElementById('logoImgThumbWrap').innerHTML = '<div class="img-upload-placeholder">🤝</div>';
+  document.getElementById('logoImgName').textContent = '點擊上傳 Logo';
+  document.getElementById('logoImgClearBtn').style.display = 'none';
+  if (id) {
+    var logo = getPartnerLogos().find(function(l){ return l.id === id; });
+    if (logo) {
+      document.getElementById('fLogoName').value = logo.name || '';
+      document.getElementById('fLogoLink').value = logo.link || '';
+      if (logo.image) {
+        currentLogoImage = logo.image;
+        document.getElementById('logoImgThumbWrap').innerHTML = '<img class="img-upload-preview" src="' + logo.image + '">';
+        document.getElementById('logoImgName').textContent = '已上傳圖片';
+        document.getElementById('logoImgClearBtn').style.display = '';
+      }
+    }
+  }
+  document.getElementById('logoModal').classList.add('open');
+}
+function editLogo(id) { openLogoModal(id); }
+function closeLogoModal() { document.getElementById('logoModal').classList.remove('open'); editingLogoId = null; }
+
+function handleLogoImg(input) {
+  if (!input.files || !input.files[0]) return;
+  var file = input.files[0];
+  if (file.size > 3 * 1024 * 1024) { alert('Logo 圖片上限 3MB'); input.value=''; return; }
+  var reader = new FileReader();
+  reader.onload = function(e) {
+    var img = new Image();
+    img.onload = function() {
+      var MAX = 600;
+      var w = img.width, h = img.height;
+      if (w > MAX) { h = Math.round(h*MAX/w); w = MAX; }
+      var canvas = document.createElement('canvas');
+      canvas.width = w; canvas.height = h;
+      canvas.getContext('2d').drawImage(img,0,0,w,h);
+      currentLogoImage = canvas.toDataURL('image/png', 1.0);
+      document.getElementById('logoImgThumbWrap').innerHTML = '<img class="img-upload-preview" src="'+currentLogoImage+'">';
+      document.getElementById('logoImgName').textContent = file.name;
+      document.getElementById('logoImgClearBtn').style.display = '';
+    };
+    img.src = e.target.result;
+  };
+  reader.readAsDataURL(file);
+}
+function clearLogoImg(e) {
+  if (e) e.stopPropagation();
+  currentLogoImage = '';
+  document.getElementById('logoImgFile').value = '';
+  document.getElementById('logoImgThumbWrap').innerHTML = '<div class="img-upload-placeholder">🤝</div>';
+  document.getElementById('logoImgName').textContent = '點擊上傳 Logo';
+  document.getElementById('logoImgClearBtn').style.display = 'none';
+}
+
+function saveLogo() {
+  var name = document.getElementById('fLogoName').value.trim();
+  if (!name && !currentLogoImage) { alert('請輸入客戶名稱或上傳 Logo'); return; }
+  var logos = getPartnerLogos();
+  var data = { name: name, image: currentLogoImage, link: document.getElementById('fLogoLink').value.trim() };
+  if (editingLogoId) {
+    logos = logos.map(function(l){ return l.id === editingLogoId ? Object.assign({}, l, data) : l; });
+  } else {
+    data.id = genId();
+    data.order = logos.length;
+    logos.push(data);
+  }
+  savePartnerLogos(logos);
+  closeLogoModal();
+  renderLogoGrid();
+  showToast('&#9989; 已儲存', 'success');
+}
+
+function deleteLogo(id) {
+  if (!confirm('確定刪除這個合作客戶？')) return;
+  savePartnerLogos(getPartnerLogos().filter(function(l){ return l.id !== id; }));
+  renderLogoGrid();
+  showToast('已刪除', 'error');
+}
+
+// ── Toast ─────────────────────────────────────────────────────
+function showToast(msg, type) {
+  var t = document.createElement("div");
+  t.className = "toast" + (type ? " " + type : "");
+  t.innerHTML = msg;
+  document.body.appendChild(t);
+  setTimeout(function(){ t.remove(); }, 2800);
+}
+
+// ── Init ──────────────────────────────────────────────────────
+if (new URLSearchParams(window.location.search).get("action") === "new") {
+  window.addEventListener("load", openAddModal);
+}
+
+renderTable();
+renderStatsEditor();
+renderLogoGrid();
+</script>
+</body>
+</html>

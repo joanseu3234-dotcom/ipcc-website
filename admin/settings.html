@@ -1,0 +1,405 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>系統設定 | IPCC 後台</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="admin.css">
+</head>
+<body>
+  <div class="admin-layout">
+    <aside class="sidebar" id="sidebar">
+      <div class="sidebar-logo">
+        <img src="../IPCCLOGO-transparent.png" alt="IPCC" onerror="this.style.display='none'">
+        <div class="sidebar-logo-text">
+        <div class="co-name">IPCC 東州集團</div>
+          <div class="co-sub">後台管理系統</div>
+        </div>
+      </div>
+          <nav class="sidebar-nav">
+      <a href="dashboard.html" class="nav-item">📊 儀表板</a>
+      <a href="home-manage.html" class="nav-item" data-perm="home">🏠 首頁管理</a>
+      <a href="news-manage.html" class="nav-item" data-perm="news">📰 最新消息</a>
+      <a href="about-manage.html" class="nav-item" data-perm="about">🏢 關於我們</a>
+      <a href="services-manage.html" class="nav-item" data-perm="services">🛠 專案服務</a>
+      <a href="cases-manage.html" class="nav-item" data-perm="cases">🏆 成功案例</a>
+      <a href="contacts-manage.html" class="nav-item" data-perm="contacts">📋 聯絡表單</a>
+      <a href="settings.html" class="nav-item active" data-perm="settings">⚙️ 系統設定</a>
+      <a href="users-manage.html" class="nav-item" data-perm="users">👥 帳號管理</a>
+    </nav>
+      <div class="sidebar-footer">
+        <a href="../index.html" target="_blank" class="view-site-btn">🔗 查看前台</a>
+        <button onclick="logout()" class="logout-btn">登出</button>
+      </div>
+    </aside>
+    <div class="sidebar-overlay" onclick="toggleSidebar()"></div>
+    <main class="main-content">
+      <header class="topbar">
+        <button class="hamburger" onclick="toggleSidebar()">☰</button>
+        <div class="topbar-title">系統設定</div>
+        <div class="topbar-user">管理員</div>
+      </header>
+      <div class="page-content">
+        <div class="page-header">
+          <h1>系統設定</h1>
+          <p>管理帳號密碼與資料匯入匯出</p>
+        </div>
+
+        <div class="section-card" style="max-width:520px;">
+          <h2 class="section-card-title">🔐 修改管理員密碼</h2>
+          <div id="pwMsg"></div>
+          <form onsubmit="changePassword(event)">
+            <div class="form-group">
+              <label class="form-label">目前帳號</label>
+              <input type="text" class="form-control" id="curUser" placeholder="目前帳號">
+            </div>
+            <div class="form-group">
+              <label class="form-label">目前密碼</label>
+              <input type="password" class="form-control" id="curPass" placeholder="目前密碼">
+            </div>
+            <div class="form-group">
+              <label class="form-label">新帳號（留空不變更）</label>
+              <input type="text" class="form-control" id="newUser" placeholder="新帳號">
+            </div>
+            <div class="form-group">
+              <label class="form-label">新密碼</label>
+              <input type="password" class="form-control" id="newPass" placeholder="新密碼（至少 6 字元）">
+            </div>
+            <div class="form-group">
+              <label class="form-label">確認新密碼</label>
+              <input type="password" class="form-control" id="confirmPass" placeholder="再次輸入新密碼">
+            </div>
+            <button type="submit" class="btn-primary">儲存變更</button>
+          </form>
+        </div>
+
+        <div class="section-card" style="max-width:520px;">
+          <h2 class="section-card-title">📤 資料匯出</h2>
+          <p style="color:var(--text-sub); font-size:0.9rem; margin-bottom:20px;">將所有消息與案例資料下載為 JSON 備份檔。</p>
+          <button class="btn-primary" onclick="exportData()">⬇ 下載備份 JSON</button>
+        </div>
+
+        <div class="section-card" style="max-width:520px;">
+          <h2 class="section-card-title">📥 資料匯入</h2>
+          <p style="color:var(--text-sub); font-size:0.9rem; margin-bottom:20px;">從 JSON 備份檔還原資料（將覆蓋現有資料）。</p>
+          <div class="form-group">
+            <label class="form-label">選擇備份檔案</label>
+            <input type="file" class="form-control" id="importFile" accept=".json">
+          </div>
+          <button class="btn-primary" onclick="importData()">⬆ 匯入資料</button>
+          <div id="importMsg" style="margin-top:12px;"></div>
+        </div>
+
+        <!-- GitHub 自動部署 -->
+        <div class="section-card" style="max-width:520px; border-color:#d1d5db;">
+          <h2 class="section-card-title">🚀 GitHub 自動部署設定</h2>
+          <p style="color:var(--text-sub); font-size:0.88rem; margin-bottom:16px; line-height:1.6;">
+            設定後，任何電腦在後台按「發布上線」，官網都會在 <b>30 秒內</b>自動更新，不需要任何本機工具。<br>
+            <a href="https://github.com/settings/tokens/new?scopes=repo&description=IPCC+Admin" target="_blank" style="color:var(--navy); text-decoration:underline;">點此前往 GitHub 建立 Token（勾選 repo 權限）</a>
+          </p>
+          <div id="ghMsg"></div>
+          <div class="form-group">
+            <label class="form-label">GitHub Repository（格式：帳號/倉庫名稱）</label>
+            <input type="text" class="form-control" id="ghRepo" placeholder="例：joan-company/ipcc-website">
+          </div>
+          <div class="form-group">
+            <label class="form-label">GitHub 分支</label>
+            <input type="text" class="form-control" id="ghBranch" placeholder="main">
+          </div>
+          <div class="form-group">
+            <label class="form-label">Personal Access Token</label>
+            <input type="password" class="form-control" id="ghToken" placeholder="ghp_xxxxxxxxxxxxxxxxxxxx">
+            <div style="font-size:0.72rem; color:var(--text-sub); margin-top:4px;">Token 只存在此瀏覽器，不會上傳到任何地方。</div>
+          </div>
+          <div style="display:flex; gap:10px; flex-wrap:wrap;">
+            <button class="btn-primary" onclick="saveGitHubSettings()">💾 儲存設定</button>
+            <button class="btn-outline" onclick="testGitHubConnection()" id="ghTestBtn">🔍 測試連線</button>
+          </div>
+          <div style="margin-top:16px; padding:12px 14px; background:#F0F9FF; border-radius:8px; font-size:0.82rem; color:#0369A1; line-height:1.7;" id="ghGuide">
+            <b>設定步驟（只需做一次）：</b><br>
+            1. 到 <a href="https://github.com/new" target="_blank" style="color:#0369A1;">github.com/new</a> 建立 Repository（名稱如 <code>ipcc-website</code>，Public 或 Private 皆可）<br>
+            2. 上方填入 Repository 名稱與 Token → 儲存<br>
+            3. 點下方「📁 上傳所有檔案到 GitHub」，選擇 IPCC 資料夾<br>
+            4. 到 <a href="https://zeabur.com" target="_blank" style="color:#0369A1;">Zeabur 後台</a> → 找到此服務 → Settings → Git Source → 連結剛才的 GitHub Repo<br>
+            完成後，每次按 🚀 發布上線，官網自動 30 秒更新。
+          </div>
+
+          <!-- 首次上傳全部檔案到 GitHub -->
+          <div style="margin-top:20px; padding:16px; border:1.5px dashed #93C5FD; border-radius:10px; background:#F8FBFF;">
+            <div style="font-weight:700; font-size:0.9rem; color:#1E40AF; margin-bottom:6px;">📁 首次設定 — 上傳所有檔案到 GitHub</div>
+            <div style="font-size:0.82rem; color:var(--text-sub); margin-bottom:12px; line-height:1.6;">
+              不需要安裝 git。點按鈕後選擇桌面的 IPCC 資料夾，系統會自動把所有檔案上傳到你的 GitHub Repository。
+            </div>
+            <div id="ghUploadProgress" style="display:none; margin-bottom:10px; font-size:0.82rem; color:#1E40AF; background:#EFF6FF; padding:8px 12px; border-radius:6px; line-height:1.6;"></div>
+            <button class="btn-primary" onclick="uploadAllToGitHub()" id="ghUploadBtn">📁 上傳所有檔案到 GitHub</button>
+            <div id="ghUploadMsg" style="margin-top:10px;"></div>
+          </div>
+        </div>
+
+        <div class="section-card" style="max-width:520px; border-color:#FFB3B5;">
+          <h2 class="section-card-title" style="color:#C8161D;">⚠️ 危險區域</h2>
+          <p style="color:var(--text-sub); font-size:0.9rem; margin-bottom:20px;">清除所有資料後無法復原，請謹慎操作。</p>
+          <button class="btn-red" onclick="clearAllData()">🗑 清除所有資料</button>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <script src="users-config.js"></script>
+  <script src="admin.js"></script>
+  <script>
+    requireLogin();
+    initAdminUI();
+    const DEFAULT_USER = 'admin';
+    const DEFAULT_PASS = 'ipcc2024';
+
+    function changePassword(e) {
+      e.preventDefault();
+      const curUser = document.getElementById('curUser').value.trim();
+      const curPass = document.getElementById('curPass').value;
+      const newUser = document.getElementById('newUser').value.trim();
+      const newPass = document.getElementById('newPass').value;
+      const confirmPass = document.getElementById('confirmPass').value;
+      const savedUser = localStorage.getItem('ipcc_admin_username') || DEFAULT_USER;
+      const savedPass = localStorage.getItem('ipcc_admin_password') || DEFAULT_PASS;
+      const msg = document.getElementById('pwMsg');
+      if (curUser !== savedUser || curPass !== savedPass) {
+        msg.innerHTML = '<div class="alert alert-error">目前帳號或密碼錯誤</div>';
+        return;
+      }
+      if (newPass.length < 6) {
+        msg.innerHTML = '<div class="alert alert-error">新密碼至少需要 6 個字元</div>';
+        return;
+      }
+      if (newPass !== confirmPass) {
+        msg.innerHTML = '<div class="alert alert-error">兩次輸入的新密碼不一致</div>';
+        return;
+      }
+      if (newUser) localStorage.setItem('ipcc_admin_username', newUser);
+      localStorage.setItem('ipcc_admin_password', newPass);
+      msg.innerHTML = '<div class="alert alert-success">✅ 密碼已成功更新</div>';
+      e.target.reset();
+    }
+
+    function exportData() {
+      const data = { exportedAt: new Date().toISOString(), news: getNews(), cases: getCases() };
+      const blob = new Blob([JSON.stringify(data, null, 2)], {type: 'application/json'});
+      const a = document.createElement('a');
+      a.href = URL.createObjectURL(blob);
+      a.download = 'ipcc-backup-' + new Date().toISOString().slice(0,10) + '.json';
+      a.click();
+    }
+
+    function importData() {
+      const file = document.getElementById('importFile').files[0];
+      const msg = document.getElementById('importMsg');
+      if (!file) { msg.innerHTML = '<div class="alert alert-error">請選擇備份檔案</div>'; return; }
+      const reader = new FileReader();
+      reader.onload = function(e) {
+        try {
+          const data = JSON.parse(e.target.result);
+          if (!Array.isArray(data.news) || !Array.isArray(data.cases)) throw new Error('格式錯誤');
+          if (!confirm('確定要匯入資料？這將覆蓋現有的所有消息與案例。')) return;
+          saveNews(data.news);
+          saveCases(data.cases);
+          msg.innerHTML = '<div class="alert alert-success">✅ 匯入成功！消息：' + data.news.length + ' 筆，案例：' + data.cases.length + ' 筆</div>';
+        } catch(err) {
+          msg.innerHTML = '<div class="alert alert-error">匯入失敗：' + err.message + '</div>';
+        }
+      };
+      reader.readAsText(file);
+    }
+
+    // ── GitHub 設定 ──
+    function loadGitHubSettings() {
+      document.getElementById('ghRepo').value   = localStorage.getItem('ipcc_github_repo')   || '';
+      document.getElementById('ghBranch').value = localStorage.getItem('ipcc_github_branch') || 'main';
+      document.getElementById('ghToken').value  = localStorage.getItem('ipcc_github_token')  || '';
+    }
+
+    function saveGitHubSettings() {
+      var repo   = document.getElementById('ghRepo').value.trim();
+      var branch = document.getElementById('ghBranch').value.trim() || 'main';
+      var token  = document.getElementById('ghToken').value.trim();
+      var msg    = document.getElementById('ghMsg');
+      if (!repo || !token) {
+        msg.innerHTML = '<div class="alert alert-error">請填寫 Repository 和 Token</div>';
+        return;
+      }
+      localStorage.setItem('ipcc_github_repo',   repo);
+      localStorage.setItem('ipcc_github_branch', branch);
+      localStorage.setItem('ipcc_github_token',  token);
+      msg.innerHTML = '<div class="alert alert-success">✅ 設定已儲存！下次按發布上線即會自動部署。</div>';
+    }
+
+    async function testGitHubConnection() {
+      var repo   = document.getElementById('ghRepo').value.trim();
+      var token  = document.getElementById('ghToken').value.trim();
+      var branch = document.getElementById('ghBranch').value.trim() || 'main';
+      var msg    = document.getElementById('ghMsg');
+      var btn    = document.getElementById('ghTestBtn');
+      if (!repo || !token) {
+        msg.innerHTML = '<div class="alert alert-error">請先填寫 Repository 和 Token</div>';
+        return;
+      }
+      btn.textContent = '測試中...'; btn.disabled = true;
+      try {
+        var res = await fetch('https://api.github.com/repos/' + repo, {
+          headers: { 'Authorization': 'token ' + token, 'Accept': 'application/vnd.github.v3+json' }
+        });
+        if (res.ok) {
+          var info = await res.json();
+          msg.innerHTML = '<div class="alert alert-success">✅ 連線成功！Repository：' + info.full_name + '（' + (info.private ? '私有' : '公開') + '）</div>';
+        } else if (res.status === 401) {
+          msg.innerHTML = '<div class="alert alert-error">❌ Token 無效，請重新產生</div>';
+        } else if (res.status === 404) {
+          msg.innerHTML = '<div class="alert alert-error">❌ 找不到 Repository，請確認名稱格式（帳號/倉庫名）</div>';
+        } else {
+          msg.innerHTML = '<div class="alert alert-error">❌ 連線失敗（HTTP ' + res.status + '）</div>';
+        }
+      } catch(e) {
+        msg.innerHTML = '<div class="alert alert-error">❌ 連線錯誤：' + e.message + '</div>';
+      }
+      btn.textContent = '🔍 測試連線'; btn.disabled = false;
+    }
+
+    // ── 上傳所有檔案到 GitHub（首次設定，不需要 git）──
+    var SKIP_NAMES = new Set([
+      'node_modules', '.git', 'deploy-server.js',
+      'start-deploy-server.bat', 'setup-github.bat',
+      'deploy-to-zeabur.bat', 'sync-from-ipccowb.bat', 'sync-to-ipccowb.bat'
+    ]);
+
+    async function readDirFiles(handle, prefix) {
+      var list = [];
+      for await (var [name, entry] of handle.entries()) {
+        if (SKIP_NAMES.has(name)) continue;
+        var path = prefix ? prefix + '/' + name : name;
+        if (entry.kind === 'directory') {
+          var sub = await readDirFiles(entry, path);
+          list = list.concat(sub);
+        } else {
+          list.push({ path: path, handle: entry });
+        }
+      }
+      return list;
+    }
+
+    async function ghPutFile(repo, token, branch, filePath, b64, sha) {
+      var url = 'https://api.github.com/repos/' + repo + '/contents/' + filePath;
+      var headers = {
+        'Authorization': 'token ' + token,
+        'Accept': 'application/vnd.github.v3+json',
+        'Content-Type': 'application/json'
+      };
+      var body = {
+        message: 'upload: ' + filePath,
+        content: b64,
+        branch: branch
+      };
+      if (sha) body.sha = sha;
+      var res = await fetch(url, { method: 'PUT', headers: headers, body: JSON.stringify(body) });
+      return res;
+    }
+
+    async function getFileSha(repo, token, branch, filePath) {
+      var url = 'https://api.github.com/repos/' + repo + '/contents/' + filePath + '?ref=' + branch;
+      var res = await fetch(url, {
+        headers: {
+          'Authorization': 'token ' + token,
+          'Accept': 'application/vnd.github.v3+json'
+        }
+      });
+      if (!res.ok) return null;
+      var info = await res.json();
+      return info.sha || null;
+    }
+
+    async function uploadAllToGitHub() {
+      var repo   = document.getElementById('ghRepo').value.trim();
+      var branch = document.getElementById('ghBranch').value.trim() || 'main';
+      var token  = document.getElementById('ghToken').value.trim();
+      var btn    = document.getElementById('ghUploadBtn');
+      var prog   = document.getElementById('ghUploadProgress');
+      var msg    = document.getElementById('ghUploadMsg');
+
+      if (!repo || !token) {
+        msg.innerHTML = '<div class="alert alert-error">請先填寫 Repository 和 Token 並儲存</div>';
+        return;
+      }
+      if (!('showDirectoryPicker' in window)) {
+        msg.innerHTML = '<div class="alert alert-error">你的瀏覽器不支援資料夾選取，請使用 Chrome 或 Edge</div>';
+        return;
+      }
+
+      var dirHandle;
+      try {
+        dirHandle = await window.showDirectoryPicker({ mode: 'read', startIn: 'desktop' });
+      } catch(e) { return; }
+
+      btn.disabled = true; btn.textContent = '上傳中...';
+      prog.style.display = 'block';
+      prog.textContent = '正在讀取 IPCC 資料夾中的檔案...';
+      msg.innerHTML = '';
+
+      try {
+        var files = await readDirFiles(dirHandle, '');
+        var total = files.length;
+        prog.textContent = '共找到 ' + total + ' 個檔案，開始上傳...';
+
+        var success = 0, fail = 0, skip = 0;
+        for (var i = 0; i < files.length; i++) {
+          var f = files[i];
+          prog.textContent = '(' + (i+1) + '/' + total + ') 上傳中：' + f.path;
+          try {
+            var fileObj = await f.handle.getFile();
+            var ab = await fileObj.arrayBuffer();
+            var bytes = new Uint8Array(ab);
+            var binary = '';
+            for (var c = 0; c < bytes.length; c += 8192) {
+              binary += String.fromCharCode.apply(null, bytes.subarray(c, Math.min(c + 8192, bytes.length)));
+            }
+            var b64 = btoa(binary);
+            var sha = await getFileSha(repo, token, branch, f.path);
+            var putRes = await ghPutFile(repo, token, branch, f.path, b64, sha);
+            if (putRes.ok) { success++; } else {
+              var errBody = await putRes.json().catch(function(){ return {}; });
+              if (errBody.message && errBody.message.indexOf('too large') !== -1) {
+                skip++; // 超過 GitHub 大小限制，略過
+              } else {
+                fail++;
+                console.warn('upload failed:', f.path, putRes.status, errBody.message);
+              }
+            }
+          } catch(fe) { fail++; console.warn('file error:', f.path, fe); }
+        }
+
+        prog.style.display = 'none';
+        var summary = '✅ 上傳完成！成功 ' + success + ' 個';
+        if (skip) summary += '，略過 ' + skip + ' 個（超過大小限制）';
+        if (fail) summary += '，失敗 ' + fail + ' 個';
+        msg.innerHTML = '<div class="alert alert-success">' + summary + '<br><br>'
+          + '下一步：到 <a href="https://zeabur.com" target="_blank">Zeabur 後台</a> → 找到此服務 → Settings → Git Source → 連結 '
+          + '<b>' + repo + '</b>，之後每次後台發布就會自動更新官網。</div>';
+      } catch(e) {
+        prog.style.display = 'none';
+        msg.innerHTML = '<div class="alert alert-error">上傳失敗：' + e.message + '</div>';
+      }
+
+      btn.disabled = false; btn.textContent = '📁 上傳所有檔案到 GitHub';
+    }
+
+    loadGitHubSettings();
+
+    function clearAllData() {
+      if (!confirm('確定要清除所有消息和案例資料嗎？此操作無法復原！')) return;
+      if (!confirm('再次確認：真的要清除全部資料？')) return;
+      saveNews([]);
+      saveCases([]);
+      alert('所有資料已清除。');
+    }
+  </script>
+</body>
+</html>

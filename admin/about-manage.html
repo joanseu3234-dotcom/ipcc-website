@@ -1,0 +1,837 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>關於我們管理 | IPCC 後台</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="admin.css">
+  <style>
+    .page-tab-nav { display:flex; gap:0; margin-bottom:28px; border:1.5px solid var(--border); border-radius:12px; overflow:hidden; flex-wrap:wrap; }
+    .page-tab-btn { padding:10px 18px; border:none; background:none; font-size:0.85rem; font-weight:600; color:var(--text-sub); cursor:pointer; font-family:inherit; transition:background 0.2s, color 0.2s; border-right:1px solid var(--border); }
+    .page-tab-btn:last-child { border-right:none; }
+    .page-tab-btn.active { background:var(--navy-dark); color:#fff; }
+    .sub-page { display:none; }
+    .sub-page.active { display:block; }
+    .row-editor { display:flex; flex-direction:column; gap:10px; }
+    .editor-row { background:#FAFAF9; border:1px solid var(--border); border-radius:8px; padding:12px; position:relative; }
+    .editor-row-grid2 { display:grid; grid-template-columns:1fr 2fr; gap:10px; }
+    .editor-row-grid3 { display:grid; grid-template-columns:100px 1fr 2fr; gap:10px; }
+    .editor-row-grid4 { display:grid; grid-template-columns:70px 120px 1fr 2fr; gap:10px; }
+    .editor-row-icon-title-desc { display:grid; grid-template-columns:64px 1fr 2fr; gap:10px; }
+    .editor-row-header { font-size:0.78rem; font-weight:700; color:var(--text-sub); margin-bottom:8px; letter-spacing:0.03em; }
+    .del-row-btn { background:none; border:none; color:#C8161D; font-size:1.1rem; cursor:pointer; padding:4px 6px; line-height:1; flex-shrink:0; }
+    .add-row-btn { display:flex; align-items:center; justify-content:center; gap:6px; padding:10px; border:2px dashed var(--border); border-radius:8px; background:none; color:var(--navy); font-weight:600; font-family:inherit; cursor:pointer; font-size:0.88rem; transition:border-color 0.2s; width:100%; margin-top:8px; }
+    .add-row-btn:hover { border-color:var(--navy); }
+    .fixed-num { display:flex; align-items:center; justify-content:center; background:var(--navy-dark); color:#fff; border-radius:6px; font-size:0.8rem; font-weight:800; min-width:36px; height:36px; flex-shrink:0; }
+    .section-divider { border:none; border-top:1px solid var(--border); margin:24px 0; }
+    .section-sub-label { font-size:0.75rem; font-weight:700; letter-spacing:0.1em; color:var(--text-sub); margin-bottom:14px; text-transform:uppercase; }
+    /* 獎項圖片上傳小方塊 */
+    .award-img-upload { width:76px; height:76px; border:1.5px dashed var(--border); border-radius:8px; cursor:pointer; display:flex; flex-direction:column; align-items:center; justify-content:center; position:relative; overflow:hidden; background:#FAFAF9; transition:border-color 0.2s; flex-shrink:0; }
+    .award-img-upload:hover { border-color:var(--navy); }
+    /* 主要獎項用大圖上傳框 */
+    .award-img-upload-lg { width:100%; height:160px; border:1.5px dashed var(--border); border-radius:8px; cursor:pointer; display:flex; flex-direction:column; align-items:center; justify-content:center; position:relative; overflow:hidden; background:#FAFAF9; transition:border-color 0.2s; margin-bottom:10px; }
+    .award-img-upload-lg:hover { border-color:var(--navy); }
+    .award-img-placeholder { text-align:center; font-size:0.72rem; color:var(--text-sub); line-height:1.7; pointer-events:none; }
+    .award-img-clear { position:absolute; top:4px; right:4px; background:rgba(0,0,0,0.55); color:#fff; border:none; border-radius:50%; width:20px; height:20px; font-size:12px; cursor:pointer; line-height:1; padding:0; display:flex; align-items:center; justify-content:center; z-index:2; }
+  </style>
+</head>
+<body>
+  <div class="admin-layout">
+    <aside class="sidebar" id="sidebar">
+      <div class="sidebar-logo">
+        <img src="../IPCCLOGO-transparent.png" alt="IPCC" onerror="this.style.display='none'">
+        <div class="sidebar-logo-text">
+          <div class="co-name">IPCC 東州集團</div>
+          <div class="co-sub">後台管理系統</div>
+        </div>
+      </div>
+          <nav class="sidebar-nav">
+      <a href="dashboard.html" class="nav-item">📊 儀表板</a>
+      <a href="home-manage.html" class="nav-item" data-perm="home">🏠 首頁管理</a>
+      <a href="news-manage.html" class="nav-item" data-perm="news">📰 最新消息</a>
+      <a href="about-manage.html" class="nav-item active" data-perm="about">🏢 關於我們</a>
+      <a href="services-manage.html" class="nav-item" data-perm="services">🛠 專案服務</a>
+      <a href="cases-manage.html" class="nav-item" data-perm="cases">🏆 成功案例</a>
+      <a href="contacts-manage.html" class="nav-item" data-perm="contacts">📋 聯絡表單</a>
+      <a href="settings.html" class="nav-item" data-perm="settings">⚙️ 系統設定</a>
+      <a href="users-manage.html" class="nav-item" data-perm="users">👥 帳號管理</a>
+    </nav>
+      <div class="sidebar-footer">
+        <a href="../about.html" target="_blank" class="view-site-btn">🔗 查看前台</a>
+        <button onclick="logout()" class="logout-btn">登出</button>
+      </div>
+    </aside>
+    <div class="sidebar-overlay" onclick="toggleSidebar()"></div>
+
+    <main class="main-content">
+      <header class="topbar">
+        <button class="hamburger" onclick="toggleSidebar()">☰</button>
+        <div class="topbar-title">關於我們管理</div>
+        <div class="topbar-user">管理員</div>
+      </header>
+      <div class="page-content">
+        <div class="page-header">
+          <h1>關於我們管理</h1>
+          <p>管理五個關於我們子頁面的內容，儲存後前台重新整理即生效</p>
+        </div>
+
+        <div class="page-tab-nav">
+          <button class="page-tab-btn active" onclick="switchSub('main')">集團簡介</button>
+          <button class="page-tab-btn" onclick="switchSub('vision')">集團理念願景</button>
+          <button class="page-tab-btn" onclick="switchSub('awards')">獲獎事蹟</button>
+          <button class="page-tab-btn" onclick="switchSub('future')">未來展望</button>
+          <button class="page-tab-btn" onclick="switchSub('security')">資安政策</button>
+        </div>
+
+        <!-- ===== TAB 1: 集團簡介 ===== -->
+        <div id="sub-main" class="sub-page active">
+          <div class="section-card" style="max-width:760px;">
+            <div class="section-card-header">
+              <h2 class="section-card-title">集團簡介（about.html）</h2>
+              <a href="../about.html" target="_blank" class="section-card-link">查看頁面 →</a>
+            </div>
+            <div id="mainMsg"></div>
+
+            <div class="section-sub-label">簡介文字區</div>
+            <div class="form-group">
+              <label class="form-label">簡介第一段</label>
+              <textarea class="form-control form-textarea" id="mainPara1" rows="2">在數位時代之前，我們從「系統」開始。&lt;br&gt;在服務競爭時代，我們走向「人與體驗」。</textarea>
+            </div>
+            <div class="form-group">
+              <label class="form-label">簡介第二段</label>
+              <textarea class="form-control form-textarea" id="mainPara2" rows="3">東州互聯網實業有限公司成立於 1996 年，初期以資訊系統整合為核心，參與醫療體系電腦化建置，並於 1998 年與中華電信合作，投入 HINET 客服中心營運，正式跨入資訊服務與顧客服務領域。</textarea>
+            </div>
+            <div class="form-group">
+              <label class="form-label">簡介第三段</label>
+              <textarea class="form-control form-textarea" id="mainPara3" rows="2">這段歷程讓我們清楚看見一件事 ——&lt;br&gt;企業的競爭，不僅在技術，而在「與客戶互動的每一刻」。</textarea>
+            </div>
+            <div class="form-group">
+              <label class="form-label">簡介第四段</label>
+              <textarea class="form-control form-textarea" id="mainPara4" rows="2">因此，我們逐步發展出雙核心體系，整合「系統 × 服務 × 數據」，形成一套完整的企業營運解決方案。</textarea>
+            </div>
+            <div class="form-group">
+              <label class="form-label">主卡片標題</label>
+              <input type="text" class="form-control" id="mainCardTitle" value="雙核心體系">
+            </div>
+
+            <hr class="section-divider">
+            <div class="section-sub-label">集團沿革時間軸</div>
+            <div class="row-editor" id="mainTimeline"></div>
+            <button class="add-row-btn" onclick="addTimelineRow()">＋ 新增時間軸項目</button>
+
+            <div style="margin-top:24px;">
+              <button class="btn btn-primary" onclick="saveMain()">💾 儲存集團簡介</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- ===== TAB 2: 集團理念願景 ===== -->
+        <div id="sub-vision" class="sub-page">
+          <div class="section-card" style="max-width:760px;">
+            <div class="section-card-header">
+              <h2 class="section-card-title">集團理念願景（about-vision.html）</h2>
+              <a href="../about-vision.html" target="_blank" class="section-card-link">查看頁面 →</a>
+            </div>
+            <div id="visionMsg"></div>
+
+            <div class="section-sub-label">頁面標題區</div>
+            <div class="form-group">
+              <label class="form-label">區塊主標題</label>
+              <input type="text" class="form-control" id="visionTitle" value="集團理念願景">
+            </div>
+            <div class="form-group">
+              <label class="form-label">副說明文字</label>
+              <textarea class="form-control form-textarea" id="visionSub" rows="2">在快速變動的數位時代，我們相信企業的長期競爭力，不只來自技術與產品，更來自每一次與顧客互動所累積的信任與價值</textarea>
+            </div>
+
+            <hr class="section-divider">
+            <div class="section-sub-label">深藍主視覺區塊</div>
+            <div class="form-group">
+              <label class="form-label">大標語（如：創新服務 · 永續經營）</label>
+              <input type="text" class="form-control" id="visionHeroTitle" value="創新服務 · 永續經營">
+            </div>
+            <div class="form-group">
+              <label class="form-label">副標語</label>
+              <input type="text" class="form-control" id="visionHeroSub" value="讓 0800 優化品牌價值、讓 0800 創造企業商機">
+            </div>
+            <div class="form-group">
+              <label class="form-label">主視覺說明文字</label>
+              <textarea class="form-control form-textarea" id="visionHeroDesc" rows="3">我們以「創新服務」為核心，以「永續經營」為目標，持續整合資訊系統、顧客服務與數據應用，協助企業在變動中建立穩定成長的能力。</textarea>
+            </div>
+
+            <hr class="section-divider">
+            <div class="section-sub-label">六大核心價值卡片</div>
+            <div class="row-editor" id="visionCards"></div>
+
+            <div style="margin-top:24px;">
+              <button class="btn btn-primary" onclick="saveVision()">💾 儲存集團理念願景</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- ===== TAB 3: 獲獎事蹟 ===== -->
+        <div id="sub-awards" class="sub-page">
+          <div class="section-card" style="max-width:760px;">
+            <div class="section-card-header">
+              <h2 class="section-card-title">獲獎事蹟（about-awards.html）</h2>
+              <a href="../about-awards.html" target="_blank" class="section-card-link">查看頁面 →</a>
+            </div>
+            <div id="awardsMsg"></div>
+
+            <div class="section-sub-label">頁面標題區</div>
+            <div class="form-group">
+              <label class="form-label">區塊主標題</label>
+              <input type="text" class="form-control" id="awardsTitle" value="獲獎事蹟">
+            </div>
+            <div class="form-group">
+              <label class="form-label">副說明文字</label>
+              <textarea class="form-control form-textarea" id="awardsSub" rows="2">數十年來持續獲得業界肯定，每一座獎項背後都是團隊的努力與對品質的堅持</textarea>
+            </div>
+
+            <hr class="section-divider">
+            <div class="section-sub-label">主要獎項卡片（3欄網格）</div>
+            <div style="font-size:0.78rem; color:var(--text-sub); margin-bottom:8px;">欄位：圖片（可上傳）、英文副標（如 NATIONAL BRAND AWARD）、獎項名稱、說明</div>
+            <div class="row-editor" id="awardsMain"></div>
+            <button class="add-row-btn" onclick="addAwardRow()">＋ 新增獎項卡片</button>
+
+            <hr class="section-divider">
+            <div class="section-sub-label">專業認證與資格（深藍區塊）</div>
+            <div style="font-size:0.78rem; color:var(--text-sub); margin-bottom:8px;">欄位：圖片（可上傳）、認證名稱、說明</div>
+            <div class="row-editor" id="awardsCerts"></div>
+            <button class="add-row-btn" onclick="addCertRow()">＋ 新增認證</button>
+
+            <hr class="section-divider">
+            <div class="section-sub-label">媒體報導與業界肯定</div>
+            <div style="font-size:0.78rem; color:var(--text-sub); margin-bottom:8px;">欄位：圖片（可上傳）、標題、說明</div>
+            <div class="row-editor" id="awardsMedia"></div>
+            <button class="add-row-btn" onclick="addMediaRow()">＋ 新增媒體項目</button>
+
+            <div style="margin-top:24px;">
+              <button class="btn btn-primary" onclick="saveAwards()">💾 儲存獲獎事蹟</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- ===== TAB 4: 未來展望 ===== -->
+        <div id="sub-future" class="sub-page">
+          <div class="section-card" style="max-width:760px;">
+            <div class="section-card-header">
+              <h2 class="section-card-title">未來展望（about-future.html）</h2>
+              <a href="../about-future.html" target="_blank" class="section-card-link">查看頁面 →</a>
+            </div>
+            <div id="futureMsg"></div>
+
+            <div class="section-sub-label">頁面標題區</div>
+            <div class="form-group">
+              <label class="form-label">區塊主標題</label>
+              <input type="text" class="form-control" id="futureTitle" value="未來展望">
+            </div>
+            <div class="form-group">
+              <label class="form-label">副說明文字</label>
+              <textarea class="form-control form-textarea" id="futureSub" rows="2">站在三十年的基礎上，我們正以更大的格局，迎向客服產業的下一個世代</textarea>
+            </div>
+
+            <hr class="section-divider">
+            <div class="section-sub-label">核心戰略方向（深藍區塊）</div>
+            <div class="form-group">
+              <label class="form-label">戰略標語</label>
+              <input type="text" class="form-control" id="futureStratTitle" value="智慧客服 × 數據驅動 × 永續成長">
+            </div>
+            <div class="form-group">
+              <label class="form-label">戰略說明文字</label>
+              <textarea class="form-control form-textarea" id="futureStratDesc" rows="4">我們深信，客服產業正處於一個前所未有的轉型節點。AI 技術的成熟、數據分析能力的躍進，以及顧客體驗期待的提升，都將重新定義「優質服務」的標準。東州集團將以既有的深厚基礎，帶領企業客戶共同迎接這場變革。</textarea>
+            </div>
+
+            <hr class="section-divider">
+            <div class="section-sub-label">四大發展方向（固定4項）</div>
+            <div class="row-editor" id="futureDirections"></div>
+
+            <hr class="section-divider">
+            <div class="section-sub-label">發展藍圖（固定3階段：近期／中期／長期）</div>
+            <div class="row-editor" id="futureRoadmap"></div>
+
+            <div style="margin-top:24px;">
+              <button class="btn btn-primary" onclick="saveFuture()">💾 儲存未來展望</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- ===== TAB 5: 資安政策 ===== -->
+        <div id="sub-security" class="sub-page">
+          <div class="section-card" style="max-width:760px;">
+            <div class="section-card-header">
+              <h2 class="section-card-title">資安政策（about-security.html）</h2>
+              <a href="../about-security.html" target="_blank" class="section-card-link">查看頁面 →</a>
+            </div>
+            <div id="securityMsg"></div>
+
+            <div class="section-sub-label">頁面標題區</div>
+            <div class="form-group">
+              <label class="form-label">區塊主標題</label>
+              <input type="text" class="form-control" id="securityTitle" value="資訊安全政策">
+            </div>
+            <div class="form-group">
+              <label class="form-label">副說明文字</label>
+              <textarea class="form-control form-textarea" id="securitySub" rows="2">東州集團深知資訊安全對企業及客戶的重要性，建立完善的資安管理框架，確保所有資料的機密性、完整性與可用性</textarea>
+            </div>
+
+            <hr class="section-divider">
+            <div class="section-sub-label">政策聲明（深藍區塊）</div>
+            <div class="form-group">
+              <label class="form-label">政策聲明第一段</label>
+              <textarea class="form-control form-textarea" id="securityStmt1" rows="4">東州互聯網實業有限公司及顯榮國際股份有限公司（以下合稱「本集團」）致力於建立、實施、維護及持續改善資訊安全管理系統。本集團認知到資訊資產的保護對於維持業務運作連續性、降低企業風險、保護客戶及合作夥伴資料之重要性。</textarea>
+            </div>
+            <div class="form-group">
+              <label class="form-label">政策聲明第二段</label>
+              <textarea class="form-control form-textarea" id="securityStmt2" rows="4">本集團承諾遵循適用的法律、法規及合約要求，持續提升全體員工的資安意識，並透過定期評估與改善，確保資訊安全措施能有效應對不斷演變的資安威脅。</textarea>
+            </div>
+
+            <hr class="section-divider">
+            <div class="section-sub-label">六大資安管理原則</div>
+            <div class="row-editor" id="securityPrinciples"></div>
+
+            <div style="margin-top:24px;">
+              <button class="btn btn-primary" onclick="saveSecurity()">💾 儲存資安政策</button>
+            </div>
+          </div>
+        </div>
+
+      </div><!-- /page-content -->
+    </main>
+  </div>
+
+  <script src="users-config.js"></script>
+  <script src="admin.js"></script>
+  <script>
+    requireLogin();
+    initAdminUI();
+
+    var TABS = ['main','vision','awards','future','security'];
+
+    function switchSub(name) {
+      document.querySelectorAll('.page-tab-btn').forEach(function(b,i){ b.classList.toggle('active', TABS[i]===name); });
+      document.querySelectorAll('.sub-page').forEach(function(p){ p.classList.remove('active'); });
+      document.getElementById('sub-'+name).classList.add('active');
+    }
+
+    function showMsg(id, ok, txt) {
+      var el = document.getElementById(id);
+      el.innerHTML = '<div class="alert alert-'+(ok?'success':'error')+'">'+txt+'</div>';
+      if(ok) setTimeout(function(){ el.innerHTML=''; }, 3000);
+    }
+
+    // ============================================================
+    // TAB 1 — 集團簡介
+    // ============================================================
+    var defaultTimeline = [
+      {year:'1996', title:'東州互聯網實業有限公司成立', desc:'以資訊系統整合為核心，參與醫療體系電腦化建置，奠定技術基礎。'},
+      {year:'1998', title:'與中華電信合作', desc:'投入 HINET 客服中心營運，正式跨入資訊服務與顧客服務領域，開啟客服外包服務。'},
+      {year:'2005+', title:'多渠道客服拓展', desc:'隨行動通訊與網路普及，擴展電話、文字、電商等多渠道客服服務，滿足多元需求。'},
+      {year:'2015+', title:'顯榮國際加入集團', desc:'成立顯榮國際股份有限公司，專注多渠道客服營運與顧客體驗管理，形成雙核心體系。'},
+      {year:'2020+', title:'AI 與數據整合', desc:'導入 AI 輔助分析與自動化工具，持續提升客服效率與數據洞察能力。'}
+    ];
+
+    function makeYearOptions(selected) {
+      var opts = '<option value="">── 年份 ──</option>';
+      // 1990–2035 純年份
+      for (var y = 1990; y <= 2035; y++) {
+        var val = String(y);
+        opts += '<option value="'+val+'"'+(selected===val?' selected':'')+'>'+val+'</option>';
+      }
+      // 「年份+」代表該年之後，固定加入方便選取
+      ['1990+','1995+','2000+','2005+','2010+','2015+','2020+','2025+','2030+'].forEach(function(v) {
+        opts += '<option value="'+v+'"'+(selected===v?' selected':'')+'>'+v+'</option>';
+      });
+      // 若 selected 是不在以上清單的自訂值，動態加入
+      if (selected && selected !== '' && opts.indexOf('value="'+selected+'"') === -1) {
+        opts += '<option value="'+selected+'" selected>'+selected+'</option>';
+      }
+      return opts;
+    }
+
+    function makeYearSelectHtml(selected) {
+      return '<select class="form-control timeline-year" style="height:38px;">' + makeYearOptions(selected||'') + '</select>';
+    }
+
+    function renderTimelineRows(items) {
+      var el = document.getElementById('mainTimeline');
+      el.innerHTML = items.map(function(item) {
+        return '<div class="editor-row">'
+          + '<div class="editor-row-header">年份 ／ 事件標題 ／ 說明</div>'
+          + '<div class="editor-row-grid3">'
+          + makeYearSelectHtml(item.year)
+          + '<input type="text" class="form-control" placeholder="事件標題" value="'+esc(item.title)+'">'
+          + '<textarea class="form-control form-textarea" rows="2" placeholder="說明文字">'+esc(item.desc)+'</textarea>'
+          + '</div>'
+          + '<button class="del-row-btn" onclick="this.closest(\'.editor-row\').remove()" style="position:absolute;top:8px;right:8px;">✕</button>'
+          + '</div>';
+      }).join('');
+    }
+
+    function addTimelineRow() {
+      var el = document.getElementById('mainTimeline');
+      var div = document.createElement('div');
+      div.className = 'editor-row';
+      div.innerHTML = '<div class="editor-row-header">年份 ／ 事件標題 ／ 說明</div>'
+        + '<div class="editor-row-grid3">'
+        + makeYearSelectHtml('')
+        + '<input type="text" class="form-control" placeholder="事件標題">'
+        + '<textarea class="form-control form-textarea" rows="2" placeholder="說明文字"></textarea>'
+        + '</div>'
+        + '<button class="del-row-btn" onclick="this.closest(\'.editor-row\').remove()" style="position:absolute;top:8px;right:8px;">✕</button>';
+      el.appendChild(div);
+    }
+
+    function getTimelineRows() {
+      return Array.from(document.querySelectorAll('#mainTimeline .editor-row')).map(function(row) {
+        var sel = row.querySelector('.timeline-year');
+        var inp = row.querySelectorAll('input'); var ta = row.querySelector('textarea');
+        return {year: sel ? sel.value.trim() : '', title: inp[0].value.trim(), desc: ta.value.trim()};
+      }).filter(function(r){ return r.year||r.title; });
+    }
+
+    function loadMain() {
+      var d = getAboutData('main');
+      document.getElementById('mainPara1').value = (d&&d.para1) || '在數位時代之前，我們從「系統」開始。<br>在服務競爭時代，我們走向「人與體驗」。';
+      document.getElementById('mainPara2').value = (d&&d.para2) || '東州互聯網實業有限公司成立於 1996 年，初期以資訊系統整合為核心，參與醫療體系電腦化建置，並於 1998 年與中華電信合作，投入 HINET 客服中心營運，正式跨入資訊服務與顧客服務領域。';
+      document.getElementById('mainPara3').value = (d&&d.para3) || '這段歷程讓我們清楚看見一件事 ——<br>企業的競爭，不僅在技術，而在「與客戶互動的每一刻」。';
+      document.getElementById('mainPara4').value = (d&&d.para4) || '因此，我們逐步發展出雙核心體系，整合「系統 × 服務 × 數據」，形成一套完整的企業營運解決方案。';
+      document.getElementById('mainCardTitle').value = (d&&d.cardTitle) || '雙核心體系';
+      renderTimelineRows((d&&d.timeline) || defaultTimeline);
+    }
+
+    function saveMain() {
+      var data = {
+        para1: document.getElementById('mainPara1').value.trim(),
+        para2: document.getElementById('mainPara2').value.trim(),
+        para3: document.getElementById('mainPara3').value.trim(),
+        para4: document.getElementById('mainPara4').value.trim(),
+        cardTitle: document.getElementById('mainCardTitle').value.trim(),
+        timeline: getTimelineRows()
+      };
+      saveAboutData('main', data);
+      showMsg('mainMsg', true, '✅ 集團簡介已儲存！前台重新整理後即生效。');
+    }
+
+    // ============================================================
+    // TAB 2 — 集團理念願景
+    // ============================================================
+    var defaultVisionCards = [
+      {num:'01', title:'我們的價值主張', desc:'讓每一次 0800 互動，成為品牌價值與商機的起點。我們透過專業的客服營運、流程設計與數據分析，將每一次對話，轉化為可被管理、可被優化的營運資產，讓客服從成本中心，進化為企業成長的核心引擎。'},
+      {num:'02', title:'我們的承諾', desc:'我們珍視每一份顧客的託付，不僅解決問題，更致力於創造長期價值。從系統建構，到服務營運，我們陪伴企業在每一次顧客互動中，累積品牌信任，創造成長動能，邁向真正的永續經營。'},
+      {num:'03', title:'以人為本｜打造可持續的服務能力', desc:'我們相信，卓越的服務來自卓越的人。透過系統化培訓與制度設計，建立具備紀律、專業與穩定度的團隊。'},
+      {num:'04', title:'以服務為核心｜創造差異化競爭力', desc:'服務不只是支援功能，而是企業價值被感知的關鍵。我們致力於讓每一次顧客接觸，都成為品牌加分的時刻。'},
+      {num:'05', title:'以數據為基礎｜驅動決策與成長', desc:'從對話到數據，我們將前線服務轉化為決策依據，協助企業洞察需求、優化流程，並持續提升營運效率。'},
+      {num:'06', title:'以系統為方法｜建立可複製的成功模式', desc:'結合資訊系統與營運流程，讓服務品質可以被標準化、被管理，並持續優化與擴展。'}
+    ];
+
+    function renderVisionCards(cards) {
+      var el = document.getElementById('visionCards');
+      el.innerHTML = cards.map(function(c) {
+        return '<div class="editor-row">'
+          + '<div class="editor-row-header" style="display:flex;align-items:center;gap:8px;">'
+          + '<span class="fixed-num">'+c.num+'</span>'
+          + '<span>核心價值 '+c.num+'</span></div>'
+          + '<div class="form-group" style="margin-bottom:8px;">'
+          + '<label class="form-label" style="font-size:0.78rem;">標題</label>'
+          + '<input type="text" class="form-control" placeholder="標題" value="'+esc(c.title)+'">'
+          + '</div>'
+          + '<div class="form-group" style="margin-bottom:0;">'
+          + '<label class="form-label" style="font-size:0.78rem;">說明文字</label>'
+          + '<textarea class="form-control form-textarea" rows="3" placeholder="說明文字">'+esc(c.desc)+'</textarea>'
+          + '</div>'
+          + '</div>';
+      }).join('');
+    }
+
+    function getVisionCards() {
+      var cards = [];
+      document.querySelectorAll('#visionCards .editor-row').forEach(function(row, i) {
+        var numEl = row.querySelector('.fixed-num');
+        var inputs = row.querySelectorAll('input');
+        var ta = row.querySelector('textarea');
+        cards.push({
+          num: numEl ? numEl.textContent : String(i+1).padStart(2,'0'),
+          title: inputs[0] ? inputs[0].value.trim() : '',
+          desc: ta ? ta.value.trim() : ''
+        });
+      });
+      return cards;
+    }
+
+    function loadVision() {
+      var d = getAboutData('vision');
+      document.getElementById('visionTitle').value = (d&&d.title) || '集團理念願景';
+      document.getElementById('visionSub').value = (d&&d.sub) || '在快速變動的數位時代，我們相信企業的長期競爭力，不只來自技術與產品，更來自每一次與顧客互動所累積的信任與價值';
+      document.getElementById('visionHeroTitle').value = (d&&d.heroTitle) || '創新服務 · 永續經營';
+      document.getElementById('visionHeroSub').value = (d&&d.heroSub) || '讓 0800 優化品牌價值、讓 0800 創造企業商機';
+      document.getElementById('visionHeroDesc').value = (d&&d.heroDesc) || '我們以「創新服務」為核心，以「永續經營」為目標，持續整合資訊系統、顧客服務與數據應用，協助企業在變動中建立穩定成長的能力。';
+      renderVisionCards((d&&d.cards) || defaultVisionCards);
+    }
+
+    function saveVision() {
+      var data = {
+        title: document.getElementById('visionTitle').value.trim(),
+        sub: document.getElementById('visionSub').value.trim(),
+        heroTitle: document.getElementById('visionHeroTitle').value.trim(),
+        heroSub: document.getElementById('visionHeroSub').value.trim(),
+        heroDesc: document.getElementById('visionHeroDesc').value.trim(),
+        cards: getVisionCards()
+      };
+      saveAboutData('vision', data);
+      showMsg('visionMsg', true, '✅ 集團理念願景已儲存！前台重新整理後即生效。');
+    }
+
+    // ============================================================
+    // TAB 3 — 獲獎事蹟
+    // ============================================================
+    var defaultAwards = [
+      {image:'', subtitle:'NATIONAL BRAND AWARD', name:'玉山國家品牌獎', desc:'肯定集團在客服領域的卓越表現與品牌貢獻，代表台灣企業對服務品質的最高追求。', content:''},
+      {image:'', subtitle:'INNOVATION AWARD', name:'智慧行銷系統創新獎', desc:'智慧電話行銷系統榮獲創新成就獎，引領產業數位轉型，樹立台灣客服科技新標竿。', content:''},
+      {image:'', subtitle:'SERVICE EXCELLENCE', name:'服務品質卓越認證', desc:'持續通過服務品質驗證，維持業界高標準，成為企業委外客服的信賴首選。', content:''}
+    ];
+    var defaultCerts = [
+      {image:'', name:'ISO 品質管理', desc:'符合國際品質管理系統標準，確保服務流程一致性與可靠性'},
+      {image:'', name:'資訊安全認證', desc:'取得資訊安全相關認證，保障客戶資料安全與隱私權益'},
+      {image:'', name:'客服中心認證', desc:'通過國內外客服中心專業認證，彰顯卓越服務能量'}
+    ];
+    var defaultMedia = [
+      {image:'', title:'榮獲媒體專題報導', desc:'多次受邀接受財經、科技媒體專題採訪，分享客服產業趨勢與數位轉型經驗'},
+      {image:'', title:'業界論壇與研討會受邀演講', desc:'受邀參與客服、數位轉型相關論壇，分享集團在服務創新與 AI 應用的實踐經驗'},
+      {image:'', title:'政府合作標竿企業', desc:'獲政府機關指定為優質客服外包廠商，服務多個公共事業及政府機關客服中心'}
+    ];
+
+    // ── 圖片上傳共用函式 ──
+    function triggerAwardImg(box) {
+      box.querySelector('input[type=file]').click();
+    }
+    function getImgBox(el) {
+      return el.closest('.award-img-upload-lg') || el.closest('.award-img-upload');
+    }
+    function handleAwardImg(input) {
+      var file = input.files && input.files[0];
+      if (!file) return;
+      if (file.size > 5 * 1024 * 1024) { alert('圖片上限 5MB'); input.value = ''; return; }
+      var reader = new FileReader();
+      reader.onload = function(e) {
+        var img = new Image();
+        img.onload = function() {
+          var MAX = 800;
+          var w = img.width, h = img.height;
+          if (w > MAX) { h = Math.round(h * MAX / w); w = MAX; }
+          var canvas = document.createElement('canvas');
+          canvas.width = w; canvas.height = h;
+          canvas.getContext('2d').drawImage(img, 0, 0, w, h);
+          var base64 = canvas.toDataURL('image/jpeg', 0.85);
+          var box = getImgBox(input);
+          var preview = box.querySelector('.award-img-preview');
+          preview.src = base64;
+          preview.style.display = 'block';
+          box.querySelector('.award-img-placeholder').style.display = 'none';
+          box.querySelector('.award-img-clear').style.display = 'flex';
+        };
+        img.src = e.target.result;
+      };
+      reader.readAsDataURL(file);
+    }
+    function clearAwardImg(event, btn) {
+      event.stopPropagation();
+      var box = getImgBox(btn);
+      var preview = box.querySelector('.award-img-preview');
+      preview.src = '';
+      preview.style.display = 'none';
+      box.querySelector('.award-img-placeholder').style.display = '';
+      btn.style.display = 'none';
+      box.querySelector('input[type=file]').value = '';
+    }
+    function makeImgUploadBox(large) {
+      var cls = large ? 'award-img-upload-lg' : 'award-img-upload';
+      return '<div class="' + cls + '" onclick="triggerAwardImg(this)">'
+        + '<input type="file" accept="image/*" onchange="handleAwardImg(this)" style="display:none;">'
+        + '<img class="award-img-preview" style="display:none;width:100%;height:100%;object-fit:cover;position:absolute;top:0;left:0;" alt="">'
+        + '<div class="award-img-placeholder">🖼<br><span>點擊上傳封面照片</span></div>'
+        + '<button type="button" class="award-img-clear" onclick="clearAwardImg(event,this)" style="display:none;">✕</button>'
+        + '</div>';
+    }
+    function setImgPreview(box, src) {
+      if (!src || !box) return;
+      var preview = box.querySelector('.award-img-preview');
+      if (!preview) return;
+      preview.src = src;
+      preview.style.display = 'block';
+      box.querySelector('.award-img-placeholder').style.display = 'none';
+      box.querySelector('.award-img-clear').style.display = 'flex';
+    }
+    function getRowImg(row) {
+      var preview = row.querySelector('.award-img-preview');
+      if (!preview) return '';
+      var src = preview.getAttribute('src') || '';
+      return src.startsWith('data:') ? src : '';
+    }
+
+    function makeAwardRow(a) {
+      return '<div class="editor-row">'
+        + '<div class="form-group" style="margin-bottom:8px;">'
+        + '<label class="form-label" style="font-size:0.75rem;">封面照片（大圖，建議寬度 600px 以上）</label>'
+        + makeImgUploadBox(true)
+        + '</div>'
+        + '<div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:8px;">'
+        + '<div><label class="form-label" style="font-size:0.75rem;">英文副標</label><input type="text" class="form-control" placeholder="NATIONAL BRAND AWARD" value="'+esc(a.subtitle||'')+'"></div>'
+        + '<div><label class="form-label" style="font-size:0.75rem;">獎項名稱</label><input type="text" class="form-control" placeholder="玉山國家品牌獎" value="'+esc(a.name||'')+'"></div>'
+        + '</div>'
+        + '<div class="form-group" style="margin-bottom:8px;"><label class="form-label" style="font-size:0.75rem;">摘要（卡片顯示用）</label>'
+        + '<textarea class="form-control form-textarea" rows="2" placeholder="簡短說明文字（80~120字）">'+esc(a.desc||'')+'</textarea></div>'
+        + '<div class="form-group" style="margin-bottom:0;"><label class="form-label" style="font-size:0.75rem;">詳細內容（點擊卡片後顯示的完整說明）</label>'
+        + '<textarea class="form-control form-textarea" rows="4" placeholder="可輸入完整的獲獎背景、說明、得獎意義等詳細內容">'+esc(a.content||'')+'</textarea></div>'
+        + '<button class="del-row-btn" onclick="this.closest(\'.editor-row\').remove()" style="position:absolute;top:8px;right:8px;">✕</button>'
+        + '</div>';
+    }
+
+    function makeCertRow(c) {
+      return '<div class="editor-row">'
+        + '<div style="display:grid;grid-template-columns:84px 1fr 2fr;gap:8px;align-items:start;">'
+        + '<div><label class="form-label" style="font-size:0.75rem;">圖片</label>' + makeImgUploadBox() + '</div>'
+        + '<div><label class="form-label" style="font-size:0.75rem;">認證名稱</label><input type="text" class="form-control" placeholder="ISO 品質管理" value="'+esc(c.name||'')+'"></div>'
+        + '<div><label class="form-label" style="font-size:0.75rem;">說明</label><input type="text" class="form-control" placeholder="說明文字" value="'+esc(c.desc||'')+'"></div>'
+        + '</div>'
+        + '<button class="del-row-btn" onclick="this.closest(\'.editor-row\').remove()" style="position:absolute;top:8px;right:8px;">✕</button>'
+        + '</div>';
+    }
+
+    function makeMediaRow(m) {
+      return '<div class="editor-row">'
+        + '<div style="display:grid;grid-template-columns:84px 1fr 2fr;gap:8px;align-items:start;">'
+        + '<div><label class="form-label" style="font-size:0.75rem;">圖片</label>' + makeImgUploadBox() + '</div>'
+        + '<div><label class="form-label" style="font-size:0.75rem;">標題</label><input type="text" class="form-control" placeholder="榮獲媒體專題報導" value="'+esc(m.title||'')+'"></div>'
+        + '<div><label class="form-label" style="font-size:0.75rem;">說明</label><textarea class="form-control form-textarea" rows="2" placeholder="說明文字">'+esc(m.desc||'')+'</textarea></div>'
+        + '</div>'
+        + '<button class="del-row-btn" onclick="this.closest(\'.editor-row\').remove()" style="position:absolute;top:8px;right:8px;">✕</button>'
+        + '</div>';
+    }
+
+    function renderAwardRows(items) {
+      var el = document.getElementById('awardsMain');
+      el.innerHTML = items.map(makeAwardRow).join('');
+      el.querySelectorAll('.editor-row').forEach(function(row, i) {
+        if (items[i]) {
+          var box = row.querySelector('.award-img-upload-lg') || row.querySelector('.award-img-upload');
+          if (box) setImgPreview(box, items[i].image||'');
+        }
+      });
+    }
+    function renderCertRows(items) {
+      var el = document.getElementById('awardsCerts');
+      el.innerHTML = items.map(makeCertRow).join('');
+      el.querySelectorAll('.editor-row').forEach(function(row, i) { if (items[i]) setImgPreview(row.querySelector('.award-img-upload'), items[i].image||''); });
+    }
+    function renderMediaRows(items) {
+      var el = document.getElementById('awardsMedia');
+      el.innerHTML = items.map(makeMediaRow).join('');
+      el.querySelectorAll('.editor-row').forEach(function(row, i) { if (items[i]) setImgPreview(row.querySelector('.award-img-upload'), items[i].image||''); });
+    }
+
+    function addAwardRow() { var el=document.getElementById('awardsMain'); el.insertAdjacentHTML('beforeend', makeAwardRow({image:'',subtitle:'',name:'',desc:'',content:''})); }
+    function addCertRow()  { document.getElementById('awardsCerts').insertAdjacentHTML('beforeend', makeCertRow({image:'',name:'',desc:''})); }
+    function addMediaRow() { document.getElementById('awardsMedia').insertAdjacentHTML('beforeend', makeMediaRow({image:'',title:'',desc:''})); }
+
+    function collectAwardRows(containerId) {
+      return Array.from(document.querySelectorAll('#'+containerId+' .editor-row')).map(function(row) {
+        var inputs = Array.from(row.querySelectorAll('input')).filter(function(i){ return i.type !== 'file'; });
+        var tas = Array.from(row.querySelectorAll('textarea'));
+        return {
+          image: getRowImg(row),
+          subtitle: inputs[0] ? inputs[0].value.trim() : '',
+          name: inputs[1] ? inputs[1].value.trim() : '',
+          desc: tas[0] ? tas[0].value.trim() : '',
+          content: tas[1] ? tas[1].value.trim() : ''
+        };
+      }).filter(function(r){ return r.name; });
+    }
+    function collectCertRows(containerId) {
+      return Array.from(document.querySelectorAll('#'+containerId+' .editor-row')).map(function(row) {
+        var inputs = Array.from(row.querySelectorAll('input')).filter(function(i){ return i.type !== 'file'; });
+        return {image:getRowImg(row), name:inputs[0]?inputs[0].value.trim():'', desc:inputs[1]?inputs[1].value.trim():''};
+      }).filter(function(r){ return r.name; });
+    }
+    function collectMediaRows(containerId) {
+      return Array.from(document.querySelectorAll('#'+containerId+' .editor-row')).map(function(row) {
+        var inputs = Array.from(row.querySelectorAll('input')).filter(function(i){ return i.type !== 'file'; });
+        var ta = row.querySelector('textarea');
+        return {image:getRowImg(row), title:inputs[0]?inputs[0].value.trim():'', desc:ta?ta.value.trim():''};
+      }).filter(function(r){ return r.title; });
+    }
+
+    function loadAwards() {
+      var d = getAboutData('awards');
+      document.getElementById('awardsTitle').value = (d&&d.title) || '獲獎事蹟';
+      document.getElementById('awardsSub').value = (d&&d.sub) || '數十年來持續獲得業界肯定，每一座獎項背後都是團隊的努力與對品質的堅持';
+      renderAwardRows((d&&d.awards) || defaultAwards);
+      renderCertRows((d&&d.certs) || defaultCerts);
+      renderMediaRows((d&&d.media) || defaultMedia);
+    }
+
+    function saveAwards() {
+      var data = {
+        title: document.getElementById('awardsTitle').value.trim(),
+        sub: document.getElementById('awardsSub').value.trim(),
+        awards: collectAwardRows('awardsMain'),
+        certs: collectCertRows('awardsCerts'),
+        media: collectMediaRows('awardsMedia')
+      };
+      saveAboutData('awards', data);
+      showMsg('awardsMsg', true, '✅ 獲獎事蹟已儲存！前台重新整理後即生效。');
+    }
+
+    // ============================================================
+    // TAB 4 — 未來展望
+    // ============================================================
+    var defaultDirections = [
+      {num:'01', title:'AI 智慧客服全面整合', desc:'導入大語言模型（LLM）與對話式 AI，建立智慧客服輔助系統，讓真人客服聚焦於高價值互動，AI 處理常規問題，大幅提升服務效率與顧客滿意度。'},
+      {num:'02', title:'數據洞察平台升級', desc:'建構即時數據分析平台，將每日數千通話務轉化為可視化的決策報表，協助客戶從服務數據中洞察市場趨勢、識別潛在商機，驅動業務成長。'},
+      {num:'03', title:'全通路體驗整合', desc:'整合電話、LINE、Email、社群媒體等多元渠道，打造無縫的全通路顧客體驗管理平台，讓企業能在任何接觸點提供一致且優質的服務體驗。'},
+      {num:'04', title:'人才培育與永續發展', desc:'建立系統化的客服人才培育體系，結合 AI 工具與人本服務，培養具備數位能力的新世代服務人才，實現企業與員工共同成長的永續發展目標。'}
+    ];
+    var defaultRoadmap = [
+      {phase:'近期', title:'AI 輔助系統試行上線', desc:'導入 AI 輔助客服系統，針對特定產業客戶進行試行，收集效益數據並持續優化模型'},
+      {phase:'中期', title:'全通路平台全面整合', desc:'完成全通路客服管理平台建置，整合既有客戶的多元服務渠道，實現統一管理與數據分析'},
+      {phase:'長期', title:'成為台灣智慧客服領導品牌', desc:'以三十年的服務積累為基礎，整合 AI、數據與人本服務，確立集團在台灣智慧客服領域的領導地位'}
+    ];
+
+    function renderDirections(items) {
+      document.getElementById('futureDirections').innerHTML = items.map(function(d) {
+        return '<div class="editor-row">'
+          + '<div class="editor-row-header" style="display:flex;align-items:center;gap:8px;">'
+          + '<span class="fixed-num">'+d.num+'</span><span>發展方向 '+d.num+'</span></div>'
+          + '<div class="form-group" style="margin-bottom:8px;"><label class="form-label" style="font-size:0.75rem;">標題</label>'
+          + '<input type="text" class="form-control" placeholder="標題" value="'+esc(d.title)+'"></div>'
+          + '<div class="form-group" style="margin-bottom:0;"><label class="form-label" style="font-size:0.75rem;">說明文字</label>'
+          + '<textarea class="form-control form-textarea" rows="3" placeholder="說明">'+esc(d.desc)+'</textarea></div>'
+          + '</div>';
+      }).join('');
+    }
+
+    function renderRoadmap(items) {
+      document.getElementById('futureRoadmap').innerHTML = items.map(function(r) {
+        return '<div class="editor-row">'
+          + '<div class="editor-row-header" style="display:flex;align-items:center;gap:8px;">'
+          + '<span class="fixed-num" style="font-size:0.7rem;min-width:42px;">'+r.phase+'</span><span>階段：'+r.phase+'</span></div>'
+          + '<div class="form-group" style="margin-bottom:8px;"><label class="form-label" style="font-size:0.75rem;">標題</label>'
+          + '<input type="text" class="form-control" placeholder="標題" value="'+esc(r.title)+'"></div>'
+          + '<div class="form-group" style="margin-bottom:0;"><label class="form-label" style="font-size:0.75rem;">說明文字</label>'
+          + '<textarea class="form-control form-textarea" rows="2" placeholder="說明">'+esc(r.desc)+'</textarea></div>'
+          + '</div>';
+      }).join('');
+    }
+
+    function getDirections() {
+      var phases = ['01','02','03','04'];
+      return Array.from(document.querySelectorAll('#futureDirections .editor-row')).map(function(row, i) {
+        var inp = row.querySelector('input'); var ta = row.querySelector('textarea');
+        var numEl = row.querySelector('.fixed-num');
+        return {num: numEl?numEl.textContent:(phases[i]||String(i+1).padStart(2,'0')), title:inp?inp.value.trim():'', desc:ta?ta.value.trim():''};
+      });
+    }
+
+    function getRoadmap() {
+      var phases = ['近期','中期','長期'];
+      return Array.from(document.querySelectorAll('#futureRoadmap .editor-row')).map(function(row, i) {
+        var inp = row.querySelector('input'); var ta = row.querySelector('textarea');
+        var numEl = row.querySelector('.fixed-num');
+        return {phase: numEl?numEl.textContent:(phases[i]||''), title:inp?inp.value.trim():'', desc:ta?ta.value.trim():''};
+      });
+    }
+
+    function loadFuture() {
+      var d = getAboutData('future');
+      document.getElementById('futureTitle').value = (d&&d.title) || '未來展望';
+      document.getElementById('futureSub').value = (d&&d.sub) || '站在三十年的基礎上，我們正以更大的格局，迎向客服產業的下一個世代';
+      document.getElementById('futureStratTitle').value = (d&&d.stratTitle) || '智慧客服 × 數據驅動 × 永續成長';
+      document.getElementById('futureStratDesc').value = (d&&d.stratDesc) || '我們深信，客服產業正處於一個前所未有的轉型節點。AI 技術的成熟、數據分析能力的躍進，以及顧客體驗期待的提升，都將重新定義「優質服務」的標準。東州集團將以既有的深厚基礎，帶領企業客戶共同迎接這場變革。';
+      renderDirections((d&&d.directions) || defaultDirections);
+      renderRoadmap((d&&d.roadmap) || defaultRoadmap);
+    }
+
+    function saveFuture() {
+      var data = {
+        title: document.getElementById('futureTitle').value.trim(),
+        sub: document.getElementById('futureSub').value.trim(),
+        stratTitle: document.getElementById('futureStratTitle').value.trim(),
+        stratDesc: document.getElementById('futureStratDesc').value.trim(),
+        directions: getDirections(),
+        roadmap: getRoadmap()
+      };
+      saveAboutData('future', data);
+      showMsg('futureMsg', true, '✅ 未來展望已儲存！前台重新整理後即生效。');
+    }
+
+    // ============================================================
+    // TAB 5 — 資安政策
+    // ============================================================
+    var defaultPrinciples = [
+      {icon:'🛡️', title:'機密性保護', desc:'確保資訊僅供授權人員存取，防止未經授權的資訊揭露，保護客戶個資與商業機密'},
+      {icon:'✅', title:'完整性維護', desc:'確保資訊的準確性與完整性，防止未經授權的資料修改、刪除或破壞行為'},
+      {icon:'⚡', title:'可用性確保', desc:'確保授權使用者在需要時能及時存取所需資訊與系統，維持業務連續性'},
+      {icon:'👤', title:'個資合規管理', desc:'嚴格遵循個人資料保護法相關規範，建立完整的個資蒐集、處理與利用管理機制'},
+      {icon:'🔔', title:'事件應變機制', desc:'建立完整的資安事件偵測、通報與應變程序，確保事件發生時能迅速有效應對'},
+      {icon:'📚', title:'教育訓練推廣', desc:'定期辦理資安意識教育訓練，強化全體員工的資安觀念與技能，打造資安文化'}
+    ];
+
+    function renderPrinciples(items) {
+      document.getElementById('securityPrinciples').innerHTML = items.map(function(p, i) {
+        return '<div class="editor-row">'
+          + '<div class="editor-row-header" style="display:flex;align-items:center;gap:8px;">'
+          + '<span class="fixed-num">'+String(i+1).padStart(2,'0')+'</span><span>原則 '+String(i+1).padStart(2,'0')+'</span></div>'
+          + '<div style="display:grid;grid-template-columns:64px 1fr 2fr;gap:8px;">'
+          + '<div><label class="form-label" style="font-size:0.75rem;">圖示</label>'
+          + '<input type="text" class="form-control" placeholder="🛡️" value="'+esc(p.icon||'')+'" style="text-align:center;font-size:1.2rem;"></div>'
+          + '<div><label class="form-label" style="font-size:0.75rem;">標題</label>'
+          + '<input type="text" class="form-control" placeholder="標題" value="'+esc(p.title||'')+'"></div>'
+          + '<div><label class="form-label" style="font-size:0.75rem;">說明</label>'
+          + '<textarea class="form-control form-textarea" rows="2" placeholder="說明文字">'+esc(p.desc||'')+'</textarea></div>'
+          + '</div>'
+          + '</div>';
+      }).join('');
+    }
+
+    function getPrinciples() {
+      return Array.from(document.querySelectorAll('#securityPrinciples .editor-row')).map(function(row) {
+        var inputs = row.querySelectorAll('input'); var ta = row.querySelector('textarea');
+        return {icon:inputs[0]?inputs[0].value.trim():'', title:inputs[1]?inputs[1].value.trim():'', desc:ta?ta.value.trim():''};
+      }).filter(function(p){ return p.title; });
+    }
+
+    function loadSecurity() {
+      var d = getAboutData('security');
+      document.getElementById('securityTitle').value = (d&&d.title) || '資訊安全政策';
+      document.getElementById('securitySub').value = (d&&d.sub) || '東州集團深知資訊安全對企業及客戶的重要性，建立完善的資安管理框架，確保所有資料的機密性、完整性與可用性';
+      document.getElementById('securityStmt1').value = (d&&d.stmt1) || '東州互聯網實業有限公司及顯榮國際股份有限公司（以下合稱「本集團」）致力於建立、實施、維護及持續改善資訊安全管理系統。本集團認知到資訊資產的保護對於維持業務運作連續性、降低企業風險、保護客戶及合作夥伴資料之重要性。';
+      document.getElementById('securityStmt2').value = (d&&d.stmt2) || '本集團承諾遵循適用的法律、法規及合約要求，持續提升全體員工的資安意識，並透過定期評估與改善，確保資訊安全措施能有效應對不斷演變的資安威脅。';
+      renderPrinciples((d&&d.principles) || defaultPrinciples);
+    }
+
+    function saveSecurity() {
+      var data = {
+        title: document.getElementById('securityTitle').value.trim(),
+        sub: document.getElementById('securitySub').value.trim(),
+        stmt1: document.getElementById('securityStmt1').value.trim(),
+        stmt2: document.getElementById('securityStmt2').value.trim(),
+        principles: getPrinciples()
+      };
+      saveAboutData('security', data);
+      showMsg('securityMsg', true, '✅ 資安政策已儲存！前台重新整理後即生效。');
+    }
+
+    // ============================================================
+    // Utility
+    // ============================================================
+    function esc(s) {
+      return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+    }
+
+    // Init
+    loadMain(); loadVision(); loadAwards(); loadFuture(); loadSecurity();
+  </script>
+</body>
+</html>

@@ -1,0 +1,410 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>專案服務管理 | IPCC 後台</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="admin.css">
+  <script src="https://cdn.jsdelivr.net/npm/sortablejs@1.15.0/Sortable.min.js"></script>
+  <style>
+    .svc-card { background:#fff; border:1.5px solid var(--border); border-radius:14px; overflow:hidden; }
+    .svc-card-header { padding:16px 20px; background:linear-gradient(135deg,var(--navy-dark),var(--navy)); color:#fff; display:flex; align-items:center; gap:14px; }
+    .svc-card-icon { font-size:2rem; }
+    .svc-card-num { font-size:0.72rem; font-weight:700; letter-spacing:0.1em; opacity:0.7; margin-bottom:2px; }
+    .svc-card-title { font-size:1.1rem; font-weight:800; }
+    .svc-card-body { padding:20px; }
+    .svc-cards-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(320px,1fr)); gap:20px; margin-bottom:28px; }
+    .drag-handle-card { cursor:grab; opacity:0.5; font-size:1rem; }
+    .drag-handle-card:hover { opacity:1; }
+    .svc-list-table { width:100%; border-collapse:collapse; }
+    .svc-list-table th { text-align:left; padding:10px 14px; font-size:0.78rem; font-weight:700; color:var(--text-sub); text-transform:uppercase; letter-spacing:0.05em; border-bottom:2px solid var(--border); }
+    .svc-list-table td { padding:12px 14px; border-bottom:1px solid var(--border); vertical-align:middle; }
+    .svc-list-table tr:last-child td { border-bottom:none; }
+    .svc-tags-row { display:flex; flex-wrap:wrap; gap:4px; }
+    .svc-tag-sm { background:rgba(30,42,94,0.08); color:var(--navy); padding:2px 8px; border-radius:100px; font-size:0.72rem; font-weight:600; }
+    .info-box { background:#EFF6FF; border:1px solid #BFDBFE; border-radius:10px; padding:14px 16px; font-size:0.85rem; color:#1E40AF; margin-bottom:24px; }
+  </style>
+</head>
+<body>
+  <div class="admin-layout">
+    <aside class="sidebar" id="sidebar">
+      <div class="sidebar-logo">
+        <img src="../IPCCLOGO-transparent.png" alt="IPCC" onerror="this.style.display='none'">
+        <div class="sidebar-logo-text">
+        <div class="co-name">IPCC 東州集團</div>
+          <div class="co-sub">後台管理系統</div>
+        </div>
+      </div>
+          <nav class="sidebar-nav">
+      <a href="dashboard.html" class="nav-item">📊 儀表板</a>
+      <a href="home-manage.html" class="nav-item" data-perm="home">🏠 首頁管理</a>
+      <a href="news-manage.html" class="nav-item" data-perm="news">📰 最新消息</a>
+      <a href="about-manage.html" class="nav-item" data-perm="about">🏢 關於我們</a>
+      <a href="services-manage.html" class="nav-item active" data-perm="services">🛠 專案服務</a>
+      <a href="cases-manage.html" class="nav-item" data-perm="cases">🏆 成功案例</a>
+      <a href="contacts-manage.html" class="nav-item" data-perm="contacts">📋 聯絡表單</a>
+      <a href="settings.html" class="nav-item" data-perm="settings">⚙️ 系統設定</a>
+      <a href="users-manage.html" class="nav-item" data-perm="users">👥 帳號管理</a>
+    </nav>
+      <div class="sidebar-footer">
+        <a href="../services.html" target="_blank" class="btn-view-site"><span>🔗</span>查看前台</a>
+        <button onclick="logout()" class="btn-logout"><span>🚪</span>登出</button>
+      </div>
+    </aside>
+    <div class="sidebar-overlay" id="sidebarOverlay" onclick="toggleSidebar()"></div>
+    <main class="main-content">
+      <header class="topbar">
+        <button class="topbar-hamburger" onclick="toggleSidebar()">☰</button>
+        <div class="topbar-title">專案服務管理</div>
+        <div class="topbar-user">管理員</div>
+      </header>
+      <div class="page-content">
+        <div class="page-header-row" style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;">
+          <div>
+            <h1>專案服務管理</h1>
+            <p style="color:var(--text-sub);font-size:0.9rem;">管理首頁服務卡片，可拖曳排序、新增或編輯</p>
+          </div>
+          <button class="btn-primary" onclick="openSvcModal()">+ 新增服務項目</button>
+        </div>
+
+        <div class="info-box">
+          💡 服務項目會顯示在首頁「我們的服務」區塊。前三項（Service 01-03）為原始服務頁面，連結已預設好；新增的服務項目可自訂連結至任意頁面。
+        </div>
+
+        <!-- 目前服務預覽 -->
+        <div id="svcCardsGrid" class="svc-cards-grid"></div>
+
+        <!-- 完整清單 -->
+        <div class="section-card">
+          <div class="section-card-header">
+            <h2 class="section-card-title">服務項目清單（可拖曳調整順序）</h2>
+            <span id="svcCount" style="font-size:0.82rem;color:var(--text-sub);"></span>
+          </div>
+          <div style="overflow-x:auto;">
+            <table class="svc-list-table">
+              <thead>
+                <tr>
+                  <th style="width:40px;"></th>
+                  <th>編號</th>
+                  <th>服務名稱</th>
+                  <th>標籤</th>
+                  <th>連結</th>
+                  <th>狀態</th>
+                  <th>操作</th>
+                </tr>
+              </thead>
+              <tbody id="svcTableBody"></tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- 客服委外作業內容格子管理 -->
+        <div class="section-card">
+          <div class="section-card-header">
+            <h2>📋 客服委外 — 作業內容格子管理</h2>
+            <div style="display:flex;gap:8px;align-items:center;">
+              <a href="../services.html" target="_blank" style="font-size:0.82rem;color:var(--navy);">查看前台 →</a>
+              <button class="btn-primary btn-sm" onclick="addGridItem()">+ 新增格子</button>
+            </div>
+          </div>
+          <div class="section-card-body">
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:20px;">
+              <div class="form-group" style="margin:0;">
+                <label class="form-label">區塊主標題</label>
+                <input type="text" class="form-control" id="gridTitle" value="客服委外——實際作業內容">
+              </div>
+              <div class="form-group" style="margin:0;">
+                <label class="form-label">區塊副說明</label>
+                <input type="text" class="form-control" id="gridSub" value="從導入規劃到績效優化，每個環節都有專業團隊全程負責">
+              </div>
+            </div>
+            <p style="font-size:0.82rem;color:var(--text-sub);margin-bottom:16px;">新增格子後前台即時顯示，可拖曳調整順序</p>
+            <div id="gridItemsList" style="display:flex;flex-direction:column;gap:10px;margin-bottom:16px;"></div>
+            <button class="btn-primary" onclick="saveGrid()" style="width:100%;">💾 儲存所有格子到前台</button>
+            <div id="gridSaveMsg" style="margin-top:10px;"></div>
+          </div>
+        </div>
+
+        <!-- 各服務頁面內容 -->
+        <div class="section-card">
+          <div class="section-card-header">
+            <h2>📄 各服務頁面副說明</h2>
+          </div>
+          <div class="section-card-body">
+            <p style="font-size:0.85rem;color:var(--text-sub);margin-bottom:20px;">編輯各服務詳細頁面的副說明文字</p>
+            <div style="display:grid; grid-template-columns:repeat(auto-fill,minmax(300px,1fr)); gap:16px;">
+              <div class="section-card" style="margin:0; padding:20px;">
+                <h3 style="font-size:1rem; font-weight:700; color:var(--navy-dark); margin-bottom:12px;">📞 客服委外（services.html）</h3>
+                <div class="form-group">
+                  <label class="form-label">頁面副說明</label>
+                  <textarea class="form-control form-textarea" id="page1Sub" rows="2" placeholder="服務介紹說明..."></textarea>
+                </div>
+                <button class="btn-outline btn-sm" onclick="savePage('outsource','page1Sub')">💾 儲存</button>
+                <a href="../services.html" target="_blank" style="margin-left:8px; font-size:0.82rem; color:var(--navy);">查看頁面 →</a>
+              </div>
+              <div class="section-card" style="margin:0; padding:20px;">
+                <h3 style="font-size:1rem; font-weight:700; color:var(--navy-dark); margin-bottom:12px;">🎓 客服訓練（services-training.html）</h3>
+                <div class="form-group">
+                  <label class="form-label">頁面副說明</label>
+                  <textarea class="form-control form-textarea" id="page2Sub" rows="2" placeholder="服務介紹說明..."></textarea>
+                </div>
+                <button class="btn-outline btn-sm" onclick="savePage('training','page2Sub')">💾 儲存</button>
+                <a href="../services-training.html" target="_blank" style="margin-left:8px; font-size:0.82rem; color:var(--navy);">查看頁面 →</a>
+              </div>
+              <div class="section-card" style="margin:0; padding:20px;">
+                <h3 style="font-size:1rem; font-weight:700; color:var(--navy-dark); margin-bottom:12px;">💻 資訊服務（services-it.html）</h3>
+                <div class="form-group">
+                  <label class="form-label">頁面副說明</label>
+                  <textarea class="form-control form-textarea" id="page3Sub" rows="2" placeholder="服務介紹說明..."></textarea>
+                </div>
+                <button class="btn-outline btn-sm" onclick="savePage('it','page3Sub')">💾 儲存</button>
+                <a href="../services-it.html" target="_blank" style="margin-left:8px; font-size:0.82rem; color:var(--navy);">查看頁面 →</a>
+              </div>
+            </div>
+            <div id="pageSaveMsg" style="margin-top:12px;"></div>
+          </div>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <!-- Service Modal -->
+  <div class="modal-overlay" id="svcModal">
+    <div class="modal modal-lg">
+      <div class="modal-header">
+        <h3 id="svcModalTitle">新增服務項目</h3>
+        <button class="modal-close" onclick="closeSvcModal()">✕</button>
+      </div>
+      <div class="modal-body">
+        <input type="hidden" id="svcId">
+        <div style="display:grid; grid-template-columns:1fr 1fr; gap:16px;">
+          <div class="form-group">
+            <label class="form-label">服務編號標籤</label>
+            <input type="text" class="form-control" id="svcNum" placeholder="如：Service 04">
+          </div>
+          <div style="display:grid; grid-template-columns:80px 1fr; gap:10px; align-items:end;">
+            <div class="form-group">
+              <label class="form-label">圖示</label>
+              <input type="text" class="form-control" id="svcIcon" placeholder="📋" style="text-align:center;font-size:1.4rem;">
+            </div>
+            <div class="form-group">
+              <label class="form-label">服務名稱</label>
+              <input type="text" class="form-control" id="svcTitle" placeholder="服務名稱">
+            </div>
+          </div>
+        </div>
+        <div class="form-group">
+          <label class="form-label">服務描述</label>
+          <textarea class="form-control form-textarea" id="svcDesc" rows="3" placeholder="服務說明..."></textarea>
+        </div>
+        <div class="form-group">
+          <label class="form-label">標籤（用逗號分隔）</label>
+          <input type="text" class="form-control" id="svcTags" placeholder="電話, 文字, 電商">
+        </div>
+        <div class="form-group">
+          <label class="form-label">點擊「了解更多」的連結頁面</label>
+          <input type="text" class="form-control" id="svcLink" placeholder="services.html 或 contact.html">
+        </div>
+        <div class="form-group" style="display:flex;align-items:center;gap:10px;">
+          <input type="checkbox" id="svcPublished" style="width:18px;height:18px;cursor:pointer;">
+          <label for="svcPublished" class="form-label" style="margin:0;cursor:pointer;">發布（顯示在前台）</label>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn-outline" onclick="closeSvcModal()">取消</button>
+        <button class="btn-primary" onclick="saveSvc()">儲存</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="users-config.js"></script>
+  <script src="admin.js"></script>
+  <script>
+    requireLogin();
+    initAdminUI();
+    let sortable;
+
+    function renderCards() {
+      const svcs = getServices().filter(s=>s.published).slice().sort((a,b)=>a.order-b.order);
+      document.getElementById('svcCardsGrid').innerHTML = svcs.map(s => `
+        <div class="svc-card">
+          <div class="svc-card-header">
+            <span class="svc-card-icon">${s.icon||'📋'}</span>
+            <div><div class="svc-card-num">${s.num||''}</div><div class="svc-card-title">${s.title||''}</div></div>
+          </div>
+          <div class="svc-card-body">
+            <p style="font-size:0.85rem;color:var(--text-sub);line-height:1.7;margin-bottom:10px;">${(s.desc||'').slice(0,80)}...</p>
+            <div class="svc-tags-row">${(s.tags||[]).map(t=>'<span class="svc-tag-sm">'+t+'</span>').join('')}</div>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    function renderTable() {
+      const svcs = getServices().slice().sort((a,b)=>a.order-b.order);
+      document.getElementById('svcCount').textContent = svcs.length + ' 項服務';
+      const tbody = document.getElementById('svcTableBody');
+      tbody.innerHTML = svcs.map(s => `
+        <tr data-id="${s.id}">
+          <td><span class="drag-handle-card" title="拖曳排序">⠿</span></td>
+          <td style="font-size:0.82rem;font-weight:700;color:var(--text-sub);">${s.num||''}</td>
+          <td><span style="margin-right:8px;">${s.icon||''}</span><strong>${s.title||''}</strong></td>
+          <td><div class="svc-tags-row">${(s.tags||[]).map(t=>'<span class="svc-tag-sm">'+t+'</span>').join('')}</div></td>
+          <td style="font-size:0.82rem;color:var(--text-sub);">${s.link||'—'}</td>
+          <td><span style="font-size:0.75rem;padding:3px 10px;border-radius:100px;${s.published?'background:#D1FAE5;color:#065F46':'background:#F3F4F6;color:#6B7280'}">${s.published?'已發布':'草稿'}</span></td>
+          <td style="white-space:nowrap;">
+            <button class="btn-outline btn-sm" onclick="editSvc('${s.id}')">編輯</button>
+            ${!['svc-1','svc-2','svc-3'].includes(s.id) ? '<button class="btn-red btn-sm" style="margin-left:4px;" onclick="deleteSvc(\'' + s.id + '\')">刪除</button>' : ''}
+          </td>
+        </tr>
+      `).join('');
+
+      if(sortable) sortable.destroy();
+      sortable = Sortable.create(tbody, {
+        handle: '.drag-handle-card',
+        animation: 150,
+        onEnd: function() {
+          const ids = Array.from(tbody.querySelectorAll('tr')).map(r=>r.dataset.id);
+          const all = getServices();
+          ids.forEach((id,i) => { const s = all.find(s=>s.id===id); if(s) s.order=i; });
+          saveServices(all);
+          renderCards();
+        }
+      });
+    }
+
+    function openSvcModal(s) {
+      document.getElementById('svcModalTitle').textContent = s ? '編輯服務項目' : '新增服務項目';
+      document.getElementById('svcId').value = s ? s.id : '';
+      document.getElementById('svcNum').value = s ? s.num : 'Service 0'+(getServices().length+1);
+      document.getElementById('svcIcon').value = s ? s.icon : '📋';
+      document.getElementById('svcTitle').value = s ? s.title : '';
+      document.getElementById('svcDesc').value = s ? s.desc : '';
+      document.getElementById('svcTags').value = s ? (s.tags||[]).join(', ') : '';
+      document.getElementById('svcLink').value = s ? s.link : 'contact.html';
+      document.getElementById('svcPublished').checked = s ? !!s.published : true;
+      document.getElementById('svcModal').classList.add('open');
+    }
+    function closeSvcModal() { document.getElementById('svcModal').classList.remove('open'); }
+    function editSvc(id) { const s = getServices().find(s=>s.id===id); if(s) openSvcModal(s); }
+    function deleteSvc(id) {
+      if(!confirm('確定要刪除此服務項目？')) return;
+      saveServices(getServices().filter(s=>s.id!==id));
+      renderCards(); renderTable();
+    }
+    function saveSvc() {
+      const id = document.getElementById('svcId').value || genId();
+      const svcs = getServices();
+      const idx = svcs.findIndex(s=>s.id===id);
+      const item = {
+        id, num:document.getElementById('svcNum').value.trim(),
+        icon:document.getElementById('svcIcon').value.trim()||'📋',
+        title:document.getElementById('svcTitle').value.trim(),
+        desc:document.getElementById('svcDesc').value.trim(),
+        tags:document.getElementById('svcTags').value.split(',').map(t=>t.trim()).filter(Boolean),
+        link:document.getElementById('svcLink').value.trim()||'contact.html',
+        published:document.getElementById('svcPublished').checked,
+        order:idx>=0?svcs[idx].order:svcs.length
+      };
+      if(idx>=0) svcs[idx]=item; else svcs.push(item);
+      saveServices(svcs);
+      closeSvcModal();
+      renderCards(); renderTable();
+    }
+
+    // ── 客服委外作業格子管理 ──────────────────────────────
+    var DEFAULT_GRID_ITEMS = [
+      { id:'g1', icon:'📋', title:'委外導入規劃', desc:'從需求訪談、SOP 建立到人力配置，完整陪伴企業完成客服委外的每個關鍵步驟，確保無縫接軌。' },
+      { id:'g2', icon:'🎧', title:'日常作業管理', desc:'專業督導即時監控服務狀況，彈性調配人力應對尖峰時段，確保每通來電、每則訊息都能即時處理。' },
+      { id:'g3', icon:'🔍', title:'品質控管稽核', desc:'定期錄音抽查與 QA 評分，搭配客戶滿意度調查，從數據發現問題、持續優化服務品質。' },
+      { id:'g4', icon:'📊', title:'績效報表分析', desc:'提供週報、月報及客服 KPI 儀表板，讓您隨時掌握服務成效，做出更精準的業務決策。' }
+    ];
+
+    function getGridData() {
+      try {
+        var d = JSON.parse(localStorage.getItem('ipcc_outsource_grid') || 'null');
+        if (d && d.items && d.items.length) return d;
+      } catch(e) {}
+      return { title:'客服委外——實際作業內容', sub:'從導入規劃到績效優化，每個環節都有專業團隊全程負責', items: DEFAULT_GRID_ITEMS.map(function(i){ return Object.assign({},i); }) };
+    }
+
+    function renderGridList() {
+      var d = getGridData();
+      document.getElementById('gridTitle').value = d.title || '';
+      document.getElementById('gridSub').value   = d.sub   || '';
+      var list = document.getElementById('gridItemsList');
+      list.innerHTML = d.items.map(function(item, idx) {
+        return '<div style="display:grid;grid-template-columns:60px 1fr 2fr 36px;gap:10px;align-items:center;background:#FAFAF9;border:1.5px solid var(--border);border-radius:10px;padding:12px 14px;" data-gid="' + item.id + '">'
+          + '<input type="text" value="' + (item.icon||'') + '" placeholder="圖示" style="text-align:center;font-size:1.4rem;padding:6px;border:1px solid var(--border);border-radius:6px;width:100%;" onchange="updateGridField(\'' + item.id + '\',\'icon\',this.value)">'
+          + '<input type="text" value="' + escHtml(item.title||'') + '" placeholder="格子標題" class="form-control" onchange="updateGridField(\'' + item.id + '\',\'title\',this.value)">'
+          + '<input type="text" value="' + escHtml(item.desc||'') + '" placeholder="格子說明（可詳細描述）" class="form-control" onchange="updateGridField(\'' + item.id + '\',\'desc\',this.value)">'
+          + '<button class="btn-red btn-sm" onclick="deleteGridItem(\'' + item.id + '\')" title="刪除">✕</button>'
+          + '</div>';
+      }).join('');
+    }
+
+    function escHtml(s) { return s.replace(/&/g,'&amp;').replace(/"/g,'&quot;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+
+    function updateGridField(id, field, val) {
+      var d = getGridData();
+      var item = d.items.find(function(i){ return i.id===id; });
+      if (item) item[field] = val;
+      localStorage.setItem('ipcc_outsource_grid', JSON.stringify(d));
+    }
+
+    function addGridItem() {
+      var d = getGridData();
+      d.items.push({ id:'g'+Date.now(), icon:'⚡', title:'新格子', desc:'請在此填入說明內容' });
+      localStorage.setItem('ipcc_outsource_grid', JSON.stringify(d));
+      renderGridList();
+    }
+
+    function deleteGridItem(id) {
+      var d = getGridData();
+      if (d.items.length <= 1 || !confirm('確定刪除這個格子？')) return;
+      d.items = d.items.filter(function(i){ return i.id!==id; });
+      localStorage.setItem('ipcc_outsource_grid', JSON.stringify(d));
+      renderGridList();
+    }
+
+    function saveGrid() {
+      var d = getGridData();
+      d.title = document.getElementById('gridTitle').value.trim() || d.title;
+      d.sub   = document.getElementById('gridSub').value.trim()   || d.sub;
+      // 把目前 input 的值同步回去
+      document.querySelectorAll('#gridItemsList [data-gid]').forEach(function(row) {
+        var id = row.dataset.gid;
+        var inputs = row.querySelectorAll('input');
+        var item = d.items.find(function(i){ return i.id===id; });
+        if (item) { item.icon=inputs[0].value; item.title=inputs[1].value; item.desc=inputs[2].value; }
+      });
+      localStorage.setItem('ipcc_outsource_grid', JSON.stringify(d));
+      var msg = document.getElementById('gridSaveMsg');
+      msg.innerHTML = '<div class="alert alert-success">✅ 已儲存！前台 services.html 即時更新。</div>';
+      setTimeout(function(){ msg.innerHTML=''; }, 3000);
+    }
+
+    renderGridList();
+
+    // ── 各頁面副說明 ──────────────────────────────────────
+    function loadPageSubs() {
+      const d1 = JSON.parse(localStorage.getItem('ipcc_svcpage_outsource')||'null');
+      const d2 = JSON.parse(localStorage.getItem('ipcc_svcpage_training')||'null');
+      const d3 = JSON.parse(localStorage.getItem('ipcc_svcpage_it')||'null');
+      document.getElementById('page1Sub').value = (d1&&d1.sub)||'整合多渠道客服資源，建立穩定、高效的客服體系，讓品牌服務成為競爭優勢。';
+      document.getElementById('page2Sub').value = (d2&&d2.sub)||'培訓專業客服人才，從技術到態度，全方位提升服務能量與應對品質。';
+      document.getElementById('page3Sub').value = (d3&&d3.sub)||'提供客服系統建置與技術委外，整合 IT 能力協助企業與政府單位數位升級。';
+    }
+    function savePage(type, fieldId) {
+      const sub = document.getElementById(fieldId).value.trim();
+      localStorage.setItem('ipcc_svcpage_'+type, JSON.stringify({sub}));
+      document.getElementById('pageSaveMsg').innerHTML = '<div class="alert alert-success">✅ 已儲存！前台重新整理後即生效。</div>';
+      setTimeout(()=>document.getElementById('pageSaveMsg').innerHTML='', 3000);
+    }
+
+    renderCards(); renderTable(); loadPageSubs();
+  </script>
+</body>
+</html>

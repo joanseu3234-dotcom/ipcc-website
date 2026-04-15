@@ -1,0 +1,435 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>獲獎事蹟 — 關於我們 — IPCC 東州集團</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+  <style>
+    .award-card {
+      background: var(--white);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      overflow: hidden;
+      cursor: pointer;
+      transition: transform 0.25s ease, box-shadow 0.25s ease;
+      display: flex;
+      flex-direction: column;
+    }
+    .award-card:hover {
+      transform: translateY(-6px);
+      box-shadow: 0 16px 40px rgba(0,0,0,0.12);
+    }
+    .award-card-img {
+      width: 100%;
+      height: 200px;
+      background: linear-gradient(135deg, #F4F2EE, #E5E0D6);
+      position: relative;
+      overflow: hidden;
+      flex-shrink: 0;
+    }
+    .award-card-img img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+    .award-card-placeholder {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 4rem;
+      color: rgba(30,42,94,0.2);
+    }
+    .award-card-body {
+      padding: 24px;
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+    }
+    .award-card-sub {
+      font-size: 0.7rem;
+      font-weight: 700;
+      color: var(--orange, #D97706);
+      letter-spacing: 0.12em;
+      margin-bottom: 8px;
+    }
+    .award-card-title {
+      font-size: 1.05rem;
+      font-weight: 800;
+      color: var(--navy-dark);
+      margin-bottom: 10px;
+      line-height: 1.4;
+    }
+    .award-card-desc {
+      font-size: 0.85rem;
+      color: var(--text-sub);
+      line-height: 1.8;
+      flex: 1;
+      margin-bottom: 16px;
+    }
+    .award-card-read {
+      font-size: 0.82rem;
+      font-weight: 700;
+      color: var(--navy, #1E2A5E);
+      letter-spacing: 0.02em;
+    }
+    @media (max-width: 768px) {
+      #awards-main-grid { grid-template-columns: 1fr !important; }
+    }
+    @media (min-width: 769px) and (max-width: 1024px) {
+      #awards-main-grid { grid-template-columns: repeat(2,1fr) !important; }
+    }
+  </style>
+</head>
+<body>
+<script src="content-data.js"></script>
+
+<nav class="navbar" id="navbar">
+  <div class="container">
+    <div class="nav-inner">
+      <a href="index.html" class="nav-logo">
+        <img src="IPCCLOGO.png" alt="IPCC">
+        <div class="nav-logo-right">
+          <div class="nav-logo-group">東州集團</div>
+          <div class="nav-logo-companies">
+            <span>東州互聯網實業有限公司</span>
+            <span>顯榮國際股份有限公司</span>
+          </div>
+        </div>
+      </a>
+      <ul class="nav-menu" id="navMenu">
+        <li><a href="index.html" class="nav-link">首頁</a></li>
+        <li><a href="news.html" class="nav-link">最新消息</a></li>
+        <li><a href="about.html" class="nav-link active">關於我們</a></li>
+        <li><a href="services.html" class="nav-link">專案服務</a></li>
+        <li><a href="cases.html" class="nav-link">成功案例</a></li>
+      </ul>
+      <a href="contact.html" class="nav-cta">與我們聯繫</a>
+      <div class="nav-hamburger" id="hamburger" onclick="toggleMenu()">
+        <span></span><span></span><span></span>
+      </div>
+    </div>
+  </div>
+</nav>
+
+<!-- Page Hero -->
+<div class="page-hero">
+  <div class="page-hero-signal">
+    <div class="page-hero-phone"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="rgba(220,80,80,0.95)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" style="display:block"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.26 13a19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 3.17 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L7.91 9.91a16 16 0 0 0 6.18 6.18l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg></div>
+    <div class="page-hero-ring"></div>
+    <div class="page-hero-ring"></div>
+    <div class="page-hero-ring"></div>
+    <div class="page-hero-ring"></div>
+    <div class="page-hero-ring"></div>
+  </div>
+  <div class="container">
+    <div class="breadcrumb">
+      <a href="index.html">首頁</a>
+      <span>›</span>
+      <a href="about.html">關於我們</a>
+      <span>›</span>
+      <span>獲獎事蹟</span>
+    </div>
+    <h1>獲獎事蹟</h1>
+    <p>業界認可，是我們持續進步的動力</p>
+  </div>
+</div>
+
+<!-- 子導覽列 -->
+<nav class="about-subnav">
+  <div class="container">
+    <a href="about.html">集團簡介</a>
+    <a href="about-vision.html">集團理念願景</a>
+    <a href="about-awards.html" class="active">獲獎事蹟</a>
+    <a href="about-future.html">未來展望</a>
+    <a href="about-security.html">資安政策</a>
+  </div>
+</nav>
+
+<!-- 獲獎事蹟 -->
+<section class="section" id="awards">
+  <div class="container">
+    <div class="text-center" style="margin-bottom:64px;">
+      <span class="section-label">Awards & Recognition</span>
+      <h2 class="section-title">獲獎事蹟</h2>
+      <p class="section-sub">數十年來持續獲得業界肯定，每一座獎項背後都是團隊的努力與對品質的堅持</p>
+    </div>
+
+    <!-- 主要獎項 -->
+    <div id="awards-main-grid" style="display:grid; grid-template-columns:repeat(3,1fr); gap:28px; margin-bottom:56px;">
+      <div class="award-card" onclick="openAwardModal('玉山國家品牌獎','NATIONAL BRAND AWARD','肯定集團在客服領域的卓越表現與品牌貢獻，代表台灣企業對服務品質的最高追求。','','')">
+        <div class="award-card-img"><div class="award-card-placeholder">🏆</div></div>
+        <div class="award-card-body">
+          <div class="award-card-sub">NATIONAL BRAND AWARD</div>
+          <h4 class="award-card-title">玉山國家品牌獎</h4>
+          <p class="award-card-desc">肯定集團在客服領域的卓越表現與品牌貢獻，代表台灣企業對服務品質的最高追求。</p>
+          <span class="award-card-read">閱讀詳情 →</span>
+        </div>
+      </div>
+      <div class="award-card" onclick="openAwardModal('智慧行銷系統創新獎','INNOVATION AWARD','智慧電話行銷系統榮獲創新成就獎，引領產業數位轉型，樹立台灣客服科技新標竿。','','')">
+        <div class="award-card-img"><div class="award-card-placeholder">🥇</div></div>
+        <div class="award-card-body">
+          <div class="award-card-sub">INNOVATION AWARD</div>
+          <h4 class="award-card-title">智慧行銷系統創新獎</h4>
+          <p class="award-card-desc">智慧電話行銷系統榮獲創新成就獎，引領產業數位轉型，樹立台灣客服科技新標竿。</p>
+          <span class="award-card-read">閱讀詳情 →</span>
+        </div>
+      </div>
+      <div class="award-card" onclick="openAwardModal('服務品質卓越認證','SERVICE EXCELLENCE','持續通過服務品質驗證，維持業界高標準，成為企業委外客服的信賴首選。','','')">
+        <div class="award-card-img"><div class="award-card-placeholder">⭐</div></div>
+        <div class="award-card-body">
+          <div class="award-card-sub">SERVICE EXCELLENCE</div>
+          <h4 class="award-card-title">服務品質卓越認證</h4>
+          <p class="award-card-desc">持續通過服務品質驗證，維持業界高標準，成為企業委外客服的信賴首選。</p>
+          <span class="award-card-read">閱讀詳情 →</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- 獲獎詳情 Modal -->
+    <div id="awardModal" style="display:none; position:fixed; inset:0; background:rgba(0,0,0,0.6); z-index:9000; align-items:center; justify-content:center; padding:20px;" onclick="if(event.target===this)closeAwardModal()">
+      <div style="background:#fff; border-radius:16px; max-width:640px; width:100%; max-height:90vh; overflow-y:auto; box-shadow:0 24px 60px rgba(0,0,0,0.3); position:relative;">
+        <div id="awardModalImg" style="display:none; width:100%; height:260px; overflow:hidden; border-radius:16px 16px 0 0;">
+          <img id="awardModalImgEl" src="" alt="" style="width:100%; height:100%; object-fit:cover;">
+        </div>
+        <div style="padding:32px;">
+          <button onclick="closeAwardModal()" style="position:absolute; top:14px; right:16px; background:rgba(0,0,0,0.12); border:none; border-radius:50%; width:32px; height:32px; font-size:1rem; cursor:pointer; line-height:1; color:#333;">✕</button>
+          <div id="awardModalSub" style="font-size:0.72rem; font-weight:700; color:var(--orange,#D97706); letter-spacing:0.12em; margin-bottom:8px;"></div>
+          <h3 id="awardModalTitle" style="font-size:1.4rem; font-weight:800; color:#12193A; margin-bottom:16px;"></h3>
+          <p id="awardModalDesc" style="font-size:0.92rem; color:#564E3C; line-height:1.9; margin-bottom:0;"></p>
+          <div id="awardModalContent" style="display:none; margin-top:20px; padding-top:20px; border-top:1px solid #DDD0C2;">
+            <div id="awardModalContentText" style="font-size:0.9rem; color:#564E3C; line-height:2; white-space:pre-wrap;"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 認證資格區塊 -->
+    <div style="background:linear-gradient(135deg, var(--navy-dark), var(--navy)); border-radius:var(--radius-lg); padding:48px; color:white; margin-bottom:48px;">
+      <div class="text-center" style="margin-bottom:40px;">
+        <div style="font-size:0.8rem; font-weight:700; letter-spacing:0.15em; color:rgba(255,255,255,0.5); margin-bottom:12px;">CERTIFICATIONS</div>
+        <h3 style="font-size:1.4rem; font-weight:900; margin-bottom:8px;">專業認證與資格</h3>
+        <p style="color:rgba(255,255,255,0.6); font-size:0.9rem;">持續取得國際與國內專業認證，確保服務品質符合最高標準</p>
+      </div>
+      <div id="awards-certs-grid" style="display:grid; grid-template-columns:repeat(3,1fr); gap:24px;">
+        <div style="background:rgba(255,255,255,0.07); border-radius:12px; padding:24px; text-align:center;">
+          <div style="font-size:2rem; margin-bottom:12px;">📋</div>
+          <div style="font-size:0.95rem; font-weight:700; margin-bottom:6px;">ISO 品質管理</div>
+          <div style="font-size:0.8rem; color:rgba(255,255,255,0.55); line-height:1.6;">符合國際品質管理系統標準，確保服務流程一致性與可靠性</div>
+        </div>
+        <div style="background:rgba(255,255,255,0.07); border-radius:12px; padding:24px; text-align:center;">
+          <div style="font-size:2rem; margin-bottom:12px;">🔒</div>
+          <div style="font-size:0.95rem; font-weight:700; margin-bottom:6px;">資訊安全認證</div>
+          <div style="font-size:0.8rem; color:rgba(255,255,255,0.55); line-height:1.6;">取得資訊安全相關認證，保障客戶資料安全與隱私權益</div>
+        </div>
+        <div style="background:rgba(255,255,255,0.07); border-radius:12px; padding:24px; text-align:center;">
+          <div style="font-size:2rem; margin-bottom:12px;">🏅</div>
+          <div style="font-size:0.95rem; font-weight:700; margin-bottom:6px;">客服中心認證</div>
+          <div style="font-size:0.8rem; color:rgba(255,255,255,0.55); line-height:1.6;">通過國內外客服中心專業認證，彰顯卓越服務能量</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 媒體與報導 -->
+    <div style="background:var(--bg-light); border-radius:var(--radius-lg); padding:40px;">
+      <h3 style="font-size:1.1rem; font-weight:800; color:var(--navy-dark); margin-bottom:24px; text-align:center;">媒體報導與業界肯定</h3>
+      <div id="awards-media-list" style="display:flex; flex-direction:column; gap:16px;">
+        <div style="background:var(--white); border-left:4px solid #CE0000; border-radius:0 8px 8px 0; padding:20px 24px; display:flex; align-items:center; gap:20px;">
+          <div style="font-size:1.5rem; flex-shrink:0;">📰</div>
+          <div>
+            <div style="font-size:0.88rem; font-weight:700; color:var(--text-main); margin-bottom:4px;">榮獲媒體專題報導</div>
+            <div style="font-size:0.82rem; color:var(--text-sub); line-height:1.6;">多次受邀接受財經、科技媒體專題採訪，分享客服產業趨勢與數位轉型經驗</div>
+          </div>
+        </div>
+        <div style="background:var(--white); border-left:4px solid #CE0000; border-radius:0 8px 8px 0; padding:20px 24px; display:flex; align-items:center; gap:20px;">
+          <div style="font-size:1.5rem; flex-shrink:0;">🎤</div>
+          <div>
+            <div style="font-size:0.88rem; font-weight:700; color:var(--text-main); margin-bottom:4px;">業界論壇與研討會受邀演講</div>
+            <div style="font-size:0.82rem; color:var(--text-sub); line-height:1.6;">受邀參與客服、數位轉型相關論壇，分享集團在服務創新與 AI 應用的實踐經驗</div>
+          </div>
+        </div>
+        <div style="background:var(--white); border-left:4px solid #CE0000; border-radius:0 8px 8px 0; padding:20px 24px; display:flex; align-items:center; gap:20px;">
+          <div style="font-size:1.5rem; flex-shrink:0;">🤝</div>
+          <div>
+            <div style="font-size:0.88rem; font-weight:700; color:var(--text-main); margin-bottom:4px;">政府合作標竿企業</div>
+            <div style="font-size:0.82rem; color:var(--text-sub); line-height:1.6;">獲政府機關指定為優質客服外包廠商，服務多個公共事業及政府機關客服中心</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CTA -->
+<section class="cta-section">
+  <div class="container" style="position:relative; z-index:1; text-align:center;">
+    <h2 class="section-title" style="color:#fff;">與我們合作，共創服務新價值</h2>
+    <p style="color:rgba(255,255,255,0.6); margin:16px auto 36px; max-width:480px;">立即聯繫我們的顧問，了解最適合您的客服解決方案</p>
+    <div style="display:flex; justify-content:center; gap:16px; flex-wrap:wrap;">
+      <a href="services.html" class="btn btn-primary">探索服務方案</a>
+      <a href="contact.html" class="btn btn-outline">免費諮詢</a>
+    </div>
+  </div>
+</section>
+
+<footer class="footer">
+  <div class="container">
+    <div class="footer-grid">
+      <div class="footer-brand">
+        <div class="footer-logo">
+          <div class="footer-logo-box"><img src="IPCCLOGO.png" alt="IPCC"></div>
+          <div>
+            <span class="footer-logo-name">東州集團</span>
+            <div class="footer-logo-companies">
+              <span>東州互聯網實業有限公司</span>
+              <span>顯榮國際股份有限公司</span>
+            </div>
+          </div>
+        </div>
+        <p>整合系統、服務與數據，協助企業打造永續競爭力。</p>
+        <div class="footer-socials">
+          <a href="https://www.facebook.com/easy.ipcc/" target="_blank" rel="noopener" class="footer-social" title="Facebook">f</a>
+          <a href="#" class="footer-social">▶</a>
+          <a href="https://www.1111.com.tw/corp/8563" target="_blank" rel="noopener" class="footer-social" title="1111人力銀行">人</a>
+        </div>
+      </div>
+      <div class="footer-col">
+        <h4>快速連結</h4>
+        <ul>
+          <li><a href="news.html">最新消息</a></li>
+          <li><a href="about.html">關於我們</a></li>
+          <li><a href="services.html">專案服務</a></li>
+          <li><a href="cases.html">成功案例</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>服務項目</h4>
+        <ul>
+          <li><a href="services.html#outsource">客服委外</a></li>
+          <li><a href="services.html#training">客服訓練</a></li>
+          <li><a href="services.html#it">資訊服務</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>聯絡地址</h4>
+        <div class="footer-companies">
+          <div>東州互聯網實業有限公司</div>
+          <div>顯榮國際股份有限公司</div>
+        </div>
+        <div class="footer-address" style="margin-top:12px;"><span>北區</span><br>台北市松山區民權東路三段102號10樓</div>
+        <div class="footer-address" style="margin-top:16px;"><span>中區</span><br>台中市西區台灣大道二段307號9樓之2</div>
+        <div style="margin-top:16px; color:rgba(255,255,255,0.55);">☎ 0800-666-080</div>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span>© 2025 東州互聯網實業有限公司 / 顯榮國際股份有限公司 版權所有</span>
+      <span>IPCC Group — 創新服務．永續經營</span>
+    </div>
+  </div>
+</footer>
+
+<script>
+window.addEventListener('scroll', () => {
+  document.getElementById('navbar').classList.toggle('scrolled', window.scrollY > 20);
+});
+function toggleMenu() {
+  document.getElementById('navMenu').classList.toggle('open');
+}
+</script>
+
+<script>
+function openAwardModal(name, subtitle, desc, content, imgSrc) {
+  document.getElementById('awardModalTitle').textContent = name || '';
+  document.getElementById('awardModalSub').textContent = subtitle || '';
+  document.getElementById('awardModalDesc').textContent = desc || '';
+  var imgWrap = document.getElementById('awardModalImg');
+  if (imgSrc) {
+    document.getElementById('awardModalImgEl').src = imgSrc;
+    imgWrap.style.display = 'block';
+  } else {
+    imgWrap.style.display = 'none';
+  }
+  var contentWrap = document.getElementById('awardModalContent');
+  if (content) {
+    document.getElementById('awardModalContentText').textContent = content;
+    contentWrap.style.display = 'block';
+  } else {
+    contentWrap.style.display = 'none';
+  }
+  var modal = document.getElementById('awardModal');
+  modal.style.display = 'flex';
+  document.body.style.overflow = 'hidden';
+}
+function closeAwardModal() {
+  document.getElementById('awardModal').style.display = 'none';
+  document.body.style.overflow = '';
+}
+document.addEventListener('keydown', function(e) { if (e.key === 'Escape') closeAwardModal(); });
+</script>
+<script>
+// 安全編碼 helper
+function esc(s) { return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
+function jsStr(s) { return "'" + String(s).replace(/\\/g,'\\\\').replace(/'/g,"\\'").replace(/\n/g,'\\n').replace(/\r/g,'') + "'"; }
+(function() {
+  try {
+    var d = JSON.parse(localStorage.getItem('ipcc_about_awards') || 'null');
+    if (!d) return;
+    var h2 = document.querySelector('.section-title');
+    var sub = document.querySelector('.section-sub');
+    if (d.title && h2) h2.textContent = d.title;
+    if (d.sub && sub) sub.textContent = d.sub;
+    if (d.awards && d.awards.length) {
+      var ag = document.getElementById('awards-main-grid');
+      if (ag) ag.innerHTML = d.awards.map(function(a) {
+        var imgHtml = a.image
+          ? '<img src="'+a.image+'" alt="'+esc(a.name||'')+'" style="width:100%;height:100%;object-fit:cover;display:block;">'
+          : '<div class="award-card-placeholder">🏆</div>';
+        var safeArgs = [
+          jsStr(a.name||''), jsStr(a.subtitle||''), jsStr(a.desc||''), jsStr(a.content||''), jsStr(a.image||'')
+        ].join(',');
+        return '<div class="award-card" onclick="openAwardModal('+safeArgs+')">'
+          + '<div class="award-card-img">'+imgHtml+'</div>'
+          + '<div class="award-card-body">'
+          + '<div class="award-card-sub">'+esc(a.subtitle||'')+'</div>'
+          + '<h4 class="award-card-title">'+esc(a.name||'')+'</h4>'
+          + '<p class="award-card-desc">'+esc(a.desc||'')+'</p>'
+          + '<span class="award-card-read">閱讀詳情 →</span>'
+          + '</div></div>';
+      }).join('');
+    }
+    if (d.certs && d.certs.length) {
+      var cg = document.getElementById('awards-certs-grid');
+      if (cg) cg.innerHTML = d.certs.map(function(c) {
+        var iconHtml = c.image
+          ? '<img src="'+c.image+'" style="width:60px;height:60px;object-fit:cover;border-radius:8px;margin-bottom:12px;display:block;margin-left:auto;margin-right:auto;" alt="">'
+          : '<div style="font-size:2rem;margin-bottom:12px;">📋</div>';
+        return '<div style="background:rgba(255,255,255,0.07);border-radius:12px;padding:24px;text-align:center;">'
+          + iconHtml
+          + '<div style="font-size:0.95rem;font-weight:700;margin-bottom:6px;">'+(c.name||'')+'</div>'
+          + '<div style="font-size:0.8rem;color:rgba(255,255,255,0.55);line-height:1.6;">'+(c.desc||'')+'</div>'
+          + '</div>';
+      }).join('');
+    }
+    if (d.media && d.media.length) {
+      var ml = document.getElementById('awards-media-list');
+      if (ml) ml.innerHTML = d.media.map(function(m) {
+        var iconHtml = m.image
+          ? '<img src="'+m.image+'" style="width:52px;height:52px;object-fit:cover;border-radius:8px;flex-shrink:0;" alt="">'
+          : '<div style="font-size:1.5rem;flex-shrink:0;width:52px;text-align:center;">📰</div>';
+        return '<div style="background:var(--white);border-left:4px solid #CE0000;border-radius:0 8px 8px 0;padding:20px 24px;display:flex;align-items:center;gap:20px;">'
+          + iconHtml
+          + '<div><div style="font-size:0.88rem;font-weight:700;color:var(--text-main);margin-bottom:4px;">'+(m.title||'')+'</div>'
+          + '<div style="font-size:0.82rem;color:var(--text-sub);line-height:1.6;">'+(m.desc||'')+'</div></div>'
+          + '</div>';
+      }).join('');
+    }
+  } catch(e) {}
+})();
+</script>
+</body>
+</html>

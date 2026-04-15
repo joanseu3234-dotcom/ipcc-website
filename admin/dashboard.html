@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>總覽 | IPCC 後台</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="admin.css">
+</head>
+<body>
+<div class="sidebar-overlay" id="sidebarOverlay" onclick="toggleSidebar()"></div>
+<div class="admin-layout">
+  <!-- Sidebar -->
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-logo">
+      <img src="../IPCCLOGO-transparent.png" alt="IPCC">
+      <div class="sidebar-logo-text">
+        <div class="co-name">IPCC 東州集團</div>
+        <div class="co-sub">後台管理系統</div>
+      </div>
+    </div>
+        <nav class="sidebar-nav">
+      <a href="dashboard.html" class="nav-item active">📊 儀表板</a>
+      <a href="home-manage.html" class="nav-item" data-perm="home">🏠 首頁管理</a>
+      <a href="news-manage.html" class="nav-item" data-perm="news">📰 最新消息</a>
+      <a href="about-manage.html" class="nav-item" data-perm="about">🏢 關於我們</a>
+      <a href="services-manage.html" class="nav-item" data-perm="services">🛠 專案服務</a>
+      <a href="cases-manage.html" class="nav-item" data-perm="cases">🏆 成功案例</a>
+      <a href="contacts-manage.html" class="nav-item" data-perm="contacts">📋 聯絡表單</a>
+      <a href="settings.html" class="nav-item" data-perm="settings">⚙️ 系統設定</a>
+      <a href="users-manage.html" class="nav-item" data-perm="users">👥 帳號管理</a>
+    </nav>
+    <div class="sidebar-footer">
+      <a class="btn-view-site" href="../index.html" target="_blank"><span>&#127760;</span>查看前台網站</a>
+      <button class="btn-logout" onclick="logout()"><span>&#128682;</span>登出</button>
+    </div>
+  </aside>
+  <!-- Main Content -->
+  <div class="main-content">
+    <header class="topbar">
+      <button class="topbar-hamburger" onclick="toggleSidebar()">&#9776;</button>
+      <div class="topbar-title">總覽 Dashboard</div>
+      <div class="topbar-user">
+        <div class="topbar-avatar">A</div>
+        <span id="topbarUsername">管理員</span>
+      </div>
+    </header>
+    <div class="page-content">
+      <div class="page-header">
+        <h1>歡迎回來 &#128075;</h1>
+        <p class="page-subtitle">這是 IPCC 東州集團後台管理系統，管理消息與成功案例。</p>
+      </div>
+      <!-- Stats -->
+      <div class="stats-grid" id="statsGrid">
+        <div class="stat-card"><div class="stat-icon">&#128240;</div><div class="stat-info"><div class="stat-num" id="statTotalNews">0</div><div class="stat-label">消息總數</div></div></div>
+        <div class="stat-card"><div class="stat-icon">&#9989;</div><div class="stat-info"><div class="stat-num" id="statPubNews">0</div><div class="stat-label">已發布消息</div></div></div>
+        <div class="stat-card"><div class="stat-icon">&#128188;</div><div class="stat-info"><div class="stat-num" id="statTotalCases">0</div><div class="stat-label">案例總數</div></div></div>
+        <div class="stat-card"><div class="stat-icon">&#127942;</div><div class="stat-info"><div class="stat-num" id="statPubCases">0</div><div class="stat-label">已發布案例</div></div></div>
+      </div>
+      <!-- Quick Actions -->
+      <div class="section-card">
+        <div class="section-card-header"><h2>&#9889; 快速操作</h2></div>
+        <div class="section-card-body">
+          <div class="quick-actions">
+            <a class="action-btn action-news" href="news-manage.html?action=new">&#43; 新增消息</a>
+            <a class="action-btn action-case" href="cases-manage.html?action=new">&#43; 新增案例</a>
+            <a class="action-btn action-view" href="../index.html" target="_blank">&#127760; 查看前台</a>
+          </div>
+        </div>
+      </div>
+      <!-- Recent News -->
+      <div class="section-card">
+        <div class="section-card-header">
+          <h2>&#128240; 最近消息</h2>
+          <a href="news-manage.html">管理全部 &rarr;</a>
+        </div>
+        <div class="section-card-body" id="recentNews">
+          <div class="empty-state"><div class="empty-icon">&#128240;</div><p>尚無消息，點擊「新增消息」開始建立。</p></div>
+        </div>
+      </div>
+      <!-- Recent Cases -->
+      <div class="section-card">
+        <div class="section-card-header">
+          <h2>&#128188; 最近案例</h2>
+          <a href="cases-manage.html">管理全部 &rarr;</a>
+        </div>
+        <div class="section-card-body" id="recentCases">
+          <div class="empty-state"><div class="empty-icon">&#128188;</div><p>尚無案例，點擊「新增案例」開始建立。</p></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<script src="users-config.js"></script>
+<script src="admin.js"></script>
+<script>
+requireLogin();
+    initAdminUI();
+
+function renderDashboard() {
+  var news = getNews();
+  var cases = getCases();
+  document.getElementById("statTotalNews").textContent = news.length;
+  document.getElementById("statPubNews").textContent = news.filter(function(n){ return n.published; }).length;
+  document.getElementById("statTotalCases").textContent = cases.length;
+  document.getElementById("statPubCases").textContent = cases.filter(function(c){ return c.published; }).length;
+
+  // Recent news (last 5)
+  var recentN = news.slice().sort(function(a,b){ return b.createdAt - a.createdAt; }).slice(0,5);
+  var newsEl = document.getElementById("recentNews");
+  if (recentN.length === 0) {
+    newsEl.innerHTML = '<div class="empty-state"><div class="empty-icon">&#128240;</div><p>尚無消息，點擊「新增消息」開始建立。</p></div>';
+  } else {
+    newsEl.innerHTML = recentN.map(function(item) {
+      var tabBadge = item.tab === "award" ? '<span class="badge badge-award">獎項</span>' : item.tab === "podcast" ? '<span class="badge badge-podcast">Podcast</span>' : '<span class="badge badge-news">消息</span>';
+      var statusCls = item.published ? "published" : "draft";
+      var statusTxt = item.published ? "已發布" : "草稿";
+      return '<div class="list-row"><div class="list-row-emoji">' + (item.emoji||"&#128240;") + '</div><div class="list-row-info"><div class="list-row-title">' + item.title + '</div><div class="list-row-meta">' + item.date + '</div></div><div class="list-row-aside">' + tabBadge + '<span class="status-dot ' + statusCls + '">' + statusTxt + '</span></div></div>';
+    }).join("");
+  }
+
+  // Recent cases (last 5)
+  var recentC = cases.slice().sort(function(a,b){ return b.createdAt - a.createdAt; }).slice(0,5);
+  var casesEl = document.getElementById("recentCases");
+  if (recentC.length === 0) {
+    casesEl.innerHTML = '<div class="empty-state"><div class="empty-icon">&#128188;</div><p>尚無案例，點擊「新增案例」開始建立。</p></div>';
+  } else {
+    casesEl.innerHTML = recentC.map(function(item) {
+      var typeBadge = item.caseType === "training" ? '<span class="badge badge-training">客服訓練</span>' : item.caseType === "it" ? '<span class="badge badge-it">資訊服務</span>' : '<span class="badge badge-outsource">客服委外</span>';
+      var statusCls = item.published ? "published" : "draft";
+      var statusTxt = item.published ? "已發布" : "草稿";
+      return '<div class="list-row"><div class="list-row-emoji">' + (item.emoji||"&#127942;") + '</div><div class="list-row-info"><div class="list-row-title">' + item.client + '</div><div class="list-row-meta">' + item.category + '</div></div><div class="list-row-aside">' + typeBadge + '<span class="status-dot ' + statusCls + '">' + statusTxt + '</span></div></div>';
+    }).join("");
+  }
+}
+
+renderDashboard();
+</script>
+</body>
+</html>

@@ -1,0 +1,393 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>首頁管理 | IPCC 後台</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="admin.css">
+  <script src="https://cdn.jsdelivr.net/npm/sortablejs@1.15.0/Sortable.min.js"></script>
+  <style>
+    .tab-nav { display:flex; gap:4px; margin-bottom:28px; border-bottom:2px solid var(--border); padding-bottom:0; }
+    .tab-btn { padding:10px 20px; border:none; background:none; font-size:0.9rem; font-weight:600; color:var(--text-sub); cursor:pointer; border-bottom:2px solid transparent; margin-bottom:-2px; font-family:inherit; transition:color 0.2s; }
+    .tab-btn.active { color:var(--navy); border-bottom-color:var(--navy); }
+    .tab-content { display:none; }
+    .tab-content.active { display:block; }
+    .svc-drag-list { display:flex; flex-direction:column; gap:12px; }
+    .svc-drag-item { background:#fff; border:1.5px solid var(--border); border-radius:12px; padding:16px 20px; display:flex; align-items:center; gap:16px; cursor:grab; transition:box-shadow 0.2s; }
+    .svc-drag-item:active { cursor:grabbing; }
+    .svc-drag-item.sortable-ghost { opacity:0.4; box-shadow:0 4px 20px rgba(30,42,94,0.15); }
+    .drag-handle { font-size:1.2rem; color:#aaa; user-select:none; flex-shrink:0; }
+    .svc-drag-icon { font-size:1.8rem; flex-shrink:0; }
+    .svc-drag-info { flex:1; min-width:0; }
+    .svc-drag-title { font-weight:700; color:var(--navy-dark); font-size:0.95rem; }
+    .svc-drag-desc { font-size:0.8rem; color:var(--text-sub); margin-top:3px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+    .svc-drag-tags { display:flex; flex-wrap:wrap; gap:4px; margin-top:6px; }
+    .svc-tag-chip { background:rgba(30,42,94,0.08); color:var(--navy); padding:2px 8px; border-radius:100px; font-size:0.72rem; font-weight:600; }
+    .svc-drag-actions { display:flex; gap:8px; flex-shrink:0; }
+    .news-picker-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(260px,1fr)); gap:12px; }
+    .news-picker-card { border:2px solid var(--border); border-radius:10px; padding:0; cursor:pointer; transition:border-color 0.2s, background 0.2s; overflow:hidden; display:flex; flex-direction:column; }
+    .news-picker-card:hover { border-color:var(--navy); }
+    .news-picker-card.selected { border-color:var(--navy); background:rgba(30,42,94,0.04); }
+    .news-picker-card.is-draft { opacity:0.62; }
+    .news-picker-card .check { width:20px; height:20px; border:2px solid var(--border); border-radius:4px; display:inline-flex; align-items:center; justify-content:center; margin-right:8px; color:transparent; flex-shrink:0; transition:all 0.15s; }
+    .news-picker-card.selected .check { background:var(--navy); border-color:var(--navy); color:#fff; font-size:0.75rem; }
+    .news-picker-thumb { width:100%; height:90px; object-fit:cover; display:block; background:#F3F4F6; }
+    .news-picker-thumb-placeholder { width:100%; height:90px; background:linear-gradient(135deg,#F3F4F6,#E5E7EB); display:flex; align-items:center; justify-content:center; font-size:1.6rem; color:#ccc; }
+    .news-picker-body { padding:12px 14px; flex:1; }
+    .news-picker-title { font-size:0.84rem; font-weight:600; color:var(--navy-dark); margin-top:6px; line-height:1.4; display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden; }
+    .picker-tab-nav { display:flex; gap:8px; margin-bottom:16px; flex-wrap:wrap; align-items:center; }
+    .picker-tab { padding:6px 16px; border:1.5px solid var(--border); border-radius:100px; font-size:0.82rem; font-weight:600; cursor:pointer; background:#fff; color:var(--text-sub); font-family:inherit; transition:all 0.2s; }
+    .picker-tab.active { background:var(--navy); border-color:var(--navy); color:#fff; }
+    .picker-tab .tab-count { font-size:0.7rem; background:rgba(0,0,0,0.1); border-radius:100px; padding:1px 6px; margin-left:4px; }
+    .picker-tab.active .tab-count { background:rgba(255,255,255,0.25); }
+    .badge-news  { background:rgba(30,42,94,0.1);  color:#1E2A5E; font-size:0.68rem; padding:2px 7px; border-radius:100px; font-weight:700; }
+    .badge-media { background:rgba(59,130,246,0.1); color:#1D4ED8; font-size:0.68rem; padding:2px 7px; border-radius:100px; font-weight:700; }
+    .badge-event { background:rgba(16,185,129,0.1); color:#047857; font-size:0.68rem; padding:2px 7px; border-radius:100px; font-weight:700; }
+    .badge-draft { background:#F3F4F6; color:#9CA3AF; font-size:0.68rem; padding:2px 7px; border-radius:100px; font-weight:700; margin-left:4px; }
+    .selected-order { background:#F4F2EE; border-radius:10px; padding:14px 16px; margin-top:12px; }
+    .order-item { display:flex; align-items:center; gap:10px; padding:6px 0; border-bottom:1px solid var(--border); }
+    .order-item:last-child { border:none; }
+    .order-num { width:24px; height:24px; background:var(--navy); color:#fff; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:0.75rem; font-weight:700; flex-shrink:0; }
+    .picker-refresh-btn { margin-left:auto; font-size:0.78rem; color:var(--text-sub); background:none; border:1px solid var(--border); border-radius:100px; padding:4px 12px; cursor:pointer; font-family:inherit; transition:all 0.2s; }
+    .picker-refresh-btn:hover { border-color:var(--navy); color:var(--navy); }
+  </style>
+</head>
+<body>
+  <div class="admin-layout">
+    <aside class="sidebar" id="sidebar">
+      <div class="sidebar-logo">
+        <img src="../IPCCLOGO-transparent.png" alt="IPCC" onerror="this.style.display='none'">
+        <div class="sidebar-logo-text">
+        <div class="co-name">IPCC 東州集團</div>
+          <div class="co-sub">後台管理系統</div>
+        </div>
+      </div>
+          <nav class="sidebar-nav">
+      <a href="dashboard.html" class="nav-item">📊 儀表板</a>
+      <a href="home-manage.html" class="nav-item active" data-perm="home">🏠 首頁管理</a>
+      <a href="news-manage.html" class="nav-item" data-perm="news">📰 最新消息</a>
+      <a href="about-manage.html" class="nav-item" data-perm="about">🏢 關於我們</a>
+      <a href="services-manage.html" class="nav-item" data-perm="services">🛠 專案服務</a>
+      <a href="cases-manage.html" class="nav-item" data-perm="cases">🏆 成功案例</a>
+      <a href="contacts-manage.html" class="nav-item" data-perm="contacts">📋 聯絡表單</a>
+      <a href="settings.html" class="nav-item" data-perm="settings">⚙️ 系統設定</a>
+      <a href="users-manage.html" class="nav-item" data-perm="users">👥 帳號管理</a>
+    </nav>
+      <div class="sidebar-footer">
+        <a href="../index.html" target="_blank" class="view-site-btn">🔗 查看前台</a>
+        <button onclick="logout()" class="logout-btn">登出</button>
+      </div>
+    </aside>
+    <div class="sidebar-overlay" onclick="toggleSidebar()"></div>
+    <main class="main-content">
+      <header class="topbar">
+        <button class="hamburger" onclick="toggleSidebar()">☰</button>
+        <div class="topbar-title">首頁管理</div>
+        <div class="topbar-user">管理員</div>
+      </header>
+      <div class="page-content">
+        <div class="page-header">
+          <h1>首頁管理</h1>
+          <p>管理首頁的服務項目與精選消息（最新消息 / 媒體採訪 / 活動）</p>
+        </div>
+
+        <div class="tab-nav">
+          <button class="tab-btn active" onclick="switchTab('services')">🛠 服務項目</button>
+          <button class="tab-btn" onclick="switchTab('news')">📰 精選消息</button>
+        </div>
+
+        <!-- === 服務項目 Tab === -->
+        <div id="tab-services" class="tab-content active">
+          <div class="section-card">
+            <div class="section-card-header">
+              <h2 class="section-card-title">服務項目管理</h2>
+              <button class="btn-primary btn-sm" onclick="openSvcModal()">+ 新增服務</button>
+            </div>
+            <p style="font-size:0.85rem; color:var(--text-sub); margin-bottom:20px;">拖曳卡片可調整在首頁的顯示順序</p>
+            <div id="svcList" class="svc-drag-list"></div>
+          </div>
+        </div>
+
+        <!-- === 精選消息 Tab === -->
+        <div id="tab-news" class="tab-content">
+          <div class="section-card">
+            <h2 class="section-card-title">首頁精選消息</h2>
+            <p style="font-size:0.85rem; color:var(--text-sub); margin-bottom:4px;">勾選要在首頁各分頁顯示的消息，儲存後立即生效。<strong>未勾選時自動顯示最新 3 篇已發布消息。</strong></p>
+            <p style="font-size:0.82rem; color:var(--text-sub); margin-bottom:20px;">灰色卡片為草稿（尚未發布），仍可預先選取，發布後即會顯示在前台。</p>
+            <div class="picker-tab-nav">
+              <button class="picker-tab active" id="ptab-news"  onclick="switchPickerTab('news')">最新消息 <span class="tab-count" id="cnt-news">0</span></button>
+              <button class="picker-tab"        id="ptab-media" onclick="switchPickerTab('media')">媒體採訪 <span class="tab-count" id="cnt-media">0</span></button>
+              <button class="picker-tab"        id="ptab-event" onclick="switchPickerTab('event')">活動 <span class="tab-count" id="cnt-event">0</span></button>
+              <button class="picker-refresh-btn" onclick="renderPickers()" title="重新從最新消息管理載入">↻ 重新整理</button>
+            </div>
+            <div id="pickerNews"  class="news-picker-grid"></div>
+            <div id="pickerMedia" class="news-picker-grid" style="display:none;"></div>
+            <div id="pickerEvent" class="news-picker-grid" style="display:none;"></div>
+            <div style="margin-top:20px;">
+              <div id="selectedOrder" class="selected-order" style="display:none;">
+                <div style="font-size:0.82rem; font-weight:700; color:var(--text-sub); margin-bottom:8px;">✅ 已選取（將依此順序在首頁顯示）</div>
+                <div id="orderList"></div>
+              </div>
+              <button class="btn-primary" style="margin-top:16px;" onclick="saveFeaturedNews()">💾 儲存精選消息</button>
+              <span id="saveMsg" style="margin-left:12px; font-size:0.82rem; color:#059669; display:none;">已儲存！前台重新整理後生效</span>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </main>
+  </div>
+
+  <!-- Service Modal -->
+  <div class="modal-overlay" id="svcModal">
+    <div class="modal">
+      <div class="modal-header">
+        <h3 id="svcModalTitle">新增服務</h3>
+        <button class="modal-close" onclick="closeSvcModal()">✕</button>
+      </div>
+      <div class="modal-body">
+        <input type="hidden" id="svcId">
+        <div class="form-group">
+          <label class="form-label">服務編號標籤</label>
+          <input type="text" class="form-control" id="svcNum" placeholder="如：Service 04">
+        </div>
+        <div style="display:grid; grid-template-columns:80px 1fr; gap:12px;">
+          <div class="form-group">
+            <label class="form-label">圖示</label>
+            <input type="text" class="form-control" id="svcIcon" placeholder="📞" style="text-align:center; font-size:1.4rem;">
+          </div>
+          <div class="form-group">
+            <label class="form-label">服務名稱</label>
+            <input type="text" class="form-control" id="svcTitle" placeholder="服務名稱">
+          </div>
+        </div>
+        <div class="form-group">
+          <label class="form-label">服務描述</label>
+          <textarea class="form-control form-textarea" id="svcDesc" rows="3" placeholder="服務說明..."></textarea>
+        </div>
+        <div class="form-group">
+          <label class="form-label">標籤（用逗號分隔）</label>
+          <input type="text" class="form-control" id="svcTags" placeholder="電話, 文字, 電商">
+        </div>
+        <div class="form-group">
+          <label class="form-label">連結頁面</label>
+          <input type="text" class="form-control" id="svcLink" placeholder="services.html">
+        </div>
+        <div class="form-group" style="display:flex; align-items:center; gap:10px;">
+          <input type="checkbox" id="svcPublished" style="width:18px;height:18px;cursor:pointer;">
+          <label for="svcPublished" class="form-label" style="margin:0; cursor:pointer;">發布（顯示在前台）</label>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn-outline" onclick="closeSvcModal()">取消</button>
+        <button class="btn-primary" onclick="saveSvc()">儲存</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="users-config.js"></script>
+  <script src="admin.js"></script>
+  <script>
+    requireLogin();
+    initAdminUI();
+
+    // ====== Tab 切換 ======
+    function switchTab(name) {
+      document.querySelectorAll('.tab-btn').forEach((b,i) => b.classList.toggle('active', ['services','news'][i]===name));
+      document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+      document.getElementById('tab-'+name).classList.add('active');
+    }
+
+    // ====== 服務管理 ======
+    let sortable;
+    function renderSvcList() {
+      const svcs = getServices().slice().sort((a,b)=>a.order-b.order);
+      const el = document.getElementById('svcList');
+      el.innerHTML = svcs.map(s => `
+        <div class="svc-drag-item" data-id="${s.id}">
+          <span class="drag-handle">⠿</span>
+          <span class="svc-drag-icon">${s.icon||'📋'}</span>
+          <div class="svc-drag-info">
+            <div class="svc-drag-title">${s.num} — ${s.title}</div>
+            <div class="svc-drag-desc">${s.desc||''}</div>
+            <div class="svc-drag-tags">${(s.tags||[]).map(t=>'<span class="svc-tag-chip">'+t+'</span>').join('')}</div>
+          </div>
+          <span style="font-size:0.75rem; padding:3px 10px; border-radius:100px; ${s.published?'background:#D1FAE5;color:#065F46':'background:#F3F4F6;color:#6B7280'}">${s.published?'已發布':'草稿'}</span>
+          <div class="svc-drag-actions">
+            <button class="btn-outline btn-sm" onclick="editSvc('${s.id}')">編輯</button>
+            ${s.id.startsWith('svc-') && ['svc-1','svc-2','svc-3'].includes(s.id) ? '' : '<button class="btn-red btn-sm" onclick="deleteSvc(\'' + s.id + '\')">刪除</button>'}
+          </div>
+        </div>
+      `).join('');
+      if (sortable) sortable.destroy();
+      sortable = Sortable.create(el, {
+        handle: '.drag-handle',
+        animation: 150,
+        onEnd: function() {
+          const ids = Array.from(el.querySelectorAll('.svc-drag-item')).map(el=>el.dataset.id);
+          const svcs = getServices();
+          ids.forEach((id,i) => { const s = svcs.find(s=>s.id===id); if(s) s.order=i; });
+          saveServices(svcs);
+        }
+      });
+    }
+
+    function openSvcModal(s) {
+      document.getElementById('svcModalTitle').textContent = s ? '編輯服務' : '新增服務';
+      document.getElementById('svcId').value = s ? s.id : '';
+      document.getElementById('svcNum').value = s ? s.num : '';
+      document.getElementById('svcIcon').value = s ? s.icon : '📋';
+      document.getElementById('svcTitle').value = s ? s.title : '';
+      document.getElementById('svcDesc').value = s ? s.desc : '';
+      document.getElementById('svcTags').value = s ? (s.tags||[]).join(', ') : '';
+      document.getElementById('svcLink').value = s ? s.link : 'contact.html';
+      document.getElementById('svcPublished').checked = s ? !!s.published : true;
+      document.getElementById('svcModal').classList.add('open');
+    }
+    function closeSvcModal() { document.getElementById('svcModal').classList.remove('open'); }
+    function editSvc(id) { const s = getServices().find(s=>s.id===id); if(s) openSvcModal(s); }
+    function deleteSvc(id) {
+      if(!confirm('確定要刪除此服務項目？')) return;
+      saveServices(getServices().filter(s=>s.id!==id));
+      renderSvcList();
+    }
+    function saveSvc() {
+      const id = document.getElementById('svcId').value || genId();
+      const svcs = getServices();
+      const idx = svcs.findIndex(s=>s.id===id);
+      const item = {
+        id, num:document.getElementById('svcNum').value.trim(),
+        icon:document.getElementById('svcIcon').value.trim()||'📋',
+        title:document.getElementById('svcTitle').value.trim(),
+        desc:document.getElementById('svcDesc').value.trim(),
+        tags:document.getElementById('svcTags').value.split(',').map(t=>t.trim()).filter(Boolean),
+        link:document.getElementById('svcLink').value.trim()||'contact.html',
+        published:document.getElementById('svcPublished').checked,
+        order:idx>=0?svcs[idx].order:svcs.length
+      };
+      if(idx>=0) svcs[idx]=item; else svcs.push(item);
+      saveServices(svcs);
+      closeSvcModal();
+      renderSvcList();
+    }
+
+    // ====== 精選消息選取 ======
+    let currentPickerTab = 'news';
+    let selectedIds = {news:[], media:[], event:[]};
+    const TAB_LABELS = {news:'最新消息', media:'媒體採訪', event:'活動'};
+    const TAB_KEYS   = ['news','media','event'];
+
+    function switchPickerTab(tab) {
+      currentPickerTab = tab;
+      TAB_KEYS.forEach(t => {
+        document.getElementById('ptab-'+t).classList.toggle('active', t===tab);
+        document.getElementById('picker'+cap(t)).style.display = t===tab?'grid':'none';
+      });
+      renderOrderList();
+    }
+
+    function cap(s) { return s.charAt(0).toUpperCase()+s.slice(1); }
+
+    function renderPickers() {
+      const h = getHomeData();
+      // 保留已選取的 id，不覆蓋（避免刷新時取消勾選）
+      const saved = h.featuredNews||{news:[],media:[],event:[]};
+      TAB_KEYS.forEach(t => { if(!selectedIds[t].length) selectedIds[t] = [...(saved[t]||[])]; });
+
+      const allNews = getNews();
+
+      TAB_KEYS.forEach(tab => {
+        const items = allNews.filter(n=>n.tab===tab)
+                             .sort((a,b)=>(b.createdAt||0)-(a.createdAt||0));
+        // 更新 tab 計數
+        const pubCount = items.filter(n=>n.published).length;
+        document.getElementById('cnt-'+tab).textContent = pubCount;
+
+        const el = document.getElementById('picker'+cap(tab));
+        if(items.length===0) {
+          el.innerHTML = `<div style="grid-column:1/-1; padding:28px 0; text-align:center; color:var(--text-sub); font-size:0.88rem;">
+            此分類尚無消息 — <a href="news-manage.html?action=new" style="color:var(--navy); font-weight:700;">立即新增</a>
+          </div>`;
+          return;
+        }
+
+        el.innerHTML = items.map(n => {
+          const sel = selectedIds[tab].includes(n.id);
+          const thumbHtml = n.image
+            ? `<img class="news-picker-thumb" src="${n.image}" alt="">`
+            : `<div class="news-picker-thumb-placeholder">📰</div>`;
+          const statusBadge = n.published
+            ? `<span class="badge-${tab}">${n.badge||TAB_LABELS[tab]}</span>`
+            : `<span class="badge-draft">草稿</span>`;
+          return `<div class="news-picker-card ${sel?'selected':''} ${n.published?'':'is-draft'}" onclick="togglePick('${tab}','${n.id}',this)">
+            ${thumbHtml}
+            <div class="news-picker-body">
+              <div style="display:flex;align-items:center;gap:6px;margin-bottom:6px;">
+                <span class="check">${sel?'✓':''}</span>
+                <span style="font-size:0.72rem;color:var(--text-sub);">${n.date||''}</span>
+                ${statusBadge}
+              </div>
+              <div class="news-picker-title">${n.title}</div>
+            </div>
+          </div>`;
+        }).join('');
+      });
+      renderOrderList();
+    }
+
+    function togglePick(tab, id, card) {
+      const arr = selectedIds[tab];
+      const idx = arr.indexOf(id);
+      if(idx>=0) {
+        arr.splice(idx,1);
+        card.classList.remove('selected');
+        card.querySelector('.check').textContent='';
+      } else {
+        arr.push(id);
+        card.classList.add('selected');
+        card.querySelector('.check').textContent='✓';
+      }
+      renderOrderList();
+    }
+
+    function renderOrderList() {
+      const arr = selectedIds[currentPickerTab];
+      const el   = document.getElementById('orderList');
+      const wrap = document.getElementById('selectedOrder');
+      if(!arr || arr.length===0) { wrap.style.display='none'; return; }
+      wrap.style.display='block';
+      const allNews = getNews();
+      el.innerHTML = arr.map((id,i) => {
+        const n = allNews.find(n=>n.id===id);
+        if(!n) return '';
+        const status = n.published ? '' : ' <span class="badge-draft">草稿</span>';
+        return `<div class="order-item">
+          <span class="order-num">${i+1}</span>
+          <span style="font-size:0.84rem;flex:1;">${n.title}${status}</span>
+          <span style="font-size:0.72rem;color:var(--text-sub);">${n.date||''}</span>
+        </div>`;
+      }).join('');
+    }
+
+    function saveFeaturedNews() {
+      const h = getHomeData();
+      h.featuredNews = JSON.parse(JSON.stringify(selectedIds));
+      saveHomeData(h);
+      const msg = document.getElementById('saveMsg');
+      msg.style.display = 'inline';
+      setTimeout(() => msg.style.display='none', 3000);
+    }
+
+    // ── 監聽 ipcc_news 變動（在其他頁籤新增/修改新聞後自動刷新）
+    window.addEventListener('storage', e => {
+      if (e.key === 'ipcc_news') renderPickers();
+    });
+
+    // Init
+    renderSvcList();
+    renderPickers();
+  </script>
+</body>
+</html>

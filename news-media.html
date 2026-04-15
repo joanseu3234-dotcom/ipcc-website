@@ -1,0 +1,561 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>媒體採訪 — 最新消息 — IPCC 東州集團</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+  <style>
+    /* ── 媒體卡片 ── */
+    .media-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 28px;
+      margin-bottom: 56px;
+    }
+    @media (max-width: 1024px) { .media-grid { grid-template-columns: repeat(2,1fr); } }
+    @media (max-width: 640px)  { .media-grid { grid-template-columns: 1fr; } }
+
+    .media-card {
+      background: var(--white);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      overflow: hidden;
+      cursor: pointer;
+      display: flex;
+      flex-direction: column;
+      transition: transform 0.25s, box-shadow 0.25s;
+    }
+    .media-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 16px 40px rgba(0,0,0,0.11);
+    }
+
+    /* 圖片區 */
+    .media-card-img {
+      width: 100%;
+      height: 190px;
+      flex-shrink: 0;
+      overflow: hidden;
+      background: linear-gradient(135deg, #EEF2FF, #E5E0D6);
+      position: relative;
+    }
+    .media-card-img img { width:100%; height:100%; object-fit:cover; display:block; }
+    .media-card-placeholder {
+      position: absolute; inset: 0;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 3.5rem; color: rgba(30,42,94,0.18);
+    }
+    /* 媒體類型標籤（貼在圖片左上） */
+    .media-type-badge {
+      position: absolute; top: 12px; left: 12px;
+      padding: 4px 10px; border-radius: 100px;
+      font-size: 0.72rem; font-weight: 700;
+      backdrop-filter: blur(8px);
+    }
+    .mt-article  { background:rgba(30,42,94,0.85);  color:#fff; }
+    .mt-podcast  { background:rgba(124,58,237,0.85); color:#fff; }
+    .mt-online   { background:rgba(2,132,199,0.85);  color:#fff; }
+    .mt-tv       { background:rgba(220,38,38,0.85);  color:#fff; }
+    .mt-radio    { background:rgba(5,150,105,0.85);  color:#fff; }
+    .mt-other    { background:rgba(100,116,139,0.85);color:#fff; }
+
+    /* 內容區 */
+    .media-card-body {
+      padding: 20px 22px 18px;
+      display: flex; flex-direction: column; flex: 1;
+    }
+    .media-card-meta {
+      display: flex; align-items: center; gap: 8px;
+      margin-bottom: 10px; flex-wrap: wrap;
+    }
+    .media-source {
+      font-size: 0.75rem; font-weight: 700;
+      color: var(--navy, #1E2A5E);
+      background: rgba(30,42,94,0.07);
+      padding: 3px 8px; border-radius: 100px;
+      white-space: nowrap;
+    }
+    .media-date {
+      font-size: 0.75rem; color: var(--text-sub);
+    }
+    .media-card-title {
+      font-size: 0.98rem; font-weight: 800;
+      color: var(--navy-dark, #12193A);
+      line-height: 1.5; margin-bottom: 10px;
+      overflow-wrap: break-word; word-break: break-word;
+      display: -webkit-box; -webkit-line-clamp: 3;
+      -webkit-box-orient: vertical; overflow: hidden;
+    }
+    .media-card-desc {
+      font-size: 0.83rem; color: var(--text-sub);
+      line-height: 1.8; flex: 1; margin-bottom: 14px;
+      overflow-wrap: break-word; word-break: break-word;
+      display: -webkit-box; -webkit-line-clamp: 3;
+      -webkit-box-orient: vertical; overflow: hidden;
+    }
+    .media-card-footer {
+      display: flex; align-items: center;
+      justify-content: space-between; flex-wrap: wrap; gap: 8px;
+    }
+    .media-card-tags { display:flex; gap:6px; flex-wrap:wrap; }
+    .media-tag {
+      font-size: 0.7rem; font-weight: 600;
+      padding: 2px 8px; border-radius: 100px;
+      text-decoration: none;
+    }
+    .media-tag-case    { background:#EEF2FF; color:#4338CA; }
+    .media-tag-service { background:#ECFDF5; color:#047857; }
+    .media-read-btn {
+      font-size: 0.78rem; font-weight: 700;
+      color: var(--navy, #1E2A5E); white-space: nowrap;
+    }
+
+    /* ── 詳情 Modal ── */
+    #mediaModal {
+      display: none; position: fixed; inset: 0;
+      background: rgba(0,0,0,0.6); z-index: 9000;
+      align-items: center; justify-content: center; padding: 20px;
+    }
+    #mediaModal.open { display: flex; }
+    .media-modal-box {
+      background: #fff; border-radius: 16px;
+      max-width: 680px; width: 100%;
+      max-height: 90vh; overflow-y: auto;
+      box-shadow: 0 24px 60px rgba(0,0,0,0.28);
+      position: relative;
+    }
+    .media-modal-img {
+      width: 100%; height: 260px; overflow: hidden;
+      border-radius: 16px 16px 0 0; display: none;
+    }
+    .media-modal-img img { width:100%; height:100%; object-fit:cover; }
+    .media-modal-body { padding: 32px; }
+    .media-modal-close {
+      position: absolute; top: 14px; right: 16px;
+      background: rgba(0,0,0,0.12); border: none; border-radius: 50%;
+      width: 32px; height: 32px; font-size: 1rem;
+      cursor: pointer; color: #333; line-height: 1;
+    }
+    .media-modal-type  { font-size:0.72rem; font-weight:700; letter-spacing:0.1em; margin-bottom:8px; }
+    .media-modal-title { font-size:1.3rem; font-weight:800; color:#12193A; line-height:1.45; margin-bottom:10px; overflow-wrap:break-word; word-break:break-word; }
+    .media-modal-meta  { font-size:0.82rem; color:#6B7280; margin-bottom:18px; display:flex; gap:12px; flex-wrap:wrap; align-items:center; }
+    .media-modal-desc  { font-size:0.92rem; color:#374151; line-height:2; margin-bottom:0; overflow-wrap:break-word; word-break:break-word; white-space:pre-wrap; }
+    .media-modal-divider { border:none; border-top:1px solid #E5E7EB; margin:20px 0; }
+    .media-modal-content { font-size:0.9rem; color:#4B5563; line-height:2.1; overflow-wrap:break-word; word-break:break-word; white-space:pre-wrap; }
+    .media-modal-link {
+      display: inline-flex; align-items: center; gap: 8px;
+      margin-top: 24px; padding: 12px 24px;
+      border-radius: 10px; font-size: 0.92rem; font-weight: 700;
+      text-decoration: none; transition: opacity 0.2s;
+    }
+    .media-modal-link:hover { opacity: 0.85; }
+    .content-link { color: #1E2A5E; font-weight: 600; text-decoration: underline; text-underline-offset: 2px; }
+    .content-link:hover { color: #E85D04; }
+    .media-modal-link.type-podcast { background: #7C3AED; color: #fff; }
+    .media-modal-link.type-article { background: var(--navy-dark,#12193A); color: #fff; }
+    .media-modal-link.type-default { background: var(--navy-dark,#12193A); color: #fff; }
+    .media-modal-related { margin-top:20px; display:flex; gap:8px; flex-wrap:wrap; align-items:center; }
+    .media-modal-related-label { font-size:0.78rem; color:#9CA3AF; }
+  </style>
+</head>
+<body>
+<script src="content-data.js"></script>
+
+<nav class="navbar" id="navbar">
+  <div class="container">
+    <div class="nav-inner">
+      <a href="index.html" class="nav-logo">
+        <img src="IPCCLOGO.png" alt="IPCC">
+        <div class="nav-logo-right">
+          <div class="nav-logo-group">東州集團</div>
+          <div class="nav-logo-companies">
+            <span>東州互聯網實業有限公司</span>
+            <span>顯榮國際股份有限公司</span>
+          </div>
+        </div>
+      </a>
+      <ul class="nav-menu" id="navMenu">
+        <li><a href="index.html" class="nav-link">首頁</a></li>
+        <li><a href="news.html" class="nav-link active">最新消息</a></li>
+        <li><a href="about.html" class="nav-link">關於我們</a></li>
+        <li><a href="services.html" class="nav-link">專案服務</a></li>
+        <li><a href="cases.html" class="nav-link">成功案例</a></li>
+      </ul>
+      <a href="contact.html" class="nav-cta">與我們聯繫</a>
+      <div class="nav-hamburger" onclick="toggleMenu()"><span></span><span></span><span></span></div>
+    </div>
+  </div>
+</nav>
+
+<div class="page-hero">
+  <div class="page-hero-signal">
+    <div class="page-hero-phone"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="rgba(220,80,80,0.95)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" style="display:block"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.26 13a19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 3.17 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L7.91 9.91a16 16 0 0 0 6.18 6.18l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg></div>
+    <div class="page-hero-ring"></div><div class="page-hero-ring"></div>
+    <div class="page-hero-ring"></div><div class="page-hero-ring"></div>
+    <div class="page-hero-ring"></div>
+  </div>
+  <div class="container">
+    <div class="breadcrumb">
+      <a href="index.html">首頁</a><span>›</span>
+      <a href="news.html">最新消息</a><span>›</span>
+      <span>媒體採訪</span>
+    </div>
+    <h1>媒體採訪</h1>
+    <p>業界媒體對東州集團的專題報導與採訪紀錄</p>
+  </div>
+</div>
+
+<nav class="about-subnav">
+  <div class="container">
+    <a href="news.html">最新消息</a>
+    <a href="news-media.html" class="active">媒體採訪</a>
+    <a href="news-event.html">活動</a>
+  </div>
+</nav>
+
+<section class="section">
+  <div class="container">
+    <div class="text-center" style="margin-bottom:48px;">
+      <span class="section-label">Media Coverage</span>
+      <h2 class="section-title">媒體採訪</h2>
+      <p class="section-sub">業界媒體的肯定，是我們深耕客服產業的最佳見證</p>
+    </div>
+
+    <div id="mediaGrid" class="media-grid">
+      <!-- 預設靜態卡片，後台有資料時會被取代 -->
+      <div class="media-card" onclick="openMediaModal({title:'【工商時報】東州集團：讓每一通 0800 成為品牌價值的起點',mediaType:'article',mediaSource:'工商時報',date:'2024年8月',description:'工商時報專題報導東州集團的服務創新之路，深入介紹集團如何透過科技與人才雙軌並進，在台灣客服產業樹立新標竿。',content:'',externalUrl:'',linkText:'閱讀全文'})">
+        <div class="media-card-img">
+          <div class="media-card-placeholder">📰</div>
+          <span class="media-type-badge mt-article">報導</span>
+        </div>
+        <div class="media-card-body">
+          <div class="media-card-meta">
+            <span class="media-source">工商時報</span>
+            <span class="media-date">2024年8月</span>
+          </div>
+          <h3 class="media-card-title">【工商時報】東州集團：讓每一通 0800 成為品牌價值的起點</h3>
+          <p class="media-card-desc">工商時報專題報導東州集團的服務創新之路，深入介紹集團如何透過科技與人才雙軌並進，在台灣客服產業樹立新標竿。</p>
+          <div class="media-card-footer">
+            <div class="media-card-tags"></div>
+            <span class="media-read-btn">閱讀詳情 →</span>
+          </div>
+        </div>
+      </div>
+      <div class="media-card" onclick="openMediaModal({title:'【數位時代】客服委外的新思維：東州集團以數據驅動服務升級',mediaType:'online',mediaSource:'數位時代',date:'2024年5月',description:'數位時代雜誌深度專訪東州集團，探討如何以數據分析為基礎，重新定義客服外包的價值與模式，引領產業轉型。',content:'',externalUrl:'',linkText:'閱讀全文'})">
+        <div class="media-card-img">
+          <div class="media-card-placeholder">🌐</div>
+          <span class="media-type-badge mt-online">網路媒體</span>
+        </div>
+        <div class="media-card-body">
+          <div class="media-card-meta">
+            <span class="media-source">數位時代</span>
+            <span class="media-date">2024年5月</span>
+          </div>
+          <h3 class="media-card-title">【數位時代】客服委外的新思維：東州集團以數據驅動服務升級</h3>
+          <p class="media-card-desc">數位時代雜誌深度專訪東州集團，探討如何以數據分析為基礎，重新定義客服外包的價值與模式，引領產業轉型。</p>
+          <div class="media-card-footer">
+            <div class="media-card-tags"></div>
+            <span class="media-read-btn">閱讀詳情 →</span>
+          </div>
+        </div>
+      </div>
+      <div class="media-card" onclick="openMediaModal({title:'【經理人月刊】近三十年客服老兵的數位轉型之路',mediaType:'article',mediaSource:'經理人月刊',date:'2024年2月',description:'經理人月刊專題採訪東州集團高層，分享從 1996 年創立至今的發展歷程，以及面對 AI 時代所採取的策略佈局。',content:'',externalUrl:'',linkText:'閱讀全文'})">
+        <div class="media-card-img">
+          <div class="media-card-placeholder">📰</div>
+          <span class="media-type-badge mt-article">報導</span>
+        </div>
+        <div class="media-card-body">
+          <div class="media-card-meta">
+            <span class="media-source">經理人月刊</span>
+            <span class="media-date">2024年2月</span>
+          </div>
+          <h3 class="media-card-title">【經理人月刊】近三十年客服老兵的數位轉型之路</h3>
+          <p class="media-card-desc">經理人月刊專題採訪東州集團高層，分享從 1996 年創立至今的發展歷程，以及面對 AI 時代所採取的策略佈局。</p>
+          <div class="media-card-footer">
+            <div class="media-card-tags"></div>
+            <span class="media-read-btn">閱讀詳情 →</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 詳情 Modal -->
+<div id="mediaModal" onclick="if(event.target===this)closeMediaModal()">
+  <div class="media-modal-box">
+    <button class="media-modal-close" onclick="closeMediaModal()">✕</button>
+    <div class="media-modal-img" id="mmImg"><img id="mmImgEl" src="" alt=""></div>
+    <div class="media-modal-body">
+      <div class="media-modal-type" id="mmType"></div>
+      <h2 class="media-modal-title" id="mmTitle"></h2>
+      <div class="media-modal-meta">
+        <span id="mmSource"></span>
+        <span id="mmDate"></span>
+      </div>
+      <p class="media-modal-desc" id="mmDesc"></p>
+      <div id="mmContentWrap" style="display:none;">
+        <hr class="media-modal-divider">
+        <div class="media-modal-content" id="mmContent"></div>
+      </div>
+      <div id="mmLinkWrap" style="margin-top:24px; display:none;">
+        <a id="mmLink" href="#" target="_blank" rel="noopener" class="media-modal-link type-default"></a>
+      </div>
+      <div class="media-modal-related" id="mmRelated" style="display:none;">
+        <span class="media-modal-related-label">相關：</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<section class="cta-section">
+  <div class="container" style="position:relative; z-index:1; text-align:center;">
+    <h2 class="section-title" style="color:#fff;">媒體採訪洽詢</h2>
+    <p style="color:rgba(255,255,255,0.6); margin:16px auto 36px; max-width:400px;">歡迎各媒體聯繫採訪，了解東州集團的服務創新故事</p>
+    <a href="contact.html" class="btn btn-primary">聯繫公關窗口</a>
+  </div>
+</section>
+
+<footer class="footer">
+  <div class="container">
+    <div class="footer-grid">
+      <div class="footer-brand">
+        <div class="footer-logo">
+          <div class="footer-logo-box"><img src="IPCCLOGO.png" alt="IPCC"></div>
+          <div>
+            <span class="footer-logo-name">東州集團</span>
+            <div class="footer-logo-companies">
+              <span>東州互聯網實業有限公司</span>
+              <span>顯榮國際股份有限公司</span>
+            </div>
+          </div>
+        </div>
+        <p>整合系統、服務與數據，協助企業打造永續競爭力。</p>
+        <div class="footer-socials">
+          <a href="https://www.facebook.com/easy.ipcc/" target="_blank" rel="noopener" class="footer-social" title="Facebook">f</a>
+          <a href="#" class="footer-social">▶</a>
+          <a href="https://www.1111.com.tw/corp/8563" target="_blank" rel="noopener" class="footer-social" title="1111人力銀行">人</a>
+        </div>
+      </div>
+      <div class="footer-col">
+        <h4>快速連結</h4>
+        <ul>
+          <li><a href="news.html">最新消息</a></li>
+          <li><a href="about.html">關於我們</a></li>
+          <li><a href="services.html">專案服務</a></li>
+          <li><a href="cases.html">成功案例</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>服務項目</h4>
+        <ul>
+          <li><a href="services.html">客服委外</a></li>
+          <li><a href="services-training.html">客服訓練</a></li>
+          <li><a href="services-it.html">資訊服務</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>聯絡地址</h4>
+        <div class="footer-companies">
+          <div>東州互聯網實業有限公司</div>
+          <div>顯榮國際股份有限公司</div>
+        </div>
+        <div class="footer-address" style="margin-top:12px;"><span>北區</span><br>台北市松山區民權東路三段102號10樓</div>
+        <div class="footer-address" style="margin-top:16px;"><span>中區</span><br>台中市西區台灣大道二段307號9樓之2</div>
+        <div style="margin-top:16px; color:rgba(255,255,255,0.55);">☎ 0800-666-080</div>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span>© 2025 東州互聯網實業有限公司 / 顯榮國際股份有限公司 版權所有</span>
+      <span>IPCC Group — 創新服務．永續經營</span>
+    </div>
+  </div>
+</footer>
+
+<script>
+window.addEventListener('scroll', function() {
+  document.getElementById('navbar').classList.toggle('scrolled', window.scrollY > 20);
+});
+function toggleMenu() {
+  document.getElementById('navMenu').classList.toggle('open');
+}
+
+// ── 媒體類型設定 ──
+var MEDIA_TYPE_MAP = {
+  article: { label:'📰 報導',   cls:'mt-article',  icon:'📰', linkCls:'type-article' },
+  online:  { label:'🌐 網路媒體', cls:'mt-online',   icon:'🌐', linkCls:'type-article' },
+  podcast: { label:'🎙 Podcast', cls:'mt-podcast',  icon:'🎙', linkCls:'type-podcast' },
+  tv:      { label:'📺 電視',    cls:'mt-tv',       icon:'📺', linkCls:'type-article' },
+  radio:   { label:'📻 廣播',    cls:'mt-radio',    icon:'📻', linkCls:'type-article' },
+  other:   { label:'💬 採訪',    cls:'mt-other',    icon:'🎤', linkCls:'type-default' }
+};
+
+// ── Modal ──
+function openMediaModal(item) {
+  var mt = MEDIA_TYPE_MAP[item.mediaType] || {};
+
+  // 圖片
+  var imgWrap = document.getElementById('mmImg');
+  if (item.image) {
+    document.getElementById('mmImgEl').src = item.image;
+    imgWrap.style.display = 'block';
+  } else {
+    imgWrap.style.display = 'none';
+  }
+
+  // 類型標籤
+  var typeEl = document.getElementById('mmType');
+  if (mt.label) {
+    typeEl.textContent = mt.label;
+    typeEl.style.color = item.mediaType === 'podcast' ? '#7C3AED' : '#1E2A5E';
+    typeEl.style.display = '';
+  } else { typeEl.style.display = 'none'; }
+
+  document.getElementById('mmTitle').textContent = item.title || '';
+  document.getElementById('mmSource').textContent = item.mediaSource || '';
+  document.getElementById('mmDate').textContent = item.date || '';
+  document.getElementById('mmDesc').innerHTML = renderContent(item.description || '');
+
+  var contentWrap = document.getElementById('mmContentWrap');
+  if (item.content) {
+    document.getElementById('mmContent').innerHTML = renderContent(item.content);
+    contentWrap.style.display = 'block';
+  } else { contentWrap.style.display = 'none'; }
+
+  // 外部連結（文字超連結）
+  var linkWrap = document.getElementById('mmLinkWrap');
+  if (item.externalUrl) {
+    var linkEl = document.getElementById('mmLink');
+    var isPodcast = item.mediaType === 'podcast';
+    var defaultText = isPodcast ? '🎙 收聽 Podcast' : '閱讀全文 →';
+    linkEl.textContent = item.linkText || defaultText;
+    linkEl.href = item.externalUrl;
+    linkEl.className = 'media-modal-link ' + (mt.linkCls || 'type-default');
+    linkWrap.style.display = 'block';
+  } else { linkWrap.style.display = 'none'; }
+
+  // 相關標籤
+  var relatedEl = document.getElementById('mmRelated');
+  var relatedTags = '';
+  if (item.relatedCaseLabel) {
+    relatedTags += '<a href="cases.html" class="media-tag media-tag-case">🏆 ' + item.relatedCaseLabel + '</a>';
+  }
+  if (item.relatedService) {
+    var svcLabels = { 'services.html':'客服委外', 'services-training.html':'客服服務訓練', 'services-it.html':'資訊服務' };
+    relatedTags += '<a href="' + item.relatedService + '" class="media-tag media-tag-service">🛠 ' + (svcLabels[item.relatedService]||'服務') + '</a>';
+  }
+  if (relatedTags) {
+    relatedEl.style.display = 'flex';
+    relatedEl.innerHTML = '<span class="media-modal-related-label">相關：</span>' + relatedTags;
+  } else { relatedEl.style.display = 'none'; }
+
+  var modal = document.getElementById('mediaModal');
+  modal.classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+
+function closeMediaModal() {
+  document.getElementById('mediaModal').classList.remove('open');
+  document.body.style.overflow = '';
+}
+document.addEventListener('keydown', function(e) { if (e.key === 'Escape') closeMediaModal(); });
+
+// ── 動態載入後台內容 ──
+(function() {
+  try {
+    var all = JSON.parse(localStorage.getItem('ipcc_news') || '[]');
+    var items = all.filter(function(n){ return n.published && n.tab === 'media'; });
+    if (items.length === 0) return;
+    items.sort(function(a, b){ return (b.createdAt||0) - (a.createdAt||0); });
+
+    var allCases = JSON.parse(localStorage.getItem('ipcc_cases') || '[]');
+
+    var grid = document.getElementById('mediaGrid');
+    if (!grid) return;
+
+    grid.innerHTML = items.map(function(n) {
+      var mt = MEDIA_TYPE_MAP[n.mediaType] || {};
+      var typeBadgeHtml = n.mediaType
+        ? '<span class="media-type-badge ' + (mt.cls||'mt-other') + '">' + (mt.label||n.mediaType) + '</span>'
+        : '';
+      var imgHtml = n.image
+        ? '<img src="' + n.image + '" alt="" loading="lazy">'
+        : '<div class="media-card-placeholder">' + (mt.icon||'📸') + '</div>';
+
+      // 相關案例標籤
+      var caseLabel = '';
+      if (n.relatedCaseId) {
+        var c = allCases.find(function(c){ return c.id === n.relatedCaseId; });
+        if (c) caseLabel = c.client;
+      }
+      var tagsHtml = '';
+      if (caseLabel) tagsHtml += '<span class="media-tag media-tag-case">🏆 ' + esc(caseLabel) + '</span>';
+      if (n.relatedService) {
+        var svcLabels = { 'services.html':'客服委外', 'services-training.html':'客服服務訓練', 'services-it.html':'資訊服務' };
+        tagsHtml += '<span class="media-tag media-tag-service">🛠 ' + esc(svcLabels[n.relatedService]||'服務') + '</span>';
+      }
+
+      // 傳給 Modal 的資料（JSON 安全序列化）
+      var modalData = JSON.stringify({
+        title: n.title||'',
+        mediaType: n.mediaType||'',
+        mediaSource: n.mediaSource||'',
+        date: n.date||'',
+        description: n.description||'',
+        content: n.content||'',
+        externalUrl: n.externalUrl||'',
+        linkText: n.linkText||'',
+        image: n.image||'',
+        relatedCaseLabel: caseLabel,
+        relatedService: n.relatedService||''
+      });
+
+      return '<div class="media-card" onclick=\'openMediaModal(' + modalData.replace(/'/g, '&#39;') + ')\'>'
+        + '<div class="media-card-img">' + imgHtml + typeBadgeHtml + '</div>'
+        + '<div class="media-card-body">'
+        + '<div class="media-card-meta">'
+        + (n.mediaSource ? '<span class="media-source">' + esc(n.mediaSource) + '</span>' : '')
+        + (n.date ? '<span class="media-date">' + esc(n.date) + '</span>' : '')
+        + '</div>'
+        + '<h3 class="media-card-title">' + esc(n.title||'') + '</h3>'
+        + '<p class="media-card-desc">' + esc(n.description||'') + '</p>'
+        + '<div class="media-card-footer">'
+        + '<div class="media-card-tags">' + tagsHtml + '</div>'
+        + '<span class="media-read-btn">' + (n.mediaType==='podcast' ? '收聽 →' : '閱讀詳情 →') + '</span>'
+        + '</div></div></div>';
+    }).join('');
+  } catch(e) { console.error(e); }
+})();
+
+
+// 將文字中的連結轉成可點擊超連結
+// 支援 [顯示文字](網址) 格式，以及純網址自動偵測
+function renderContent(text) {
+  if (!text) return '';
+  var re = /[([^]]*)]((https?://[^)]+))|(https?://[^s<>"&]+)/g;
+  var result = '';
+  var lastIdx = 0;
+  var m;
+  while ((m = re.exec(text)) !== null) {
+    if (m.index > lastIdx) result += esc(text.slice(lastIdx, m.index));
+    if (m[1] !== undefined) {
+      result += '<a href="' + esc(m[2]) + '" target="_blank" rel="noopener" class="content-link">' + esc(m[1]) + '</a>';
+    } else {
+      result += '<a href="' + esc(m[3]) + '" target="_blank" rel="noopener" class="content-link">' + esc(m[3]) + '</a>';
+    }
+    lastIdx = m.index + m[0].length;
+  }
+  if (lastIdx < text.length) result += esc(text.slice(lastIdx));
+  return result;
+}
+function esc(s) {
+  return String(s)
+    .replace(/&/g,'&amp;').replace(/</g,'&lt;')
+    .replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+</script>
+</body>
+</html>

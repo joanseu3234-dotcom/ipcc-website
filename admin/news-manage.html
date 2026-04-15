@@ -1,0 +1,495 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>消息管理 | IPCC 後台</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="admin.css">
+<style>
+  .filter-btn { padding:7px 16px; border:1.5px solid var(--border); border-radius:100px; font-size:0.82rem; font-weight:600; cursor:pointer; background:#fff; color:var(--text-sub); font-family:inherit; transition:all 0.2s; }
+  .filter-btn.active { background:var(--navy-dark); border-color:var(--navy-dark); color:#fff; }
+  /* news-manage 用大型置中上傳框 */
+  .img-upload-box { padding:16px; text-align:center; position:relative; }
+  .img-upload-box input[type=file] { position:absolute; inset:0; opacity:0; cursor:pointer; width:100%; height:100%; }
+  .img-preview { width:100%; max-height:180px; object-fit:cover; border-radius:8px; display:block; }
+  .img-placeholder { color:var(--text-sub); font-size:0.88rem; padding:16px 0; }
+  .img-placeholder span { font-size:2rem; display:block; margin-bottom:6px; }
+  .related-case-select { width:100%; }
+</style>
+</head>
+<body>
+<div class="sidebar-overlay" id="sidebarOverlay" onclick="toggleSidebar()"></div>
+<div class="admin-layout">
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-logo">
+      <img src="../IPCCLOGO-transparent.png" alt="IPCC" onerror="this.style.display='none'">
+      <div class="sidebar-logo-text">
+        <div class="co-name">IPCC 東州集團</div>
+        <div class="co-sub">後台管理系統</div>
+      </div>
+    </div>
+        <nav class="sidebar-nav">
+      <a href="dashboard.html" class="nav-item">📊 儀表板</a>
+      <a href="home-manage.html" class="nav-item" data-perm="home">🏠 首頁管理</a>
+      <a href="news-manage.html" class="nav-item active" data-perm="news">📰 最新消息</a>
+      <a href="about-manage.html" class="nav-item" data-perm="about">🏢 關於我們</a>
+      <a href="services-manage.html" class="nav-item" data-perm="services">🛠 專案服務</a>
+      <a href="cases-manage.html" class="nav-item" data-perm="cases">🏆 成功案例</a>
+      <a href="contacts-manage.html" class="nav-item" data-perm="contacts">📋 聯絡表單</a>
+      <a href="settings.html" class="nav-item" data-perm="settings">⚙️ 系統設定</a>
+      <a href="users-manage.html" class="nav-item" data-perm="users">👥 帳號管理</a>
+    </nav>
+    <div class="sidebar-footer">
+      <a href="../news.html" target="_blank" class="btn-view-site"><span>🔗</span>查看前台</a>
+      <button onclick="logout()" class="btn-logout"><span>🚪</span>登出</button>
+    </div>
+  </aside>
+  <div class="main-content">
+    <header class="topbar">
+      <button class="topbar-hamburger" onclick="toggleSidebar()">☰</button>
+      <div class="topbar-title">最新消息管理</div>
+      <div class="topbar-user">管理員</div>
+    </header>
+    <div class="page-content">
+      <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:20px; flex-wrap:wrap; gap:12px;">
+        <div>
+          <h1 style="font-size:1.6rem; font-weight:800; color:var(--navy-dark); margin-bottom:4px;">最新消息管理</h1>
+          <p style="color:var(--text-sub); font-size:0.9rem;">管理最新消息、媒體採訪與活動公告</p>
+        </div>
+        <button class="btn-primary" onclick="openAddModal()">+ 新增文章</button>
+      </div>
+
+      <div class="section-card">
+        <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:12px; margin-bottom:16px;">
+          <div style="display:flex; gap:6px; flex-wrap:wrap;">
+            <button class="filter-btn active" onclick="setFilter('all',this)">全部</button>
+            <button class="filter-btn" onclick="setFilter('news',this)">最新消息</button>
+            <button class="filter-btn" onclick="setFilter('media',this)">媒體採訪</button>
+            <button class="filter-btn" onclick="setFilter('event',this)">活動</button>
+          </div>
+          <div id="newsStats" style="font-size:0.82rem; color:var(--text-sub);"></div>
+        </div>
+
+        <div style="overflow-x:auto;">
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th style="width:70px;">圖片</th>
+                <th>標題</th>
+                <th>日期</th>
+                <th>分類</th>
+                <th>相關案例</th>
+                <th>狀態</th>
+                <th>操作</th>
+              </tr>
+            </thead>
+            <tbody id="newsTableBody"></tbody>
+          </table>
+        </div>
+        <div id="newsEmpty" class="empty-state" style="padding:40px; display:none;">尚無文章，<a href="#" onclick="openAddModal(); return false;">立即新增</a></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- 新增/編輯 Modal -->
+<div class="modal-overlay" id="newsModal">
+  <div class="modal modal-lg">
+    <div class="modal-header">
+      <h3 id="modalTitle">新增文章</h3>
+      <button class="modal-close" onclick="closeModal()">✕</button>
+    </div>
+    <div class="modal-body">
+      <input type="hidden" id="fId">
+
+      <div style="display:grid; grid-template-columns:1fr 1fr; gap:0 20px;">
+        <div class="form-group">
+          <label class="form-label">分類</label>
+          <select class="form-control" id="fTab">
+            <option value="news">最新消息</option>
+            <option value="media">媒體採訪</option>
+            <option value="event">活動</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label class="form-label">媒體類型</label>
+          <select class="form-control" id="fMediaType">
+            <option value="">— 請選擇 —</option>
+            <option value="article">📰 報紙 / 雜誌</option>
+            <option value="online">🌐 網路媒體</option>
+            <option value="podcast">🎙 Podcast</option>
+            <option value="tv">📺 電視 / 影片</option>
+            <option value="radio">📻 廣播</option>
+            <option value="other">💬 其他</option>
+          </select>
+        </div>
+      </div>
+
+      <div style="display:grid; grid-template-columns:1fr 1fr; gap:0 20px;">
+        <div class="form-group">
+          <label class="form-label">媒體來源名稱</label>
+          <input type="text" class="form-control" id="fMediaSource" placeholder="例：工商時報、DIGITIMES、SoundOn">
+        </div>
+        <div class="form-group">
+          <label class="form-label">日期</label>
+          <input type="text" class="form-control" id="fDate" placeholder="例：2025.03">
+        </div>
+      </div>
+
+      <div style="display:grid; grid-template-columns:1fr 1fr; gap:0 20px;">
+        <div class="form-group">
+          <label class="form-label">相關成功案例</label>
+          <select class="form-control related-case-select" id="fRelatedCase">
+            <option value="">— 無相關案例 —</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label class="form-label">相關服務</label>
+          <select class="form-control" id="fRelatedService">
+            <option value="">— 無相關服務 —</option>
+            <option value="services.html">客服委外</option>
+            <option value="services-training.html">客服服務訓練</option>
+            <option value="services-it.html">資訊服務</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">標題 *</label>
+        <input type="text" class="form-control" id="fTitle" placeholder="文章標題（建議格式：【媒體名稱】報導標題）">
+      </div>
+
+      <div class="form-group">
+        <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:4px;">
+          <label class="form-label" style="margin:0;">完整內文（點入後顯示，可貼上報導全文）</label>
+          <button type="button" class="btn-outline btn-sm" onclick="insertLink('fContent')" title="在游標位置插入超連結語法 [文字](網址)">🔗 插入連結</button>
+        </div>
+        <textarea class="form-control form-textarea" id="fContent" rows="6" placeholder="貼上完整報導內文、採訪記錄或 Podcast 節目介紹..."></textarea>
+        <div style="font-size:0.72rem; color:var(--text-sub); margin-top:4px;">提示：可用 <code style="background:#F3F4F6; padding:1px 4px; border-radius:3px;">[顯示文字](https://網址)</code> 格式插入超連結，前台將自動轉換為可點擊連結。</div>
+      </div>
+
+      <div class="form-group">
+        <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:4px;">
+          <label class="form-label" style="margin:0;">摘要說明（卡片顯示用，建議 80 字內）</label>
+          <div style="display:flex; gap:6px;">
+            <button type="button" class="btn-outline btn-sm" onclick="insertLink('fDesc')" title="在游標位置插入超連結語法 [文字](網址)">🔗 插入連結</button>
+            <button type="button" class="btn-outline btn-sm" onclick="autoSummaryNews()" title="從完整內文自動擷取前 80 字作為摘要">✨ 自動摘要</button>
+          </div>
+        </div>
+        <textarea class="form-control form-textarea" id="fDesc" rows="3" placeholder="簡短描述這篇報導的重點，或點「✨ 自動摘要」從內文擷取..."></textarea>
+      </div>
+
+      <div style="display:grid; grid-template-columns:2fr 1fr; gap:0 20px;">
+        <div class="form-group">
+          <label class="form-label">外部連結網址</label>
+          <input type="url" class="form-control" id="fExternalUrl" placeholder="https://example.com/article...（完整連結）">
+        </div>
+        <div class="form-group">
+          <label class="form-label">連結顯示文字</label>
+          <input type="text" class="form-control" id="fLinkText" placeholder="例：閱讀全文、收聽節目">
+        </div>
+      </div>
+      <div class="form-group" style="margin-top:-8px;">
+        <label class="form-label" style="font-size:0.75rem; color:var(--text-sub);">標籤文字（badge，不填則自動依媒體類型產生）</label>
+        <input type="text" class="form-control" id="fBadge" placeholder="例：專訪、合作報導、Podcast">
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">封面圖片</label>
+        <div class="img-upload-box" id="uploadBox" onclick="document.getElementById('fImageFile').click()">
+          <input type="file" id="fImageFile" accept="image/*" onchange="handleImageUpload(this)" style="display:none;">
+          <img id="fImagePreview" class="img-preview" style="display:none;">
+          <div class="img-placeholder" id="imgPlaceholder">
+            <span>🖼</span>
+            點擊或拖曳上傳圖片<br>
+            <span style="font-size:0.75rem; color:#aaa;">建議尺寸 800×500，支援 JPG / PNG / WebP，圖片將自動壓縮</span>
+          </div>
+        </div>
+        <div style="margin-top:8px; display:flex; gap:8px; align-items:center;">
+          <button type="button" class="btn-outline btn-sm" onclick="document.getElementById('fImageFile').click()">選擇圖片</button>
+          <button type="button" class="btn-outline btn-sm" onclick="clearImage()" id="btnClearImg" style="display:none;">✕ 移除圖片</button>
+          <span id="imgSizeHint" style="font-size:0.75rem; color:var(--text-sub);"></span>
+        </div>
+      </div>
+
+      <div class="form-group" style="display:flex; align-items:center; gap:10px;">
+        <input type="checkbox" id="fPublished" style="width:17px; height:17px; cursor:pointer; accent-color:var(--navy);" checked>
+        <label for="fPublished" style="font-weight:600; font-size:0.88rem; cursor:pointer; margin:0;">立即發布（顯示在前台）</label>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn-outline" onclick="closeModal()">取消</button>
+      <button class="btn-primary" onclick="saveItem()">💾 儲存文章</button>
+    </div>
+  </div>
+</div>
+
+<script src="users-config.js"></script>
+<script src="admin.js"></script>
+<script>
+  requireLogin();
+  initAdminUI();
+
+  var currentFilter = 'all';
+  var editingId = null;
+  var currentImageBase64 = '';
+
+  var TAB_LABELS = { news:'最新消息', media:'媒體採訪', event:'活動' };
+  var TAB_BADGE_CLASS = { news:'badge-news', media:'badge-news', event:'badge-news' };
+  var TAB_BADGE_COLORS = {
+    news:  'background:rgba(30,42,94,0.1); color:#1E2A5E;',
+    media: 'background:rgba(59,130,246,0.1); color:#1D4ED8;',
+    event: 'background:rgba(16,185,129,0.1); color:#047857;'
+  };
+
+  // 填充相關案例下拉
+  function populateCasesDropdown(selectedId) {
+    var sel = document.getElementById('fRelatedCase');
+    var cases = getCases();
+    sel.innerHTML = '<option value="">— 無相關案例 —</option>';
+    cases.forEach(function(c) {
+      var opt = document.createElement('option');
+      opt.value = c.id;
+      opt.textContent = c.client + '（' + (c.category||c.caseType) + '）';
+      if (c.id === selectedId) opt.selected = true;
+      sel.appendChild(opt);
+    });
+  }
+
+  // 圖片上傳 + canvas 壓縮
+  function handleImageUpload(input) {
+    if (!input.files || !input.files[0]) return;
+    var file = input.files[0];
+    var sizeKB = Math.round(file.size / 1024);
+    if (file.size > 5 * 1024 * 1024) {
+      alert('圖片檔案太大（上限 5MB），請選擇較小的圖片');
+      input.value = ''; return;
+    }
+    var reader = new FileReader();
+    reader.onload = function(e) {
+      var img = new Image();
+      img.onload = function() {
+        var MAX_W = 800, MAX_H = 500;
+        var w = img.width, h = img.height;
+        if (w > MAX_W) { h = Math.round(h * MAX_W / w); w = MAX_W; }
+        if (h > MAX_H) { w = Math.round(w * MAX_H / h); h = MAX_H; }
+        var canvas = document.createElement('canvas');
+        canvas.width = w; canvas.height = h;
+        canvas.getContext('2d').drawImage(img, 0, 0, w, h);
+        var base64 = canvas.toDataURL('image/jpeg', 0.82);
+        currentImageBase64 = base64;
+        var preview = document.getElementById('fImagePreview');
+        preview.src = base64;
+        preview.style.display = 'block';
+        document.getElementById('imgPlaceholder').style.display = 'none';
+        document.getElementById('btnClearImg').style.display = '';
+        var kb = Math.round(base64.length * 3/4 / 1024);
+        document.getElementById('imgSizeHint').textContent = '原始：' + sizeKB + 'KB　壓縮後：約 ' + kb + 'KB';
+      };
+      img.src = e.target.result;
+    };
+    reader.readAsDataURL(file);
+  }
+
+  function clearImage() {
+    currentImageBase64 = '';
+    document.getElementById('fImageFile').value = '';
+    document.getElementById('fImagePreview').style.display = 'none';
+    document.getElementById('fImagePreview').src = '';
+    document.getElementById('imgPlaceholder').style.display = 'block';
+    document.getElementById('btnClearImg').style.display = 'none';
+    document.getElementById('imgSizeHint').textContent = '';
+  }
+
+  function setFilter(tab, btn) {
+    currentFilter = tab;
+    document.querySelectorAll('.filter-btn').forEach(function(b){ b.classList.remove('active'); });
+    btn.classList.add('active');
+    renderTable();
+  }
+
+  function renderTable() {
+    var all = getNews();
+    var items = currentFilter === 'all' ? all : all.filter(function(n){ return n.tab === currentFilter; });
+    var pub = all.filter(function(n){ return n.published; }).length;
+    document.getElementById('newsStats').textContent = '共 ' + all.length + ' 篇，已發布 ' + pub + ' 篇';
+
+    var tbody = document.getElementById('newsTableBody');
+    var empty = document.getElementById('newsEmpty');
+    if (items.length === 0) { tbody.innerHTML = ''; empty.style.display = 'block'; return; }
+    empty.style.display = 'none';
+
+    var allCases = getCases();
+    tbody.innerHTML = items.slice().reverse().map(function(item) {
+      var thumbHtml = item.image
+        ? '<img class="thumb" src="' + item.image + '" alt="">'
+        : '<div class="thumb-placeholder">🖼</div>';
+      var caseLabel = '';
+      if (item.relatedCaseId) {
+        var c = allCases.find(function(c){ return c.id === item.relatedCaseId; });
+        caseLabel = c ? ('<span style="font-size:0.75rem; background:#EEF2FF; color:#4338CA; padding:2px 8px; border-radius:100px;">' + c.client + '</span>') : '—';
+      }
+      var tabColor = TAB_BADGE_COLORS[item.tab] || '';
+      return '<tr>'
+        + '<td>' + thumbHtml + '</td>'
+        + '<td style="font-weight:600; max-width:240px;">'
+            + '<span style="font-size:0.72rem; padding:2px 8px; border-radius:100px; margin-right:6px; ' + tabColor + '">' + (item.badge||TAB_LABELS[item.tab]||'') + '</span>'
+            + (item.title||'—')
+          + '</td>'
+        + '<td style="white-space:nowrap; font-size:0.82rem;">' + (item.date||'—') + '</td>'
+        + '<td style="font-size:0.82rem;">' + (TAB_LABELS[item.tab]||'—') + '</td>'
+        + '<td>' + (caseLabel||'<span style="color:#ccc;">—</span>') + '</td>'
+        + '<td><span style="font-size:0.75rem; padding:3px 10px; border-radius:100px; ' + (item.published ? 'background:#D1FAE5; color:#065F46;' : 'background:#F3F4F6; color:#6B7280;') + '">' + (item.published ? '已發布' : '草稿') + '</span></td>'
+        + '<td style="white-space:nowrap;">'
+          + '<button class="btn-outline btn-sm" onclick="editItem(\'' + item.id + '\')">編輯</button> '
+          + '<button class="btn-outline btn-sm" onclick="togglePublish(\'' + item.id + '\')">' + (item.published ? '下架' : '發布') + '</button> '
+          + '<button class="btn-red btn-sm" onclick="deleteItem(\'' + item.id + '\')">刪除</button>'
+        + '</td></tr>';
+    }).join('');
+  }
+
+  function openAddModal() {
+    editingId = null; currentImageBase64 = '';
+    document.getElementById('modalTitle').textContent = '新增文章';
+    document.getElementById('fId').value = '';
+    document.getElementById('fTab').value = 'news';
+    document.getElementById('fMediaType').value = '';
+    document.getElementById('fMediaSource').value = '';
+    document.getElementById('fBadge').value = '';
+    document.getElementById('fDate').value = formatDate(Date.now());
+    document.getElementById('fTitle').value = '';
+    document.getElementById('fDesc').value = '';
+    document.getElementById('fContent').value = '';
+    document.getElementById('fExternalUrl').value = '';
+    document.getElementById('fLinkText').value = '';
+    document.getElementById('fRelatedService').value = '';
+    document.getElementById('fPublished').checked = true;
+    clearImage();
+    populateCasesDropdown('');
+    document.getElementById('newsModal').classList.add('open');
+  }
+
+  function editItem(id) {
+    var item = getNews().find(function(n){ return n.id === id; });
+    if (!item) return;
+    editingId = id;
+    currentImageBase64 = item.image || '';
+    document.getElementById('modalTitle').textContent = '編輯文章';
+    document.getElementById('fId').value = id;
+    document.getElementById('fTab').value = item.tab || 'news';
+    document.getElementById('fMediaType').value = item.mediaType || '';
+    document.getElementById('fMediaSource').value = item.mediaSource || '';
+    document.getElementById('fBadge').value = item.badge || '';
+    document.getElementById('fDate').value = item.date || '';
+    document.getElementById('fTitle').value = item.title || '';
+    document.getElementById('fDesc').value = item.description || '';
+    document.getElementById('fContent').value = item.content || '';
+    document.getElementById('fExternalUrl').value = item.externalUrl || '';
+    document.getElementById('fLinkText').value = item.linkText || '';
+    document.getElementById('fRelatedService').value = item.relatedService || '';
+    document.getElementById('fPublished').checked = !!item.published;
+    populateCasesDropdown(item.relatedCaseId || '');
+    // 顯示圖片預覽
+    if (item.image) {
+      document.getElementById('fImagePreview').src = item.image;
+      document.getElementById('fImagePreview').style.display = 'block';
+      document.getElementById('imgPlaceholder').style.display = 'none';
+      document.getElementById('btnClearImg').style.display = '';
+      document.getElementById('imgSizeHint').textContent = '';
+    } else {
+      clearImage();
+    }
+    document.getElementById('newsModal').classList.add('open');
+  }
+
+  function closeModal() {
+    document.getElementById('newsModal').classList.remove('open');
+    editingId = null;
+  }
+
+  function saveItem() {
+    var title = document.getElementById('fTitle').value.trim();
+    if (!title) { alert('請輸入標題'); return; }
+    var arr = getNews();
+    var now = Date.now();
+    var mediaType = document.getElementById('fMediaType').value;
+    var MEDIA_TYPE_LABELS = { article:'報導', online:'網路媒體', podcast:'Podcast', tv:'電視', radio:'廣播', other:'採訪' };
+    var autoBadge = mediaType ? MEDIA_TYPE_LABELS[mediaType] : '';
+    var newItem = {
+      tab:            document.getElementById('fTab').value,
+      mediaType:      mediaType,
+      mediaSource:    document.getElementById('fMediaSource').value.trim(),
+      badge:          document.getElementById('fBadge').value.trim() || autoBadge,
+      date:           document.getElementById('fDate').value.trim(),
+      title:          title,
+      description:    document.getElementById('fDesc').value.trim(),
+      content:        document.getElementById('fContent').value.trim(),
+      externalUrl:    document.getElementById('fExternalUrl').value.trim(),
+      linkText:       document.getElementById('fLinkText').value.trim(),
+      image:          currentImageBase64 || '',
+      relatedCaseId:  document.getElementById('fRelatedCase').value,
+      relatedService: document.getElementById('fRelatedService').value,
+      published:      document.getElementById('fPublished').checked
+    };
+    if (editingId) {
+      arr = arr.map(function(n) {
+        if (n.id !== editingId) return n;
+        return Object.assign({}, n, newItem);
+      });
+    } else {
+      newItem.id = genId();
+      newItem.createdAt = now;
+      arr.push(newItem);
+    }
+    saveNews(arr);
+    closeModal();
+    renderTable();
+  }
+
+  function togglePublish(id) {
+    var arr = getNews().map(function(n) {
+      return n.id === id ? Object.assign({}, n, { published: !n.published }) : n;
+    });
+    saveNews(arr);
+    renderTable();
+  }
+
+  function deleteItem(id) {
+    if (!confirm('確定要刪除這則文章嗎？')) return;
+    saveNews(getNews().filter(function(n){ return n.id !== id; }));
+    renderTable();
+  }
+
+  // 插入超連結語法 [文字](網址)
+  function insertLink(taId) {
+    var ta = document.getElementById(taId);
+    var start = ta.selectionStart;
+    var end = ta.selectionEnd;
+    var selected = ta.value.substring(start, end) || '連結文字';
+    var url = prompt('請輸入連結網址：', 'https://');
+    if (!url || url === 'https://') return;
+    var link = '[' + selected + '](' + url + ')';
+    ta.value = ta.value.substring(0, start) + link + ta.value.substring(end);
+    ta.focus();
+    ta.selectionStart = ta.selectionEnd = start + link.length;
+  }
+
+  // 自動摘要：從內文擷取前 80 字
+  function autoSummaryNews() {
+    var content = document.getElementById('fContent').value.trim();
+    if (!content) { alert('請先填寫完整內文，再點自動摘要'); return; }
+    var summary = content.replace(/\s+/g,' ').trim().substring(0, 80);
+    if (content.length > 80) summary += '⋯';
+    document.getElementById('fDesc').value = summary;
+  }
+
+  if (new URLSearchParams(window.location.search).get('action') === 'new') {
+    window.addEventListener('load', openAddModal);
+  }
+
+  renderTable();
+</script>
+</body>
+</html>

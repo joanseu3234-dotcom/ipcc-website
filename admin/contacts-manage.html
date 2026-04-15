@@ -1,0 +1,362 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>聯絡表單管理 | IPCC 後台</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="admin.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+  <style>
+    .filter-bar { display:flex; gap:8px; flex-wrap:wrap; align-items:center; margin-bottom:20px; }
+    .filter-btn { padding:7px 16px; border:1.5px solid var(--border); border-radius:100px; font-size:0.82rem; font-weight:600; cursor:pointer; background:#fff; color:var(--text-sub); font-family:inherit; transition:all 0.2s; }
+    .filter-btn.active { background:var(--navy-dark); border-color:var(--navy-dark); color:#fff; }
+    .contact-table { width:100%; border-collapse:collapse; }
+    .contact-table th { text-align:left; padding:10px 14px; font-size:0.76rem; font-weight:700; color:var(--text-sub); text-transform:uppercase; letter-spacing:0.05em; border-bottom:2px solid var(--border); white-space:nowrap; }
+    .contact-table td { padding:11px 14px; border-bottom:1px solid var(--border); vertical-align:middle; font-size:0.88rem; }
+    .contact-table tr:last-child td { border-bottom:none; }
+    .contact-table tr:hover td { background:#FAFAF9; }
+    .status-select { border:none; background:transparent; font-size:0.82rem; font-weight:700; cursor:pointer; font-family:inherit; padding:3px 6px; border-radius:6px; outline:none; }
+    .status-未處理 { background:#FEF3C7; color:#92400E; }
+    .status-處理中 { background:#DBEAFE; color:#1E40AF; }
+    .status-已完成 { background:#D1FAE5; color:#065F46; }
+    .stat-row { display:grid; grid-template-columns:repeat(4,1fr); gap:16px; margin-bottom:24px; }
+    .stat-mini { background:#fff; border:1.5px solid var(--border); border-radius:12px; padding:16px 20px; }
+    .stat-mini-num { font-size:1.8rem; font-weight:800; color:var(--navy-dark); }
+    .stat-mini-label { font-size:0.78rem; color:var(--text-sub); margin-top:2px; }
+    .msg-preview { max-width:200px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; color:var(--text-sub); font-size:0.82rem; }
+    .detail-field { margin-bottom:14px; }
+    .detail-label { font-size:0.72rem; font-weight:700; text-transform:uppercase; letter-spacing:0.08em; color:var(--text-sub); margin-bottom:4px; }
+    .detail-value { font-size:0.92rem; color:var(--navy-dark); font-weight:500; line-height:1.6; }
+    .detail-grid { display:grid; grid-template-columns:1fr 1fr; gap:0 24px; }
+    .export-bar { display:flex; gap:10px; align-items:center; flex-wrap:wrap; }
+    .new-dot { display:inline-block; width:8px; height:8px; background:#C8161D; border-radius:50%; margin-right:4px; vertical-align:middle; }
+    @media(max-width:768px){ .stat-row{grid-template-columns:1fr 1fr;} .detail-grid{grid-template-columns:1fr;} }
+  </style>
+</head>
+<body>
+  <div class="admin-layout">
+    <aside class="sidebar" id="sidebar">
+      <div class="sidebar-logo">
+        <img src="../IPCCLOGO-transparent.png" alt="IPCC" onerror="this.style.display='none'">
+        <div class="sidebar-logo-text">
+        <div class="co-name">IPCC 東州集團</div>
+          <div class="co-sub">後台管理系統</div>
+        </div>
+      </div>
+          <nav class="sidebar-nav">
+      <a href="dashboard.html" class="nav-item">📊 儀表板</a>
+      <a href="home-manage.html" class="nav-item" data-perm="home">🏠 首頁管理</a>
+      <a href="news-manage.html" class="nav-item" data-perm="news">📰 最新消息</a>
+      <a href="about-manage.html" class="nav-item" data-perm="about">🏢 關於我們</a>
+      <a href="services-manage.html" class="nav-item" data-perm="services">🛠 專案服務</a>
+      <a href="cases-manage.html" class="nav-item" data-perm="cases">🏆 成功案例</a>
+      <a href="contacts-manage.html" class="nav-item active" data-perm="contacts">📋 聯絡表單</a>
+      <a href="settings.html" class="nav-item" data-perm="settings">⚙️ 系統設定</a>
+      <a href="users-manage.html" class="nav-item" data-perm="users">👥 帳號管理</a>
+    </nav>
+      <div class="sidebar-footer">
+        <a href="../contact.html" target="_blank" class="view-site-btn">🔗 查看前台</a>
+        <button onclick="logout()" class="logout-btn">登出</button>
+      </div>
+    </aside>
+    <div class="sidebar-overlay" onclick="toggleSidebar()"></div>
+
+    <main class="main-content">
+      <header class="topbar">
+        <button class="hamburger" onclick="toggleSidebar()">☰</button>
+        <div class="topbar-title">聯絡表單管理</div>
+        <div class="topbar-user">管理員</div>
+      </header>
+
+      <div class="page-content">
+        <!-- 標題列 -->
+        <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:20px; flex-wrap:wrap; gap:12px;">
+          <div>
+            <h1 style="font-size:1.6rem; font-weight:800; color:var(--navy-dark); margin-bottom:4px;">聯絡表單管理</h1>
+            <p style="color:var(--text-sub); font-size:0.9rem;">管理客戶諮詢表單，追蹤處理進度並匯出資料</p>
+          </div>
+          <div class="export-bar">
+            <button class="btn-primary" onclick="exportExcel()">⬇ 匯出 Excel</button>
+            <button class="btn-outline" onclick="exportExcel(true)">匯出篩選結果</button>
+            <button class="btn-red btn-sm" onclick="clearAll()" style="margin-left:4px;">🗑 清除全部</button>
+          </div>
+        </div>
+
+        <!-- 統計 -->
+        <div class="stat-row">
+          <div class="stat-mini">
+            <div class="stat-mini-num" id="statTotal">0</div>
+            <div class="stat-mini-label">總計筆數</div>
+          </div>
+          <div class="stat-mini" style="border-color:#FCD34D;">
+            <div class="stat-mini-num" style="color:#92400E;" id="statPending">0</div>
+            <div class="stat-mini-label">未處理</div>
+          </div>
+          <div class="stat-mini" style="border-color:#93C5FD;">
+            <div class="stat-mini-num" style="color:#1E40AF;" id="statProcessing">0</div>
+            <div class="stat-mini-label">處理中</div>
+          </div>
+          <div class="stat-mini" style="border-color:#6EE7B7;">
+            <div class="stat-mini-num" style="color:#065F46;" id="statDone">0</div>
+            <div class="stat-mini-label">已完成</div>
+          </div>
+        </div>
+
+        <!-- 篩選 + 搜尋 -->
+        <div class="section-card">
+          <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:12px; margin-bottom:16px;">
+            <div class="filter-bar" style="margin:0;">
+              <button class="filter-btn active" onclick="setFilter('all',this)">全部</button>
+              <button class="filter-btn" onclick="setFilter('未處理',this)">未處理</button>
+              <button class="filter-btn" onclick="setFilter('處理中',this)">處理中</button>
+              <button class="filter-btn" onclick="setFilter('已完成',this)">已完成</button>
+            </div>
+            <input type="search" class="form-control" id="searchInput" placeholder="搜尋姓名、公司、Email…"
+              style="width:240px; padding:8px 14px;" oninput="renderTable()">
+          </div>
+
+          <div style="overflow-x:auto;">
+            <table class="contact-table">
+              <thead>
+                <tr>
+                  <th>#</th>
+                  <th>收件時間</th>
+                  <th>姓名</th>
+                  <th>公司</th>
+                  <th>電話</th>
+                  <th>Email</th>
+                  <th>服務需求</th>
+                  <th>需求摘要</th>
+                  <th>狀態</th>
+                  <th>操作</th>
+                </tr>
+              </thead>
+              <tbody id="tableBody"></tbody>
+            </table>
+          </div>
+          <div id="emptyState" class="empty-state" style="padding:40px; display:none;">
+            尚無聯絡表單資料
+          </div>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <!-- 詳細內容 Modal -->
+  <div class="modal-overlay" id="detailModal">
+    <div class="modal modal-lg">
+      <div class="modal-header">
+        <h3>聯絡表單詳細資料</h3>
+        <button class="modal-close" onclick="closeDetail()">✕</button>
+      </div>
+      <div class="modal-body" id="detailBody"></div>
+      <div class="modal-footer">
+        <div style="flex:1; font-size:0.82rem; color:var(--text-sub);" id="detailStatusBar"></div>
+        <button class="btn-outline" onclick="closeDetail()">關閉</button>
+        <button class="btn-red btn-sm" id="detailDeleteBtn">刪除此筆</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="users-config.js"></script>
+  <script src="admin.js"></script>
+  <script>
+    requireLogin();
+    initAdminUI();
+
+    var currentFilter = 'all';
+    var currentDetailId = null;
+
+    function formatDT(ts) {
+      if (!ts) return '—';
+      const d = new Date(ts);
+      return d.getFullYear() + '/' + String(d.getMonth()+1).padStart(2,'0') + '/' + String(d.getDate()).padStart(2,'0')
+        + ' ' + String(d.getHours()).padStart(2,'0') + ':' + String(d.getMinutes()).padStart(2,'0');
+    }
+
+    function setFilter(val, btn) {
+      currentFilter = val;
+      document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      renderTable();
+    }
+
+    function getFiltered() {
+      var all = getContacts();
+      var q = (document.getElementById('searchInput').value || '').trim().toLowerCase();
+      return all.filter(function(c) {
+        var matchFilter = currentFilter === 'all' || c.status === currentFilter;
+        var matchSearch = !q || [c.name,c.company,c.email,c.phone,c.jobTitle].some(function(v){ return v && v.toLowerCase().includes(q); });
+        return matchFilter && matchSearch;
+      });
+    }
+
+    function renderStats() {
+      var all = getContacts();
+      document.getElementById('statTotal').textContent = all.length;
+      document.getElementById('statPending').textContent = all.filter(c=>c.status==='未處理').length;
+      document.getElementById('statProcessing').textContent = all.filter(c=>c.status==='處理中').length;
+      document.getElementById('statDone').textContent = all.filter(c=>c.status==='已完成').length;
+    }
+
+    function renderTable() {
+      renderStats();
+      var items = getFiltered();
+      var tbody = document.getElementById('tableBody');
+      var empty = document.getElementById('emptyState');
+      if (items.length === 0) {
+        tbody.innerHTML = '';
+        empty.style.display = 'block';
+        return;
+      }
+      empty.style.display = 'none';
+      var allC = getContacts();
+      tbody.innerHTML = items.map(function(c, i) {
+        var isNew = c.status === '未處理';
+        return '<tr>'
+          + '<td style="color:var(--text-sub);font-size:0.78rem;">' + (isNew ? '<span class="new-dot"></span>' : '') + (i+1) + '</td>'
+          + '<td style="white-space:nowrap;font-size:0.8rem;">' + formatDT(c.submittedAt) + '</td>'
+          + '<td><strong>' + (c.name||'—') + '</strong>' + (c.jobTitle ? '<br><span style="font-size:0.75rem;color:var(--text-sub);">' + c.jobTitle + '</span>' : '') + '</td>'
+          + '<td>' + (c.company||'—') + '</td>'
+          + '<td style="white-space:nowrap;">' + (c.phone||'—') + '</td>'
+          + '<td style="font-size:0.82rem;">' + (c.email||'—') + '</td>'
+          + '<td style="font-size:0.8rem;white-space:nowrap;">' + (c.service||'—') + '</td>'
+          + '<td><div class="msg-preview">' + (c.message||'（無）') + '</div></td>'
+          + '<td><select class="status-select status-' + (c.status||'未處理') + '" onchange="changeStatus(\'' + c.id + '\',this)">'
+          + ['未處理','處理中','已完成'].map(s => '<option' + (c.status===s?' selected':'') + '>'+s+'</option>').join('')
+          + '</select></td>'
+          + '<td style="white-space:nowrap;">'
+          + '<button class="btn-outline btn-sm" onclick="openDetail(\'' + c.id + '\')">詳細</button> '
+          + '<button class="btn-red btn-sm" onclick="deleteOne(\'' + c.id + '\')">刪除</button>'
+          + '</td></tr>';
+      }).join('');
+    }
+
+    function changeStatus(id, sel) {
+      var all = getContacts();
+      var idx = all.findIndex(c=>c.id===id);
+      if (idx<0) return;
+      all[idx].status = sel.value;
+      sel.className = 'status-select status-' + sel.value;
+      saveContacts(all);
+      renderStats();
+    }
+
+    function openDetail(id) {
+      var c = getContacts().find(c=>c.id===id);
+      if (!c) return;
+      currentDetailId = id;
+      var body = document.getElementById('detailBody');
+      body.innerHTML =
+        '<div class="detail-grid">'
+        + '<div class="detail-field"><div class="detail-label">姓名</div><div class="detail-value">' + (c.name||'—') + '</div></div>'
+        + '<div class="detail-field"><div class="detail-label">職稱</div><div class="detail-value">' + (c.jobTitle||'—') + '</div></div>'
+        + '<div class="detail-field"><div class="detail-label">公司名稱</div><div class="detail-value">' + (c.company||'—') + '</div></div>'
+        + '<div class="detail-field"><div class="detail-label">聯絡電話</div><div class="detail-value">' + (c.phone||'—') + '</div></div>'
+        + '<div class="detail-field"><div class="detail-label">電子郵件</div><div class="detail-value">' + (c.email||'—') + '</div></div>'
+        + '<div class="detail-field"><div class="detail-label">感興趣的服務</div><div class="detail-value">' + (c.service||'—') + '</div></div>'
+        + '<div class="detail-field"><div class="detail-label">方便聯繫時段</div><div class="detail-value">' + (c.contactTime||'—') + '</div></div>'
+        + '<div class="detail-field"><div class="detail-label">送出時間</div><div class="detail-value">' + formatDT(c.submittedAt) + '</div></div>'
+        + '</div>'
+        + '<div class="detail-field" style="margin-top:16px;">'
+        + '<div class="detail-label">需求說明</div>'
+        + '<div class="detail-value" style="background:#F4F2EE; border-radius:8px; padding:14px; line-height:1.9; white-space:pre-wrap;">' + (c.message||'（無填寫）') + '</div>'
+        + '</div>'
+        + '<div class="detail-field" style="margin-top:16px;">'
+        + '<div class="detail-label">更改狀態</div>'
+        + '<div style="display:flex;gap:8px;margin-top:6px;">'
+        + ['未處理','處理中','已完成'].map(s =>
+            '<button class="btn-outline btn-sm" style="'+(c.status===s?'background:var(--navy-dark);color:#fff;border-color:var(--navy-dark);':'')+'" onclick="setDetailStatus(\'' + s + '\')" id="dsbtn-'+s+'">'+s+'</button>'
+          ).join('')
+        + '</div></div>';
+      document.getElementById('detailStatusBar').textContent = '目前狀態：' + (c.status||'未處理');
+      document.getElementById('detailDeleteBtn').onclick = function(){ deleteOne(id); closeDetail(); };
+      document.getElementById('detailModal').classList.add('open');
+    }
+
+    function setDetailStatus(s) {
+      if (!currentDetailId) return;
+      var all = getContacts();
+      var idx = all.findIndex(c=>c.id===currentDetailId);
+      if (idx<0) return;
+      all[idx].status = s;
+      saveContacts(all);
+      document.getElementById('detailStatusBar').textContent = '目前狀態：' + s;
+      document.querySelectorAll('[id^="dsbtn-"]').forEach(function(b){
+        b.style.background = ''; b.style.color = ''; b.style.borderColor = '';
+      });
+      var ab = document.getElementById('dsbtn-'+s);
+      if (ab) { ab.style.background='var(--navy-dark)'; ab.style.color='#fff'; ab.style.borderColor='var(--navy-dark)'; }
+      renderTable();
+    }
+
+    function closeDetail() { document.getElementById('detailModal').classList.remove('open'); currentDetailId = null; }
+
+    function deleteOne(id) {
+      if (!confirm('確定要刪除此筆資料？')) return;
+      saveContacts(getContacts().filter(c=>c.id!==id));
+      renderTable();
+    }
+
+    function clearAll() {
+      if (!confirm('確定要清除所有聯絡表單資料？此操作無法復原！')) return;
+      if (!confirm('再次確認：清除全部聯絡記錄？')) return;
+      saveContacts([]);
+      renderTable();
+    }
+
+    // ====== Excel 匯出 ======
+    function exportExcel(filteredOnly) {
+      var data = filteredOnly ? getFiltered() : getContacts();
+      if (data.length === 0) { alert('沒有資料可以匯出'); return; }
+
+      // 轉換欄位為中文標題
+      var rows = data.map(function(c, i) {
+        return {
+          '編號': i + 1,
+          '送出時間': formatDT(c.submittedAt),
+          '姓名': c.name || '',
+          '職稱': c.jobTitle || '',
+          '公司名稱': c.company || '',
+          '聯絡電話': c.phone || '',
+          '電子郵件': c.email || '',
+          '感興趣的服務': c.service || '',
+          '方便聯繫時段': c.contactTime || '',
+          '需求說明': c.message || '',
+          '處理狀態': c.status || '未處理'
+        };
+      });
+
+      var wb = XLSX.utils.book_new();
+      var ws = XLSX.utils.json_to_sheet(rows);
+
+      // 設定欄寬
+      ws['!cols'] = [
+        {wch:6},{wch:18},{wch:12},{wch:14},{wch:20},{wch:16},{wch:28},{wch:16},{wch:24},{wch:40},{wch:10}
+      ];
+
+      XLSX.utils.book_append_sheet(wb, ws, '聯絡表單');
+
+      // 加入統計工作表
+      var all = getContacts();
+      var statsData = [
+        {'項目':'總計筆數', '數量': all.length},
+        {'項目':'未處理',   '數量': all.filter(c=>c.status==='未處理').length},
+        {'項目':'處理中',   '數量': all.filter(c=>c.status==='處理中').length},
+        {'項目':'已完成',   '數量': all.filter(c=>c.status==='已完成').length}
+      ];
+      var wsStats = XLSX.utils.json_to_sheet(statsData);
+      XLSX.utils.book_append_sheet(wb, wsStats, '統計摘要');
+
+      var today = new Date();
+      var dateStr = today.getFullYear() + String(today.getMonth()+1).padStart(2,'0') + String(today.getDate()).padStart(2,'0');
+      XLSX.writeFile(wb, 'IPCC-聯絡表單-' + dateStr + '.xlsx');
+    }
+
+    // 初始化
+    renderTable();
+  </script>
+</body>
+</html>

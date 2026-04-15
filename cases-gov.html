@@ -1,0 +1,323 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>資訊服務解決方案案例 — 成功案例 — IPCC 東州集團</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+<script src="content-data.js"></script>
+
+<nav class="navbar" id="navbar">
+  <div class="container">
+    <div class="nav-inner">
+      <a href="index.html" class="nav-logo">
+        <img src="IPCCLOGO.png" alt="IPCC">
+        <div class="nav-logo-right">
+          <div class="nav-logo-group">東州集團</div>
+          <div class="nav-logo-companies">
+            <span>東州互聯網實業有限公司</span>
+            <span>顯榮國際股份有限公司</span>
+          </div>
+        </div>
+      </a>
+      <ul class="nav-menu" id="navMenu">
+        <li><a href="index.html" class="nav-link">首頁</a></li>
+        <li><a href="news.html" class="nav-link">最新消息</a></li>
+        <li><a href="about.html" class="nav-link">關於我們</a></li>
+        <li><a href="services.html" class="nav-link">專案服務</a></li>
+        <li><a href="cases.html" class="nav-link active">成功案例</a></li>
+      </ul>
+      <a href="contact.html" class="nav-cta">與我們聯繫</a>
+      <div class="nav-hamburger" onclick="toggleMenu()"><span></span><span></span><span></span></div>
+    </div>
+  </div>
+</nav>
+
+<div class="page-hero">
+  <div class="page-hero-signal">
+    <div class="page-hero-phone"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="rgba(220,80,80,0.95)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" style="display:block"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.26 13a19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 3.17 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L7.91 9.91a16 16 0 0 0 6.18 6.18l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg></div>
+    <div class="page-hero-ring"></div>
+    <div class="page-hero-ring"></div>
+    <div class="page-hero-ring"></div>
+    <div class="page-hero-ring"></div>
+    <div class="page-hero-ring"></div>
+  </div>
+  <div class="container">
+    <div class="breadcrumb">
+      <a href="index.html">首頁</a>
+      <span>›</span>
+      <a href="cases.html">成功案例</a>
+      <span>›</span>
+      <span>資訊服務解決方案</span>
+    </div>
+    <h1>成功案例</h1>
+    <p>超過 50 家企業與政府機關的信賴，見證服務創造的真實價值</p>
+  </div>
+</div>
+
+<!-- 子導覽列 -->
+<nav class="about-subnav">
+  <div class="container">
+    <a href="cases.html">客服委外</a>
+    <a href="cases-training.html">客服訓練</a>
+    <a href="cases-gov.html" class="active">資訊服務解決方案</a>
+  </div>
+</nav>
+
+<style>
+  .case-new-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:28px; margin-bottom:56px; }
+  @media(max-width:1024px){ .case-new-grid{ grid-template-columns:repeat(2,1fr); } }
+  @media(max-width:640px) { .case-new-grid{ grid-template-columns:1fr; } }
+  .cn-card { background:#fff; border:1px solid var(--border); border-radius:var(--radius-lg); overflow:hidden; cursor:pointer; display:flex; flex-direction:column; transition:transform 0.25s,box-shadow 0.25s; }
+  .cn-card:hover { transform:translateY(-5px); box-shadow:0 16px 40px rgba(0,0,0,0.11); }
+  .cn-card-img { width:100%; height:185px; flex-shrink:0; overflow:hidden; background:linear-gradient(135deg,#EEF6FF,#DBEAFE); position:relative; display:flex; align-items:center; justify-content:center; }
+  .cn-card-img img { width:100%; height:100%; object-fit:cover; display:block; }
+  .cn-card-emoji { font-size:3.5rem; color:rgba(29,78,216,0.18); }
+  .cn-card-badge { position:absolute; top:12px; left:12px; padding:4px 10px; border-radius:100px; font-size:0.72rem; font-weight:700; background:rgba(29,78,216,0.85); color:#fff; backdrop-filter:blur(8px); }
+  .cn-card-body { padding:20px 22px 18px; display:flex; flex-direction:column; flex:1; }
+  .cn-card-cat { font-size:0.72rem; font-weight:700; color:var(--text-sub); text-transform:uppercase; letter-spacing:0.06em; margin-bottom:4px; }
+  .cn-card-client { font-size:1rem; font-weight:800; color:var(--navy-dark,#12193A); margin-bottom:10px; }
+  .cn-card-desc { font-size:0.83rem; color:var(--text-sub); line-height:1.8; flex:1; margin-bottom:14px; overflow-wrap:break-word; word-break:break-word; display:-webkit-box; -webkit-line-clamp:3; -webkit-box-orient:vertical; overflow:hidden; }
+  .cn-card-footer { display:flex; justify-content:flex-end; }
+  .cn-read-btn { font-size:0.78rem; font-weight:700; color:#1D4ED8; }
+  #caseDetailModal { display:none; position:fixed; inset:0; background:rgba(0,0,0,0.6); z-index:9000; align-items:center; justify-content:center; padding:20px; }
+  #caseDetailModal.open { display:flex; }
+  .cdm-box { background:#fff; border-radius:16px; max-width:700px; width:100%; max-height:90vh; overflow-y:auto; box-shadow:0 24px 60px rgba(0,0,0,0.28); position:relative; }
+  .cdm-img { width:100%; height:260px; overflow:hidden; border-radius:16px 16px 0 0; display:none; }
+  .cdm-img img { width:100%; height:100%; object-fit:cover; }
+  .cdm-body { padding:32px; }
+  .cdm-close { position:absolute; top:14px; right:16px; background:rgba(0,0,0,0.12); border:none; border-radius:50%; width:32px; height:32px; font-size:1rem; cursor:pointer; color:#333; line-height:1; }
+  .cdm-cat { font-size:0.72rem; font-weight:700; color:var(--text-sub); text-transform:uppercase; letter-spacing:0.08em; margin-bottom:6px; }
+  .cdm-client { font-size:1.4rem; font-weight:800; color:#12193A; margin-bottom:16px; }
+  .cdm-section-label { font-size:0.78rem; font-weight:700; text-transform:uppercase; letter-spacing:0.08em; color:#1D4ED8; margin:18px 0 6px; }
+  .cdm-text { font-size:0.92rem; color:#374151; line-height:2; overflow-wrap:break-word; word-break:break-word; white-space:pre-wrap; }
+  .cdm-divider { border:none; border-top:1px solid #E5E7EB; margin:20px 0; }
+  .cdm-results { display:flex; gap:16px; flex-wrap:wrap; margin-top:12px; }
+  .cdm-result { background:#EFF6FF; border-radius:12px; padding:14px 20px; text-align:center; min-width:80px; }
+  .cdm-result-num { font-size:1.4rem; font-weight:900; color:#1D4ED8; display:block; }
+  .cdm-result-label { font-size:0.72rem; color:var(--text-sub); margin-top:2px; }
+</style>
+
+<section class="section">
+  <div class="container">
+    <div style="margin-bottom:48px;">
+      <span class="section-label">Government Cases</span>
+      <h2 class="section-title" style="margin-top:8px;">資訊服務解決方案成功案例</h2>
+      <p class="section-sub">符合政府規範的完整解決方案，提升公共服務品質，增進民眾滿意度</p>
+    </div>
+
+    <div id="caseGrid" class="case-new-grid">
+      <div class="cn-card" onclick="openCaseModal({client:'地方政府 D 單位',category:'政府機關 · 資訊服務',emoji:'🏛️',challenge:'民眾服務需求量大，現有人力嚴重不足，跨部門轉介流程複雜，民眾服務滿意度長期低迷，議員質詢壓力大。',solution:'建置符合政府規範的客服中心，整合多部門轉介流程，提供專業人力委外服務，確保符合驗收規範。',results:[{value:&#39;↑38%&#39;,label:&#39;民眾滿意度&#39;},{value:&#39;↓55%&#39;,label:&#39;平均等待時間&#39;}]})">
+        <div class="cn-card-img"><div class="cn-card-emoji">🏛️</div><span class="cn-card-badge">資訊服務</span></div>
+        <div class="cn-card-body">
+          <div class="cn-card-cat">政府機關 · 資訊服務</div>
+          <div class="cn-card-client">地方政府 D 單位</div>
+          <p class="cn-card-desc">民眾服務需求量大，現有人力嚴重不足，跨部門轉介流程複雜，民眾服務滿意度長期低迷，議員質詢壓力大。</p>
+          <div class="cn-card-footer"><span class="cn-read-btn">查看詳情 →</span></div>
+        </div>
+      </div>
+      <div class="cn-card" onclick="openCaseModal({client:'區域醫院 F',category:'醫療機構 · 資訊服務',emoji:'🏥',challenge:'掛號諮詢電話量龐大，患者等待時間過長，診療資訊傳遞不一致，醫護人員需分心處理非醫療性客服問題。',solution:'建置醫療客服中心，整合掛號、衛教、轉介等服務，讓醫護人員專注醫療核心工作，提升整體服務效率。',results:[{value:&#39;↓65%&#39;,label:&#39;電話等待時間&#39;},{value:&#39;↑42%&#39;,label:&#39;病患滿意度&#39;}]})">
+        <div class="cn-card-img"><div class="cn-card-emoji">🏥</div><span class="cn-card-badge">資訊服務</span></div>
+        <div class="cn-card-body">
+          <div class="cn-card-cat">醫療機構 · 資訊服務</div>
+          <div class="cn-card-client">區域醫院 F</div>
+          <p class="cn-card-desc">掛號諮詢電話量龐大，患者等待時間過長，診療資訊傳遞不一致，醫護人員需分心處理非醫療性客服問題。</p>
+          <div class="cn-card-footer"><span class="cn-read-btn">查看詳情 →</span></div>
+        </div>
+      </div>
+      <div class="cn-card" onclick="openCaseModal({client:'大眾運輸業者 I',category:'公共運輸 · 資訊服務',emoji:'🚌',challenge:'尖峰時段乘客申訴量暴增，路線查詢、票務問題、失物招領等多元需求難以分流，電話接通率僅達 62%。',solution:'導入智慧語音 IVR 分流系統，整合多渠道客服，建置 24 小時緊急服務機制，並提供即時數據報表協助管理決策。',results:[{value:&#39;↑95%&#39;,label:&#39;電話接通率&#39;},{value:&#39;↑48%&#39;,label:&#39;乘客滿意度&#39;}]})">
+        <div class="cn-card-img"><div class="cn-card-emoji">🚌</div><span class="cn-card-badge">資訊服務</span></div>
+        <div class="cn-card-body">
+          <div class="cn-card-cat">公共運輸 · 資訊服務</div>
+          <div class="cn-card-client">大眾運輸業者 I</div>
+          <p class="cn-card-desc">尖峰時段乘客申訴量暴增，路線查詢、票務問題、失物招領等多元需求難以分流，電話接通率僅達 62%。</p>
+          <div class="cn-card-footer"><span class="cn-read-btn">查看詳情 →</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 案例 Modal -->
+<div id="caseDetailModal" onclick="if(event.target===this)closeCaseModal()">
+  <div class="cdm-box">
+    <button class="cdm-close" onclick="closeCaseModal()">✕</button>
+    <div class="cdm-img" id="cdmImg"><img id="cdmImgEl" src="" alt=""></div>
+    <div class="cdm-body">
+      <div class="cdm-cat" id="cdmCat"></div>
+      <div class="cdm-client" id="cdmClient"></div>
+      <div id="cdmChallengeWrap"><div class="cdm-section-label">面臨挑戰</div><p class="cdm-text" id="cdmChallenge"></p></div>
+      <div id="cdmSolutionWrap"><hr class="cdm-divider"><div class="cdm-section-label">我們的解決方案</div><p class="cdm-text" id="cdmSolution"></p></div>
+      <div id="cdmResultsWrap"><hr class="cdm-divider"><div class="cdm-section-label">成果展示</div><div class="cdm-results" id="cdmResults"></div></div>
+    </div>
+  </div>
+</div>
+
+<section class="cta-section">
+  <div class="container" style="position:relative; z-index:1; text-align:center;">
+    <h2 class="section-title" style="color:#fff;">公部門客服解決方案</h2>
+    <p style="color:rgba(255,255,255,0.6); margin:16px auto 36px; max-width:480px;">符合政府採購規範，提供完整的公共服務客服解決方案</p>
+    <div style="display:flex; justify-content:center; gap:16px; flex-wrap:wrap;">
+      <a href="contact.html" class="btn btn-primary">免費諮詢 →</a>
+      <a href="services-it.html" class="btn btn-outline">了解資訊服務</a>
+    </div>
+  </div>
+</section>
+
+<footer class="footer">
+  <div class="container">
+    <div class="footer-grid">
+      <div class="footer-brand">
+        <div class="footer-logo">
+          <div class="footer-logo-box"><img src="IPCCLOGO.png" alt="IPCC"></div>
+          <div>
+            <span class="footer-logo-name">東州集團</span>
+            <div class="footer-logo-companies">
+              <span>東州互聯網實業有限公司</span>
+              <span>顯榮國際股份有限公司</span>
+            </div>
+          </div>
+        </div>
+        <p>整合系統、服務與數據，協助企業打造永續競爭力。</p>
+        <div class="footer-socials">
+          <a href="https://www.facebook.com/easy.ipcc/" target="_blank" rel="noopener" class="footer-social" title="Facebook">f</a>
+          <a href="#" class="footer-social">▶</a>
+          <a href="https://www.1111.com.tw/corp/8563" target="_blank" rel="noopener" class="footer-social" title="1111人力銀行">人</a>
+        </div>
+      </div>
+      <div class="footer-col">
+        <h4>快速連結</h4>
+        <ul>
+          <li><a href="news.html">最新消息</a></li>
+          <li><a href="about.html">關於我們</a></li>
+          <li><a href="services.html">專案服務</a></li>
+          <li><a href="cases.html">成功案例</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>服務項目</h4>
+        <ul>
+          <li><a href="services.html">客服委外</a></li>
+          <li><a href="services-training.html">客服訓練</a></li>
+          <li><a href="services-it.html">資訊服務</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>聯絡地址</h4>
+        <div class="footer-companies">
+          <div>東州互聯網實業有限公司</div>
+          <div>顯榮國際股份有限公司</div>
+        </div>
+        <div class="footer-address" style="margin-top:12px;"><span>北區</span><br>台北市松山區民權東路三段102號10樓</div>
+        <div class="footer-address" style="margin-top:16px;"><span>中區</span><br>台中市西區台灣大道二段307號9樓之2</div>
+        <div style="margin-top:16px; color:rgba(255,255,255,0.55);">☎ 0800-666-080</div>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span>© 2025 東州互聯網實業有限公司 / 顯榮國際股份有限公司 版權所有</span>
+      <span>IPCC Group — 創新服務．永續經營</span>
+    </div>
+  </div>
+</footer>
+
+<script>
+window.addEventListener('scroll', () => {
+  document.getElementById('navbar').classList.toggle('scrolled', window.scrollY > 20);
+});
+function toggleMenu() {
+  document.getElementById('navMenu').classList.toggle('open');
+}
+</script>
+
+<script>
+function openCaseModal(c) {
+  var imgWrap = document.getElementById('cdmImg');
+  if (c.image) { document.getElementById('cdmImgEl').src = c.image; imgWrap.style.display = 'block'; }
+  else { imgWrap.style.display = 'none'; }
+  document.getElementById('cdmCat').textContent = c.category || '';
+  document.getElementById('cdmClient').textContent = c.client || '';
+  var chw = document.getElementById('cdmChallengeWrap');
+  if (c.challenge) { document.getElementById('cdmChallenge').innerHTML = renderContent(c.challenge); chw.style.display = ''; }
+  else { chw.style.display = 'none'; }
+  var sw = document.getElementById('cdmSolutionWrap');
+  if (c.solution) { document.getElementById('cdmSolution').innerHTML = renderContent(c.solution); sw.style.display = ''; }
+  else { sw.style.display = 'none'; }
+  var rw = document.getElementById('cdmResultsWrap');
+  var results = c.results || [];
+  if (results.length) {
+    document.getElementById('cdmResults').innerHTML = results.map(function(r){
+      return '<div class="cdm-result"><span class="cdm-result-num">'+esc(r.value||'')+'</span><div class="cdm-result-label">'+esc(r.label||'')+'</div></div>';
+    }).join('');
+    rw.style.display = '';
+  } else { rw.style.display = 'none'; }
+  document.getElementById('caseDetailModal').classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+function closeCaseModal() {
+  document.getElementById('caseDetailModal').classList.remove('open');
+  document.body.style.overflow = '';
+}
+document.addEventListener('keydown', function(e){ if(e.key==='Escape') closeCaseModal(); });
+
+// 將文字中的連結轉成可點擊超連結
+// 支援 [顯示文字](網址) 格式，以及純網址自動偵測
+function renderContent(text) {
+  if (!text) return '';
+  var re = /[([^]]*)]((https?://[^)]+))|(https?://[^s<>"&]+)/g;
+  var result = '';
+  var lastIdx = 0;
+  var m;
+  while ((m = re.exec(text)) !== null) {
+    if (m.index > lastIdx) result += esc(text.slice(lastIdx, m.index));
+    if (m[1] !== undefined) {
+      result += '<a href="' + esc(m[2]) + '" target="_blank" rel="noopener" class="content-link">' + esc(m[1]) + '</a>';
+    } else {
+      result += '<a href="' + esc(m[3]) + '" target="_blank" rel="noopener" class="content-link">' + esc(m[3]) + '</a>';
+    }
+    lastIdx = m.index + m[0].length;
+  }
+  if (lastIdx < text.length) result += esc(text.slice(lastIdx));
+  return result;
+}
+function esc(s){ return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
+
+(function () {
+  try {
+    var all = JSON.parse(localStorage.getItem('ipcc_cases') || '[]');
+    var items = all.filter(function (c) {
+      if (!c.published) return false;
+      var st = c.serviceType || c.caseType || '';
+      return st === 'it';
+    });
+    if (items.length === 0) return;
+    items.sort(function (a, b) { return (b.createdAt || 0) - (a.createdAt || 0); });
+    var grid = document.getElementById('caseGrid');
+    if (!grid) return;
+    grid.innerHTML = items.map(function (c) {
+      var imgHtml = c.image
+        ? '<img src="' + c.image + '" alt="' + esc(c.client||'') + '" loading="lazy">'
+        : '<div class="cn-card-emoji">' + (c.emoji || '🏆') + '</div>';
+      var summary = c.description || c.challenge || '';
+      var modalData = JSON.stringify({
+        client: c.client||'', category: c.category||'', emoji: c.emoji||'🏆',
+        image: c.image||'', challenge: c.challenge||'', solution: c.solution||'',
+        results: c.results||[], description: c.description||''
+      });
+      return '<div class="cn-card" onclick=\'openCaseModal(' + modalData.replace(/'/g,'&#39;') + ')\'>'
+        + '<div class="cn-card-img">' + imgHtml + '<span class="cn-card-badge">資訊服務</span></div>'
+        + '<div class="cn-card-body">'
+        + '<div class="cn-card-cat">' + esc(c.category||'') + '</div>'
+        + '<div class="cn-card-client">' + esc(c.client||'') + '</div>'
+        + '<p class="cn-card-desc">' + esc(summary) + '</p>'
+        + '<div class="cn-card-footer"><span class="cn-read-btn">查看詳情 →</span></div>'
+        + '</div></div>';
+    }).join('');
+  } catch (e) { console.error(e); }
+})();
+</script>
+</body>
+</html>
