@@ -27,10 +27,32 @@
     .detail-desc { font-size: 1.05rem; color: #374151; line-height: 2; margin-bottom: 28px; font-weight: 500; }
     .detail-divider { border: none; border-top: 1px solid #E5E7EB; margin: 28px 0; }
     .detail-content { font-size: 0.95rem; color: #4B5563; line-height: 2.1; white-space: pre-wrap; }
-    .detail-link { display: inline-flex; align-items: center; gap: 8px; margin-top: 32px; padding: 14px 28px; border-radius: 10px; font-size: 0.95rem; font-weight: 700; text-decoration: none; background: #12193A; color: #fff; transition: opacity 0.2s; }
-    .detail-link:hover { opacity: 0.85; }
-    .detail-link.type-podcast { background: #7C3AED; }
-    .detail-link.type-article { background: #12193A; }
+    /* 文章頂部超連結 */
+    .detail-top-link {
+      display: inline-flex; align-items: center; gap: 6px;
+      font-size: 0.85rem; font-weight: 700; text-decoration: none;
+      border: 1.5px solid #1E2A5E; color: #1E2A5E;
+      border-radius: 100px; padding: 6px 16px; margin-bottom: 28px;
+      transition: all 0.2s;
+    }
+    .detail-top-link:hover { background: #1E2A5E; color: #fff; }
+    .detail-top-link.type-podcast { color: #7C3AED; border-color: #7C3AED; }
+    .detail-top-link.type-podcast:hover { background: #7C3AED; color: #fff; border-color: #7C3AED; }
+    /* 底部標籤列 */
+    .detail-tags {
+      display: flex; flex-wrap: wrap; gap: 8px;
+      margin-top: 36px; padding-top: 24px;
+      border-top: 1px solid #E5E7EB;
+    }
+    .detail-tag {
+      display: inline-block; padding: 6px 16px; border-radius: 100px;
+      font-size: 0.78rem; font-weight: 700;
+      background: #F3F4F6; color: #374151;
+    }
+    .detail-tag-media   { background: #EEF2FF; color: #4338CA; }
+    .detail-tag-badge   { background: #FEF3C7; color: #92400E; }
+    .detail-tag-case    { background: #ECFDF5; color: #065F46; }
+    .detail-tag-service { background: #E0F2FE; color: #0369A1; }
     .content-link { color: #1E2A5E; font-weight: 600; text-decoration: underline; text-underline-offset: 2px; }
     .content-link:hover { color: #E85D04; }
     .not-found { text-align: center; padding: 80px 20px; color: #6B7280; }
@@ -203,16 +225,33 @@ function renderContent(text) {
   document.getElementById('detailMeta').innerHTML = metaParts.join('');
 
   var html = '';
-  if (item.image) html += '<img class="detail-img" src="'+esc(item.image)+'" alt="">';
-  if (item.description) html += '<p class="detail-desc">'+renderContent(item.description)+'</p>';
-  if (item.content) html += '<hr class="detail-divider"><div class="detail-content">'+renderContent(item.content)+'</div>';
+  // 1. External link at top-left as outlined pill
   if (item.externalUrl) {
     var isPodcast = item.mediaType === 'podcast';
-    var defaultText = isPodcast ? '收聽 Podcast' : '閱讀全文';
-    var linkCls = (mt.linkCls || 'type-article');
-    html += '<a href="'+esc(item.externalUrl)+'" target="_blank" rel="noopener" class="detail-link '+linkCls+'">'
-      + (item.linkText ? esc(item.linkText) : defaultText) + '</a>';
+    var topLinkCls = isPodcast ? 'type-podcast' : '';
+    var topLinkText = item.linkText || (isPodcast ? '🎙 收聽 Podcast' : '🔗 閱讀全文');
+    html += '<a href="'+esc(item.externalUrl)+'" target="_blank" rel="noopener" class="detail-top-link '+topLinkCls+'">'+esc(topLinkText)+' →</a>';
   }
+  // 2. Image
+  if (item.image) html += '<img class="detail-img" src="'+esc(item.image)+'" alt="">';
+  // 3. Description
+  if (item.description) html += '<p class="detail-desc">'+renderContent(item.description)+'</p>';
+  // 4. Full content
+  if (item.content) html += '<hr class="detail-divider"><div class="detail-content">'+renderContent(item.content)+'</div>';
+  // 5. Tags at bottom as oval pills
+  var tags = [];
+  if (item.badge) tags.push('<span class="detail-tag detail-tag-badge">'+esc(item.badge)+'</span>');
+  if (mt.label) tags.push('<span class="detail-tag detail-tag-media">'+esc(mt.label)+'</span>');
+  if (item.relatedCaseId) {
+    var cases = JSON.parse(localStorage.getItem('ipcc_cases') || '[]');
+    var relCase = cases.find(function(c){ return c.id === item.relatedCaseId; });
+    if (relCase) tags.push('<span class="detail-tag detail-tag-case">'+esc(relCase.client)+'</span>');
+  }
+  if (item.relatedService) {
+    var svcMap = {'services.html':'客服委外','services-training.html':'客服服務訓練','services-it.html':'資訊服務'};
+    tags.push('<span class="detail-tag detail-tag-service">'+esc(svcMap[item.relatedService] || item.relatedService)+'</span>');
+  }
+  if (tags.length) html += '<div class="detail-tags">'+tags.join('')+'</div>';
 
   document.getElementById('detailBody').innerHTML = html || '<p>（無內容）</p>';
 })();
