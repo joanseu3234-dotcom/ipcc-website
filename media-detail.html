@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title id="pageTitle">媒體採訪詳情 — IPCC 東州集團</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+  <style>
+    .detail-hero { background: linear-gradient(135deg, #12193A, #1E2A5E); color: #fff; padding: 56px 0 40px; }
+    .detail-back { display: inline-flex; align-items: center; gap: 6px; color: rgba(255,255,255,0.7); font-size: 0.85rem; text-decoration: none; margin-bottom: 24px; }
+    .detail-back:hover { color: #fff; }
+    .detail-type-badge { display: inline-block; font-size: 0.72rem; font-weight: 700; padding: 3px 10px; border-radius: 100px; letter-spacing: 0.05em; margin-bottom: 12px; }
+    .detail-type-badge.mt-article  { background: rgba(30,42,94,0.85);   color: #fff; }
+    .detail-type-badge.mt-podcast  { background: rgba(124,58,237,0.85); color: #fff; }
+    .detail-type-badge.mt-online   { background: rgba(2,132,199,0.85);  color: #fff; }
+    .detail-type-badge.mt-tv       { background: rgba(220,38,38,0.85);  color: #fff; }
+    .detail-type-badge.mt-radio    { background: rgba(5,150,105,0.85);  color: #fff; }
+    .detail-type-badge.mt-other    { background: rgba(100,116,139,0.85);color: #fff; }
+    .detail-title { font-size: 1.8rem; font-weight: 900; line-height: 1.4; margin-bottom: 12px; }
+    .detail-meta { color: rgba(255,255,255,0.6); font-size: 0.85rem; display: flex; gap: 12px; flex-wrap: wrap; align-items: center; }
+    .detail-meta-source { font-weight: 700; color: rgba(255,255,255,0.85); }
+    @media (max-width: 768px) { .detail-title { font-size: 1.3rem; } }
+    .detail-img { width: 100%; max-height: 420px; object-fit: cover; border-radius: 16px; display: block; margin: 0 auto 40px; }
+    .detail-body { max-width: 780px; margin: 0 auto; }
+    .detail-desc { font-size: 1.05rem; color: #374151; line-height: 2; margin-bottom: 28px; font-weight: 500; }
+    .detail-divider { border: none; border-top: 1px solid #E5E7EB; margin: 28px 0; }
+    .detail-content { font-size: 0.95rem; color: #4B5563; line-height: 2.1; white-space: pre-wrap; }
+    .detail-link { display: inline-flex; align-items: center; gap: 8px; margin-top: 32px; padding: 14px 28px; border-radius: 10px; font-size: 0.95rem; font-weight: 700; text-decoration: none; background: #12193A; color: #fff; transition: opacity 0.2s; }
+    .detail-link:hover { opacity: 0.85; }
+    .detail-link.type-podcast { background: #7C3AED; }
+    .detail-link.type-article { background: #12193A; }
+    .content-link { color: #1E2A5E; font-weight: 600; text-decoration: underline; text-underline-offset: 2px; }
+    .content-link:hover { color: #E85D04; }
+    .not-found { text-align: center; padding: 80px 20px; color: #6B7280; }
+    .not-found h2 { font-size: 1.3rem; font-weight: 700; margin-bottom: 16px; color: #374151; }
+  </style>
+</head>
+<body>
+<script src="content-data.js"></script>
+
+<nav class="navbar" id="navbar">
+  <div class="container">
+    <div class="nav-inner">
+      <a href="index.html" class="nav-logo">
+        <img src="IPCCLOGO.png" alt="IPCC">
+        <div class="nav-logo-right">
+          <div class="nav-logo-group">東州集團</div>
+          <div class="nav-logo-companies">
+            <span>東州互聯網實業有限公司</span>
+            <span>顯榮國際股份有限公司</span>
+          </div>
+        </div>
+      </a>
+      <ul class="nav-menu" id="navMenu">
+        <li><a href="index.html" class="nav-link">首頁</a></li>
+        <li><a href="news.html" class="nav-link active">最新消息</a></li>
+        <li><a href="about.html" class="nav-link">關於我們</a></li>
+        <li><a href="services.html" class="nav-link">專案服務</a></li>
+        <li><a href="cases.html" class="nav-link">成功案例</a></li>
+      </ul>
+      <a href="contact.html" class="nav-cta">與我們聯繫</a>
+      <div class="nav-hamburger" onclick="toggleMenu()"><span></span><span></span><span></span></div>
+    </div>
+  </div>
+</nav>
+
+<div class="detail-hero" id="detailHero">
+  <div class="container">
+    <a href="news-media.html" class="detail-back" id="backLink">← 返回媒體採訪</a>
+    <div id="detailTypeBadgeWrap"></div>
+    <h1 class="detail-title" id="detailTitle">載入中…</h1>
+    <div class="detail-meta" id="detailMeta"></div>
+  </div>
+</div>
+
+<section class="section">
+  <div class="container">
+    <div class="detail-body" id="detailBody">
+      <div class="not-found"><p>載入中…</p></div>
+    </div>
+  </div>
+</section>
+
+<section class="cta-section">
+  <div class="container" style="position:relative; z-index:1; text-align:center;">
+    <h2 class="section-title" style="color:#fff;">媒體採訪洽詢</h2>
+    <p style="color:rgba(255,255,255,0.6); margin:16px auto 36px; max-width:400px;">歡迎各媒體聯繫採訪，了解東州集團的服務創新故事</p>
+    <a href="contact.html" class="btn btn-primary">聯繫公關窗口</a>
+  </div>
+</section>
+
+<footer class="footer">
+  <div class="container">
+    <div class="footer-grid">
+      <div class="footer-brand">
+        <div class="footer-logo">
+          <div class="footer-logo-box"><img src="IPCCLOGO.png" alt="IPCC"></div>
+          <div>
+            <span class="footer-logo-name">東州集團</span>
+            <div class="footer-logo-companies">
+              <span>東州互聯網實業有限公司</span>
+              <span>顯榮國際股份有限公司</span>
+            </div>
+          </div>
+        </div>
+        <p>整合系統、服務與數據，協助企業打造永續競爭力。</p>
+        <div class="footer-socials">
+          <a href="https://www.facebook.com/easy.ipcc/" target="_blank" rel="noopener" class="footer-social" title="Facebook">f</a>
+          <a href="#" class="footer-social">▶</a>
+          <a href="https://www.1111.com.tw/corp/8563" target="_blank" rel="noopener" class="footer-social" title="1111人力銀行">人</a>
+        </div>
+      </div>
+      <div class="footer-col">
+        <h4>快速連結</h4>
+        <ul>
+          <li><a href="news.html">最新消息</a></li>
+          <li><a href="about.html">關於我們</a></li>
+          <li><a href="services.html">專案服務</a></li>
+          <li><a href="cases.html">成功案例</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>服務項目</h4>
+        <ul>
+          <li><a href="services.html">客服委外</a></li>
+          <li><a href="services-training.html">客服訓練</a></li>
+          <li><a href="services-it.html">資訊服務</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>聯絡地址</h4>
+        <div class="footer-companies">
+          <div>東州互聯網實業有限公司</div>
+          <div>顯榮國際股份有限公司</div>
+        </div>
+        <div class="footer-address" style="margin-top:12px;"><span>北區</span><br>台北市松山區民權東路三段102號10樓</div>
+        <div class="footer-address" style="margin-top:16px;"><span>中區</span><br>台中市西區台灣大道二段307號9樓之2</div>
+        <div style="margin-top:16px; color:rgba(255,255,255,0.55);">☎ 0800-666-080</div>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span>© 2025 東州互聯網實業有限公司 / 顯榮國際股份有限公司 版權所有</span>
+      <span>IPCC Group — 創新服務．永續經營</span>
+    </div>
+  </div>
+</footer>
+
+<script>
+window.addEventListener('scroll', function() {
+  document.getElementById('navbar').classList.toggle('scrolled', window.scrollY > 20);
+});
+function toggleMenu() { document.getElementById('navMenu').classList.toggle('open'); }
+
+var MEDIA_TYPE_MAP = {
+  article: { label: '報導',    cls: 'mt-article', linkCls: 'type-article' },
+  online:  { label: '網路媒體', cls: 'mt-online',  linkCls: 'type-article' },
+  podcast: { label: 'Podcast', cls: 'mt-podcast',  linkCls: 'type-podcast' },
+  tv:      { label: '電視',    cls: 'mt-tv',       linkCls: 'type-article' },
+  radio:   { label: '廣播',    cls: 'mt-radio',    linkCls: 'type-article' },
+  other:   { label: '採訪',    cls: 'mt-other',    linkCls: 'type-article' }
+};
+
+function esc(s) { return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
+function renderContent(text) {
+  if (!text) return '';
+  var re = /\[([^\]]*)\]\((https?:\/\/[^)]+)\)|(https?:\/\/[^\s<>"&]+)/g;
+  var result = '', lastIdx = 0, m;
+  while ((m = re.exec(text)) !== null) {
+    if (m.index > lastIdx) result += esc(text.slice(lastIdx, m.index));
+    if (m[1] !== undefined) result += '<a href="'+esc(m[2])+'" target="_blank" rel="noopener" class="content-link">'+esc(m[1])+'</a>';
+    else result += '<a href="'+esc(m[3])+'" target="_blank" rel="noopener" class="content-link">'+esc(m[3])+'</a>';
+    lastIdx = m.index + m[0].length;
+  }
+  if (lastIdx < text.length) result += esc(text.slice(lastIdx));
+  return result;
+}
+
+(function() {
+  var params = new URLSearchParams(location.search);
+  var id = params.get('id');
+  if (!id) { showNotFound(); return; }
+
+  var all = JSON.parse(localStorage.getItem('ipcc_news') || '[]');
+  var item = all.find(function(n){ return n.id === id; });
+  if (!item) { showNotFound(); return; }
+
+  document.title = (item.title || '媒體採訪詳情') + ' — IPCC 東州集團';
+  document.getElementById('pageTitle').textContent = (item.title || '媒體採訪詳情') + ' — IPCC 東州集團';
+
+  var mt = MEDIA_TYPE_MAP[item.mediaType] || {};
+  if (mt.label) {
+    document.getElementById('detailTypeBadgeWrap').innerHTML =
+      '<span class="detail-type-badge ' + (mt.cls || 'mt-other') + '">' + esc(mt.label) + '</span>';
+  }
+
+  document.getElementById('detailTitle').textContent = item.title || '';
+
+  var metaParts = [];
+  if (item.mediaSource) metaParts.push('<span class="detail-meta-source">' + esc(item.mediaSource) + '</span>');
+  if (item.date) metaParts.push('<span>' + esc(item.date) + '</span>');
+  document.getElementById('detailMeta').innerHTML = metaParts.join('');
+
+  var html = '';
+  if (item.image) html += '<img class="detail-img" src="'+esc(item.image)+'" alt="">';
+  if (item.description) html += '<p class="detail-desc">'+renderContent(item.description)+'</p>';
+  if (item.content) html += '<hr class="detail-divider"><div class="detail-content">'+renderContent(item.content)+'</div>';
+  if (item.externalUrl) {
+    var isPodcast = item.mediaType === 'podcast';
+    var defaultText = isPodcast ? '收聽 Podcast' : '閱讀全文';
+    var linkCls = (mt.linkCls || 'type-article');
+    html += '<a href="'+esc(item.externalUrl)+'" target="_blank" rel="noopener" class="detail-link '+linkCls+'">'
+      + (item.linkText ? esc(item.linkText) : defaultText) + '</a>';
+  }
+
+  document.getElementById('detailBody').innerHTML = html || '<p>（無內容）</p>';
+})();
+
+function showNotFound() {
+  document.getElementById('detailTitle').textContent = '找不到內容';
+  document.getElementById('detailMeta').innerHTML = '';
+  document.getElementById('detailBody').innerHTML = '<div class="not-found"><h2>找不到指定的媒體採訪</h2><p>可能已被刪除或連結有誤。</p><a href="news-media.html" class="detail-link" style="display:inline-flex;">← 返回媒體採訪</a></div>';
+}
+</script>
+</body>
+</html>

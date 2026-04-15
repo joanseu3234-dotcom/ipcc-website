@@ -58,7 +58,10 @@
           <h1 style="font-size:1.6rem; font-weight:800; color:var(--navy-dark); margin-bottom:4px;">最新消息管理</h1>
           <p style="color:var(--text-sub); font-size:0.9rem;">管理最新消息、媒體採訪與活動公告</p>
         </div>
-        <button class="btn-primary" onclick="openAddModal()">+ 新增文章</button>
+        <div style="display:flex;gap:8px;">
+          <button class="btn-outline" onclick="openImportPanel()" style="font-size:0.85rem;">📥 從其他區塊引入</button>
+          <button class="btn-primary" onclick="openAddModal()">+ 新增文章</button>
+        </div>
       </div>
 
       <div class="section-card">
@@ -225,6 +228,49 @@
     </div>
   </div>
 </div>
+
+<!-- 引入面板 -->
+<div class="modal-overlay" id="importPanel">
+  <div class="modal modal-lg" style="max-width:720px;">
+    <div class="modal-header">
+      <h3>📥 從其他區塊引入內容</h3>
+      <button class="modal-close" onclick="closeImportPanel()">✕</button>
+    </div>
+    <div class="modal-body" style="padding-bottom:8px;">
+      <p style="color:var(--text-sub);font-size:0.85rem;margin-bottom:16px;">選擇來源區塊，點選要引入的項目，系統會自動產生摘要並帶入新增消息表單，您可以再進行編輯。</p>
+      <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:20px;" id="importSourceBtns">
+        <button class="filter-btn active" onclick="selectImportSource('media',this)">📺 媒體採訪</button>
+        <button class="filter-btn" onclick="selectImportSource('event',this)">📅 活動</button>
+        <button class="filter-btn" onclick="selectImportSource('awards',this)">🏆 獲獎事蹟</button>
+        <button class="filter-btn" onclick="selectImportSource('services',this)">🛠 專案服務</button>
+        <button class="filter-btn" onclick="selectImportSource('cases',this)">📊 成功案例</button>
+      </div>
+      <div id="importList" style="max-height:400px;overflow-y:auto;display:flex;flex-direction:column;gap:8px;"></div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn-outline" onclick="closeImportPanel()">關閉</button>
+    </div>
+  </div>
+</div>
+<style>
+.import-item {
+  display:flex;align-items:center;gap:12px;padding:12px 14px;border:1.5px solid var(--border);
+  border-radius:10px;cursor:pointer;transition:border-color 0.2s,background 0.2s;background:#fff;
+}
+.import-item:hover { border-color:var(--navy);background:#F4F6FF; }
+.import-item-thumb {
+  width:60px;height:48px;flex-shrink:0;border-radius:6px;object-fit:cover;background:var(--bg-light);
+  display:flex;align-items:center;justify-content:center;font-size:1.4rem;overflow:hidden;
+}
+.import-item-thumb img { width:100%;height:100%;object-fit:cover;display:block;border-radius:6px; }
+.import-item-body { flex:1;min-width:0; }
+.import-item-title { font-weight:700;font-size:0.88rem;color:var(--navy-dark);margin-bottom:3px;overflow:hidden;white-space:nowrap;text-overflow:ellipsis; }
+.import-item-desc { font-size:0.78rem;color:var(--text-sub);overflow:hidden;white-space:nowrap;text-overflow:ellipsis; }
+.import-item-meta { font-size:0.72rem;color:#9CA3AF;margin-top:2px; }
+.import-item-btn { flex-shrink:0;font-size:0.78rem;padding:5px 12px;border-radius:100px;background:var(--navy-dark);color:#fff;border:none;cursor:pointer;white-space:nowrap; }
+.import-item-btn:hover { opacity:0.85; }
+.import-empty { text-align:center;padding:40px 20px;color:var(--text-sub);font-size:0.88rem; }
+</style>
 
 <script src="users-config.js"></script>
 <script src="admin.js"></script>
@@ -487,6 +533,174 @@
 
   if (new URLSearchParams(window.location.search).get('action') === 'new') {
     window.addEventListener('load', openAddModal);
+  }
+
+  // ── 引入其他區塊功能 ──
+  var _importSource = 'media';
+
+  function openImportPanel() {
+    document.getElementById('importPanel').classList.add('open');
+    selectImportSource('media', document.querySelector('#importSourceBtns .filter-btn'));
+  }
+  function closeImportPanel() {
+    document.getElementById('importPanel').classList.remove('open');
+  }
+
+  function selectImportSource(src, btn) {
+    _importSource = src;
+    document.querySelectorAll('#importSourceBtns .filter-btn').forEach(function(b){ b.classList.remove('active'); });
+    btn.classList.add('active');
+    renderImportList(src);
+  }
+
+  function renderImportList(src) {
+    var list = document.getElementById('importList');
+    var items = getImportItems(src);
+    if (!items.length) {
+      list.innerHTML = '<div class="import-empty">此區塊目前沒有可引入的內容<br><span style="font-size:0.75rem;color:#ccc;">請先在對應區塊新增並儲存資料</span></div>';
+      return;
+    }
+    list.innerHTML = items.map(function(item, idx) {
+      var thumbHtml = item.image
+        ? '<img src="'+item.image+'" alt="">'
+        : (item.icon || '📄');
+      var thumb = item.image
+        ? '<div class="import-item-thumb"><img src="'+item.image+'" alt=""></div>'
+        : '<div class="import-item-thumb">'+(item.icon||'📄')+'</div>';
+      return '<div class="import-item">'
+        + thumb
+        + '<div class="import-item-body">'
+        + '<div class="import-item-title">'+escHtml(item.title||'（無標題）')+'</div>'
+        + '<div class="import-item-desc">'+escHtml((item.desc||'').slice(0,80)+(item.desc && item.desc.length>80?'⋯':''))+'</div>'
+        + '<div class="import-item-meta">'+(item.meta||'')+'</div>'
+        + '</div>'
+        + '<button class="import-item-btn" onclick="importItem('+idx+')">引入 →</button>'
+        + '</div>';
+    }).join('');
+  }
+
+  function getImportItems(src) {
+    if (src === 'media') {
+      return getNews().filter(function(n){ return n.tab === 'media'; }).map(function(n) {
+        return { _raw:n, title:n.title, desc:n.description, image:n.image, icon:'📺', meta:(n.mediaSource||'')+(n.date?' · '+n.date:'') };
+      });
+    }
+    if (src === 'event') {
+      return getNews().filter(function(n){ return n.tab === 'event'; }).map(function(n) {
+        return { _raw:n, title:n.title, desc:n.description, image:n.image, icon:'📅', meta:(n.badge||'活動')+(n.date?' · '+n.date:'') };
+      });
+    }
+    if (src === 'awards') {
+      var ad = JSON.parse(localStorage.getItem('ipcc_about_awards') || 'null');
+      var awards = (ad && ad.awards) || [];
+      return awards.map(function(a) {
+        return { _raw:a, _src:'award', title:a.name, desc:a.desc, image:a.image, icon:'🏆', meta:a.subtitle||'' };
+      });
+    }
+    if (src === 'services') {
+      var svcs = JSON.parse(localStorage.getItem('ipcc_services') || '[]');
+      return svcs.map(function(s) {
+        return { _raw:s, _src:'service', title:s.title, desc:s.desc, image:s.image, icon:'🛠', meta:s.num||'' };
+      });
+    }
+    if (src === 'cases') {
+      return getCases().map(function(c) {
+        return { _raw:c, _src:'case', title:(c.client||'')+(c.projectName?' — '+c.projectName:''), desc:c.challenge||(c.result||''), image:c.image, icon:'📊', meta:(c.category||c.caseType||'')+(c.year?' · '+c.year:'') };
+      });
+    }
+    return [];
+  }
+
+  function escHtml(s) { return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
+
+  function importItem(idx) {
+    var items = getImportItems(_importSource);
+    var item = items[idx];
+    if (!item) return;
+    var r = item._raw;
+    closeImportPanel();
+
+    // 依來源組合 badge 與內容
+    var badge = '', title = '', content = '', desc = '', image = '', date = '', mediaType = '', mediaSource = '', externalUrl = '', linkText = '';
+
+    if (_importSource === 'media') {
+      badge = r.badge || r.mediaType || '採訪';
+      title = r.title || '';
+      content = r.content || r.description || '';
+      desc = r.description || '';
+      image = r.image || '';
+      date = r.date || formatDate(Date.now());
+      mediaType = r.mediaType || '';
+      mediaSource = r.mediaSource || '';
+      externalUrl = r.externalUrl || '';
+      linkText = r.linkText || '';
+    } else if (_importSource === 'event') {
+      badge = r.badge || '活動';
+      title = r.title || '';
+      content = r.content || r.description || '';
+      desc = r.description || '';
+      image = r.image || '';
+      date = r.date || formatDate(Date.now());
+      externalUrl = r.externalUrl || '';
+      linkText = r.linkText || '';
+    } else if (_importSource === 'awards') {
+      badge = '獲獎事蹟';
+      title = r.name || '';
+      content = r.content || r.desc || '';
+      desc = (r.desc || '').slice(0,100) + (r.desc && r.desc.length>100?'⋯':'');
+      image = r.image || '';
+      date = formatDate(Date.now());
+    } else if (_importSource === 'services') {
+      badge = '服務介紹';
+      title = r.title || '';
+      content = r.desc || '';
+      desc = (r.desc || '').slice(0,80) + (r.desc && r.desc.length>80?'⋯':'');
+      image = r.image || '';
+      date = formatDate(Date.now());
+    } else if (_importSource === 'cases') {
+      badge = '成功案例';
+      title = (r.client||'') + (r.projectName?' — '+r.projectName:'');
+      var fullText = [r.challenge, r.solution, r.result].filter(Boolean).join('\n\n');
+      content = fullText;
+      desc = (r.challenge || fullText || '').slice(0,80) + ((r.challenge||fullText||'').length>80?'⋯':'');
+      image = r.image || '';
+      date = formatDate(Date.now());
+    }
+
+    // 自動摘要：若 desc 為空，從 content 取前 80 字
+    if (!desc && content) {
+      desc = content.replace(/\s+/g,' ').trim().slice(0,80) + (content.length>80?'⋯':'');
+    }
+
+    // 帶入表單
+    editingId = null; currentImageBase64 = image;
+    document.getElementById('modalTitle').textContent = '引入：' + (title.slice(0,20)||'新文章');
+    document.getElementById('fId').value = '';
+    document.getElementById('fTab').value = 'news';
+    document.getElementById('fMediaType').value = mediaType;
+    document.getElementById('fMediaSource').value = mediaSource;
+    document.getElementById('fBadge').value = badge;
+    document.getElementById('fDate').value = date;
+    document.getElementById('fTitle').value = title;
+    document.getElementById('fDesc').value = desc;
+    document.getElementById('fContent').value = content;
+    document.getElementById('fExternalUrl').value = externalUrl;
+    document.getElementById('fLinkText').value = linkText;
+    document.getElementById('fRelatedService').value = '';
+    document.getElementById('fPublished').checked = true;
+    populateCasesDropdown('');
+
+    // 顯示圖片預覽
+    if (image) {
+      document.getElementById('fImagePreview').src = image;
+      document.getElementById('fImagePreview').style.display = 'block';
+      document.getElementById('imgPlaceholder').style.display = 'none';
+      document.getElementById('btnClearImg').style.display = '';
+      document.getElementById('imgSizeHint').textContent = '';
+    } else {
+      clearImage();
+    }
+    document.getElementById('newsModal').classList.add('open');
   }
 
   renderTable();

@@ -61,6 +61,14 @@
     .mt-tv       { background:rgba(220,38,38,0.85);  color:#fff; }
     .mt-radio    { background:rgba(5,150,105,0.85);  color:#fff; }
     .mt-other    { background:rgba(100,116,139,0.85);color:#fff; }
+    .media-badge-overlay {
+      position: absolute; bottom: 10px; right: 10px;
+      background: rgba(0,0,0,0.6); color: #fff;
+      font-size: 0.68rem; font-weight: 700;
+      padding: 3px 8px; border-radius: 100px;
+      backdrop-filter: blur(4px);
+      max-width: 120px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+    }
 
     /* 內容區 */
     .media-card-body {
@@ -497,6 +505,7 @@ var _mediaItemsStore = [];
       var typeBadgeHtml = n.mediaType
         ? '<span class="media-type-badge ' + (mt.cls||'mt-other') + '">' + (mt.label||n.mediaType) + '</span>'
         : '';
+      var badgeOverlayHtml = n.badge ? '<span class="media-badge-overlay">' + esc(n.badge) + '</span>' : '';
       var imgHtml = n.image
         ? '<img src="' + n.image + '" alt="" loading="lazy">'
         : '<div class="media-card-placeholder">' + (mt.icon||'📸') + '</div>';
@@ -514,8 +523,8 @@ var _mediaItemsStore = [];
         tagsHtml += '<span class="media-tag media-tag-service">🛠 ' + esc(svcLabels[n.relatedService]||'服務') + '</span>';
       }
 
-      return '<div class="media-card" onclick="openMediaModal(_mediaItemsStore[' + idx + '])">'
-        + '<div class="media-card-img">' + imgHtml + typeBadgeHtml + '</div>'
+      return '<div class="media-card" onclick="location.href=\'media-detail.html?id=\'+encodeURIComponent(\'' + (n.id||'').replace(/'/g,"\\'") + '\')">'
+        + '<div class="media-card-img">' + imgHtml + typeBadgeHtml + badgeOverlayHtml + '</div>'
         + '<div class="media-card-body">'
         + '<div class="media-card-meta">'
         + (n.mediaSource ? '<span class="media-source">' + esc(n.mediaSource) + '</span>' : '')

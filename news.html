@@ -396,18 +396,7 @@ document.addEventListener('keydown', function(e) { if (e.key === 'Escape') close
         : '<div class="news-card-placeholder">📢</div>';
       var badgeHtml = n.badge ? '<span class="news-badge">' + esc(n.badge) + '</span>' : '';
 
-      var modalData = JSON.stringify({
-        title: n.title||'',
-        badge: n.badge||'',
-        date: n.date||'',
-        description: n.description||'',
-        content: n.content||'',
-        externalUrl: n.externalUrl||'',
-        linkText: n.linkText||'',
-        image: n.image||''
-      });
-
-      return '<div class="news-card" onclick=\'openNewsModal(' + modalData.replace(/'/g, '&#39;') + ')\'>'
+      return '<div class="news-card" onclick="location.href=\'news-detail.html?id=\'+encodeURIComponent(\'' + (n.id||'').replace(/'/g,"\\'") + '\')">'
         + '<div class="news-card-img">' + imgHtml + badgeHtml + '</div>'
         + '<div class="news-card-body">'
         + '<div class="news-card-meta">'

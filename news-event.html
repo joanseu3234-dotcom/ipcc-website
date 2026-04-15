@@ -386,18 +386,7 @@ document.addEventListener('keydown', function(e) { if (e.key === 'Escape') close
         : '<div class="event-card-placeholder">📅</div>';
       var badgeHtml = n.badge ? '<span class="event-badge">' + esc(n.badge) + '</span>' : '';
 
-      var modalData = JSON.stringify({
-        title: n.title||'',
-        badge: n.badge||'',
-        date: n.date||'',
-        description: n.description||'',
-        content: n.content||'',
-        externalUrl: n.externalUrl||'',
-        linkText: n.linkText||'',
-        image: n.image||''
-      });
-
-      return '<div class="event-card" onclick=\'openEventModal(' + modalData.replace(/'/g, '&#39;') + ')\'>'
+      return '<div class="event-card" onclick="location.href=\'event-detail.html?id=\'+encodeURIComponent(\'' + (n.id||'').replace(/'/g,"\\'") + '\')">'
         + '<div class="event-card-img">' + imgHtml + badgeHtml + '</div>'
         + '<div class="event-card-body">'
         + '<div class="event-card-meta">'

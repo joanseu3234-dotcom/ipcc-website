@@ -162,8 +162,8 @@
 
     <!-- 主要獎項 -->
     <div id="awards-main-grid" style="display:grid; grid-template-columns:repeat(3,1fr); gap:28px; margin-bottom:56px;">
-      <div class="award-card" onclick="openAwardModal('玉山國家品牌獎','NATIONAL BRAND AWARD','肯定集團在客服領域的卓越表現與品牌貢獻，代表台灣企業對服務品質的最高追求。','','')">
-        <div class="award-card-img"><div class="award-card-placeholder">🏆</div></div>
+      <div class="award-card" onclick="location.href='award-detail.html?idx=0'">
+        <div class="award-card-img"><div class="award-card-placeholder" style="background:#e5e7eb;position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:0.9rem;color:#9ca3af;font-weight:600;">獎項圖片</div></div>
         <div class="award-card-body">
           <div class="award-card-sub">NATIONAL BRAND AWARD</div>
           <h4 class="award-card-title">玉山國家品牌獎</h4>
@@ -171,8 +171,8 @@
           <span class="award-card-read">閱讀詳情 →</span>
         </div>
       </div>
-      <div class="award-card" onclick="openAwardModal('智慧行銷系統創新獎','INNOVATION AWARD','智慧電話行銷系統榮獲創新成就獎，引領產業數位轉型，樹立台灣客服科技新標竿。','','')">
-        <div class="award-card-img"><div class="award-card-placeholder">🥇</div></div>
+      <div class="award-card" onclick="location.href='award-detail.html?idx=1'">
+        <div class="award-card-img"><div class="award-card-placeholder" style="background:#e5e7eb;position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:0.9rem;color:#9ca3af;font-weight:600;">獎項圖片</div></div>
         <div class="award-card-body">
           <div class="award-card-sub">INNOVATION AWARD</div>
           <h4 class="award-card-title">智慧行銷系統創新獎</h4>
@@ -180,8 +180,8 @@
           <span class="award-card-read">閱讀詳情 →</span>
         </div>
       </div>
-      <div class="award-card" onclick="openAwardModal('服務品質卓越認證','SERVICE EXCELLENCE','持續通過服務品質驗證，維持業界高標準，成為企業委外客服的信賴首選。','','')">
-        <div class="award-card-img"><div class="award-card-placeholder">⭐</div></div>
+      <div class="award-card" onclick="location.href='award-detail.html?idx=2'">
+        <div class="award-card-img"><div class="award-card-placeholder" style="background:#e5e7eb;position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:0.9rem;color:#9ca3af;font-weight:600;">獎項圖片</div></div>
         <div class="award-card-body">
           <div class="award-card-sub">SERVICE EXCELLENCE</div>
           <h4 class="award-card-title">服務品質卓越認證</h4>
@@ -218,50 +218,23 @@
       </div>
       <div id="awards-certs-grid" style="display:grid; grid-template-columns:repeat(3,1fr); gap:24px;">
         <div style="background:rgba(255,255,255,0.07); border-radius:12px; padding:24px; text-align:center;">
-          <div style="font-size:2rem; margin-bottom:12px;">📋</div>
+          <div style="width:64px;height:64px;background:#e5e7eb;border-radius:8px;margin:0 auto 12px;display:flex;align-items:center;justify-content:center;font-size:0.7rem;color:#9ca3af;">認證圖片</div>
           <div style="font-size:0.95rem; font-weight:700; margin-bottom:6px;">ISO 品質管理</div>
           <div style="font-size:0.8rem; color:rgba(255,255,255,0.55); line-height:1.6;">符合國際品質管理系統標準，確保服務流程一致性與可靠性</div>
         </div>
         <div style="background:rgba(255,255,255,0.07); border-radius:12px; padding:24px; text-align:center;">
-          <div style="font-size:2rem; margin-bottom:12px;">🔒</div>
+          <div style="width:64px;height:64px;background:#e5e7eb;border-radius:8px;margin:0 auto 12px;display:flex;align-items:center;justify-content:center;font-size:0.7rem;color:#9ca3af;">認證圖片</div>
           <div style="font-size:0.95rem; font-weight:700; margin-bottom:6px;">資訊安全認證</div>
           <div style="font-size:0.8rem; color:rgba(255,255,255,0.55); line-height:1.6;">取得資訊安全相關認證，保障客戶資料安全與隱私權益</div>
         </div>
         <div style="background:rgba(255,255,255,0.07); border-radius:12px; padding:24px; text-align:center;">
-          <div style="font-size:2rem; margin-bottom:12px;">🏅</div>
+          <div style="width:64px;height:64px;background:#e5e7eb;border-radius:8px;margin:0 auto 12px;display:flex;align-items:center;justify-content:center;font-size:0.7rem;color:#9ca3af;">認證圖片</div>
           <div style="font-size:0.95rem; font-weight:700; margin-bottom:6px;">客服中心認證</div>
           <div style="font-size:0.8rem; color:rgba(255,255,255,0.55); line-height:1.6;">通過國內外客服中心專業認證，彰顯卓越服務能量</div>
         </div>
       </div>
     </div>
 
-    <!-- 媒體與報導 -->
-    <div style="background:var(--bg-light); border-radius:var(--radius-lg); padding:40px;">
-      <h3 style="font-size:1.1rem; font-weight:800; color:var(--navy-dark); margin-bottom:24px; text-align:center;">媒體報導與業界肯定</h3>
-      <div id="awards-media-list" style="display:flex; flex-direction:column; gap:16px;">
-        <div style="background:var(--white); border-left:4px solid #CE0000; border-radius:0 8px 8px 0; padding:20px 24px; display:flex; align-items:center; gap:20px;">
-          <div style="font-size:1.5rem; flex-shrink:0;">📰</div>
-          <div>
-            <div style="font-size:0.88rem; font-weight:700; color:var(--text-main); margin-bottom:4px;">榮獲媒體專題報導</div>
-            <div style="font-size:0.82rem; color:var(--text-sub); line-height:1.6;">多次受邀接受財經、科技媒體專題採訪，分享客服產業趨勢與數位轉型經驗</div>
-          </div>
-        </div>
-        <div style="background:var(--white); border-left:4px solid #CE0000; border-radius:0 8px 8px 0; padding:20px 24px; display:flex; align-items:center; gap:20px;">
-          <div style="font-size:1.5rem; flex-shrink:0;">🎤</div>
-          <div>
-            <div style="font-size:0.88rem; font-weight:700; color:var(--text-main); margin-bottom:4px;">業界論壇與研討會受邀演講</div>
-            <div style="font-size:0.82rem; color:var(--text-sub); line-height:1.6;">受邀參與客服、數位轉型相關論壇，分享集團在服務創新與 AI 應用的實踐經驗</div>
-          </div>
-        </div>
-        <div style="background:var(--white); border-left:4px solid #CE0000; border-radius:0 8px 8px 0; padding:20px 24px; display:flex; align-items:center; gap:20px;">
-          <div style="font-size:1.5rem; flex-shrink:0;">🤝</div>
-          <div>
-            <div style="font-size:0.88rem; font-weight:700; color:var(--text-main); margin-bottom:4px;">政府合作標竿企業</div>
-            <div style="font-size:0.82rem; color:var(--text-sub); line-height:1.6;">獲政府機關指定為優質客服外包廠商，服務多個公共事業及政府機關客服中心</div>
-          </div>
-        </div>
-      </div>
-    </div>
   </div>
 </section>
 
@@ -385,14 +358,14 @@ function jsStr(s) { return "'" + String(s).replace(/\\/g,'\\\\').replace(/'/g,"\
     if (d.sub && sub) sub.textContent = d.sub;
     if (d.awards && d.awards.length) {
       var ag = document.getElementById('awards-main-grid');
-      if (ag) ag.innerHTML = d.awards.map(function(a) {
+      if (ag) ag.innerHTML = d.awards.map(function(a, aidx) {
         var imgHtml = a.image
           ? '<img src="'+a.image+'" alt="'+esc(a.name||'')+'" style="width:100%;height:100%;object-fit:cover;display:block;">'
-          : '<div class="award-card-placeholder">🏆</div>';
-        var safeArgs = [
-          jsStr(a.name||''), jsStr(a.subtitle||''), jsStr(a.desc||''), jsStr(a.content||''), jsStr(a.image||'')
-        ].join(',');
-        return '<div class="award-card" onclick="openAwardModal('+safeArgs+')">'
+          : '<div class="award-card-placeholder" style="background:#e5e7eb;position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:0.9rem;color:#9ca3af;font-weight:600;">獎項圖片</div>';
+        var detailUrl = a.id
+          ? 'award-detail.html?id=' + encodeURIComponent(a.id)
+          : 'award-detail.html?idx=' + aidx;
+        return '<div class="award-card" onclick="location.href=\''+detailUrl+'\'">'
           + '<div class="award-card-img">'+imgHtml+'</div>'
           + '<div class="award-card-body">'
           + '<div class="award-card-sub">'+esc(a.subtitle||'')+'</div>'
@@ -406,25 +379,12 @@ function jsStr(s) { return "'" + String(s).replace(/\\/g,'\\\\').replace(/'/g,"\
       var cg = document.getElementById('awards-certs-grid');
       if (cg) cg.innerHTML = d.certs.map(function(c) {
         var iconHtml = c.image
-          ? '<img src="'+c.image+'" style="width:60px;height:60px;object-fit:cover;border-radius:8px;margin-bottom:12px;display:block;margin-left:auto;margin-right:auto;" alt="">'
-          : '<div style="font-size:2rem;margin-bottom:12px;">📋</div>';
+          ? '<img src="'+c.image+'" style="width:64px;height:64px;object-fit:cover;border-radius:8px;margin:0 auto 12px;display:block;" alt="">'
+          : '<div style="width:64px;height:64px;background:#e5e7eb;border-radius:8px;margin:0 auto 12px;display:flex;align-items:center;justify-content:center;font-size:0.7rem;color:#9ca3af;">圖片</div>';
         return '<div style="background:rgba(255,255,255,0.07);border-radius:12px;padding:24px;text-align:center;">'
           + iconHtml
           + '<div style="font-size:0.95rem;font-weight:700;margin-bottom:6px;">'+(c.name||'')+'</div>'
           + '<div style="font-size:0.8rem;color:rgba(255,255,255,0.55);line-height:1.6;">'+(c.desc||'')+'</div>'
-          + '</div>';
-      }).join('');
-    }
-    if (d.media && d.media.length) {
-      var ml = document.getElementById('awards-media-list');
-      if (ml) ml.innerHTML = d.media.map(function(m) {
-        var iconHtml = m.image
-          ? '<img src="'+m.image+'" style="width:52px;height:52px;object-fit:cover;border-radius:8px;flex-shrink:0;" alt="">'
-          : '<div style="font-size:1.5rem;flex-shrink:0;width:52px;text-align:center;">📰</div>';
-        return '<div style="background:var(--white);border-left:4px solid #CE0000;border-radius:0 8px 8px 0;padding:20px 24px;display:flex;align-items:center;gap:20px;">'
-          + iconHtml
-          + '<div><div style="font-size:0.88rem;font-weight:700;color:var(--text-main);margin-bottom:4px;">'+(m.title||'')+'</div>'
-          + '<div style="font-size:0.82rem;color:var(--text-sub);line-height:1.6;">'+(m.desc||'')+'</div></div>'
           + '</div>';
       }).join('');
     }

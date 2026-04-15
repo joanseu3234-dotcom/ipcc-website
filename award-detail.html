@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title id="pageTitle">獎項詳情 — IPCC 東州集團</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+  <style>
+    .detail-hero { background: linear-gradient(135deg, #78350F, #D97706); color: #fff; padding: 56px 0 40px; }
+    .detail-back { display: inline-flex; align-items: center; gap: 6px; color: rgba(255,255,255,0.7); font-size: 0.85rem; text-decoration: none; margin-bottom: 24px; }
+    .detail-back:hover { color: #fff; }
+    .detail-subtitle { display: inline-block; color: rgba(255,255,255,0.85); font-size: 0.78rem; font-weight: 700; letter-spacing: 0.12em; margin-bottom: 10px; }
+    .detail-title { font-size: 1.8rem; font-weight: 900; line-height: 1.4; margin-bottom: 12px; }
+    .detail-meta { color: rgba(255,255,255,0.6); font-size: 0.85rem; }
+    @media (max-width: 768px) { .detail-title { font-size: 1.3rem; } }
+    .detail-img { width: 100%; max-height: 420px; object-fit: cover; border-radius: 16px; display: block; margin: 0 auto 40px; }
+    .detail-body { max-width: 780px; margin: 0 auto; }
+    .detail-desc { font-size: 1.05rem; color: #374151; line-height: 2; margin-bottom: 28px; font-weight: 500; }
+    .detail-divider { border: none; border-top: 1px solid #E5E7EB; margin: 28px 0; }
+    .detail-content { font-size: 0.95rem; color: #4B5563; line-height: 2.1; white-space: pre-wrap; }
+    .detail-link { display: inline-flex; align-items: center; gap: 8px; margin-top: 32px; padding: 14px 28px; border-radius: 10px; font-size: 0.95rem; font-weight: 700; text-decoration: none; background: #D97706; color: #fff; transition: opacity 0.2s; }
+    .detail-link:hover { opacity: 0.85; }
+    .content-link { color: #1E2A5E; font-weight: 600; text-decoration: underline; text-underline-offset: 2px; }
+    .content-link:hover { color: #E85D04; }
+    .not-found { text-align: center; padding: 80px 20px; color: #6B7280; }
+    .not-found h2 { font-size: 1.3rem; font-weight: 700; margin-bottom: 16px; color: #374151; }
+  </style>
+</head>
+<body>
+<script src="content-data.js"></script>
+
+<nav class="navbar" id="navbar">
+  <div class="container">
+    <div class="nav-inner">
+      <a href="index.html" class="nav-logo">
+        <img src="IPCCLOGO.png" alt="IPCC">
+        <div class="nav-logo-right">
+          <div class="nav-logo-group">東州集團</div>
+          <div class="nav-logo-companies">
+            <span>東州互聯網實業有限公司</span>
+            <span>顯榮國際股份有限公司</span>
+          </div>
+        </div>
+      </a>
+      <ul class="nav-menu" id="navMenu">
+        <li><a href="index.html" class="nav-link">首頁</a></li>
+        <li><a href="news.html" class="nav-link">最新消息</a></li>
+        <li><a href="about.html" class="nav-link active">關於我們</a></li>
+        <li><a href="services.html" class="nav-link">專案服務</a></li>
+        <li><a href="cases.html" class="nav-link">成功案例</a></li>
+      </ul>
+      <a href="contact.html" class="nav-cta">與我們聯繫</a>
+      <div class="nav-hamburger" onclick="toggleMenu()"><span></span><span></span><span></span></div>
+    </div>
+  </div>
+</nav>
+
+<div class="detail-hero" id="detailHero">
+  <div class="container">
+    <a href="about-awards.html" class="detail-back" id="backLink">← 返回獲獎事蹟</a>
+    <div id="detailSubtitleWrap"></div>
+    <h1 class="detail-title" id="detailTitle">載入中…</h1>
+    <div class="detail-meta" id="detailMeta"></div>
+  </div>
+</div>
+
+<section class="section">
+  <div class="container">
+    <div class="detail-body" id="detailBody">
+      <div class="not-found"><p>載入中…</p></div>
+    </div>
+  </div>
+</section>
+
+<section class="cta-section">
+  <div class="container" style="position:relative; z-index:1; text-align:center;">
+    <h2 class="section-title" style="color:#fff;">與我們合作，共創服務新價值</h2>
+    <p style="color:rgba(255,255,255,0.6); margin:16px auto 36px; max-width:480px;">立即聯繫我們的顧問，了解最適合您的客服解決方案</p>
+    <div style="display:flex; justify-content:center; gap:16px; flex-wrap:wrap;">
+      <a href="services.html" class="btn btn-primary">探索服務方案</a>
+      <a href="contact.html" class="btn btn-outline">免費諮詢</a>
+    </div>
+  </div>
+</section>
+
+<footer class="footer">
+  <div class="container">
+    <div class="footer-grid">
+      <div class="footer-brand">
+        <div class="footer-logo">
+          <div class="footer-logo-box"><img src="IPCCLOGO.png" alt="IPCC"></div>
+          <div>
+            <span class="footer-logo-name">東州集團</span>
+            <div class="footer-logo-companies">
+              <span>東州互聯網實業有限公司</span>
+              <span>顯榮國際股份有限公司</span>
+            </div>
+          </div>
+        </div>
+        <p>整合系統、服務與數據，協助企業打造永續競爭力。</p>
+        <div class="footer-socials">
+          <a href="https://www.facebook.com/easy.ipcc/" target="_blank" rel="noopener" class="footer-social" title="Facebook">f</a>
+          <a href="#" class="footer-social">▶</a>
+          <a href="https://www.1111.com.tw/corp/8563" target="_blank" rel="noopener" class="footer-social" title="1111人力銀行">人</a>
+        </div>
+      </div>
+      <div class="footer-col">
+        <h4>快速連結</h4>
+        <ul>
+          <li><a href="news.html">最新消息</a></li>
+          <li><a href="about.html">關於我們</a></li>
+          <li><a href="services.html">專案服務</a></li>
+          <li><a href="cases.html">成功案例</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>服務項目</h4>
+        <ul>
+          <li><a href="services.html#outsource">客服委外</a></li>
+          <li><a href="services.html#training">客服訓練</a></li>
+          <li><a href="services.html#it">資訊服務</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>聯絡地址</h4>
+        <div class="footer-companies">
+          <div>東州互聯網實業有限公司</div>
+          <div>顯榮國際股份有限公司</div>
+        </div>
+        <div class="footer-address" style="margin-top:12px;"><span>北區</span><br>台北市松山區民權東路三段102號10樓</div>
+        <div class="footer-address" style="margin-top:16px;"><span>中區</span><br>台中市西區台灣大道二段307號9樓之2</div>
+        <div style="margin-top:16px; color:rgba(255,255,255,0.55);">☎ 0800-666-080</div>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span>© 2025 東州互聯網實業有限公司 / 顯榮國際股份有限公司 版權所有</span>
+      <span>IPCC Group — 創新服務．永續經營</span>
+    </div>
+  </div>
+</footer>
+
+<script>
+window.addEventListener('scroll', function() {
+  document.getElementById('navbar').classList.toggle('scrolled', window.scrollY > 20);
+});
+function toggleMenu() { document.getElementById('navMenu').classList.toggle('open'); }
+
+function esc(s) { return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
+function renderContent(text) {
+  if (!text) return '';
+  var re = /\[([^\]]*)\]\((https?:\/\/[^)]+)\)|(https?:\/\/[^\s<>"&]+)/g;
+  var result = '', lastIdx = 0, m;
+  while ((m = re.exec(text)) !== null) {
+    if (m.index > lastIdx) result += esc(text.slice(lastIdx, m.index));
+    if (m[1] !== undefined) result += '<a href="'+esc(m[2])+'" target="_blank" rel="noopener" class="content-link">'+esc(m[1])+'</a>';
+    else result += '<a href="'+esc(m[3])+'" target="_blank" rel="noopener" class="content-link">'+esc(m[3])+'</a>';
+    lastIdx = m.index + m[0].length;
+  }
+  if (lastIdx < text.length) result += esc(text.slice(lastIdx));
+  return result;
+}
+
+// Static placeholder awards (index-based fallback for static cards)
+var STATIC_AWARDS = [
+  { name: '玉山國家品牌獎', subtitle: 'NATIONAL BRAND AWARD', desc: '肯定集團在客服領域的卓越表現與品牌貢獻，代表台灣企業對服務品質的最高追求。', content: '', image: '' },
+  { name: '智慧行銷系統創新獎', subtitle: 'INNOVATION AWARD', desc: '智慧電話行銷系統榮獲創新成就獎，引領產業數位轉型，樹立台灣客服科技新標竿。', content: '', image: '' },
+  { name: '服務品質卓越認證', subtitle: 'SERVICE EXCELLENCE', desc: '持續通過服務品質驗證，維持業界高標準，成為企業委外客服的信賴首選。', content: '', image: '' }
+];
+
+(function() {
+  var params = new URLSearchParams(location.search);
+  var id = params.get('id');
+  var idxParam = params.get('idx');
+
+  var item = null;
+
+  // Try to load from localStorage first
+  try {
+    var d = JSON.parse(localStorage.getItem('ipcc_about_awards') || 'null');
+    if (d && d.awards && d.awards.length) {
+      if (id) {
+        item = d.awards.find(function(a){ return a.id === id; });
+      }
+      if (!item && idxParam !== null) {
+        var idx = parseInt(idxParam, 10);
+        if (!isNaN(idx) && idx >= 0 && idx < d.awards.length) {
+          item = d.awards[idx];
+        }
+      }
+    }
+  } catch(e) {}
+
+  // Fallback to static awards by index if nothing found in localStorage
+  if (!item && idxParam !== null) {
+    var idx2 = parseInt(idxParam, 10);
+    if (!isNaN(idx2) && idx2 >= 0 && idx2 < STATIC_AWARDS.length) {
+      item = STATIC_AWARDS[idx2];
+    }
+  }
+
+  if (!item) { showNotFound(); return; }
+
+  document.title = (item.name || '獎項詳情') + ' — IPCC 東州集團';
+  document.getElementById('pageTitle').textContent = (item.name || '獎項詳情') + ' — IPCC 東州集團';
+
+  if (item.subtitle) {
+    document.getElementById('detailSubtitleWrap').innerHTML = '<span class="detail-subtitle">'+esc(item.subtitle)+'</span>';
+  }
+  document.getElementById('detailTitle').textContent = item.name || '';
+
+  var html = '';
+  if (item.image) html += '<img class="detail-img" src="'+esc(item.image)+'" alt="">';
+  if (item.desc) html += '<p class="detail-desc">'+renderContent(item.desc)+'</p>';
+  if (item.content) html += '<hr class="detail-divider"><div class="detail-content">'+renderContent(item.content)+'</div>';
+  if (item.externalUrl) html += '<a href="'+esc(item.externalUrl)+'" target="_blank" rel="noopener" class="detail-link">'+(item.linkText ? esc(item.linkText) : '了解詳情')+'</a>';
+
+  document.getElementById('detailBody').innerHTML = html || '<p>（無內容）</p>';
+})();
+
+function showNotFound() {
+  document.getElementById('detailTitle').textContent = '找不到內容';
+  document.getElementById('detailMeta').textContent = '';
+  document.getElementById('detailBody').innerHTML = '<div class="not-found"><h2>找不到指定的獎項</h2><p>可能已被刪除或連結有誤。</p><a href="about-awards.html" class="detail-link" style="display:inline-flex;">← 返回獲獎事蹟</a></div>';
+}
+</script>
+</body>
+</html>
