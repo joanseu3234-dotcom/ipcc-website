@@ -195,35 +195,8 @@ if (typeof PAGE_PERMS !== 'undefined') { PAGE_PERMS['contacts-manage.html'] = 'c
 
 
 // ===================================================
-// IndexedDB helpers（共用，供發布與帳號同步使用）
+// 發布上線 — 推送 content-data.js 到 GitHub，觸發 Zeabur 重新部署
 // ===================================================
-function _openAdminIDB() {
-  return new Promise(function(resolve, reject) {
-    var req = indexedDB.open('ipcc_admin_fs', 1);
-    req.onupgradeneeded = function(e) { e.target.result.createObjectStore('handles'); };
-    req.onsuccess = function(e) { resolve(e.target.result); };
-    req.onerror = function() { reject(); };
-  });
-}
-function _idbGet(db, key) {
-  return new Promise(function(resolve) {
-    var req = db.transaction('handles','readonly').objectStore('handles').get(key);
-    req.onsuccess = function() { resolve(req.result||null); };
-    req.onerror = function() { resolve(null); };
-  });
-}
-function _idbSet(db, key, val) {
-  return new Promise(function(resolve) {
-    var tx = db.transaction('handles','readwrite');
-    tx.objectStore('handles').put(val, key);
-    tx.oncomplete = resolve; tx.onerror = resolve;
-  });
-}
-
-// ===================================================
-// 發布上線 — 真正將內容寫入 content-data.js
-// ===================================================
-var _publishDirHandle = null;
 
 // 產生 content-data.js 的完整內容
 function generateContentData() {
@@ -277,116 +250,42 @@ function makeUsersConfigContent(users) {
   return lines.join('\n') + '\n';
 }
 
-async function _writeAllFiles(dirHandle) {
-  var perm = await dirHandle.requestPermission({ mode: 'readwrite' });
-  if (perm !== 'granted') throw new Error('未獲授權');
-
-  // 寫入 content-data.js（根目錄）
-  var contentJs = generateContentData();
-  var fh1 = await dirHandle.getFileHandle('content-data.js', { create: true });
-  var w1 = await fh1.createWritable();
-  await w1.write(contentJs); await w1.close();
-
-  // 寫入 admin/users-config.js（admin 子目錄）
-  try {
-    var adminDir = await dirHandle.getDirectoryHandle('admin', { create: false });
-    var users = getUsers();
-    var usersJs = makeUsersConfigContent(users);
-    var fh2 = await adminDir.getFileHandle('users-config.js', { create: true });
-    var w2 = await fh2.createWritable();
-    await w2.write(usersJs); await w2.close();
-  } catch(e) {
-    // admin 資料夾不存在時忽略（非 IPCCOWB 根目錄）
-  }
-}
-
 // 主發布函式（點「🚀 發布上線」時呼叫）
 async function publishToLive() {
-  var fsSupported = ('showDirectoryPicker' in window);
+  var token  = localStorage.getItem('ipcc_github_token');
+  var repo   = localStorage.getItem('ipcc_github_repo') || (window.IPCC_GITHUB_REPO || '');
 
-  // 若未設定資料夾 → 第一次選擇
-  if (!_publishDirHandle && fsSupported) {
-    try {
-      var handle = await window.showDirectoryPicker({ mode: 'readwrite', startIn: 'desktop' });
-      var db = await _openAdminIDB();
-      await _idbSet(db, 'publishDirHandle', handle);
-      _publishDirHandle = handle;
-      _updatePublishBtn();
-    } catch(e) { return; } // 使用者取消
+  // GitHub 未設定 → 引導去設定頁
+  if (!token || !repo) {
+    if (confirm('尚未設定一鍵部署。\n\n點「確定」前往「系統設定」完成設定\n（只需設定一次，之後每台電腦都能直接按火箭發布）')) {
+      window.location.href = 'settings.html';
+    }
+    return;
   }
 
+  var btn = document.getElementById('ipcc-publish-btn');
+  if (btn) { btn.disabled = true; btn.textContent = '⏳ 發布中...'; }
+
   var contentJs = generateContentData();
-
-  // 優先：GitHub 自動部署（任何裝置、任何電腦都能用）
   showPublishToast('⏳ 正在推送到 GitHub...', 'pending', true);
-  var ghResult = await _tryGitHubDeploy(contentJs);
 
-  if (ghResult === true) {
-    // 同時寫入本機（有設定資料夾的話）
-    if (_publishDirHandle) {
-      try { await _writeAllFiles(_publishDirHandle); } catch(_) {}
-    }
+  var result = await _tryGitHubDeploy(contentJs);
+
+  if (btn) { btn.disabled = false; _updatePublishBtn(); }
+
+  if (result === true) {
     var ts = new Date().toLocaleString('zh-TW', {timeZone:'Asia/Taipei', hour12:false});
     var hasHook = !!(localStorage.getItem('ipcc_zeabur_hook') || window.IPCC_ZEABUR_HOOK);
     if (hasHook) {
-      showPublishToast('✅ 發布完成！\n已推送 GitHub 並觸發 Zeabur 重新部署\n官網約 30 秒後更新\n時間：' + ts, 'success');
+      showPublishToast('✅ 發布完成！官網約 1 分鐘後更新\n時間：' + ts, 'success');
     } else {
-      showPublishToast('⚠️ GitHub 已推送，但尚未設定 Zeabur Deploy Hook\n請到「系統設定」→「Zeabur 部署設定」取得 Hook URL\n設定後按 🚀 即可全自動部署', '');
+      showPublishToast('⚠️ 內容已推送 GitHub，但尚未設定 Zeabur Deploy Hook，網站不會自動重新部署\n請到「系統設定」→「第 ② 步」填入 Deploy Hook URL', '');
     }
-    return;
+  } else if (result === false) {
+    showPublishToast('❌ GitHub 推送失敗\n請到「系統設定」確認 Token 是否有效（可點「測試 GitHub 連線」）', '');
+  } else {
+    showPublishToast('⚠️ GitHub 設定不完整，請到「系統設定」補填 Repository 或 Token', '');
   }
-
-  if (ghResult === false) {
-    showPublishToast('⚠️ GitHub 推送失敗\n請到「系統設定」檢查 Token 與 Repository 名稱', '');
-    return;
-  }
-
-  // GitHub 未設定 → 嘗試本機寫入 + 本機部署服務器
-  if (_publishDirHandle) {
-    try {
-      showPublishToast('⏳ 正在寫入資料...', 'pending', true);
-      await _writeAllFiles(_publishDirHandle);
-
-      showPublishToast('⏳ 正在部署到 Zeabur...', 'pending', true);
-      var localResult = await _tryAutoDeploy();
-
-      if (localResult === true) {
-        var ts3 = new Date().toLocaleString('zh-TW', {timeZone:'Asia/Taipei', hour12:false});
-        showPublishToast('✅ 發布完成！官網已更新\n時間：' + ts3, 'success');
-      } else if (localResult === false) {
-        showPublishToast('⚠️ 檔案已寫入，但部署失敗\n請手動執行 deploy-to-zeabur.bat', '');
-      } else {
-        showPublishToast(
-          '✅ 資料已寫入 IPCC 資料夾\n\n' +
-          '🔴 請雙擊 deploy-to-zeabur.bat 完成部署\n\n' +
-          '💡 建議到「系統設定」設定 GitHub，之後任何裝置一鍵更新',
-          'success'
-        );
-      }
-      return;
-    } catch(e) {
-      _publishDirHandle = null;
-      try { var db2 = await _openAdminIDB(); await _idbSet(db2, 'publishDirHandle', null); } catch(_) {}
-      _updatePublishBtn();
-      showPublishToast('授權已失效，請重新點擊「發布上線」並重新選擇資料夾', '');
-      return;
-    }
-  }
-
-  // 最後備用：下載 content-data.js
-  var blob = new Blob([contentJs], { type: 'text/javascript' });
-  var url = URL.createObjectURL(blob);
-  var a = document.createElement('a');
-  a.href = url; a.download = 'content-data.js';
-  document.body.appendChild(a); a.click();
-  document.body.removeChild(a);
-  URL.revokeObjectURL(url);
-  showPublishToast(
-    'content-data.js 已下載\n\n' +
-    '請覆蓋 IPCC/content-data.js 後執行 deploy-to-zeabur.bat\n\n' +
-    '💡 建議到「系統設定」設定 GitHub，之後任何裝置一鍵更新',
-    ''
-  );
 }
 
 // ── GitHub API：推檔案到 GitHub ──
@@ -453,58 +352,25 @@ async function _tryGitHubDeploy(content) {
   }
 }
 
-// 嘗試呼叫本機部署服務器（localhost:9393）
-// 回傳：true=部署成功，false=部署失敗，null=服務器未啟動
-function _tryAutoDeploy() {
-  return new Promise(function(resolve) {
-    // 先用 2 秒快速確認服務器是否在線
-    var statusTimer = setTimeout(function() { resolve(null); }, 2500);
-
-    fetch('http://localhost:9393/status')
-      .then(function(res) {
-        clearTimeout(statusTimer);
-        if (!res.ok) { resolve(null); return; }
-        // 服務器在線，觸發部署（最多等 3 分鐘）
-        var deployTimer = setTimeout(function() { resolve(false); }, 180000);
-        fetch('http://localhost:9393/deploy', { method: 'POST' })
-          .then(function(r) {
-            clearTimeout(deployTimer);
-            return r.json().then(function(d) { resolve(d && d.success === true); });
-          })
-          .catch(function() { clearTimeout(deployTimer); resolve(false); });
-      })
-      .catch(function() {
-        clearTimeout(statusTimer);
-        resolve(null);
-      });
-  });
-}
-
-// 初始化：頁面載入時嘗試恢復已授權的資料夾
-async function initPublishDir() {
-  if (!('showDirectoryPicker' in window)) return;
-  try {
-    var db = await _openAdminIDB();
-    var handle = await _idbGet(db, 'publishDirHandle');
-    if (!handle) return;
-    var perm = await handle.queryPermission({ mode: 'readwrite' });
-    if (perm === 'granted') { _publishDirHandle = handle; _updatePublishBtn(); return; }
-    perm = await handle.requestPermission({ mode: 'readwrite' });
-    if (perm === 'granted') { _publishDirHandle = handle; _updatePublishBtn(); }
-  } catch(e) {}
-}
-
 function _updatePublishBtn() {
   var btn = document.getElementById('ipcc-publish-btn');
   if (!btn) return;
-  if (_publishDirHandle) {
+  var hasToken = !!localStorage.getItem('ipcc_github_token');
+  var hasRepo  = !!(localStorage.getItem('ipcc_github_repo') || window.IPCC_GITHUB_REPO);
+  var hasHook  = !!(localStorage.getItem('ipcc_zeabur_hook') || window.IPCC_ZEABUR_HOOK);
+
+  if (hasToken && hasRepo && hasHook) {
     btn.textContent = '🚀 發布上線';
     btn.style.background = 'linear-gradient(135deg,#CE0000,#8B0000)';
-    btn.title = '將所有內容寫入 ' + _publishDirHandle.name + '/content-data.js，再執行部署即可讓所有人看到最新內容';
+    btn.title = '推送內容到 GitHub，Zeabur 自動重新部署（約 1 分鐘後官網更新）';
+  } else if (hasToken && hasRepo) {
+    btn.textContent = '🚀 發布上線';
+    btn.style.background = 'linear-gradient(135deg,#1E2A5E,#0f172a)';
+    btn.title = '推送到 GitHub（注意：尚未設定 Zeabur Deploy Hook，網站不會自動觸發重新部署）';
   } else {
-    btn.textContent = '🔗 設定發布資料夾';
+    btn.textContent = '⚙️ 設定一鍵部署';
     btn.style.background = 'linear-gradient(135deg,#D97706,#92400E)';
-    btn.title = '選擇 IPCC 資料夾，之後按此按鈕即可一鍵發布';
+    btn.title = '點此進入系統設定，完成 GitHub 設定後即可一鍵發布';
   }
 }
 
@@ -563,7 +429,6 @@ function showPublishToast(msg, type, persistent) {
     if (!footer || document.getElementById('ipcc-publish-btn')) return;
     var btn = document.createElement('button');
     btn.id = 'ipcc-publish-btn';
-    btn.textContent = '🔗 設定發布資料夾';
     btn.style.cssText = 'width:100%;padding:10px;background:linear-gradient(135deg,#D97706,#92400E);'
       + 'color:#fff;border:none;border-radius:8px;font-size:0.88rem;font-weight:700;'
       + 'cursor:pointer;margin-top:10px;font-family:inherit;transition:opacity 0.2s;';
@@ -571,8 +436,8 @@ function showPublishToast(msg, type, persistent) {
     btn.onmouseout  = function(){ this.style.opacity='1'; };
     btn.onclick = function(){ publishToLive(); };
     footer.appendChild(btn);
-    // 嘗試恢復已儲存的授權
-    initPublishDir();
+    // 根據 GitHub 設定狀態更新按鈕外觀
+    _updatePublishBtn();
   }
   if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', doInject);

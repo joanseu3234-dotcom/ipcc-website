@@ -93,87 +93,81 @@
         </div>
 
         <!-- GitHub + Zeabur 全自動部署 -->
-        <div class="section-card" style="max-width:560px; border-color:#d1d5db;">
-          <h2 class="section-card-title">🚀 發布上線設定（任何電腦都能用）</h2>
+        <div class="section-card" style="max-width:600px; border-color:#d1d5db;">
+          <h2 class="section-card-title">🚀 一鍵部署設定</h2>
+          <p style="color:var(--text-sub); font-size:0.88rem; margin-bottom:16px;">設定完成後，每次在後台按「🚀 發布上線」即可自動更新官網，不需要開任何程式。</p>
 
           <!-- 狀態指示器 -->
-          <div id="deployStatusBar" style="margin-bottom:20px; padding:12px 14px; border-radius:8px; font-size:0.85rem; line-height:1.7;"></div>
+          <div id="deployStatusBar" style="margin-bottom:20px; padding:14px 16px; border-radius:10px; font-size:0.88rem; line-height:1.8;"></div>
 
-          <div id="ghMsg"></div>
+          <div id="ghMsg" style="margin-bottom:12px;"></div>
 
-          <!-- Step 1: GitHub -->
-          <div style="margin-bottom:20px; padding:16px; border:1.5px solid #E5E7EB; border-radius:10px;">
-            <div style="font-weight:700; font-size:0.88rem; color:#1E40AF; margin-bottom:12px;">
-              第 ① 步 — GitHub 設定（每台電腦需輸入一次 Token）
+          <!-- Step 1: GitHub Token -->
+          <div style="margin-bottom:16px; padding:16px; border:1.5px solid #E5E7EB; border-radius:10px;">
+            <div style="font-weight:700; font-size:0.9rem; color:#1E40AF; margin-bottom:4px;">第 ① 步 — GitHub Token</div>
+            <div style="font-size:0.78rem; color:var(--text-sub); margin-bottom:12px;">每台電腦需輸入一次，Token 只存在此瀏覽器中，不會上傳。</div>
+            <div class="form-group">
+              <label class="form-label">GitHub Repository（格式：帳號/倉庫名稱）</label>
+              <input type="text" class="form-control" id="ghRepo" placeholder="例：joan/ipcc-website">
+              <div style="font-size:0.72rem; color:var(--text-sub); margin-top:4px;">儲存後自動同步到所有電腦，<b>只需填一次</b>。</div>
             </div>
             <div class="form-group">
-              <label class="form-label">GitHub Repository（帳號/倉庫名稱）</label>
-              <input type="text" class="form-control" id="ghRepo" placeholder="例：joanseu3234-dotcom/ipcc-website">
-              <div style="font-size:0.72rem; color:var(--text-sub); margin-top:4px;">此設定儲存後會自動同步到所有電腦，<b>只需填一次</b>。</div>
-            </div>
-            <div class="form-group">
-              <label class="form-label">GitHub 分支</label>
+              <label class="form-label">GitHub 分支（通常是 main）</label>
               <input type="text" class="form-control" id="ghBranch" placeholder="main">
             </div>
             <div class="form-group">
-              <label class="form-label">Personal Access Token <span style="color:#9CA3AF;font-weight:400;">（每台電腦需輸入，不會上傳）</span></label>
-              <input type="password" class="form-control" id="ghToken" placeholder="ghp_xxxxxxxxxxxxxxxxxxxx">
-              <div style="font-size:0.72rem; color:var(--text-sub); margin-top:4px;">
-                Token 只存此瀏覽器，不公開。
-                <a href="https://github.com/settings/tokens/new?scopes=repo&description=IPCC+Admin" target="_blank" style="color:var(--navy);">點此建立 Token（勾選 repo 權限）</a>
+              <label class="form-label">Personal Access Token</label>
+              <input type="password" class="form-control" id="ghToken" placeholder="ghp_xxxxxxxxxxxxxxxxxxxx" autocomplete="off">
+              <div style="font-size:0.75rem; color:var(--text-sub); margin-top:6px; line-height:1.6;">
+                沒有 Token？→
+                <a href="https://github.com/settings/tokens/new?scopes=repo&description=IPCC+Admin+Deploy" target="_blank" style="color:var(--navy); font-weight:600;">點此建立 GitHub Token</a>
+                （打開頁面後直接拉到底點「Generate token」，記得勾選 <b>repo</b>）
               </div>
             </div>
-            <div style="display:flex; gap:10px; flex-wrap:wrap;">
-              <button class="btn-outline" onclick="testGitHubConnection()" id="ghTestBtn">🔍 測試 GitHub 連線</button>
+            <div style="display:flex; gap:8px; flex-wrap:wrap;">
+              <button class="btn-outline" onclick="testGitHubConnection()" id="ghTestBtn">🔍 測試連線</button>
             </div>
           </div>
 
           <!-- Step 2: Zeabur Deploy Hook -->
-          <div style="margin-bottom:20px; padding:16px; border:1.5px solid #E5E7EB; border-radius:10px;">
-            <div style="font-weight:700; font-size:0.88rem; color:#047857; margin-bottom:12px;">
-              第 ② 步 — Zeabur Deploy Hook（只需設定一次，全電腦共用）
-            </div>
+          <div style="margin-bottom:16px; padding:16px; border:1.5px solid #E5E7EB; border-radius:10px;">
+            <div style="font-weight:700; font-size:0.9rem; color:#047857; margin-bottom:4px;">第 ② 步 — Zeabur Deploy Hook</div>
+            <div style="font-size:0.78rem; color:var(--text-sub); margin-bottom:12px;">只需設定一次，設定後自動同步到所有電腦。</div>
             <div class="form-group">
               <label class="form-label">Zeabur Deploy Hook URL</label>
-              <input type="text" class="form-control" id="zeaburHook" placeholder="https://api.zeabur.com/webhook/service/...">
-              <div style="font-size:0.72rem; color:var(--text-sub); margin-top:4px;">
-                設定後自動嵌入部署檔案，<b>任何電腦無需重設</b>。
-              </div>
+              <input type="text" class="form-control" id="zeaburHook" placeholder="https://gateway.zeabur.com/api/v1/deploy-hook/...">
             </div>
-            <div style="padding:10px 12px; background:#ECFDF5; border-radius:8px; font-size:0.8rem; color:#065F46; line-height:1.7;">
-              <b>如何取得 Deploy Hook URL：</b><br>
-              1. 開啟 <a href="https://dash.zeabur.com" target="_blank" style="color:#047857;">dash.zeabur.com</a><br>
-              2. 進入你的 Project → 點選 ipcc-website 服務<br>
-              3. 上方點「Settings」→ 找到「Deploy Hook」→ 點「Create」<br>
-              4. 複製產生的 URL 貼到上方欄位
+            <div style="padding:10px 14px; background:#ECFDF5; border-radius:8px; font-size:0.8rem; color:#065F46; line-height:1.8;">
+              <b>如何取得 Deploy Hook：</b><br>
+              1. 開啟 <a href="https://dash.zeabur.com" target="_blank" style="color:#047857; font-weight:600;">dash.zeabur.com</a> → 點進你的服務<br>
+              2. 上方點「<b>Settings</b>」→ 找到「<b>Deploy Hook</b>」區塊<br>
+              3. 點「<b>Create</b>」→ 複製產生的 URL → 貼到上方欄位
             </div>
           </div>
 
           <!-- Step 3: Connect Zeabur to GitHub -->
-          <div style="margin-bottom:20px; padding:16px; border:1.5px dashed #FCD34D; border-radius:10px; background:#FFFBEB;">
-            <div style="font-weight:700; font-size:0.88rem; color:#92400E; margin-bottom:8px;">
-              第 ③ 步 — 連結 Zeabur 與 GitHub（只需做一次）
-            </div>
-            <div style="font-size:0.8rem; color:#78350F; line-height:1.7;">
-              1. Zeabur Dashboard → 你的服務 → Settings → Git Source<br>
-              2. 點「Connect GitHub」→ 選擇 <b>joanseu3234-dotcom/ipcc-website</b><br>
-              3. 選 Branch: <b>main</b> → Save<br>
-              完成後，🚀 按下時 GitHub 有新內容，Zeabur 即自動重新部署。
+          <div style="margin-bottom:16px; padding:16px; border:1.5px dashed #FCD34D; border-radius:10px; background:#FFFBEB;">
+            <div style="font-weight:700; font-size:0.9rem; color:#92400E; margin-bottom:4px;">第 ③ 步 — 連結 Zeabur 與 GitHub（只需做一次）</div>
+            <div style="font-size:0.8rem; color:#78350F; line-height:1.8;">
+              1. Zeabur Dashboard → 點選你的服務 → Settings → Git Source<br>
+              2. 點「<b>Connect GitHub</b>」→ 選擇你的 Repository → Branch 選 <b>main</b> → Save<br>
+              完成後，每次按 🚀 推送到 GitHub，Zeabur 就會自動重新部署。
             </div>
           </div>
 
           <div style="display:flex; gap:10px; flex-wrap:wrap; margin-bottom:10px;">
-            <button class="btn-primary" onclick="saveGitHubSettings()">💾 儲存所有設定並推送</button>
+            <button class="btn-primary" onclick="saveGitHubSettings()">💾 儲存設定</button>
           </div>
 
           <!-- 首次上傳全部檔案到 GitHub -->
           <div style="margin-top:16px; padding:16px; border:1.5px dashed #93C5FD; border-radius:10px; background:#F8FBFF;">
-            <div style="font-weight:700; font-size:0.88rem; color:#1E40AF; margin-bottom:6px;">📁 首次設定 — 上傳所有檔案到 GitHub</div>
+            <div style="font-weight:700; font-size:0.88rem; color:#1E40AF; margin-bottom:4px;">📁 首次設定 — 上傳所有網站檔案到 GitHub</div>
             <div style="font-size:0.8rem; color:var(--text-sub); margin-bottom:12px; line-height:1.6;">
-              第一次使用時點此按鈕，選擇 IPCC 資料夾，把所有靜態檔案推到 GitHub Repository。
+              第一次使用時，點此按鈕選擇桌面的 <b>IPCC</b> 資料夾，所有檔案將自動推送到 GitHub。<br>
+              完成後，之後每次修改內容只需按 🚀 發布上線，網站就會自動更新。
             </div>
-            <div id="ghUploadProgress" style="display:none; margin-bottom:10px; font-size:0.82rem; color:#1E40AF; background:#EFF6FF; padding:8px 12px; border-radius:6px; line-height:1.6;"></div>
-            <button class="btn-primary" onclick="uploadAllToGitHub()" id="ghUploadBtn">📁 上傳所有檔案到 GitHub</button>
+            <div id="ghUploadProgress" style="display:none; margin-bottom:10px; font-size:0.82rem; color:#1E40AF; background:#EFF6FF; padding:10px 12px; border-radius:6px; line-height:1.7;"></div>
+            <button class="btn-primary" onclick="uploadAllToGitHub()" id="ghUploadBtn">📁 首次上傳所有檔案到 GitHub</button>
             <div id="ghUploadMsg" style="margin-top:10px;"></div>
           </div>
         </div>
