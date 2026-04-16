@@ -129,30 +129,9 @@
             </div>
           </div>
 
-          <!-- Step 2: Zeabur Deploy Hook -->
-          <div style="margin-bottom:16px; padding:16px; border:1.5px solid #E5E7EB; border-radius:10px;">
-            <div style="font-weight:700; font-size:0.9rem; color:#047857; margin-bottom:4px;">第 ② 步 — Zeabur Deploy Hook</div>
-            <div style="font-size:0.78rem; color:var(--text-sub); margin-bottom:12px;">只需設定一次，設定後自動同步到所有電腦。</div>
-            <div class="form-group">
-              <label class="form-label">Zeabur Deploy Hook URL</label>
-              <input type="text" class="form-control" id="zeaburHook" placeholder="https://gateway.zeabur.com/api/v1/deploy-hook/...">
-            </div>
-            <div style="padding:10px 14px; background:#ECFDF5; border-radius:8px; font-size:0.8rem; color:#065F46; line-height:1.8;">
-              <b>如何取得 Deploy Hook：</b><br>
-              1. 開啟 <a href="https://dash.zeabur.com" target="_blank" style="color:#047857; font-weight:600;">dash.zeabur.com</a> → 點進你的服務<br>
-              2. 上方點「<b>Settings</b>」→ 找到「<b>Deploy Hook</b>」區塊<br>
-              3. 點「<b>Create</b>」→ 複製產生的 URL → 貼到上方欄位
-            </div>
-          </div>
-
-          <!-- Step 3: Connect Zeabur to GitHub -->
-          <div style="margin-bottom:16px; padding:16px; border:1.5px dashed #FCD34D; border-radius:10px; background:#FFFBEB;">
-            <div style="font-weight:700; font-size:0.9rem; color:#92400E; margin-bottom:4px;">第 ③ 步 — 連結 Zeabur 與 GitHub（只需做一次）</div>
-            <div style="font-size:0.8rem; color:#78350F; line-height:1.8;">
-              1. Zeabur Dashboard → 點選你的服務 → Settings → Git Source<br>
-              2. 點「<b>Connect GitHub</b>」→ 選擇你的 Repository → Branch 選 <b>main</b> → Save<br>
-              完成後，每次按 🚀 推送到 GitHub，Zeabur 就會自動重新部署。
-            </div>
+          <!-- 說明：GitHub Actions 自動部署 -->
+          <div style="margin-bottom:16px; padding:12px 14px; background:#ECFDF5; border-radius:8px; font-size:0.82rem; color:#065F46; line-height:1.8;">
+            ✅ <b>已設定 GitHub Actions 自動部署</b>：每次按 🚀 推送到 GitHub，Zeabur 就會自動重新部署，不需要其他設定。
           </div>
 
           <div style="display:flex; gap:10px; flex-wrap:wrap; margin-bottom:10px;">
@@ -249,40 +228,33 @@
     // ── 狀態列 ──
     function updateDeployStatus() {
       var bar = document.getElementById('deployStatusBar');
-      var hasToken  = !!localStorage.getItem('ipcc_github_token');
-      var hasRepo   = !!(localStorage.getItem('ipcc_github_repo') || window.IPCC_GITHUB_REPO);
-      var hasHook   = !!(localStorage.getItem('ipcc_zeabur_hook') || window.IPCC_ZEABUR_HOOK);
-      var allOk = hasToken && hasRepo && hasHook;
-      if (allOk) {
+      var hasToken = !!localStorage.getItem('ipcc_github_token');
+      var hasRepo  = !!(localStorage.getItem('ipcc_github_repo') || window.IPCC_GITHUB_REPO);
+      if (hasToken && hasRepo) {
         bar.style.background = '#ECFDF5'; bar.style.color = '#065F46';
-        bar.innerHTML = '✅ <b>全部設定完成</b>！按 🚀 發布上線即可自動更新官網（任何電腦皆有效）';
+        bar.innerHTML = '✅ <b>設定完成！</b>按側欄 🚀 發布上線，約 2 分鐘官網自動更新';
       } else {
         var missing = [];
-        if (!hasRepo)   missing.push('GitHub Repository');
-        if (!hasToken)  missing.push('GitHub Token（此電腦）');
-        if (!hasHook)   missing.push('Zeabur Deploy Hook');
+        if (!hasRepo)  missing.push('GitHub Repository');
+        if (!hasToken) missing.push('GitHub Token');
         bar.style.background = '#FEF3C7'; bar.style.color = '#92400E';
-        bar.innerHTML = '⚠️ <b>尚未完成設定：</b>' + missing.join('、') + '<br>'
-          + ((!hasToken && hasRepo) ? '👉 此電腦只需輸入 GitHub Token 即可使用' : '');
+        bar.innerHTML = '⚠️ 尚未填入：<b>' + missing.join('、') + '</b>　填好後點「💾 儲存設定」即可';
       }
     }
 
     // ── GitHub 設定 ──
     function loadGitHubSettings() {
-      // 優先從 localStorage，備用從 users-config.js（window.IPCC_*）
-      document.getElementById('ghRepo').value    = localStorage.getItem('ipcc_github_repo')   || (window.IPCC_GITHUB_REPO   || '');
-      document.getElementById('ghBranch').value  = localStorage.getItem('ipcc_github_branch') || (window.IPCC_GITHUB_BRANCH || 'main');
-      document.getElementById('ghToken').value   = localStorage.getItem('ipcc_github_token')  || '';
-      document.getElementById('zeaburHook').value = localStorage.getItem('ipcc_zeabur_hook')  || (window.IPCC_ZEABUR_HOOK   || '');
+      document.getElementById('ghRepo').value   = localStorage.getItem('ipcc_github_repo')   || (window.IPCC_GITHUB_REPO   || '');
+      document.getElementById('ghBranch').value = localStorage.getItem('ipcc_github_branch') || (window.IPCC_GITHUB_BRANCH || 'main');
+      document.getElementById('ghToken').value  = localStorage.getItem('ipcc_github_token')  || '';
       updateDeployStatus();
     }
 
     async function saveGitHubSettings() {
-      var repo    = document.getElementById('ghRepo').value.trim();
-      var branch  = document.getElementById('ghBranch').value.trim() || 'main';
-      var token   = document.getElementById('ghToken').value.trim();
-      var hook    = document.getElementById('zeaburHook').value.trim();
-      var msg     = document.getElementById('ghMsg');
+      var repo   = document.getElementById('ghRepo').value.trim();
+      var branch = document.getElementById('ghBranch').value.trim() || 'main';
+      var token  = document.getElementById('ghToken').value.trim();
+      var msg    = document.getElementById('ghMsg');
 
       if (!repo || !token) {
         msg.innerHTML = '<div class="alert alert-error">請填寫 Repository 和 Token</div>';
@@ -292,19 +264,14 @@
       localStorage.setItem('ipcc_github_repo',   repo);
       localStorage.setItem('ipcc_github_branch', branch);
       localStorage.setItem('ipcc_github_token',  token);
-      if (hook) localStorage.setItem('ipcc_zeabur_hook', hook);
 
       msg.innerHTML = '<div class="alert alert-success">⏳ 儲存中，正在推送設定到 GitHub…</div>';
 
-      // 推 users-config.js 到 GitHub，讓 hook URL 和 repo 同步到所有電腦
       try {
         var usersJs = makeUsersConfigContent(getUsers());
         var ok = await _ghPushFile(repo, branch, token, 'admin/users-config.js', usersJs);
         if (ok) {
-          msg.innerHTML = '<div class="alert alert-success">✅ 設定已儲存並推送到 GitHub！<br>'
-            + '其他電腦打開後台時將自動讀取 Repository 與 Hook URL。<br>'
-            + (hook ? '🚀 現在可從任何電腦按「發布上線」全自動更新官網。' : '⚠️ 建議也填入 Zeabur Deploy Hook URL 以完成全自動部署。')
-            + '</div>';
+          msg.innerHTML = '<div class="alert alert-success">✅ 設定已儲存！現在可按 🚀 發布上線一鍵更新官網。</div>';
         } else {
           msg.innerHTML = '<div class="alert alert-error">❌ GitHub 推送失敗，請確認 Token 與 Repository 名稱正確</div>';
         }
