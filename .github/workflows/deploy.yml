@@ -1,0 +1,20 @@
+name: Deploy to Zeabur
+
+on:
+  push:
+    branches: [main]
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Zeabur auth
+        run: |
+          mkdir -p ~/.config/zeabur
+          echo "token: ${{ secrets.ZEABUR_TOKEN }}" > ~/.config/zeabur/cli.yaml
+
+      - name: Deploy to Zeabur
+        run: npx zeabur@latest deploy --service-id=69ccdf619994d25a1d0acf9f --environment-id=69ccd3019c2b3309e23e20d8 -i=false

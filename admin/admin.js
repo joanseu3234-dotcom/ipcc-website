@@ -275,12 +275,7 @@ async function publishToLive() {
 
   if (result === true) {
     var ts = new Date().toLocaleString('zh-TW', {timeZone:'Asia/Taipei', hour12:false});
-    var hasHook = !!(localStorage.getItem('ipcc_zeabur_hook') || window.IPCC_ZEABUR_HOOK);
-    if (hasHook) {
-      showPublishToast('✅ 發布完成！官網約 1 分鐘後更新\n時間：' + ts, 'success');
-    } else {
-      showPublishToast('⚠️ 內容已推送 GitHub，但尚未設定 Zeabur Deploy Hook，網站不會自動重新部署\n請到「系統設定」→「第 ② 步」填入 Deploy Hook URL', '');
-    }
+    showPublishToast('✅ 發布完成！\nGitHub 已更新，官網約 2 分鐘後自動生效\n時間：' + ts, 'success');
   } else if (result === false) {
     showPublishToast('❌ GitHub 推送失敗\n請到「系統設定」確認 Token 是否有效（可點「測試 GitHub 連線」）', '');
   } else {
@@ -359,14 +354,10 @@ function _updatePublishBtn() {
   var hasRepo  = !!(localStorage.getItem('ipcc_github_repo') || window.IPCC_GITHUB_REPO);
   var hasHook  = !!(localStorage.getItem('ipcc_zeabur_hook') || window.IPCC_ZEABUR_HOOK);
 
-  if (hasToken && hasRepo && hasHook) {
+  if (hasToken && hasRepo) {
     btn.textContent = '🚀 發布上線';
     btn.style.background = 'linear-gradient(135deg,#CE0000,#8B0000)';
-    btn.title = '推送內容到 GitHub，Zeabur 自動重新部署（約 1 分鐘後官網更新）';
-  } else if (hasToken && hasRepo) {
-    btn.textContent = '🚀 發布上線';
-    btn.style.background = 'linear-gradient(135deg,#1E2A5E,#0f172a)';
-    btn.title = '推送到 GitHub（注意：尚未設定 Zeabur Deploy Hook，網站不會自動觸發重新部署）';
+    btn.title = '推送內容到 GitHub，約 2 分鐘後官網自動更新';
   } else {
     btn.textContent = '⚙️ 設定一鍵部署';
     btn.style.background = 'linear-gradient(135deg,#D97706,#92400E)';
