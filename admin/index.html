@@ -140,7 +140,15 @@
     </div>
   </div>
 
-  <script src="users-config.js"></script>
+  <script>
+    // 動態載入 users-config.js，加版本號防止瀏覽器快取舊版帳號資料
+    (function(){
+      var s = document.createElement('script');
+      s.src = 'users-config.js?v=' + Date.now();
+      s.onload = function(){ if(typeof initLogin==='function') initLogin(); };
+      document.head.appendChild(s);
+    })();
+  </script>
   <script>
     // 已登入就直接跳轉
     if (sessionStorage.getItem('ipcc_admin_logged') === '1') {
@@ -148,14 +156,15 @@
     }
 
     function getUsers() {
+      // 優先使用已部署的 users-config.js（最新帳號清單，跨電腦共用）
+      if (window.IPCC_USERS_CONFIG && window.IPCC_USERS_CONFIG.length > 0) {
+        return window.IPCC_USERS_CONFIG;
+      }
+      // 備用：localStorage（僅此瀏覽器）
       try {
         var u = JSON.parse(localStorage.getItem('ipcc_users') || 'null');
         if (u && u.length > 0) return u;
       } catch(e) {}
-      // 讀取已部署的用戶設定（跨電腦共用）
-      if (window.IPCC_USERS_CONFIG && window.IPCC_USERS_CONFIG.length > 0) {
-        return window.IPCC_USERS_CONFIG;
-      }
       return [{
         id: 'admin-root',
         username: 'admin',
