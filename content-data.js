@@ -1,9 +1,9 @@
 // IPCC 內容資料 — 由後台管理系統自動產生，請勿手動修改
-// 最後發布：2026/4/16 16:14:28
+// 最後發布：2026/4/16 16:16:47
 
 window.IPCC_CONTENT_DATA = {
-  "__ts": 1776327268821,
-  "__published": "2026/4/16 16:14:28",
+  "__ts": 1776327407863,
+  "__published": "2026/4/16 16:16:47",
   "ipcc_news": [
     {
       "tab": "media",
@@ -187,7 +187,7 @@ window.IPCC_CONTENT_DATA = {
       },
       {
         "icon": "🔔",
-        "title": "資安事件應變（Incident Response）事件應變機制",
+        "title": "資安事件應變（Incident Response）",
         "desc": "建立資訊安全事件通報、應變與復原機制，確保事件發生時能即時處理並降低影響。"
       },
       {
