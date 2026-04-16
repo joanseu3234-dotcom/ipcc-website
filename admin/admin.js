@@ -321,9 +321,10 @@ async function _triggerZeaburDeploy() {
 // ── 主流程：推 content-data.js + users-config.js 到 GitHub，再觸發 Zeabur ──
 // 回傳：true=成功，false=失敗，null=未設定（GitHub token/repo 未填）
 async function _tryGitHubDeploy(content) {
-  var token  = localStorage.getItem('ipcc_github_token');
-  var repo   = localStorage.getItem('ipcc_github_repo')   || (window.IPCC_GITHUB_REPO || '');
-  var branch = localStorage.getItem('ipcc_github_branch') || (window.IPCC_GITHUB_BRANCH || 'main');
+  // 清除 token 中可能夾帶的非 ASCII 字元（複製貼上時常見問題）
+  var token  = (localStorage.getItem('ipcc_github_token') || '').replace(/[^\x20-\x7E]/g, '').trim();
+  var repo   = (localStorage.getItem('ipcc_github_repo')   || (window.IPCC_GITHUB_REPO || '')).trim();
+  var branch = (localStorage.getItem('ipcc_github_branch') || (window.IPCC_GITHUB_BRANCH || 'main')).trim();
   if (!token || !repo) return null;
 
   try {

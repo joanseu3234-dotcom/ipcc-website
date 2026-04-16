@@ -251,9 +251,10 @@
     }
 
     async function saveGitHubSettings() {
-      var repo   = document.getElementById('ghRepo').value.trim();
-      var branch = document.getElementById('ghBranch').value.trim() || 'main';
-      var token  = document.getElementById('ghToken').value.trim();
+      // 清除複製貼上時可能夾帶的非 ASCII 字元
+      var repo   = document.getElementById('ghRepo').value.replace(/[^\x20-\x7E]/g, '').trim();
+      var branch = (document.getElementById('ghBranch').value.replace(/[^\x20-\x7E]/g, '').trim()) || 'main';
+      var token  = document.getElementById('ghToken').value.replace(/[^\x20-\x7E]/g, '').trim();
       var msg    = document.getElementById('ghMsg');
 
       if (!repo || !token) {
