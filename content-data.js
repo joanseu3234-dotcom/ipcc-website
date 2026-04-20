@@ -1,9 +1,9 @@
 // IPCC 內容資料 — 由後台管理系統自動產生，請勿手動修改
-// 最後發布：2026/4/20 14:11:01
+// 最後發布：2026/4/20 14:26:02
 
 window.IPCC_CONTENT_DATA = {
-  "__ts": 1776665461678,
-  "__published": "2026/4/20 14:11:01",
+  "__ts": 1776666362757,
+  "__published": "2026/4/20 14:26:02",
   "ipcc_news": [
     {
       "tab": "media",
@@ -266,6 +266,7 @@ window.IPCC_CONTENT_DATA = {
   }
 };
 
+// 自動將已部署的內容同步到此瀏覽器的 localStorage
 (function(){
   if (!window.IPCC_CONTENT_DATA) return;
   var deployTs = window.IPCC_CONTENT_DATA.__ts || 0;
