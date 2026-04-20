@@ -79,10 +79,10 @@
       letter-spacing: 0.02em;
     }
     @media (max-width: 768px) {
-      #awards-main-grid { grid-template-columns: 1fr !important; }
+      #awards-main-grid, #awards-certs-grid { grid-template-columns: 1fr !important; }
     }
     @media (min-width: 769px) and (max-width: 1024px) {
-      #awards-main-grid { grid-template-columns: repeat(2,1fr) !important; }
+      #awards-main-grid, #awards-certs-grid { grid-template-columns: repeat(2,1fr) !important; }
     }
   </style>
 </head>
@@ -216,21 +216,36 @@
         <h3 style="font-size:1.4rem; font-weight:900; margin-bottom:8px;">專業認證與資格</h3>
         <p style="color:rgba(255,255,255,0.6); font-size:0.9rem;">持續取得國際與國內專業認證，確保服務品質符合最高標準</p>
       </div>
-      <div id="awards-certs-grid" style="display:grid; grid-template-columns:repeat(3,1fr); gap:24px;">
-        <div style="background:rgba(255,255,255,0.07); border-radius:12px; padding:24px; text-align:center;">
-          <div style="width:64px;height:64px;background:#e5e7eb;border-radius:8px;margin:0 auto 12px;display:flex;align-items:center;justify-content:center;font-size:0.7rem;color:#9ca3af;">認證圖片</div>
-          <div style="font-size:0.95rem; font-weight:700; margin-bottom:6px;">ISO 品質管理</div>
-          <div style="font-size:0.8rem; color:rgba(255,255,255,0.55); line-height:1.6;">符合國際品質管理系統標準，確保服務流程一致性與可靠性</div>
+      <div id="awards-certs-grid" style="display:grid; grid-template-columns:repeat(3,1fr); gap:28px;">
+        <div style="background:rgba(255,255,255,0.07); border-radius:var(--radius-lg); overflow:hidden; display:flex; flex-direction:column;">
+          <div style="width:100%; height:200px; background:rgba(255,255,255,0.05); display:flex; align-items:center; justify-content:center; flex-shrink:0;">
+            <div style="width:80px;height:80px;background:rgba(255,255,255,0.12);border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:0.72rem;color:rgba(255,255,255,0.4);">認證圖片</div>
+          </div>
+          <div style="padding:24px; flex:1; display:flex; flex-direction:column;">
+            <div style="font-size:0.7rem; font-weight:700; color:rgba(255,200,100,0.85); letter-spacing:0.12em; margin-bottom:8px;">ISO QUALITY</div>
+            <div style="font-size:1.05rem; font-weight:800; margin-bottom:10px; line-height:1.4;">ISO 品質管理</div>
+            <div style="font-size:0.85rem; color:rgba(255,255,255,0.55); line-height:1.8; flex:1;">符合國際品質管理系統標準，確保服務流程一致性與可靠性</div>
+          </div>
         </div>
-        <div style="background:rgba(255,255,255,0.07); border-radius:12px; padding:24px; text-align:center;">
-          <div style="width:64px;height:64px;background:#e5e7eb;border-radius:8px;margin:0 auto 12px;display:flex;align-items:center;justify-content:center;font-size:0.7rem;color:#9ca3af;">認證圖片</div>
-          <div style="font-size:0.95rem; font-weight:700; margin-bottom:6px;">資訊安全認證</div>
-          <div style="font-size:0.8rem; color:rgba(255,255,255,0.55); line-height:1.6;">取得資訊安全相關認證，保障客戶資料安全與隱私權益</div>
+        <div style="background:rgba(255,255,255,0.07); border-radius:var(--radius-lg); overflow:hidden; display:flex; flex-direction:column;">
+          <div style="width:100%; height:200px; background:rgba(255,255,255,0.05); display:flex; align-items:center; justify-content:center; flex-shrink:0;">
+            <div style="width:80px;height:80px;background:rgba(255,255,255,0.12);border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:0.72rem;color:rgba(255,255,255,0.4);">認證圖片</div>
+          </div>
+          <div style="padding:24px; flex:1; display:flex; flex-direction:column;">
+            <div style="font-size:0.7rem; font-weight:700; color:rgba(255,200,100,0.85); letter-spacing:0.12em; margin-bottom:8px;">INFORMATION SECURITY</div>
+            <div style="font-size:1.05rem; font-weight:800; margin-bottom:10px; line-height:1.4;">資訊安全認證</div>
+            <div style="font-size:0.85rem; color:rgba(255,255,255,0.55); line-height:1.8; flex:1;">取得資訊安全相關認證，保障客戶資料安全與隱私權益</div>
+          </div>
         </div>
-        <div style="background:rgba(255,255,255,0.07); border-radius:12px; padding:24px; text-align:center;">
-          <div style="width:64px;height:64px;background:#e5e7eb;border-radius:8px;margin:0 auto 12px;display:flex;align-items:center;justify-content:center;font-size:0.7rem;color:#9ca3af;">認證圖片</div>
-          <div style="font-size:0.95rem; font-weight:700; margin-bottom:6px;">客服中心認證</div>
-          <div style="font-size:0.8rem; color:rgba(255,255,255,0.55); line-height:1.6;">通過國內外客服中心專業認證，彰顯卓越服務能量</div>
+        <div style="background:rgba(255,255,255,0.07); border-radius:var(--radius-lg); overflow:hidden; display:flex; flex-direction:column;">
+          <div style="width:100%; height:200px; background:rgba(255,255,255,0.05); display:flex; align-items:center; justify-content:center; flex-shrink:0;">
+            <div style="width:80px;height:80px;background:rgba(255,255,255,0.12);border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:0.72rem;color:rgba(255,255,255,0.4);">認證圖片</div>
+          </div>
+          <div style="padding:24px; flex:1; display:flex; flex-direction:column;">
+            <div style="font-size:0.7rem; font-weight:700; color:rgba(255,200,100,0.85); letter-spacing:0.12em; margin-bottom:8px;">CALL CENTER</div>
+            <div style="font-size:1.05rem; font-weight:800; margin-bottom:10px; line-height:1.4;">客服中心認證</div>
+            <div style="font-size:0.85rem; color:rgba(255,255,255,0.55); line-height:1.8; flex:1;">通過國內外客服中心專業認證，彰顯卓越服務能量</div>
+          </div>
         </div>
       </div>
     </div>
@@ -378,14 +393,18 @@ function jsStr(s) { return "'" + String(s).replace(/\\/g,'\\\\').replace(/'/g,"\
     if (d.certs && d.certs.length) {
       var cg = document.getElementById('awards-certs-grid');
       if (cg) cg.innerHTML = d.certs.map(function(c) {
-        var iconHtml = c.image
-          ? '<img src="'+c.image+'" style="width:64px;height:64px;object-fit:cover;border-radius:8px;margin:0 auto 12px;display:block;" alt="">'
-          : '<div style="width:64px;height:64px;background:#e5e7eb;border-radius:8px;margin:0 auto 12px;display:flex;align-items:center;justify-content:center;font-size:0.7rem;color:#9ca3af;">圖片</div>';
-        return '<div style="background:rgba(255,255,255,0.07);border-radius:12px;padding:24px;text-align:center;">'
-          + iconHtml
-          + '<div style="font-size:0.95rem;font-weight:700;margin-bottom:6px;">'+(c.name||'')+'</div>'
-          + '<div style="font-size:0.8rem;color:rgba(255,255,255,0.55);line-height:1.6;">'+(c.desc||'')+'</div>'
-          + '</div>';
+        var imgAreaHtml = c.image
+          ? '<img src="'+c.image+'" style="width:100%;height:100%;object-fit:cover;display:block;" alt="">'
+          : '<div style="width:80px;height:80px;background:rgba(255,255,255,0.12);border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:0.72rem;color:rgba(255,255,255,0.4);">圖片</div>';
+        return '<div style="background:rgba(255,255,255,0.07);border-radius:var(--radius-lg,12px);overflow:hidden;display:flex;flex-direction:column;">'
+          + '<div style="width:100%;height:200px;background:rgba(255,255,255,0.05);display:flex;align-items:center;justify-content:center;flex-shrink:0;">'
+          + imgAreaHtml
+          + '</div>'
+          + '<div style="padding:24px;flex:1;display:flex;flex-direction:column;">'
+          + '<div style="font-size:0.7rem;font-weight:700;color:rgba(255,200,100,0.85);letter-spacing:0.12em;margin-bottom:8px;">'+(c.subtitle||'CERTIFICATION')+'</div>'
+          + '<div style="font-size:1.05rem;font-weight:800;margin-bottom:10px;line-height:1.4;">'+(c.name||'')+'</div>'
+          + '<div style="font-size:0.85rem;color:rgba(255,255,255,0.55);line-height:1.8;flex:1;">'+(c.desc||'')+'</div>'
+          + '</div></div>';
       }).join('');
     }
   } catch(e) {}

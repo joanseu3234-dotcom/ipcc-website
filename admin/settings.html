@@ -26,6 +26,7 @@
       <a href="services-manage.html" class="nav-item" data-perm="services">🛠 專案服務</a>
       <a href="cases-manage.html" class="nav-item" data-perm="cases">🏆 成功案例</a>
       <a href="contacts-manage.html" class="nav-item" data-perm="contacts">📋 聯絡表單</a>
+      <a href="contact-config.html" class="nav-item" data-perm="settings">📱 聯絡資訊設定</a>
       <a href="settings.html" class="nav-item active" data-perm="settings">⚙️ 系統設定</a>
       <a href="users-manage.html" class="nav-item" data-perm="users">👥 帳號管理</a>
     </nav>
@@ -45,6 +46,28 @@
         <div class="page-header">
           <h1>系統設定</h1>
           <p>管理帳號密碼與資料匯入匯出</p>
+        </div>
+
+        <div class="section-card" style="max-width:520px; border-color:#1E2A5E;">
+          <h2 class="section-card-title">🚀 一鍵發布設定（GitHub Token）</h2>
+          <p style="color:var(--text-sub); font-size:0.9rem; margin-bottom:16px;">
+            設定後，後台所有頁面右下角的「發布上線」按鈕可直接推送到 GitHub，Zeabur 自動部署，<strong>無需任何本機操作</strong>。
+          </p>
+          <div id="ghTokenStatus" style="margin-bottom:14px;"></div>
+          <div class="form-group">
+            <label class="form-label">GitHub Personal Access Token</label>
+            <input type="password" class="form-control" id="ghTokenInput" placeholder="ghp_xxxxxxxxxxxxxxxx" autocomplete="off">
+            <p style="font-size:0.78rem;color:var(--text-sub);margin-top:6px;">
+              需要 <code>repo</code> 或 <code>contents:write</code> 權限。
+              <a href="https://github.com/settings/tokens/new?scopes=repo&description=IPCC+Admin" target="_blank" rel="noopener" style="color:var(--navy);font-weight:600;">點此產生 Token ↗</a>
+            </p>
+          </div>
+          <div style="display:flex;gap:10px;flex-wrap:wrap;">
+            <button class="btn-primary" onclick="saveGhToken()">💾 儲存 Token</button>
+            <button class="btn-secondary" onclick="testGhToken()" id="ghTestBtn">🔍 測試連線</button>
+            <button class="btn-red" onclick="clearGhToken()" style="padding:8px 16px;font-size:0.85rem;">清除</button>
+          </div>
+          <div id="ghTestResult" style="margin-top:12px;"></div>
         </div>
 
         <div class="section-card" style="max-width:520px;">
@@ -92,65 +115,6 @@
           <div id="importMsg" style="margin-top:12px;"></div>
         </div>
 
-        <!-- GitHub + Zeabur 全自動部署 -->
-        <div class="section-card" style="max-width:600px; border-color:#d1d5db;">
-          <h2 class="section-card-title">🚀 一鍵部署設定</h2>
-          <p style="color:var(--text-sub); font-size:0.88rem; margin-bottom:16px;">設定完成後，每次在後台按「🚀 發布上線」即可自動更新官網，不需要開任何程式。</p>
-
-          <!-- 狀態指示器 -->
-          <div id="deployStatusBar" style="margin-bottom:20px; padding:14px 16px; border-radius:10px; font-size:0.88rem; line-height:1.8;"></div>
-
-          <div id="ghMsg" style="margin-bottom:12px;"></div>
-
-          <!-- Step 1: GitHub Token -->
-          <div style="margin-bottom:16px; padding:16px; border:1.5px solid #E5E7EB; border-radius:10px;">
-            <div style="font-weight:700; font-size:0.9rem; color:#1E40AF; margin-bottom:4px;">第 ① 步 — GitHub Token</div>
-            <div style="font-size:0.78rem; color:var(--text-sub); margin-bottom:12px;">每台電腦需輸入一次，Token 只存在此瀏覽器中，不會上傳。</div>
-            <div class="form-group">
-              <label class="form-label">GitHub Repository（格式：帳號/倉庫名稱）</label>
-              <input type="text" class="form-control" id="ghRepo" placeholder="例：joan/ipcc-website">
-              <div style="font-size:0.72rem; color:var(--text-sub); margin-top:4px;">儲存後自動同步到所有電腦，<b>只需填一次</b>。</div>
-            </div>
-            <div class="form-group">
-              <label class="form-label">GitHub 分支（通常是 main）</label>
-              <input type="text" class="form-control" id="ghBranch" placeholder="main">
-            </div>
-            <div class="form-group">
-              <label class="form-label">Personal Access Token</label>
-              <input type="password" class="form-control" id="ghToken" placeholder="ghp_xxxxxxxxxxxxxxxxxxxx" autocomplete="off">
-              <div style="font-size:0.75rem; color:var(--text-sub); margin-top:6px; line-height:1.6;">
-                沒有 Token？→
-                <a href="https://github.com/settings/tokens/new?scopes=repo&description=IPCC+Admin+Deploy" target="_blank" style="color:var(--navy); font-weight:600;">點此建立 GitHub Token</a>
-                （打開頁面後直接拉到底點「Generate token」，記得勾選 <b>repo</b>）
-              </div>
-            </div>
-            <div style="display:flex; gap:8px; flex-wrap:wrap;">
-              <button class="btn-outline" onclick="testGitHubConnection()" id="ghTestBtn">🔍 測試連線</button>
-            </div>
-          </div>
-
-          <!-- 說明：GitHub Actions 自動部署 -->
-          <div style="margin-bottom:16px; padding:12px 14px; background:#ECFDF5; border-radius:8px; font-size:0.82rem; color:#065F46; line-height:1.8;">
-            ✅ <b>已設定 GitHub Actions 自動部署</b>：每次按 🚀 推送到 GitHub，Zeabur 就會自動重新部署，不需要其他設定。
-          </div>
-
-          <div style="display:flex; gap:10px; flex-wrap:wrap; margin-bottom:10px;">
-            <button class="btn-primary" onclick="saveGitHubSettings()">💾 儲存設定</button>
-          </div>
-
-          <!-- 首次上傳全部檔案到 GitHub -->
-          <div style="margin-top:16px; padding:16px; border:1.5px dashed #93C5FD; border-radius:10px; background:#F8FBFF;">
-            <div style="font-weight:700; font-size:0.88rem; color:#1E40AF; margin-bottom:4px;">📁 首次設定 — 上傳所有網站檔案到 GitHub</div>
-            <div style="font-size:0.8rem; color:var(--text-sub); margin-bottom:12px; line-height:1.6;">
-              第一次使用時，點此按鈕選擇桌面的 <b>IPCC</b> 資料夾，所有檔案將自動推送到 GitHub。<br>
-              完成後，之後每次修改內容只需按 🚀 發布上線，網站就會自動更新。
-            </div>
-            <div id="ghUploadProgress" style="display:none; margin-bottom:10px; font-size:0.82rem; color:#1E40AF; background:#EFF6FF; padding:10px 12px; border-radius:6px; line-height:1.7;"></div>
-            <button class="btn-primary" onclick="uploadAllToGitHub()" id="ghUploadBtn">📁 首次上傳所有檔案到 GitHub</button>
-            <div id="ghUploadMsg" style="margin-top:10px;"></div>
-          </div>
-        </div>
-
         <div class="section-card" style="max-width:520px; border-color:#FFB3B5;">
           <h2 class="section-card-title" style="color:#C8161D;">⚠️ 危險區域</h2>
           <p style="color:var(--text-sub); font-size:0.9rem; margin-bottom:20px;">清除所有資料後無法復原，請謹慎操作。</p>
@@ -165,6 +129,60 @@
   <script>
     requireLogin();
     initAdminUI();
+
+    // ── GitHub Token ──────────────────────────────
+    function loadGhTokenStatus() {
+      var token = localStorage.getItem('ipcc_github_token') || '';
+      var el = document.getElementById('ghTokenStatus');
+      if (token) {
+        el.innerHTML = '<div class="alert alert-success">✅ Token 已設定（' + token.slice(0,8) + '...）</div>';
+        document.getElementById('ghTokenInput').placeholder = '已設定，輸入新值可覆蓋';
+      } else {
+        el.innerHTML = '<div class="alert" style="background:#FEF3C7;color:#92400E;border:1px solid #FDE68A;">尚未設定，發布上線功能無法使用。</div>';
+      }
+    }
+    loadGhTokenStatus();
+
+    function saveGhToken() {
+      var val = document.getElementById('ghTokenInput').value.trim();
+      if (!val) { alert('請輸入 Token'); return; }
+      localStorage.setItem('ipcc_github_token', val);
+      document.getElementById('ghTokenInput').value = '';
+      loadGhTokenStatus();
+      _updatePublishBtn();
+      document.getElementById('ghTestResult').innerHTML = '<div class="alert alert-success">✅ Token 已儲存！</div>';
+    }
+
+    function clearGhToken() {
+      if (!confirm('確定要清除 GitHub Token？清除後「發布上線」將無法使用。')) return;
+      localStorage.removeItem('ipcc_github_token');
+      loadGhTokenStatus();
+      _updatePublishBtn();
+      document.getElementById('ghTestResult').innerHTML = '';
+    }
+
+    async function testGhToken() {
+      var token = localStorage.getItem('ipcc_github_token') || document.getElementById('ghTokenInput').value.trim();
+      var repo  = (window.IPCC_GITHUB_REPO || '').trim();
+      var el = document.getElementById('ghTestResult');
+      if (!token) { el.innerHTML = '<div class="alert alert-error">請先輸入或儲存 Token</div>'; return; }
+      if (!repo)  { el.innerHTML = '<div class="alert alert-error">找不到 GitHub Repo 設定，請確認 users-config.js</div>'; return; }
+      el.innerHTML = '<div class="alert" style="background:#EFF6FF;color:#1E40AF;">⏳ 測試中...</div>';
+      try {
+        var r = await fetch('https://api.github.com/repos/' + repo, {
+          headers: { 'Authorization': 'Bearer ' + token, 'Accept': 'application/vnd.github+json' }
+        });
+        if (r.ok) {
+          var d = await r.json();
+          el.innerHTML = '<div class="alert alert-success">✅ 連線成功！Repo：' + d.full_name + '，預設分支：' + d.default_branch + '</div>';
+        } else {
+          var err = await r.json().catch(function(){ return {}; });
+          el.innerHTML = '<div class="alert alert-error">❌ 連線失敗（' + r.status + '）：' + (err.message || '權限不足或 Token 錯誤') + '</div>';
+        }
+      } catch(e) {
+        el.innerHTML = '<div class="alert alert-error">❌ 網路錯誤：' + e.message + '</div>';
+      }
+    }
     const DEFAULT_USER = 'admin';
     const DEFAULT_PASS = 'ipcc2024';
 
@@ -224,224 +242,6 @@
       };
       reader.readAsText(file);
     }
-
-    // ── 狀態列 ──
-    function updateDeployStatus() {
-      var bar = document.getElementById('deployStatusBar');
-      var hasToken = !!localStorage.getItem('ipcc_github_token');
-      var hasRepo  = !!(localStorage.getItem('ipcc_github_repo') || window.IPCC_GITHUB_REPO);
-      if (hasToken && hasRepo) {
-        bar.style.background = '#ECFDF5'; bar.style.color = '#065F46';
-        bar.innerHTML = '✅ <b>設定完成！</b>按側欄 🚀 發布上線，約 2 分鐘官網自動更新';
-      } else {
-        var missing = [];
-        if (!hasRepo)  missing.push('GitHub Repository');
-        if (!hasToken) missing.push('GitHub Token');
-        bar.style.background = '#FEF3C7'; bar.style.color = '#92400E';
-        bar.innerHTML = '⚠️ 尚未填入：<b>' + missing.join('、') + '</b>　填好後點「💾 儲存設定」即可';
-      }
-    }
-
-    // ── GitHub 設定 ──
-    function loadGitHubSettings() {
-      document.getElementById('ghRepo').value   = localStorage.getItem('ipcc_github_repo')   || (window.IPCC_GITHUB_REPO   || '');
-      document.getElementById('ghBranch').value = localStorage.getItem('ipcc_github_branch') || (window.IPCC_GITHUB_BRANCH || 'main');
-      document.getElementById('ghToken').value  = localStorage.getItem('ipcc_github_token')  || '';
-      updateDeployStatus();
-    }
-
-    async function saveGitHubSettings() {
-      // 清除複製貼上時可能夾帶的非 ASCII 字元
-      var repo   = document.getElementById('ghRepo').value.replace(/[^\x20-\x7E]/g, '').trim();
-      var branch = (document.getElementById('ghBranch').value.replace(/[^\x20-\x7E]/g, '').trim()) || 'main';
-      var token  = document.getElementById('ghToken').value.replace(/[^\x20-\x7E]/g, '').trim();
-      var msg    = document.getElementById('ghMsg');
-
-      if (!repo || !token) {
-        msg.innerHTML = '<div class="alert alert-error">請填寫 Repository 和 Token</div>';
-        return;
-      }
-
-      localStorage.setItem('ipcc_github_repo',   repo);
-      localStorage.setItem('ipcc_github_branch', branch);
-      localStorage.setItem('ipcc_github_token',  token);
-
-      msg.innerHTML = '<div class="alert alert-success">⏳ 儲存中，正在推送設定到 GitHub…</div>';
-
-      try {
-        var usersJs = makeUsersConfigContent(getUsers());
-        var ok = await _ghPushFile(repo, branch, token, 'admin/users-config.js', usersJs);
-        if (ok) {
-          msg.innerHTML = '<div class="alert alert-success">✅ 設定已儲存！現在可按 🚀 發布上線一鍵更新官網。</div>';
-        } else {
-          msg.innerHTML = '<div class="alert alert-error">❌ GitHub 推送失敗，請確認 Token 與 Repository 名稱正確</div>';
-        }
-      } catch(e) {
-        msg.innerHTML = '<div class="alert alert-success">✅ 設定已儲存（本機），GitHub 推送失敗：' + e.message + '</div>';
-      }
-
-      updateDeployStatus();
-    }
-
-    async function testGitHubConnection() {
-      var repo   = document.getElementById('ghRepo').value.trim();
-      var token  = document.getElementById('ghToken').value.trim();
-      var branch = document.getElementById('ghBranch').value.trim() || 'main';
-      var msg    = document.getElementById('ghMsg');
-      var btn    = document.getElementById('ghTestBtn');
-      if (!repo || !token) {
-        msg.innerHTML = '<div class="alert alert-error">請先填寫 Repository 和 Token</div>';
-        return;
-      }
-      btn.textContent = '測試中...'; btn.disabled = true;
-      try {
-        var res = await fetch('https://api.github.com/repos/' + repo, {
-          headers: { 'Authorization': 'token ' + token, 'Accept': 'application/vnd.github.v3+json' }
-        });
-        if (res.ok) {
-          var info = await res.json();
-          msg.innerHTML = '<div class="alert alert-success">✅ 連線成功！Repository：' + info.full_name + '（' + (info.private ? '私有' : '公開') + '）</div>';
-        } else if (res.status === 401) {
-          msg.innerHTML = '<div class="alert alert-error">❌ Token 無效，請重新產生</div>';
-        } else if (res.status === 404) {
-          msg.innerHTML = '<div class="alert alert-error">❌ 找不到 Repository，請確認名稱格式（帳號/倉庫名）</div>';
-        } else {
-          msg.innerHTML = '<div class="alert alert-error">❌ 連線失敗（HTTP ' + res.status + '）</div>';
-        }
-      } catch(e) {
-        msg.innerHTML = '<div class="alert alert-error">❌ 連線錯誤：' + e.message + '</div>';
-      }
-      btn.textContent = '🔍 測試連線'; btn.disabled = false;
-    }
-
-    // ── 上傳所有檔案到 GitHub（首次設定，不需要 git）──
-    var SKIP_NAMES = new Set([
-      'node_modules', '.git', 'deploy-server.js',
-      'start-deploy-server.bat', 'setup-github.bat',
-      'deploy-to-zeabur.bat', 'sync-from-ipccowb.bat', 'sync-to-ipccowb.bat'
-    ]);
-
-    async function readDirFiles(handle, prefix) {
-      var list = [];
-      for await (var [name, entry] of handle.entries()) {
-        if (SKIP_NAMES.has(name)) continue;
-        var path = prefix ? prefix + '/' + name : name;
-        if (entry.kind === 'directory') {
-          var sub = await readDirFiles(entry, path);
-          list = list.concat(sub);
-        } else {
-          list.push({ path: path, handle: entry });
-        }
-      }
-      return list;
-    }
-
-    async function ghPutFile(repo, token, branch, filePath, b64, sha) {
-      var url = 'https://api.github.com/repos/' + repo + '/contents/' + filePath;
-      var headers = {
-        'Authorization': 'token ' + token,
-        'Accept': 'application/vnd.github.v3+json',
-        'Content-Type': 'application/json'
-      };
-      var body = {
-        message: 'upload: ' + filePath,
-        content: b64,
-        branch: branch
-      };
-      if (sha) body.sha = sha;
-      var res = await fetch(url, { method: 'PUT', headers: headers, body: JSON.stringify(body) });
-      return res;
-    }
-
-    async function getFileSha(repo, token, branch, filePath) {
-      var url = 'https://api.github.com/repos/' + repo + '/contents/' + filePath + '?ref=' + branch;
-      var res = await fetch(url, {
-        headers: {
-          'Authorization': 'token ' + token,
-          'Accept': 'application/vnd.github.v3+json'
-        }
-      });
-      if (!res.ok) return null;
-      var info = await res.json();
-      return info.sha || null;
-    }
-
-    async function uploadAllToGitHub() {
-      var repo   = document.getElementById('ghRepo').value.trim();
-      var branch = document.getElementById('ghBranch').value.trim() || 'main';
-      var token  = document.getElementById('ghToken').value.trim();
-      var btn    = document.getElementById('ghUploadBtn');
-      var prog   = document.getElementById('ghUploadProgress');
-      var msg    = document.getElementById('ghUploadMsg');
-
-      if (!repo || !token) {
-        msg.innerHTML = '<div class="alert alert-error">請先填寫 Repository 和 Token 並儲存</div>';
-        return;
-      }
-      if (!('showDirectoryPicker' in window)) {
-        msg.innerHTML = '<div class="alert alert-error">你的瀏覽器不支援資料夾選取，請使用 Chrome 或 Edge</div>';
-        return;
-      }
-
-      var dirHandle;
-      try {
-        dirHandle = await window.showDirectoryPicker({ mode: 'read', startIn: 'desktop' });
-      } catch(e) { return; }
-
-      btn.disabled = true; btn.textContent = '上傳中...';
-      prog.style.display = 'block';
-      prog.textContent = '正在讀取 IPCC 資料夾中的檔案...';
-      msg.innerHTML = '';
-
-      try {
-        var files = await readDirFiles(dirHandle, '');
-        var total = files.length;
-        prog.textContent = '共找到 ' + total + ' 個檔案，開始上傳...';
-
-        var success = 0, fail = 0, skip = 0;
-        for (var i = 0; i < files.length; i++) {
-          var f = files[i];
-          prog.textContent = '(' + (i+1) + '/' + total + ') 上傳中：' + f.path;
-          try {
-            var fileObj = await f.handle.getFile();
-            var ab = await fileObj.arrayBuffer();
-            var bytes = new Uint8Array(ab);
-            var binary = '';
-            for (var c = 0; c < bytes.length; c += 8192) {
-              binary += String.fromCharCode.apply(null, bytes.subarray(c, Math.min(c + 8192, bytes.length)));
-            }
-            var b64 = btoa(binary);
-            var sha = await getFileSha(repo, token, branch, f.path);
-            var putRes = await ghPutFile(repo, token, branch, f.path, b64, sha);
-            if (putRes.ok) { success++; } else {
-              var errBody = await putRes.json().catch(function(){ return {}; });
-              if (errBody.message && errBody.message.indexOf('too large') !== -1) {
-                skip++; // 超過 GitHub 大小限制，略過
-              } else {
-                fail++;
-                console.warn('upload failed:', f.path, putRes.status, errBody.message);
-              }
-            }
-          } catch(fe) { fail++; console.warn('file error:', f.path, fe); }
-        }
-
-        prog.style.display = 'none';
-        var summary = '✅ 上傳完成！成功 ' + success + ' 個';
-        if (skip) summary += '，略過 ' + skip + ' 個（超過大小限制）';
-        if (fail) summary += '，失敗 ' + fail + ' 個';
-        msg.innerHTML = '<div class="alert alert-success">' + summary + '<br><br>'
-          + '下一步：到 <a href="https://zeabur.com" target="_blank">Zeabur 後台</a> → 找到此服務 → Settings → Git Source → 連結 '
-          + '<b>' + repo + '</b>，之後每次後台發布就會自動更新官網。</div>';
-      } catch(e) {
-        prog.style.display = 'none';
-        msg.innerHTML = '<div class="alert alert-error">上傳失敗：' + e.message + '</div>';
-      }
-
-      btn.disabled = false; btn.textContent = '📁 上傳所有檔案到 GitHub';
-    }
-
-    loadGitHubSettings();
-    updateDeployStatus();
 
     function clearAllData() {
       if (!confirm('確定要清除所有消息和案例資料嗎？此操作無法復原！')) return;

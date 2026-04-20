@@ -4,6 +4,7 @@
 const http = require('http');
 const { exec } = require('child_process');
 const path = require('path');
+const fs   = require('fs');
 
 const PORT = 9393;
 const DIR  = __dirname; // 此檔案所在的 IPCC 資料夾
@@ -52,6 +53,36 @@ const server = http.createServer(function(req, res) {
         stdout:  stdout  || '',
         stderr:  stderr  || ''
       }));
+    });
+    return;
+  }
+
+  // 儲存聯絡資訊設定到靜態 JS 檔
+  if (req.method === 'POST' && req.url === '/save-contact-config') {
+    var body = '';
+    req.on('data', function(chunk) { body += chunk; });
+    req.on('end', function() {
+      try {
+        var cfg = JSON.parse(body);
+        var js =
+          '// IPCC 聯絡資訊設定（靜態預設值）\n' +
+          '// 此檔案由後台「聯絡資訊設定」頁面儲存時自動更新\n' +
+          '// 部署後所有瀏覽器與裝置都會讀取到此設定\n\n' +
+          'window.IPCC_CONTACT_CONFIG = ' + JSON.stringify(cfg, null, 2) + ';\n';
+        var filePath = path.join(DIR, 'contact-config.js');
+        var owbPath  = path.join(DIR, '..', 'IPCCOWB', 'contact-config.js');
+        fs.writeFileSync(filePath, js, 'utf8');
+        if (fs.existsSync(path.join(DIR, '..', 'IPCCOWB'))) {
+          fs.writeFileSync(owbPath, js, 'utf8');
+        }
+        log('✅ contact-config.js 已同步更新（IPCC + IPCCOWB）');
+        res.writeHead(200, { 'Content-Type': 'application/json' });
+        res.end(JSON.stringify({ success: true }));
+      } catch(e) {
+        log('❌ 儲存 contact-config.js 失敗：' + e.message);
+        res.writeHead(500, { 'Content-Type': 'application/json' });
+        res.end(JSON.stringify({ success: false, error: e.message }));
+      }
     });
     return;
   }

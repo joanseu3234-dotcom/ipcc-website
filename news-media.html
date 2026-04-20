@@ -48,27 +48,19 @@
       display: flex; align-items: center; justify-content: center;
       font-size: 3.5rem; color: rgba(30,42,94,0.18);
     }
-    /* 媒體類型標籤（貼在圖片左上） */
-    .media-type-badge {
-      position: absolute; top: 12px; left: 12px;
-      padding: 4px 10px; border-radius: 100px;
-      font-size: 0.72rem; font-weight: 700;
-      backdrop-filter: blur(8px);
+    /* tag pills — 放在照片下方、摘要上方 */
+    .tags-row { display:flex; gap:5px; flex-wrap:wrap; margin-bottom:10px; }
+    .tag-pill {
+      display:inline-block; padding:3px 10px; border-radius:100px;
+      font-size:0.7rem; font-weight:700; line-height:1.5;
+      background:rgba(30,42,94,0.09); color:#1E2A5E;
     }
-    .mt-article  { background:rgba(30,42,94,0.85);  color:#fff; }
-    .mt-podcast  { background:rgba(124,58,237,0.85); color:#fff; }
-    .mt-online   { background:rgba(2,132,199,0.85);  color:#fff; }
-    .mt-tv       { background:rgba(220,38,38,0.85);  color:#fff; }
-    .mt-radio    { background:rgba(5,150,105,0.85);  color:#fff; }
-    .mt-other    { background:rgba(100,116,139,0.85);color:#fff; }
-    .media-badge-overlay {
-      position: absolute; bottom: 10px; right: 10px;
-      background: rgba(0,0,0,0.6); color: #fff;
-      font-size: 0.68rem; font-weight: 700;
-      padding: 3px 8px; border-radius: 100px;
-      backdrop-filter: blur(4px);
-      max-width: 120px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
-    }
+    .tag-pill-article { background:rgba(30,42,94,0.1);   color:#1E2A5E; }
+    .tag-pill-podcast { background:rgba(124,58,237,0.1); color:#7C3AED; }
+    .tag-pill-online  { background:rgba(2,132,199,0.1);  color:#0284C7; }
+    .tag-pill-tv      { background:rgba(220,38,38,0.1);  color:#DC2626; }
+    .tag-pill-radio   { background:rgba(5,150,105,0.1);  color:#059669; }
+    .tag-pill-other   { background:rgba(100,116,139,0.1);color:#475569; }
 
     /* 內容區 */
     .media-card-body {
@@ -237,13 +229,13 @@
       <div class="media-card" onclick="openMediaModal({title:'【工商時報】東州集團：讓每一通 0800 成為品牌價值的起點',mediaType:'article',mediaSource:'工商時報',date:'2024年8月',description:'工商時報專題報導東州集團的服務創新之路，深入介紹集團如何透過科技與人才雙軌並進，在台灣客服產業樹立新標竿。',content:'',externalUrl:'',linkText:'閱讀全文'})">
         <div class="media-card-img">
           <div class="media-card-placeholder">📰</div>
-          <span class="media-type-badge mt-article">報導</span>
         </div>
         <div class="media-card-body">
           <div class="media-card-meta">
             <span class="media-source">工商時報</span>
             <span class="media-date">2024年8月</span>
           </div>
+          <div class="tags-row"><span class="tag-pill tag-pill-article">📰 報導</span></div>
           <h3 class="media-card-title">【工商時報】東州集團：讓每一通 0800 成為品牌價值的起點</h3>
           <p class="media-card-desc">工商時報專題報導東州集團的服務創新之路，深入介紹集團如何透過科技與人才雙軌並進，在台灣客服產業樹立新標竿。</p>
           <div class="media-card-footer">
@@ -255,13 +247,13 @@
       <div class="media-card" onclick="openMediaModal({title:'【數位時代】客服委外的新思維：東州集團以數據驅動服務升級',mediaType:'online',mediaSource:'數位時代',date:'2024年5月',description:'數位時代雜誌深度專訪東州集團，探討如何以數據分析為基礎，重新定義客服外包的價值與模式，引領產業轉型。',content:'',externalUrl:'',linkText:'閱讀全文'})">
         <div class="media-card-img">
           <div class="media-card-placeholder">🌐</div>
-          <span class="media-type-badge mt-online">網路媒體</span>
         </div>
         <div class="media-card-body">
           <div class="media-card-meta">
             <span class="media-source">數位時代</span>
             <span class="media-date">2024年5月</span>
           </div>
+          <div class="tags-row"><span class="tag-pill tag-pill-online">🌐 網路媒體</span></div>
           <h3 class="media-card-title">【數位時代】客服委外的新思維：東州集團以數據驅動服務升級</h3>
           <p class="media-card-desc">數位時代雜誌深度專訪東州集團，探討如何以數據分析為基礎，重新定義客服外包的價值與模式，引領產業轉型。</p>
           <div class="media-card-footer">
@@ -273,13 +265,13 @@
       <div class="media-card" onclick="openMediaModal({title:'【經理人月刊】近三十年客服老兵的數位轉型之路',mediaType:'article',mediaSource:'經理人月刊',date:'2024年2月',description:'經理人月刊專題採訪東州集團高層，分享從 1996 年創立至今的發展歷程，以及面對 AI 時代所採取的策略佈局。',content:'',externalUrl:'',linkText:'閱讀全文'})">
         <div class="media-card-img">
           <div class="media-card-placeholder">📰</div>
-          <span class="media-type-badge mt-article">報導</span>
         </div>
         <div class="media-card-body">
           <div class="media-card-meta">
             <span class="media-source">經理人月刊</span>
             <span class="media-date">2024年2月</span>
           </div>
+          <div class="tags-row"><span class="tag-pill tag-pill-article">📰 報導</span></div>
           <h3 class="media-card-title">【經理人月刊】近三十年客服老兵的數位轉型之路</h3>
           <p class="media-card-desc">經理人月刊專題採訪東州集團高層，分享從 1996 年創立至今的發展歷程，以及面對 AI 時代所採取的策略佈局。</p>
           <div class="media-card-footer">
@@ -500,15 +492,21 @@ var _mediaItemsStore = [];
       };
     });
 
+    var MT_PILL_CLS = { article:'tag-pill-article', podcast:'tag-pill-podcast', online:'tag-pill-online', tv:'tag-pill-tv', radio:'tag-pill-radio', other:'tag-pill-other' };
+
     grid.innerHTML = items.map(function(n, idx) {
       var mt = MEDIA_TYPE_MAP[n.mediaType] || {};
-      var typeBadgeHtml = n.mediaType
-        ? '<span class="media-type-badge ' + (mt.cls||'mt-other') + '">' + (mt.label||n.mediaType) + '</span>'
-        : '';
-      var badgeOverlayHtml = n.badge ? '<span class="media-badge-overlay">' + esc(n.badge) + '</span>' : '';
       var imgHtml = n.image
         ? '<img src="' + n.image + '" alt="" loading="lazy">'
         : '<div class="media-card-placeholder">' + (mt.icon||'📸') + '</div>';
+
+      // 組合 tag pills：媒體類型 + badge 欄位（用「、」分隔）
+      var pillTags = [];
+      if (n.mediaType && mt.label) pillTags.push('<span class="tag-pill ' + (MT_PILL_CLS[n.mediaType]||'') + '">' + esc(mt.label) + '</span>');
+      if (n.badge) {
+        n.badge.split('、').forEach(function(t){ t = t.trim(); if(t) pillTags.push('<span class="tag-pill">' + esc(t) + '</span>'); });
+      }
+      var pillsHtml = pillTags.length ? '<div class="tags-row">' + pillTags.join('') + '</div>' : '';
 
       var allCasesLocal = JSON.parse(localStorage.getItem('ipcc_cases') || '[]');
       var caseLabel = '';
@@ -524,12 +522,13 @@ var _mediaItemsStore = [];
       }
 
       return '<div class="media-card" onclick="location.href=\'media-detail.html?id=\'+encodeURIComponent(\'' + (n.id||'').replace(/'/g,"\\'") + '\')">'
-        + '<div class="media-card-img">' + imgHtml + typeBadgeHtml + badgeOverlayHtml + '</div>'
+        + '<div class="media-card-img">' + imgHtml + '</div>'
         + '<div class="media-card-body">'
         + '<div class="media-card-meta">'
         + (n.mediaSource ? '<span class="media-source">' + esc(n.mediaSource) + '</span>' : '')
         + (n.date ? '<span class="media-date">' + esc(n.date) + '</span>' : '')
         + '</div>'
+        + pillsHtml
         + '<h3 class="media-card-title">' + esc(n.title||'') + '</h3>'
         + '<p class="media-card-desc">' + esc(n.description||'') + '</p>'
         + '<div class="media-card-footer">'

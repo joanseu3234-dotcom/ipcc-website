@@ -7,6 +7,49 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="style.css">
+  <style>
+    /* 六大資安原則卡片 hover 反色 */
+    .sec-principle-card {
+      background: var(--white);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 28px;
+      text-align: center;
+      transition: background 0.28s, border-color 0.28s, transform 0.28s, box-shadow 0.28s;
+      cursor: default;
+    }
+    .sec-principle-card:hover {
+      background: var(--navy-dark, #12193A);
+      border-color: var(--navy-dark, #12193A);
+      transform: translateY(-5px);
+      box-shadow: 0 14px 36px rgba(18,25,58,0.22);
+    }
+    .sec-icon-wrap {
+      width: 56px; height: 56px;
+      background: rgba(206,0,0,0.08);
+      border-radius: 14px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1.5rem;
+      margin: 0 auto 16px;
+      transition: background 0.28s;
+    }
+    .sec-principle-card:hover .sec-icon-wrap {
+      background: rgba(255,255,255,0.15);
+    }
+    .sec-card-title {
+      font-size: 0.95rem; font-weight: 800;
+      color: var(--navy-dark, #12193A);
+      margin-bottom: 10px;
+      transition: color 0.28s;
+    }
+    .sec-principle-card:hover .sec-card-title { color: #fff; }
+    .sec-card-desc {
+      font-size: 0.82rem; color: var(--text-sub);
+      line-height: 1.7;
+      transition: color 0.28s;
+    }
+    .sec-principle-card:hover .sec-card-desc { color: rgba(255,255,255,0.72); }
+  </style>
 </head>
 <body>
 <script src="content-data.js"></script>
@@ -106,35 +149,35 @@
     <div style="margin-bottom:48px;">
       <h3 style="font-size:1.1rem; font-weight:800; color:var(--navy-dark); margin-bottom:32px; text-align:center;">六大資安管理原則</h3>
       <div id="security-principles-grid" style="display:grid; grid-template-columns:repeat(3,1fr); gap:20px;">
-        <div style="background:var(--white); border:1px solid var(--border); border-radius:var(--radius); padding:28px; text-align:center;">
-          <div style="width:56px; height:56px; background:rgba(206,0,0,0.08); border-radius:14px; display:flex; align-items:center; justify-content:center; font-size:1.5rem; margin:0 auto 16px;">🛡️</div>
-          <h4 style="font-size:0.95rem; font-weight:800; color:var(--navy-dark); margin-bottom:10px;">機密性保護</h4>
-          <p style="font-size:0.82rem; color:var(--text-sub); line-height:1.7;">確保資訊僅供授權人員存取，防止未經授權的資訊揭露，保護客戶個資與商業機密</p>
+        <div class="sec-principle-card">
+          <div class="sec-icon-wrap">🛡️</div>
+          <h4 class="sec-card-title">機密性保護</h4>
+          <p class="sec-card-desc">確保資訊僅供授權人員存取，防止未經授權的資訊揭露，保護客戶個資與商業機密</p>
         </div>
-        <div style="background:var(--white); border:1px solid var(--border); border-radius:var(--radius); padding:28px; text-align:center;">
-          <div style="width:56px; height:56px; background:rgba(206,0,0,0.08); border-radius:14px; display:flex; align-items:center; justify-content:center; font-size:1.5rem; margin:0 auto 16px;">✅</div>
-          <h4 style="font-size:0.95rem; font-weight:800; color:var(--navy-dark); margin-bottom:10px;">完整性維護</h4>
-          <p style="font-size:0.82rem; color:var(--text-sub); line-height:1.7;">確保資訊的準確性與完整性，防止未經授權的資料修改、刪除或破壞行為</p>
+        <div class="sec-principle-card">
+          <div class="sec-icon-wrap">✅</div>
+          <h4 class="sec-card-title">完整性維護</h4>
+          <p class="sec-card-desc">確保資訊的準確性與完整性，防止未經授權的資料修改、刪除或破壞行為</p>
         </div>
-        <div style="background:var(--white); border:1px solid var(--border); border-radius:var(--radius); padding:28px; text-align:center;">
-          <div style="width:56px; height:56px; background:rgba(206,0,0,0.08); border-radius:14px; display:flex; align-items:center; justify-content:center; font-size:1.5rem; margin:0 auto 16px;">⚡</div>
-          <h4 style="font-size:0.95rem; font-weight:800; color:var(--navy-dark); margin-bottom:10px;">可用性確保</h4>
-          <p style="font-size:0.82rem; color:var(--text-sub); line-height:1.7;">確保授權使用者在需要時能及時存取所需資訊與系統，維持業務連續性</p>
+        <div class="sec-principle-card">
+          <div class="sec-icon-wrap">⚡</div>
+          <h4 class="sec-card-title">可用性確保</h4>
+          <p class="sec-card-desc">確保授權使用者在需要時能及時存取所需資訊與系統，維持業務連續性</p>
         </div>
-        <div style="background:var(--white); border:1px solid var(--border); border-radius:var(--radius); padding:28px; text-align:center;">
-          <div style="width:56px; height:56px; background:rgba(206,0,0,0.08); border-radius:14px; display:flex; align-items:center; justify-content:center; font-size:1.5rem; margin:0 auto 16px;">👤</div>
-          <h4 style="font-size:0.95rem; font-weight:800; color:var(--navy-dark); margin-bottom:10px;">個資合規管理</h4>
-          <p style="font-size:0.82rem; color:var(--text-sub); line-height:1.7;">嚴格遵循個人資料保護法相關規範，建立完整的個資蒐集、處理與利用管理機制</p>
+        <div class="sec-principle-card">
+          <div class="sec-icon-wrap">👤</div>
+          <h4 class="sec-card-title">個資合規管理</h4>
+          <p class="sec-card-desc">嚴格遵循個人資料保護法相關規範，建立完整的個資蒐集、處理與利用管理機制</p>
         </div>
-        <div style="background:var(--white); border:1px solid var(--border); border-radius:var(--radius); padding:28px; text-align:center;">
-          <div style="width:56px; height:56px; background:rgba(206,0,0,0.08); border-radius:14px; display:flex; align-items:center; justify-content:center; font-size:1.5rem; margin:0 auto 16px;">🔔</div>
-          <h4 style="font-size:0.95rem; font-weight:800; color:var(--navy-dark); margin-bottom:10px;">事件應變機制</h4>
-          <p style="font-size:0.82rem; color:var(--text-sub); line-height:1.7;">建立完整的資安事件偵測、通報與應變程序，確保事件發生時能迅速有效應對</p>
+        <div class="sec-principle-card">
+          <div class="sec-icon-wrap">🔔</div>
+          <h4 class="sec-card-title">事件應變機制</h4>
+          <p class="sec-card-desc">建立完整的資安事件偵測、通報與應變程序，確保事件發生時能迅速有效應對</p>
         </div>
-        <div style="background:var(--white); border:1px solid var(--border); border-radius:var(--radius); padding:28px; text-align:center;">
-          <div style="width:56px; height:56px; background:rgba(206,0,0,0.08); border-radius:14px; display:flex; align-items:center; justify-content:center; font-size:1.5rem; margin:0 auto 16px;">📚</div>
-          <h4 style="font-size:0.95rem; font-weight:800; color:var(--navy-dark); margin-bottom:10px;">教育訓練推廣</h4>
-          <p style="font-size:0.82rem; color:var(--text-sub); line-height:1.7;">定期辦理資安意識教育訓練，強化全體員工的資安觀念與技能，打造資安文化</p>
+        <div class="sec-principle-card">
+          <div class="sec-icon-wrap">📚</div>
+          <h4 class="sec-card-title">教育訓練推廣</h4>
+          <p class="sec-card-desc">定期辦理資安意識教育訓練，強化全體員工的資安觀念與技能，打造資安文化</p>
         </div>
       </div>
     </div>
@@ -145,27 +188,12 @@
         <h4 style="font-size:1rem; font-weight:800; color:var(--navy-dark); margin-bottom:20px; display:flex; align-items:center; gap:10px;">
           <span style="color:#CE0000;">■</span> 技術安全措施
         </h4>
-        <ul style="list-style:none; padding:0; display:flex; flex-direction:column; gap:12px;">
-          <li style="display:flex; gap:12px; font-size:0.87rem; color:var(--text-sub); line-height:1.7;">
-            <span style="color:#CE0000; flex-shrink:0; margin-top:2px;">▸</span>
-            部署防火牆、入侵偵測與防禦系統（IDS/IPS），即時監控異常網路行為
-          </li>
-          <li style="display:flex; gap:12px; font-size:0.87rem; color:var(--text-sub); line-height:1.7;">
-            <span style="color:#CE0000; flex-shrink:0; margin-top:2px;">▸</span>
-            採用端對端資料加密技術，確保傳輸與儲存過程中的資料安全
-          </li>
-          <li style="display:flex; gap:12px; font-size:0.87rem; color:var(--text-sub); line-height:1.7;">
-            <span style="color:#CE0000; flex-shrink:0; margin-top:2px;">▸</span>
-            實施嚴格的存取控制與身分驗證機制，採最小權限原則管理
-          </li>
-          <li style="display:flex; gap:12px; font-size:0.87rem; color:var(--text-sub); line-height:1.7;">
-            <span style="color:#CE0000; flex-shrink:0; margin-top:2px;">▸</span>
-            定期執行弱點掃描與滲透測試，主動識別並修補系統安全漏洞
-          </li>
-          <li style="display:flex; gap:12px; font-size:0.87rem; color:var(--text-sub); line-height:1.7;">
-            <span style="color:#CE0000; flex-shrink:0; margin-top:2px;">▸</span>
-            建立多地備援與定期備份機制，確保業務連續性與資料復原能力
-          </li>
+        <ul id="security-tech-list" style="list-style:none; padding:0; display:flex; flex-direction:column; gap:12px;">
+          <li style="display:flex; gap:12px; font-size:0.87rem; color:var(--text-sub); line-height:1.7;"><span style="color:#CE0000; flex-shrink:0; margin-top:2px;">▸</span>部署防火牆、入侵偵測與防禦系統（IDS/IPS），即時監控異常網路行為</li>
+          <li style="display:flex; gap:12px; font-size:0.87rem; color:var(--text-sub); line-height:1.7;"><span style="color:#CE0000; flex-shrink:0; margin-top:2px;">▸</span>採用端對端資料加密技術，確保傳輸與儲存過程中的資料安全</li>
+          <li style="display:flex; gap:12px; font-size:0.87rem; color:var(--text-sub); line-height:1.7;"><span style="color:#CE0000; flex-shrink:0; margin-top:2px;">▸</span>實施嚴格的存取控制與身分驗證機制，採最小權限原則管理</li>
+          <li style="display:flex; gap:12px; font-size:0.87rem; color:var(--text-sub); line-height:1.7;"><span style="color:#CE0000; flex-shrink:0; margin-top:2px;">▸</span>定期執行弱點掃描與滲透測試，主動識別並修補系統安全漏洞</li>
+          <li style="display:flex; gap:12px; font-size:0.87rem; color:var(--text-sub); line-height:1.7;"><span style="color:#CE0000; flex-shrink:0; margin-top:2px;">▸</span>建立多地備援與定期備份機制，確保業務連續性與資料復原能力</li>
         </ul>
       </div>
 
@@ -173,27 +201,12 @@
         <h4 style="font-size:1rem; font-weight:800; color:var(--navy-dark); margin-bottom:20px; display:flex; align-items:center; gap:10px;">
           <span style="color:#CE0000;">■</span> 管理安全措施
         </h4>
-        <ul style="list-style:none; padding:0; display:flex; flex-direction:column; gap:12px;">
-          <li style="display:flex; gap:12px; font-size:0.87rem; color:var(--text-sub); line-height:1.7;">
-            <span style="color:#CE0000; flex-shrink:0; margin-top:2px;">▸</span>
-            依個人資料保護法規定，訂定個資管理辦法並落實執行
-          </li>
-          <li style="display:flex; gap:12px; font-size:0.87rem; color:var(--text-sub); line-height:1.7;">
-            <span style="color:#CE0000; flex-shrink:0; margin-top:2px;">▸</span>
-            所有員工入職時簽署保密協議，並定期接受資安意識教育訓練
-          </li>
-          <li style="display:flex; gap:12px; font-size:0.87rem; color:var(--text-sub); line-height:1.7;">
-            <span style="color:#CE0000; flex-shrink:0; margin-top:2px;">▸</span>
-            建立供應商資安評估機制，確保合作夥伴符合本集團資安標準
-          </li>
-          <li style="display:flex; gap:12px; font-size:0.87rem; color:var(--text-sub); line-height:1.7;">
-            <span style="color:#CE0000; flex-shrink:0; margin-top:2px;">▸</span>
-            定期進行資安風險評鑑，識別並優先處理高風險項目
-          </li>
-          <li style="display:flex; gap:12px; font-size:0.87rem; color:var(--text-sub); line-height:1.7;">
-            <span style="color:#CE0000; flex-shrink:0; margin-top:2px;">▸</span>
-            訂定業務持續計畫（BCP）及災難復原計畫（DRP）並定期演練
-          </li>
+        <ul id="security-mgmt-list" style="list-style:none; padding:0; display:flex; flex-direction:column; gap:12px;">
+          <li style="display:flex; gap:12px; font-size:0.87rem; color:var(--text-sub); line-height:1.7;"><span style="color:#CE0000; flex-shrink:0; margin-top:2px;">▸</span>依個人資料保護法規定，訂定個資管理辦法並落實執行</li>
+          <li style="display:flex; gap:12px; font-size:0.87rem; color:var(--text-sub); line-height:1.7;"><span style="color:#CE0000; flex-shrink:0; margin-top:2px;">▸</span>所有員工入職時簽署保密協議，並定期接受資安意識教育訓練</li>
+          <li style="display:flex; gap:12px; font-size:0.87rem; color:var(--text-sub); line-height:1.7;"><span style="color:#CE0000; flex-shrink:0; margin-top:2px;">▸</span>建立供應商資安評估機制，確保合作夥伴符合本集團資安標準</li>
+          <li style="display:flex; gap:12px; font-size:0.87rem; color:var(--text-sub); line-height:1.7;"><span style="color:#CE0000; flex-shrink:0; margin-top:2px;">▸</span>定期進行資安風險評鑑，識別並優先處理高風險項目</li>
+          <li style="display:flex; gap:12px; font-size:0.87rem; color:var(--text-sub); line-height:1.7;"><span style="color:#CE0000; flex-shrink:0; margin-top:2px;">▸</span>訂定業務持續計畫（BCP）及災難復原計畫（DRP）並定期演練</li>
         </ul>
       </div>
     </div>
@@ -302,14 +315,33 @@ function toggleMenu() {
     var stmtParas = document.querySelectorAll('#security p');
     if (d.stmt1 && stmtParas[0]) stmtParas[0].innerHTML = d.stmt1;
     if (d.stmt2 && stmtParas[1]) stmtParas[1].innerHTML = d.stmt2;
+    // 六大原則（帶 hover 反色 class）
     if (d.principles && d.principles.length) {
       var pg = document.getElementById('security-principles-grid');
       if (pg) pg.innerHTML = d.principles.map(function(p) {
-        return '<div style="background:var(--white);border:1px solid var(--border);border-radius:var(--radius);padding:28px;text-align:center;">'
-          + '<div style="width:56px;height:56px;background:rgba(206,0,0,0.08);border-radius:14px;display:flex;align-items:center;justify-content:center;font-size:1.5rem;margin:0 auto 16px;">'+(p.icon||'🛡️')+'</div>'
-          + '<h4 style="font-size:0.95rem;font-weight:800;color:var(--navy-dark);margin-bottom:10px;">'+(p.title||'')+'</h4>'
-          + '<p style="font-size:0.82rem;color:var(--text-sub);line-height:1.7;">'+(p.desc||'')+'</p>'
+        return '<div class="sec-principle-card">'
+          + '<div class="sec-icon-wrap">'+(p.icon||'🛡️')+'</div>'
+          + '<h4 class="sec-card-title">'+(p.title||'')+'</h4>'
+          + '<p class="sec-card-desc">'+(p.desc||'')+'</p>'
           + '</div>';
+      }).join('');
+    }
+    // 技術安全措施
+    if (d.techMeasures && d.techMeasures.length) {
+      var tl = document.getElementById('security-tech-list');
+      if (tl) tl.innerHTML = d.techMeasures.map(function(txt) {
+        return '<li style="display:flex;gap:12px;font-size:0.87rem;color:var(--text-sub);line-height:1.7;">'
+          + '<span style="color:#CE0000;flex-shrink:0;margin-top:2px;">▸</span>'
+          + txt + '</li>';
+      }).join('');
+    }
+    // 管理安全措施
+    if (d.mgmtMeasures && d.mgmtMeasures.length) {
+      var ml = document.getElementById('security-mgmt-list');
+      if (ml) ml.innerHTML = d.mgmtMeasures.map(function(txt) {
+        return '<li style="display:flex;gap:12px;font-size:0.87rem;color:var(--text-sub);line-height:1.7;">'
+          + '<span style="color:#CE0000;flex-shrink:0;margin-top:2px;">▸</span>'
+          + txt + '</li>';
       }).join('');
     }
   } catch(e) {}

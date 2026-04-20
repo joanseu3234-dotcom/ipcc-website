@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>聯絡資訊設定 | IPCC 後台</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="admin.css">
+  <script src="../contact-config.js"></script>
+  <style>
+    .qr-preview-box {
+      margin-top: 14px;
+      display: flex;
+      align-items: flex-start;
+      gap: 20px;
+      flex-wrap: wrap;
+    }
+    .qr-auto-img {
+      width: 140px; height: 140px;
+      border: 1.5px solid var(--border);
+      border-radius: 10px;
+      background: #fff;
+      display: block;
+    }
+    .qr-auto-placeholder {
+      width: 140px; height: 140px;
+      border: 2px dashed var(--border);
+      border-radius: 10px;
+      background: #FAFAF9;
+      display: flex; flex-direction: column;
+      align-items: center; justify-content: center;
+      color: var(--text-sub); font-size: 0.78rem; gap: 8px; text-align: center; padding: 12px;
+    }
+    .qr-auto-placeholder span { font-size: 2rem; }
+    .channel-card {
+      background: var(--white);
+      border: 1.5px solid var(--border);
+      border-radius: 12px;
+      padding: 24px 28px;
+      margin-bottom: 20px;
+    }
+    .channel-card-title {
+      font-size: 1rem;
+      font-weight: 800;
+      color: var(--navy-dark);
+      margin-bottom: 20px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .channel-icon {
+      width: 38px;
+      height: 38px;
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.1rem;
+      flex-shrink: 0;
+    }
+    .hint-text { font-size: 0.78rem; color: var(--text-sub); margin-top: 5px; }
+  </style>
+</head>
+<body>
+  <div class="admin-layout">
+    <aside class="sidebar" id="sidebar">
+      <div class="sidebar-logo">
+        <img src="../IPCCLOGO-transparent.png" alt="IPCC" onerror="this.style.display='none'">
+        <div class="sidebar-logo-text">
+          <div class="co-name">IPCC 東州集團</div>
+          <div class="co-sub">後台管理系統</div>
+        </div>
+      </div>
+      <nav class="sidebar-nav">
+        <a href="dashboard.html" class="nav-item">📊 儀表板</a>
+        <a href="home-manage.html" class="nav-item" data-perm="home">🏠 首頁管理</a>
+        <a href="news-manage.html" class="nav-item" data-perm="news">📰 最新消息</a>
+        <a href="about-manage.html" class="nav-item" data-perm="about">🏢 關於我們</a>
+        <a href="services-manage.html" class="nav-item" data-perm="services">🛠 專案服務</a>
+        <a href="cases-manage.html" class="nav-item" data-perm="cases">🏆 成功案例</a>
+        <a href="contacts-manage.html" class="nav-item" data-perm="contacts">📋 聯絡表單</a>
+        <a href="contact-config.html" class="nav-item active" data-perm="settings">📱 聯絡資訊設定</a>
+        <a href="settings.html" class="nav-item" data-perm="settings">⚙️ 系統設定</a>
+        <a href="users-manage.html" class="nav-item" data-perm="users">👥 帳號管理</a>
+      </nav>
+      <div class="sidebar-footer">
+        <a href="../contact.html" target="_blank" class="view-site-btn">🔗 查看前台聯繫頁</a>
+        <button onclick="logout()" class="logout-btn">登出</button>
+      </div>
+    </aside>
+    <div class="sidebar-overlay" onclick="toggleSidebar()"></div>
+
+    <main class="main-content">
+      <header class="topbar">
+        <button class="hamburger" onclick="toggleSidebar()">☰</button>
+        <div class="topbar-title">聯絡資訊設定</div>
+        <div class="topbar-user">管理員</div>
+      </header>
+
+      <div class="page-content">
+        <div style="display:flex; align-items:flex-start; justify-content:space-between; margin-bottom:24px; flex-wrap:wrap; gap:12px;">
+          <div>
+            <h1 style="font-size:1.6rem; font-weight:800; color:var(--navy-dark); margin-bottom:4px;">聯絡資訊設定</h1>
+            <p style="color:var(--text-sub); font-size:0.9rem;">管理前台顯示的聯絡電話、LINE 官方帳號及人才招募連結</p>
+          </div>
+          <button class="btn-primary" onclick="saveAll()">💾 儲存所有設定</button>
+        </div>
+
+        <div id="saveMsg"></div>
+
+        <!-- 0800 電話 -->
+        <div class="channel-card">
+          <div class="channel-card-title">
+            <div class="channel-icon" style="background:rgba(27,43,94,0.08);">📞</div>
+            免付費客服專線（0800）
+          </div>
+          <div class="form-group">
+            <label class="form-label">電話號碼</label>
+            <input type="text" class="form-control" id="phone0800" placeholder="例：0800-666-080" style="max-width:320px;">
+            <div class="hint-text">格式建議：0800-XXX-XXX，顯示於前台「聯繫我們」頁面與頁尾</div>
+          </div>
+          <div class="form-group" style="margin-top:16px;">
+            <label class="form-label">服務時間說明</label>
+            <input type="text" class="form-control" id="phoneHours" placeholder="例：週一至週五 09:00 - 18:00" style="max-width:400px;">
+          </div>
+        </div>
+
+        <!-- LINE 官方帳號 -->
+        <div class="channel-card">
+          <div class="channel-card-title">
+            <div class="channel-icon" style="background:rgba(6,199,85,0.12);">💬</div>
+            LINE 官方帳號
+          </div>
+          <div class="form-group">
+            <label class="form-label">加入好友連結（URL）</label>
+            <input type="url" class="form-control" id="lineUrl" placeholder="例：https://line.me/R/ti/p/@xxxxxxxx" oninput="refreshQrPreview()">
+            <div class="hint-text">填入後系統會自動產生 QR Code，使用者點擊 LINE 按鈕時彈出視窗供掃描或直接開啟連結</div>
+          </div>
+
+          <div class="form-group" style="margin-top:16px;">
+            <label class="form-label">QR Code 預覽（自動依 URL 產生）</label>
+            <div class="qr-preview-box">
+              <div id="qrAutoPlaceholder" class="qr-auto-placeholder">
+                <span>💬</span>
+                填入 URL 後<br>自動產生 QR Code
+              </div>
+              <img id="qrAutoImg" class="qr-auto-img" src="" alt="QR Code 預覽" style="display:none;"
+                onerror="this.style.display='none'; document.getElementById('qrAutoPlaceholder').style.display='flex';">
+              <div style="font-size:0.78rem; color:var(--text-sub); line-height:1.8; align-self:center;">
+                ✅ 不需要上傳圖片<br>
+                URL 改變時 QR Code 自動更新<br>
+                使用者點 LINE 按鈕後跳出視窗
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 1111 人力銀行 -->
+        <div class="channel-card">
+          <div class="channel-card-title">
+            <div class="channel-icon" style="background:rgba(234,88,12,0.1);">👥</div>
+            人才招募（1111 人力銀行）
+          </div>
+          <div class="form-group">
+            <label class="form-label">招募頁面連結（URL）</label>
+            <input type="url" class="form-control" id="recruitUrl" placeholder="例：https://www.1111.com.tw/corp/8563">
+            <div class="hint-text">顯示於各頁面頁尾的「人才招募」圖示，使用者點擊後將開啟此連結</div>
+          </div>
+        </div>
+
+        <!-- 預覽區 -->
+        <div class="section-card" style="margin-top:4px;">
+          <div style="font-size:0.88rem; font-weight:700; color:var(--text-sub); margin-bottom:14px; text-transform:uppercase; letter-spacing:0.05em;">前台預覽</div>
+          <div style="display:flex; gap:16px; flex-wrap:wrap; align-items:flex-start;">
+            <div style="background:#F4F2EE; border-radius:10px; padding:16px 20px; min-width:200px;">
+              <div style="font-size:0.72rem; font-weight:700; color:var(--text-sub); text-transform:uppercase; letter-spacing:0.1em; margin-bottom:6px;">免付費電話</div>
+              <div id="prev0800" style="font-size:1.2rem; font-weight:800; color:var(--navy-dark);">0800-666-080</div>
+              <div id="prevHours" style="font-size:0.75rem; color:var(--text-sub); margin-top:3px;">週一至週五 09:00 - 18:00</div>
+            </div>
+            <div style="background:#F4F2EE; border-radius:10px; padding:16px 20px; min-width:200px;">
+              <div style="font-size:0.72rem; font-weight:700; color:var(--text-sub); text-transform:uppercase; letter-spacing:0.1em; margin-bottom:6px;">LINE 官方帳號</div>
+              <div id="prevLineUrl" style="font-size:0.82rem; color:var(--navy); word-break:break-all;">（尚未設定連結）</div>
+            </div>
+            <div id="prevQrWrap" style="display:none; background:#F4F2EE; border-radius:10px; padding:16px 20px;">
+              <div style="font-size:0.72rem; font-weight:700; color:var(--text-sub); text-transform:uppercase; letter-spacing:0.1em; margin-bottom:10px;">點擊 LINE 後跳出的 QR Code</div>
+              <img id="prevQrImg" src="" alt="QR Code" style="width:120px; height:120px; object-fit:contain; border-radius:8px; background:#fff; border:1px solid var(--border);">
+            </div>
+            <div style="background:#F4F2EE; border-radius:10px; padding:16px 20px; min-width:200px;">
+              <div style="font-size:0.72rem; font-weight:700; color:var(--text-sub); text-transform:uppercase; letter-spacing:0.1em; margin-bottom:6px;">招募連結</div>
+              <div id="prevRecruit" style="font-size:0.82rem; color:var(--navy); word-break:break-all;">https://www.1111.com.tw/corp/8563</div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </main>
+  </div>
+
+  <script src="users-config.js"></script>
+  <script src="admin.js"></script>
+  <script>
+    requireLogin();
+    initAdminUI();
+
+    function qrSrc(url) {
+      if (!url) return '';
+      return 'https://api.qrserver.com/v1/create-qr-code/?size=220x220&data=' + encodeURIComponent(url);
+    }
+
+    function refreshQrPreview() {
+      var url = document.getElementById('lineUrl').value.trim();
+      var img = document.getElementById('qrAutoImg');
+      var placeholder = document.getElementById('qrAutoPlaceholder');
+      var prevQrWrap = document.getElementById('prevQrWrap');
+      var prevQrImg = document.getElementById('prevQrImg');
+      if (url) {
+        var src = qrSrc(url);
+        img.src = src;
+        img.style.display = 'block';
+        placeholder.style.display = 'none';
+        prevQrImg.src = src;
+        prevQrWrap.style.display = 'block';
+      } else {
+        img.style.display = 'none';
+        placeholder.style.display = 'flex';
+        prevQrWrap.style.display = 'none';
+      }
+    }
+
+    function loadConfig() {
+      // 讀取順序：localStorage（本機）→ 靜態設定檔（已部署）→ 預設值
+      var cfg = getContactConfig();
+      document.getElementById('phone0800').value  = cfg.phone0800  || '';
+      document.getElementById('phoneHours').value = cfg.phoneHours || '';
+      document.getElementById('lineUrl').value    = cfg.lineUrl    || '';
+      document.getElementById('recruitUrl').value = cfg.recruitUrl || '';
+      refreshQrPreview();
+      refreshPreview();
+    }
+
+    function refreshPreview() {
+      var phone = document.getElementById('phone0800').value.trim() || '0800-666-080';
+      var hours = document.getElementById('phoneHours').value.trim() || '週一至週五 09:00 - 18:00';
+      var lineUrl = document.getElementById('lineUrl').value.trim();
+      var recruit = document.getElementById('recruitUrl').value.trim() || 'https://www.1111.com.tw/corp/8563';
+      document.getElementById('prev0800').textContent = phone;
+      document.getElementById('prevHours').textContent = hours;
+      document.getElementById('prevLineUrl').textContent = lineUrl || '（尚未設定連結）';
+      document.getElementById('prevRecruit').textContent = recruit;
+    }
+
+    ['phone0800','phoneHours','recruitUrl'].forEach(function(id) {
+      document.getElementById(id).addEventListener('input', refreshPreview);
+    });
+    document.getElementById('lineUrl').addEventListener('input', function() {
+      refreshPreview();
+      refreshQrPreview();
+    });
+
+    function saveAll() {
+      var cfg = {
+        phone0800:  document.getElementById('phone0800').value.trim() || '0800-666-080',
+        phoneHours: document.getElementById('phoneHours').value.trim() || '週一至週五 09:00 - 18:00',
+        lineUrl:    document.getElementById('lineUrl').value.trim(),
+        recruitUrl: document.getElementById('recruitUrl').value.trim() || 'https://www.1111.com.tw/corp/8563'
+      };
+      saveContactConfig(cfg);
+      // 更新記憶體中的靜態設定，讓本頁面立即反映新值
+      window.IPCC_CONTACT_CONFIG = cfg;
+      // 嘗試寫入靜態設定檔（需本機 deploy-server.js 運行中）
+      fetch('http://localhost:9393/save-contact-config', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(cfg)
+      }).then(function(r) { return r.json(); }).then(function(data) {
+        if (data.success) {
+          showPublishToast('✅ 設定已儲存並寫入靜態檔！請執行「發布上線」讓所有裝置生效。', 'success');
+        } else {
+          showPublishToast('✅ 設定已儲存（此瀏覽器即時生效）。若要讓所有裝置看到，請重新部署。', 'success');
+        }
+      }).catch(function() {
+        showPublishToast('✅ 設定已儲存（此瀏覽器即時生效）。若要讓所有裝置看到，請重新部署。', 'success');
+      });
+      refreshPreview();
+    }
+
+    loadConfig();
+  </script>
+</body>
+</html>

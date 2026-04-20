@@ -95,8 +95,8 @@
             <div style="width:48px; height:48px; background:rgba(27,43,94,0.07); border-radius:12px; display:flex; align-items:center; justify-content:center; font-size:1.2rem; flex-shrink:0;">📞</div>
             <div>
               <div style="font-size:0.78rem; font-weight:700; color:var(--text-muted); text-transform:uppercase; letter-spacing:0.1em; margin-bottom:4px;">免付費客服專線</div>
-              <a href="tel:0800666080" style="font-size:1.3rem; font-weight:800; color:var(--navy-dark);">0800-666-080</a>
-              <div style="font-size:0.78rem; color:var(--text-muted); margin-top:4px;">週一至週五 09:00 - 18:00</div>
+              <a id="contactPhone" href="tel:0800666080" style="font-size:1.3rem; font-weight:800; color:var(--navy-dark);">0800-666-080</a>
+              <div id="contactPhoneHours" style="font-size:0.78rem; color:var(--text-muted); margin-top:4px;">週一至週五 09:00 - 18:00</div>
             </div>
           </div>
 
@@ -104,7 +104,7 @@
             <div style="width:48px; height:48px; background:rgba(6,199,85,0.1); border-radius:12px; display:flex; align-items:center; justify-content:center; font-size:1.2rem; flex-shrink:0;">💬</div>
             <div>
               <div style="font-size:0.78rem; font-weight:700; color:var(--text-muted); text-transform:uppercase; letter-spacing:0.1em; margin-bottom:4px;">LINE 官方帳號</div>
-              <div style="font-size:1rem; font-weight:700; color:var(--navy-dark);">加入官方帳號諮詢</div>
+              <a id="lineLink" href="#" style="font-size:1rem; font-weight:700; color:var(--navy-dark); text-decoration:none;">加入官方帳號諮詢</a>
               <div style="font-size:0.78rem; color:var(--text-muted); margin-top:4px;">即時線上回覆</div>
             </div>
           </div>
@@ -269,12 +269,34 @@
 
 
 
+<!-- LINE QR Code 放大 Modal -->
+<div id="qrModal" onclick="closeQrModal()" style="display:none; position:fixed; inset:0; background:rgba(0,0,0,0.6); z-index:9999; align-items:center; justify-content:center; cursor:pointer;">
+  <div onclick="event.stopPropagation()" style="background:#fff; border-radius:16px; padding:32px; text-align:center; max-width:340px; width:90%; position:relative;">
+    <button onclick="closeQrModal()" style="position:absolute; top:12px; right:16px; background:none; border:none; font-size:1.3rem; cursor:pointer; color:#888;">✕</button>
+    <div style="font-size:0.8rem; color:#666; margin-bottom:12px; font-weight:600;">掃描加入 LINE 官方帳號</div>
+    <img id="qrModalImg" src="" alt="LINE QR Code" style="width:220px; height:220px; object-fit:contain; border-radius:8px;">
+    <div id="qrModalLink" style="margin-top:14px; display:none;">
+      <a id="qrModalAnchor" href="#" target="_blank" rel="noopener"
+        style="display:inline-block; background:#06C755; color:#fff; padding:10px 24px; border-radius:100px; font-weight:700; font-size:0.88rem; text-decoration:none;">
+        開啟 LINE 加入好友
+      </a>
+    </div>
+  </div>
+</div>
+
 <script>
 window.addEventListener('scroll', () => {
   document.getElementById('navbar').classList.toggle('scrolled', window.scrollY > 20);
 });
 function toggleMenu() {
   document.getElementById('navMenu').classList.toggle('open');
+}
+function openQrModal() {
+  var modal = document.getElementById('qrModal');
+  modal.style.display = 'flex';
+}
+function closeQrModal() {
+  document.getElementById('qrModal').style.display = 'none';
 }
 function submitForm(e) {
   e.preventDefault();
@@ -304,12 +326,14 @@ function submitForm(e) {
   } catch(err) {}
 
   // 成功提示
-  const btn = form.querySelector('button[type=submit]');
+  const btn = form.querySelector('[type=submit]');
   btn.innerHTML = '✓ 已送出！我們將盡快與您聯繫';
   btn.style.background = '#16A34A';
   btn.disabled = true;
   form.querySelectorAll('input, textarea, select').forEach(function(el){ el.disabled = true; });
 }
+
 </script>
+<script src="contact-info.js"></script>
 </body>
 </html>

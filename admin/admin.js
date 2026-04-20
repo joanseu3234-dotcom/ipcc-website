@@ -190,30 +190,82 @@ function getContacts() {
 }
 function saveContacts(arr) { localStorage.setItem('ipcc_contacts', JSON.stringify(arr)); }
 
-// 加入 contacts 到權限對照
-if (typeof PAGE_PERMS !== 'undefined') { PAGE_PERMS['contacts-manage.html'] = 'contacts'; }
+// --- Contact Config (0800 / LINE / 1111) ---
+function getContactConfig() {
+  // 優先讀 localStorage（本機瀏覽器已儲存的值）
+  try {
+    var c = JSON.parse(localStorage.getItem('ipcc_contact_config') || 'null');
+    if (c) return c;
+  } catch(e) {}
+  // 次優先讀靜態部署檔 contact-config.js（跨瀏覽器、跨裝置）
+  if (window.IPCC_CONTACT_CONFIG) return window.IPCC_CONTACT_CONFIG;
+  return {
+    phone0800: '0800-666-080',
+    phoneHours: '週一至週五 09:00 - 18:00',
+    lineUrl: '',
+    lineQrImage: '',
+    recruitUrl: 'https://www.1111.com.tw/corp/8563'
+  };
+}
+function saveContactConfig(obj) {
+  localStorage.setItem('ipcc_contact_config', JSON.stringify(obj));
+  // 同步更新靜態設定檔（需本機 deploy-server.js 運行中）
+  fetch('http://localhost:9393/save-contact-config', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(obj)
+  }).catch(function() {}); // 若 server 未啟動，靜默略過
+}
+
+// 加入 contacts / contact-config 到權限對照
+if (typeof PAGE_PERMS !== 'undefined') {
+  PAGE_PERMS['contacts-manage.html'] = 'contacts';
+  PAGE_PERMS['contact-config.html'] = 'settings';
+}
 
 
 // ===================================================
-// 發布上線 — 推送 content-data.js 到 GitHub，觸發 Zeabur 重新部署
+// IndexedDB helpers（共用，供發布與帳號同步使用）
 // ===================================================
+function _openAdminIDB() {
+  return new Promise(function(resolve, reject) {
+    var req = indexedDB.open('ipcc_admin_fs', 1);
+    req.onupgradeneeded = function(e) { e.target.result.createObjectStore('handles'); };
+    req.onsuccess = function(e) { resolve(e.target.result); };
+    req.onerror = function() { reject(); };
+  });
+}
+function _idbGet(db, key) {
+  return new Promise(function(resolve) {
+    var req = db.transaction('handles','readonly').objectStore('handles').get(key);
+    req.onsuccess = function() { resolve(req.result||null); };
+    req.onerror = function() { resolve(null); };
+  });
+}
+function _idbSet(db, key, val) {
+  return new Promise(function(resolve) {
+    var tx = db.transaction('handles','readwrite');
+    tx.objectStore('handles').put(val, key);
+    tx.oncomplete = resolve; tx.onerror = resolve;
+  });
+}
 
+// ===================================================
+// 發布上線 — 真正將內容寫入 content-data.js
+// ===================================================
 // 產生 content-data.js 的完整內容
 function generateContentData() {
   var ts = Date.now();
   var published = new Date().toLocaleString('zh-TW', {timeZone:'Asia/Taipei', hour12:false});
   var data = { __ts: ts, __published: published };
-  // 收集 localStorage 中所有 ipcc_ 內容（排除帳號與時間戳）
   Object.keys(localStorage).forEach(function(key) {
     if (key.indexOf('ipcc_') === 0 && key !== 'ipcc_users' && key !== 'ipcc_deploy_ts') {
       try { data[key] = JSON.parse(localStorage.getItem(key)); } catch(e) {}
     }
   });
-  // content-data.js 本體：儲存資料 + 自動同步邏輯
   return '// IPCC 內容資料 — 由後台管理系統自動產生，請勿手動修改\n'
     + '// 最後發布：' + published + '\n\n'
     + 'window.IPCC_CONTENT_DATA = ' + JSON.stringify(data, null, 2) + ';\n\n'
-    + '// 自動將已部署的內容同步到此瀏覽器的 localStorage\n'
     + '(function(){\n'
     + '  if (!window.IPCC_CONTENT_DATA) return;\n'
     + '  var deployTs = window.IPCC_CONTENT_DATA.__ts || 0;\n'
@@ -229,190 +281,125 @@ function generateContentData() {
     + '})();\n';
 }
 
-// 寫入 content-data.js 到本機資料夾
 function makeUsersConfigContent(users) {
   var frontendUrl = window.IPCC_FRONTEND_URL || 'https://ipcc.zeabur.app';
-  // 嵌入部署設定（非敏感資訊），讓任何電腦打開後台都能自動讀到
-  var zeaburHook = localStorage.getItem('ipcc_zeabur_hook') || (window.IPCC_ZEABUR_HOOK || '');
-  var ghRepo     = localStorage.getItem('ipcc_github_repo')   || (window.IPCC_GITHUB_REPO || '');
-  var ghBranch   = localStorage.getItem('ipcc_github_branch') || (window.IPCC_GITHUB_BRANCH || 'main');
-  var lines = [
-    '// IPCC 後台用戶設定',
-    '// 此檔案由後台帳號管理自動產生，請勿手動修改',
-    '',
-    "window.IPCC_FRONTEND_URL = '" + frontendUrl + "';"
-  ];
-  if (ghRepo)     lines.push("window.IPCC_GITHUB_REPO   = '" + ghRepo + "';");
-  if (ghBranch)   lines.push("window.IPCC_GITHUB_BRANCH = '" + ghBranch + "';");
-  if (zeaburHook) lines.push("window.IPCC_ZEABUR_HOOK   = '" + zeaburHook.replace(/'/g,"\\'") + "';");
-  lines.push('');
-  lines.push('window.IPCC_USERS_CONFIG = ' + JSON.stringify(users, null, 2) + ';');
-  return lines.join('\n') + '\n';
+  var repo   = window.IPCC_GITHUB_REPO   || '';
+  var branch = window.IPCC_GITHUB_BRANCH || 'main';
+  return '// IPCC 後台用戶設定\n// 此檔案由後台帳號管理自動產生，請勿手動修改\n\n'
+    + "window.IPCC_FRONTEND_URL = '" + frontendUrl + "';\n"
+    + "window.IPCC_GITHUB_REPO   = '" + repo   + "';\n"
+    + "window.IPCC_GITHUB_BRANCH = '" + branch + "';\n\n"
+    + 'window.IPCC_USERS_CONFIG = ' + JSON.stringify(users, null, 2) + ';\n';
+}
+
+function makeContactConfigContent(cfg) {
+  return '// IPCC 聯絡資訊設定（靜態預設值）\n'
+    + '// 此檔案由後台「聯絡資訊設定」頁面儲存時自動更新\n\n'
+    + 'window.IPCC_CONTACT_CONFIG = ' + JSON.stringify(cfg, null, 2) + ';\n';
+}
+
+// ── GitHub API 發布核心 ─────────────────────────────
+async function _githubUpdateFile(token, repo, branch, path, content, commitMsg) {
+  var apiUrl = 'https://api.github.com/repos/' + repo + '/contents/' + path;
+  var headers = {
+    'Authorization': 'Bearer ' + token,
+    'Accept': 'application/vnd.github+json',
+    'Content-Type': 'application/json'
+  };
+  // 取得現有檔案的 SHA（更新時需要）
+  var sha = null;
+  try {
+    var r = await fetch(apiUrl + '?ref=' + branch, { headers: headers });
+    if (r.ok) { var d = await r.json(); sha = d.sha; }
+  } catch(e) {}
+
+  var body = {
+    message: commitMsg,
+    content: btoa(unescape(encodeURIComponent(content))),
+    branch: branch
+  };
+  if (sha) body.sha = sha;
+
+  var res = await fetch(apiUrl, {
+    method: 'PUT',
+    headers: headers,
+    body: JSON.stringify(body)
+  });
+  if (!res.ok) {
+    var err = await res.json().catch(function(){ return {}; });
+    throw new Error((err.message || res.status) + ' (' + path + ')');
+  }
 }
 
 // 主發布函式（點「🚀 發布上線」時呼叫）
 async function publishToLive() {
-  var token  = localStorage.getItem('ipcc_github_token');
-  var repo   = localStorage.getItem('ipcc_github_repo') || (window.IPCC_GITHUB_REPO || '');
+  var token  = localStorage.getItem('ipcc_github_token') || '';
+  var repo   = (window.IPCC_GITHUB_REPO   || '').trim();
+  var branch = (window.IPCC_GITHUB_BRANCH || 'main').trim();
 
-  // GitHub 未設定 → 引導去設定頁
+  // 尚未設定 Token → 引導到系統設定
   if (!token || !repo) {
-    if (confirm('尚未設定一鍵部署。\n\n點「確定」前往「系統設定」完成設定\n（只需設定一次，之後每台電腦都能直接按火箭發布）')) {
-      window.location.href = 'settings.html';
-    }
+    showPublishToast('請先到「⚙️ 系統設定」填入 GitHub Token，才能一鍵發布。', 'warn');
+    setTimeout(function(){ location.href = 'settings.html'; }, 2000);
     return;
   }
 
-  var btn = document.getElementById('ipcc-publish-btn');
-  if (btn) { btn.disabled = true; btn.textContent = '⏳ 發布中...'; }
+  showPublishToast('⏳ 正在發布，請稍候...', '');
 
-  var contentJs = generateContentData();
-  showPublishToast('⏳ 正在推送到 GitHub...', 'pending', true);
+  var ts = new Date().toLocaleString('zh-TW', {timeZone:'Asia/Taipei', hour12:false});
+  var commitMsg = '🔄 後台發布：' + ts;
 
-  var result = await _tryGitHubDeploy(contentJs);
-
-  if (btn) { btn.disabled = false; _updatePublishBtn(); }
-
-  if (result === true) {
-    var ts = new Date().toLocaleString('zh-TW', {timeZone:'Asia/Taipei', hour12:false});
-    showPublishToast('✅ 發布完成！\nGitHub 已更新，官網約 2 分鐘後自動生效\n時間：' + ts, 'success');
-  } else if (result === false) {
-    showPublishToast('❌ GitHub 推送失敗\n請到「系統設定」確認 Token 是否有效（可點「測試 GitHub 連線」）', '');
-  } else {
-    showPublishToast('⚠️ GitHub 設定不完整，請到「系統設定」補填 Repository 或 Token', '');
-  }
-}
-
-// ── GitHub API：推檔案到 GitHub ──
-async function _ghPushFile(repo, branch, token, filePath, fileContent) {
-  var apiUrl = 'https://api.github.com/repos/' + repo + '/contents/' + filePath;
-  var headers = {
-    'Authorization': 'token ' + token,
-    'Accept':        'application/vnd.github.v3+json',
-    'Content-Type':  'application/json'
-  };
-  var sha = null;
   try {
-    var headRes = await fetch(apiUrl + '?ref=' + branch, { headers: headers });
-    if (headRes.ok) { var info = await headRes.json(); sha = info.sha; }
-  } catch(e) {}
-  var b64 = btoa(unescape(encodeURIComponent(fileContent)));
-  var ts  = new Date().toISOString().slice(0, 16).replace('T', ' ');
-  var body = { message: 'content: update ' + filePath + ' via admin ' + ts, content: b64, branch: branch };
-  if (sha) body.sha = sha;
-  var res = await fetch(apiUrl, { method: 'PUT', headers: headers, body: JSON.stringify(body) });
-  return res.ok;
-}
+    // 1. content-data.js（所有文章/案例/首頁內容）
+    await _githubUpdateFile(token, repo, branch, 'content-data.js', generateContentData(), commitMsg);
 
-// ── Zeabur Deploy Hook：推送後觸發重新部署 ──
-// 回傳：true=成功，false=失敗，null=未設定
-async function _triggerZeaburDeploy() {
-  var hookUrl = localStorage.getItem('ipcc_zeabur_hook') || (window.IPCC_ZEABUR_HOOK || '');
-  if (!hookUrl) return null;
-  try {
-    var res = await fetch(hookUrl, { method: 'POST' });
-    // Zeabur hook 成功通常回 200/204
-    return res.ok || res.status === 200 || res.status === 204;
+    // 2. admin/users-config.js（帳號）
+    await _githubUpdateFile(token, repo, branch, 'admin/users-config.js', makeUsersConfigContent(getUsers()), commitMsg);
+
+    // 3. contact-config.js（聯絡資訊）
+    var contactCfg = getContactConfig();
+    await _githubUpdateFile(token, repo, branch, 'contact-config.js', makeContactConfigContent(contactCfg), commitMsg);
+
+    showPublishToast('✅ 發布成功！Zeabur 正在自動部署，約 1-2 分鐘後前台即更新。\n發布時間：' + ts, 'success');
   } catch(e) {
-    return false;
-  }
-}
-
-// ── 主流程：推 content-data.js + users-config.js 到 GitHub，再觸發 Zeabur ──
-// 回傳：true=成功，false=失敗，null=未設定（GitHub token/repo 未填）
-async function _tryGitHubDeploy(content) {
-  // 清除 token 中可能夾帶的非 ASCII 字元（複製貼上時常見問題）
-  var token  = (localStorage.getItem('ipcc_github_token') || '').replace(/[^\x20-\x7E]/g, '').trim();
-  var repo   = (localStorage.getItem('ipcc_github_repo')   || (window.IPCC_GITHUB_REPO || '')).trim();
-  var branch = (localStorage.getItem('ipcc_github_branch') || (window.IPCC_GITHUB_BRANCH || 'main')).trim();
-  if (!token || !repo) return null;
-
-  try {
-    // 1. 推 content-data.js
-    var ok = await _ghPushFile(repo, branch, token, 'content-data.js', content);
-    if (!ok) return false;
-
-    // 2. 同時推 admin/users-config.js（嵌入 hook URL 與 repo，讓其他電腦自動讀到）
-    try {
-      var usersJs = makeUsersConfigContent(getUsers());
-      await _ghPushFile(repo, branch, token, 'admin/users-config.js', usersJs);
-    } catch(e) { /* 非致命，繼續 */ }
-
-    // 3. 觸發 Zeabur 重新部署
-    var zeaburResult = await _triggerZeaburDeploy();
-    // zeaburResult = null 表示未設定 hook，不影響成功狀態
-
-    return true;
-  } catch(e) {
-    return false;
+    showPublishToast('❌ 發布失敗：' + e.message + '\n請確認 GitHub Token 是否正確或已過期。', 'error');
   }
 }
 
 function _updatePublishBtn() {
   var btn = document.getElementById('ipcc-publish-btn');
   if (!btn) return;
-  var hasToken = !!localStorage.getItem('ipcc_github_token');
-  var hasRepo  = !!(localStorage.getItem('ipcc_github_repo') || window.IPCC_GITHUB_REPO);
-  var hasHook  = !!(localStorage.getItem('ipcc_zeabur_hook') || window.IPCC_ZEABUR_HOOK);
-
-  if (hasToken && hasRepo) {
+  var token = localStorage.getItem('ipcc_github_token') || '';
+  if (token) {
     btn.textContent = '🚀 發布上線';
     btn.style.background = 'linear-gradient(135deg,#CE0000,#8B0000)';
-    btn.title = '推送內容到 GitHub，約 2 分鐘後官網自動更新';
+    btn.title = '一鍵推送到 GitHub，Zeabur 自動部署';
   } else {
-    btn.textContent = '⚙️ 設定一鍵部署';
+    btn.textContent = '⚙️ 設定後可一鍵發布';
     btn.style.background = 'linear-gradient(135deg,#D97706,#92400E)';
-    btn.title = '點此進入系統設定，完成 GitHub 設定後即可一鍵發布';
+    btn.title = '請先到系統設定填入 GitHub Token';
   }
 }
 
-function showPublishToast(msg, type, persistent) {
+function showPublishToast(msg, type) {
   var el = document.getElementById('ipcc-publish-toast');
   if (!el) {
     el = document.createElement('div');
     el.id = 'ipcc-publish-toast';
     el.style.cssText = 'position:fixed;bottom:28px;left:50%;transform:translateX(-50%);'
-      + 'background:#1E2A5E;color:#fff;padding:14px 24px;border-radius:12px;'
+      + 'color:#fff;padding:14px 24px;border-radius:12px;white-space:pre-line;'
       + 'font-size:0.88rem;max-width:520px;text-align:center;z-index:99999;'
-      + 'box-shadow:0 4px 24px rgba(0,0,0,0.25);line-height:1.7;white-space:pre-line;';
+      + 'box-shadow:0 4px 24px rgba(0,0,0,0.25);line-height:1.6;';
     document.body.appendChild(el);
   }
-  if (type === 'success') el.style.background = '#15803D';
-  else if (type === 'pending') el.style.background = '#B45309';
-  else el.style.background = '#1E2A5E';
+  var bg = { success: '#15803D', error: '#B91C1C', warn: '#D97706' };
+  el.style.background = bg[type] || '#1E2A5E';
   el.textContent = msg;
   el.style.display = 'block'; el.style.opacity = '1';
   clearTimeout(el._t);
-  if (!persistent) {
-    el._t = setTimeout(function(){ el.style.opacity='0'; setTimeout(function(){ el.style.display='none'; },400); }, 8000);
-  }
+  var delay = (type === 'success' || !type) ? 7000 : 10000;
+  el._t = setTimeout(function(){ el.style.opacity='0'; setTimeout(function(){ el.style.display='none'; },400); }, delay);
 }
-
-// 偵測是否從本機 file:// 開啟 → 顯示警告橫幅
-(function checkFileProtocol() {
-  if (window.location.protocol !== 'file:') return;
-  function injectBanner() {
-    if (document.getElementById('ipcc-file-warning')) return;
-    var bar = document.createElement('div');
-    bar.id = 'ipcc-file-warning';
-    bar.style.cssText = 'position:fixed;top:0;left:0;right:0;z-index:99999;'
-      + 'background:#DC2626;color:#fff;padding:10px 20px;'
-      + 'font-size:0.85rem;font-weight:600;text-align:center;line-height:1.5;'
-      + 'box-shadow:0 2px 8px rgba(0,0,0,0.4);';
-    bar.innerHTML = '⚠️ 你正在從本機直接開啟後台，儲存的資料<b>不會同步</b>到官網。'
-      + '　請改由 <a href="https://ipcc.zeabur.app/admin/" target="_blank"'
-      + ' style="color:#FDE68A;text-decoration:underline;">https://ipcc.zeabur.app/admin/</a> 開啟後台。';
-    document.body.insertBefore(bar, document.body.firstChild);
-    // 推高 admin-layout 以免被遮住
-    var layout = document.querySelector('.admin-layout');
-    if (layout) layout.style.marginTop = '44px';
-  }
-  if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', injectBanner);
-  } else {
-    injectBanner();
-  }
-})();
 
 // 自動在 sidebar footer 注入「發布上線」按鈕
 (function injectPublishBtn() {
@@ -421,6 +408,7 @@ function showPublishToast(msg, type, persistent) {
     if (!footer || document.getElementById('ipcc-publish-btn')) return;
     var btn = document.createElement('button');
     btn.id = 'ipcc-publish-btn';
+    btn.textContent = '🔗 設定發布資料夾';
     btn.style.cssText = 'width:100%;padding:10px;background:linear-gradient(135deg,#D97706,#92400E);'
       + 'color:#fff;border:none;border-radius:8px;font-size:0.88rem;font-weight:700;'
       + 'cursor:pointer;margin-top:10px;font-family:inherit;transition:opacity 0.2s;';
@@ -428,7 +416,6 @@ function showPublishToast(msg, type, persistent) {
     btn.onmouseout  = function(){ this.style.opacity='1'; };
     btn.onclick = function(){ publishToLive(); };
     footer.appendChild(btn);
-    // 根據 GitHub 設定狀態更新按鈕外觀
     _updatePublishBtn();
   }
   if (document.readyState === 'loading') {

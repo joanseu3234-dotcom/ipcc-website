@@ -376,20 +376,20 @@
     </p>
 
     <div class="cta-channels">
-      <a href="tel:0800666080" class="cta-channel">
+      <a href="tel:0800666080" class="cta-channel" id="ctaPhone">
         <div class="cta-channel-icon phone">📞</div>
         <div class="cta-channel-info">
           <div class="cta-channel-label">免付費專線</div>
-          <div class="cta-channel-value">0800-666-080</div>
+          <div class="cta-channel-value" id="ctaPhoneValue">0800-666-080</div>
         </div>
       </a>
-      <div class="cta-channel">
+      <a href="#" class="cta-channel" id="ctaLine" onclick="openIdxQrModal(event)" style="text-decoration:none; cursor:pointer;">
         <div class="cta-channel-icon line">💬</div>
         <div class="cta-channel-info">
           <div class="cta-channel-label">LINE 社群諮詢</div>
           <div class="cta-channel-value">加入官方帳號</div>
         </div>
-      </div>
+      </a>
     </div>
 
     <a href="contact.html" class="btn btn-primary" style="font-size:1rem; padding:16px 40px;">立即免費諮詢</a>
@@ -582,5 +582,30 @@ if (aboutStats) aboutObserver.observe(aboutStats);
   } catch(e) {}
 })();
 </script>
+
+<!-- LINE QR Code 放大 Modal（首頁） -->
+<div id="idxQrModal" onclick="closeIdxQrModal()" style="display:none; position:fixed; inset:0; background:rgba(0,0,0,0.6); z-index:9999; align-items:center; justify-content:center; cursor:pointer;">
+  <div onclick="event.stopPropagation()" style="background:#fff; border-radius:16px; padding:32px; text-align:center; max-width:340px; width:90%; position:relative;">
+    <button onclick="closeIdxQrModal()" style="position:absolute; top:12px; right:16px; background:none; border:none; font-size:1.3rem; cursor:pointer; color:#888;">✕</button>
+    <div style="font-size:0.85rem; color:#444; margin-bottom:12px; font-weight:600;">掃描加入 LINE 官方帳號</div>
+    <img id="idxQrModalImg" src="" alt="LINE QR Code" style="width:220px; height:220px; object-fit:contain; border-radius:8px;">
+    <div id="idxQrModalLink" style="margin-top:14px; display:none;">
+      <a id="idxQrModalAnchor" href="#" target="_blank" rel="noopener"
+        style="display:inline-block; background:#06C755; color:#fff; padding:10px 24px; border-radius:100px; font-weight:700; font-size:0.88rem; text-decoration:none;">
+        開啟 LINE 加入好友
+      </a>
+    </div>
+  </div>
+</div>
+<script>
+function openIdxQrModal(e) {
+  var qrImg = document.getElementById('idxQrModalImg');
+  if (!qrImg || !qrImg.src || qrImg.src === window.location.href + '#') return; // 無 QR 時不開 modal
+  if (e) e.preventDefault();
+  document.getElementById('idxQrModal').style.display = 'flex';
+}
+function closeIdxQrModal() { document.getElementById('idxQrModal').style.display = 'none'; }
+</script>
+<script src="contact-info.js"></script>
 </body>
 </html>

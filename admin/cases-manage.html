@@ -52,6 +52,7 @@
       <a href="services-manage.html" class="nav-item" data-perm="services">🛠 專案服務</a>
       <a href="cases-manage.html" class="nav-item active" data-perm="cases">🏆 成功案例</a>
       <a href="contacts-manage.html" class="nav-item" data-perm="contacts">📋 聯絡表單</a>
+      <a href="contact-config.html" class="nav-item" data-perm="settings">📱 聯絡資訊設定</a>
       <a href="settings.html" class="nav-item" data-perm="settings">⚙️ 系統設定</a>
       <a href="users-manage.html" class="nav-item" data-perm="users">👥 帳號管理</a>
     </nav>
@@ -179,19 +180,12 @@
         <div style="font-size:0.72rem;color:var(--text-sub);margin-top:4px;">從專案服務勾選，或在下方輸入自訂標籤</div>
       </div>
       <div class="form-group">
-        <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:4px;">
-          <label class="form-label" style="margin:0;">面臨問題</label>
-          <button type="button" class="btn-outline btn-sm" onclick="insertLink('fChallenge')" title="在游標位置插入超連結語法 [文字](網址)">🔗 插入連結</button>
-        </div>
+        <label class="form-label">面臨問題</label>
         <textarea class="form-textarea" id="fChallenge" rows="3" placeholder="客戶面臨的挑戰或問題..."></textarea>
       </div>
       <div class="form-group">
-        <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:4px;">
-          <label class="form-label" style="margin:0;">解決方案</label>
-          <button type="button" class="btn-outline btn-sm" onclick="insertLink('fSolution')" title="在游標位置插入超連結語法 [文字](網址)">🔗 插入連結</button>
-        </div>
+        <label class="form-label">解決方案</label>
         <textarea class="form-textarea" id="fSolution" rows="3" placeholder="我們提供的解決方案..."></textarea>
-        <div style="font-size:0.72rem; color:var(--text-sub); margin-top:4px;">提示：可用 <code style="background:#F3F4F6; padding:1px 4px; border-radius:3px;">[顯示文字](https://網址)</code> 格式插入超連結，前台將自動轉換為可點擊連結。</div>
       </div>
       <div class="form-group">
         <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:4px;">
@@ -405,20 +399,6 @@ function getSelectedTags() {
     custom.split(',').forEach(function(t){ var tt = t.trim(); if (tt) tags.push(tt); });
   }
   return tags;
-}
-
-// ── 插入超連結語法 [文字](網址) ──────────────────────────────
-function insertLink(taId) {
-  var ta = document.getElementById(taId);
-  var start = ta.selectionStart;
-  var end = ta.selectionEnd;
-  var selected = ta.value.substring(start, end) || '連結文字';
-  var url = prompt('請輸入連結網址：', 'https://');
-  if (!url || url === 'https://') return;
-  var link = '[' + selected + '](' + url + ')';
-  ta.value = ta.value.substring(0, start) + link + ta.value.substring(end);
-  ta.focus();
-  ta.selectionStart = ta.selectionEnd = start + link.length;
 }
 
 // ── Modal open/close ──────────────────────────────────────────

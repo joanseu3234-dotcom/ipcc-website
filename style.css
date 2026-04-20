@@ -936,6 +936,11 @@ img { max-width: 100%; display: block; }
 .timeline-content {
   padding: 24px; background: var(--white); border: 1px solid var(--border);
   border-radius: var(--radius); box-shadow: var(--shadow-sm);
+  transition: transform 0.28s ease, box-shadow 0.28s ease;
+}
+.timeline-content:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 16px 40px rgba(0,0,0,0.08), 0 8px 24px rgba(200,22,29,0.25);
 }
 .timeline-item:nth-child(even) .timeline-content:first-child { order: 2; }
 .timeline-item:nth-child(even) .timeline-content:last-child  { order: 1; }
