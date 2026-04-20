@@ -1,9 +1,9 @@
 // IPCC 內容資料 — 由後台管理系統自動產生，請勿手動修改
-// 最後發布：2026/4/20 11:56:33
+// 最後發布：2026/4/20 14:09:56
 
 window.IPCC_CONTENT_DATA = {
-  "__ts": 1776657393396,
-  "__published": "2026/4/20 11:56:33",
+  "__ts": 1776665396014,
+  "__published": "2026/4/20 14:09:56",
   "ipcc_news": [
     {
       "tab": "media",
@@ -60,6 +60,12 @@ window.IPCC_CONTENT_DATA = {
       "createdAt": 1776320701647
     }
   ],
+  "ipcc_contact_config": {
+    "phone0800": "0800-666-080",
+    "phoneHours": "週一至週五 09:00 - 18:00",
+    "lineUrl": "https://lin.ee/rp9TNMU",
+    "recruitUrl": "https://www.1111.com.tw/corp/8563"
+  },
   "ipcc_about_main": {
     "para1": "在數位時代之前，我們從「系統」開始。<br>在服務競爭時代，我們走向「人與體驗」。",
     "para2": "東州互聯網實業有限公司成立於 1996 年，初期以資訊系統整合為核心，參與醫療體系電腦化建置，並於 1998 年與中華電信合作，投入 HINET 客服中心營運，正式跨入資訊服務與顧客服務領域。",
@@ -260,7 +266,6 @@ window.IPCC_CONTENT_DATA = {
   }
 };
 
-// 自動將已部署的內容同步到此瀏覽器的 localStorage
 (function(){
   if (!window.IPCC_CONTENT_DATA) return;
   var deployTs = window.IPCC_CONTENT_DATA.__ts || 0;
