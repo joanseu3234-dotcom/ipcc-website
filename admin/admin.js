@@ -274,7 +274,8 @@ function generateContentData() {
   var data = { __ts: ts, __published: published };
   Object.keys(localStorage).forEach(function(key) {
     if (key.indexOf('ipcc_') === 0 && key !== 'ipcc_users' && key !== 'ipcc_deploy_ts') {
-      try { data[key] = JSON.parse(localStorage.getItem(key)); } catch(e) {}
+      var raw = localStorage.getItem(key);
+      try { data[key] = JSON.parse(raw); } catch(e) { data[key] = raw; }
     }
   });
   return '// IPCC 內容資料 — 由後台管理系統自動產生，請勿手動修改\n'
@@ -287,7 +288,8 @@ function generateContentData() {
     + '  if (deployTs > localTs) {\n'
     + '    Object.keys(window.IPCC_CONTENT_DATA).forEach(function(key) {\n'
     + '      if (key.indexOf(\'ipcc_\') === 0) {\n'
-    + '        localStorage.setItem(key, JSON.stringify(window.IPCC_CONTENT_DATA[key]));\n'
+    + '        var v = window.IPCC_CONTENT_DATA[key];\n'
+    + '        localStorage.setItem(key, typeof v === "string" ? v : JSON.stringify(v));\n'
     + '      }\n'
     + '    });\n'
     + '    localStorage.setItem(\'ipcc_deploy_ts\', String(deployTs));\n'
