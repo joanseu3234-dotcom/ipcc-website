@@ -1,6 +1,20 @@
 // IPCC Admin Panel - Shared Utilities
 // =====================================
 
+// 若 localStorage 沒有文章資料（新瀏覽器 / 被清空），自動從 content-data.js 還原
+(function() {
+  if (!localStorage.getItem('ipcc_news') && !localStorage.getItem('ipcc_cases')) {
+    try {
+      var xhr = new XMLHttpRequest();
+      xhr.open('GET', '../content-data.js', false); // 同步載入
+      xhr.send();
+      if (xhr.status === 200) {
+        new Function(xhr.responseText)();
+      }
+    } catch(e) {}
+  }
+})();
+
 // --- Auth ---
 function requireLogin() {
   if (!sessionStorage.getItem("ipcc_admin_logged")) {
