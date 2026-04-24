@@ -282,9 +282,6 @@ function generateContentData() {
       try { data[key] = JSON.parse(raw); } catch(e) { data[key] = raw; }
     }
   });
-  // Token 以 base64 編碼存入，避免觸發 Secret Scanning，同時讓新瀏覽器能自動還原
-  var tok = localStorage.getItem('ipcc_github_token') || '';
-  if (tok) { try { data['_k'] = btoa(tok); } catch(e) {} }
 
   return '// IPCC 內容資料 — 由後台管理系統自動產生，請勿手動修改\n'
     + '// 最後發布：' + published + '\n\n'
@@ -302,12 +299,6 @@ function generateContentData() {
     + '    });\n'
     + '    localStorage.setItem(\'ipcc_deploy_ts\', String(deployTs));\n'
     + '  }\n'
-    + '  // 無論 deploy 版本新舊，只要 Token 遺失就從備份還原\n'
-    + '  try {\n'
-    + '    if (window.IPCC_CONTENT_DATA._k && !localStorage.getItem(\'ipcc_github_token\')) {\n'
-    + '      localStorage.setItem(\'ipcc_github_token\', atob(window.IPCC_CONTENT_DATA._k));\n'
-    + '    }\n'
-    + '  } catch(e) {}\n'
     + '})();\n';
 }
 
