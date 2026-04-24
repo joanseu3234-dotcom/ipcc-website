@@ -1,7 +1,7 @@
 // IPCC 後台用戶設定
 // 此檔案由後台帳號管理自動產生，請勿手動修改
 
-window.IPCC_FRONTEND_URL = 'https://ipcc.zeabur.app';
+window.IPCC_FRONTEND_URL  = 'https://ipcc.zeabur.app';
 window.IPCC_GITHUB_REPO   = 'joanseu3234-dotcom/ipcc-website';
 window.IPCC_GITHUB_BRANCH = 'main';
 
