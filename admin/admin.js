@@ -1,10 +1,27 @@
 // IPCC Admin Panel - Shared Utilities
 // =====================================
 
+// Token 讀寫 helper（localStorage + Cookie 雙重備援，避免重啟後遺失）
+function _getGhToken() {
+  var t = (localStorage.getItem('ipcc_github_token') || '').trim();
+  if (!t) {
+    var m = document.cookie.match(/(?:^|;\s*)igt=([^;]+)/);
+    if (m) {
+      t = decodeURIComponent(m[1]).trim();
+      if (t) localStorage.setItem('ipcc_github_token', t);
+    }
+  }
+  return t;
+}
+function _saveGhToken(val) {
+  localStorage.setItem('ipcc_github_token', val);
+  document.cookie = 'igt=' + encodeURIComponent(val) + '; max-age=31536000; path=/; SameSite=Strict';
+}
+
 // 若 localStorage 沒有文章資料或 Token，自動從 content-data.js 還原
 (function() {
   var needLoad = !localStorage.getItem('ipcc_news') && !localStorage.getItem('ipcc_cases');
-  var needToken = !localStorage.getItem('ipcc_github_token');
+  var needToken = !_getGhToken();
   if (needLoad || needToken) {
     try {
       var xhr = new XMLHttpRequest();
@@ -354,7 +371,7 @@ async function _githubUpdateFile(token, repo, branch, path, content, commitMsg) 
 
 // 主發布函式（點「🚀 發布上線」時呼叫）
 async function publishToLive() {
-  var token  = (window.IPCC_GITHUB_TOKEN || localStorage.getItem('ipcc_github_token') || '').trim();
+  var token  = _getGhToken();
   var repo   = (window.IPCC_GITHUB_REPO   || '').trim();
   var branch = (window.IPCC_GITHUB_BRANCH || 'main').trim();
 
@@ -390,7 +407,7 @@ async function publishToLive() {
 function _updatePublishBtn() {
   var btn = document.getElementById('ipcc-publish-btn');
   if (!btn) return;
-  var token = (window.IPCC_GITHUB_TOKEN || localStorage.getItem('ipcc_github_token') || '').trim();
+  var token = _getGhToken();
   if (token) {
     btn.textContent = '🚀 發布上線';
     btn.style.background = 'linear-gradient(135deg,#CE0000,#8B0000)';

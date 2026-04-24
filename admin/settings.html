@@ -133,14 +133,13 @@
 
     // ── GitHub Token ──────────────────────────────
     function loadGhTokenStatus() {
-      var token = (window.IPCC_GITHUB_TOKEN || localStorage.getItem('ipcc_github_token') || '').trim();
+      var token = _getGhToken();
       var el = document.getElementById('ghTokenStatus');
-      var src = window.IPCC_GITHUB_TOKEN ? '來自設定檔（已永久生效）' : '來自瀏覽器暫存';
       if (token) {
-        el.innerHTML = '<div class="alert alert-success">✅ Token 已設定（' + token.slice(0,8) + '...）—— ' + src + '</div>';
+        el.innerHTML = '<div class="alert alert-success">✅ Token 已設定（' + token.slice(0,8) + '...）</div>';
         document.getElementById('ghTokenInput').placeholder = '已設定，輸入新值可覆蓋';
       } else {
-        el.innerHTML = '<div class="alert" style="background:#FEF3C7;color:#92400E;border:1px solid #FDE68A;">⚠️ 尚未設定 Token。設定後請點「發布上線」一次，Token 即永久嵌入所有人都能使用。</div>';
+        el.innerHTML = '<div class="alert" style="background:#FEF3C7;color:#92400E;border:1px solid #FDE68A;">⚠️ 尚未設定 Token，發布上線功能無法使用。</div>';
       }
     }
     loadGhTokenStatus();
@@ -148,25 +147,24 @@
     function saveGhToken() {
       var val = document.getElementById('ghTokenInput').value.trim();
       if (!val) { alert('請輸入 Token'); return; }
-      localStorage.setItem('ipcc_github_token', val);
-      window.IPCC_GITHUB_TOKEN = val;
+      _saveGhToken(val);
       document.getElementById('ghTokenInput').value = '';
       loadGhTokenStatus();
       _updatePublishBtn();
-      document.getElementById('ghTestResult').innerHTML = '<div class="alert alert-success">✅ Token 已儲存！請點一次「發布上線」讓 Token 永久寫入設定檔，之後所有人登入後台都不需要重新設定。</div>';
+      document.getElementById('ghTestResult').innerHTML = '<div class="alert alert-success">✅ Token 已儲存，重新啟動電腦後也不需要重新輸入。</div>';
     }
 
     function clearGhToken() {
       if (!confirm('確定要清除 GitHub Token？清除後「發布上線」將無法使用。')) return;
       localStorage.removeItem('ipcc_github_token');
-      window.IPCC_GITHUB_TOKEN = '';
+      document.cookie = 'igt=; max-age=0; path=/';
       loadGhTokenStatus();
       _updatePublishBtn();
       document.getElementById('ghTestResult').innerHTML = '';
     }
 
     async function testGhToken() {
-      var token = (window.IPCC_GITHUB_TOKEN || localStorage.getItem('ipcc_github_token') || document.getElementById('ghTokenInput').value || '').trim();
+      var token = _getGhToken() || document.getElementById('ghTokenInput').value.trim();
       var repo  = (window.IPCC_GITHUB_REPO || '').trim();
       var el = document.getElementById('ghTestResult');
       if (!token) { el.innerHTML = '<div class="alert alert-error">請先輸入或儲存 Token</div>'; return; }
