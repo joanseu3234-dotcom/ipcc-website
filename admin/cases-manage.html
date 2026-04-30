@@ -357,13 +357,13 @@ function handleCaseImg(input) {
   reader.onload = function(e) {
     var img = new Image();
     img.onload = function() {
-      var MAX = 800;
+      var MAX = 1600;
       var w = img.width, h = img.height;
       if (w > MAX) { h = Math.round(h*MAX/w); w = MAX; }
       var canvas = document.createElement('canvas');
       canvas.width = w; canvas.height = h;
       canvas.getContext('2d').drawImage(img,0,0,w,h);
-      currentCaseImage = canvas.toDataURL('image/jpeg', 0.82);
+      currentCaseImage = canvas.toDataURL('image/jpeg', 0.92);
       document.getElementById('caseImgThumbWrap').innerHTML = '<img class="img-upload-preview" src="'+currentCaseImage+'">';
       document.getElementById('caseImgName').textContent = file.name;
       document.getElementById('caseImgClearBtn').style.display = '';
