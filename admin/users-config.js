@@ -4,7 +4,7 @@
 window.IPCC_FRONTEND_URL  = 'https://ipcc.zeabur.app';
 window.IPCC_GITHUB_REPO   = 'joanseu3234-dotcom/ipcc-website';
 window.IPCC_GITHUB_BRANCH = 'main';
-window.IPCC_GH_TOKEN_E    = '==gdKZDUBNTQhpVd4MVO1YUYj90N1BFSMJ1SMV1UqJ2TmBnRJN2Xwh2Z';
+window.IPCC_GH_TOKEN_E    = '==AURdDcIJTNyVnerdVZF5mc0c3ViRHVIBHMyRDRwM2Q0JHMLJ1Xwh2Z';
 
 window.IPCC_USERS_CONFIG = [
   {
@@ -23,7 +23,7 @@ window.IPCC_USERS_CONFIG = [
       "users": true
     },
     "createdAt": 1775951284136,
-    "lastLogin": 1777478407799
+    "lastLogin": 1777513938356
   },
   {
     "id": "mo01aonyqrv79",
