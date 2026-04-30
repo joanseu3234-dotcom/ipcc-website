@@ -8,8 +8,9 @@
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;600;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="admin.css">
 <style>
-  .filter-btn { padding:7px 16px; border:1.5px solid var(--border); border-radius:100px; font-size:0.82rem; font-weight:600; cursor:pointer; background:#fff; color:var(--text-sub); font-family:inherit; transition:all 0.2s; }
-  .filter-btn.active { background:var(--navy-dark); border-color:var(--navy-dark); color:#fff; }
+  .filter-btn { padding:7px 16px; border:1.5px solid var(--border); border-radius:100px; font-size:0.82rem; font-weight:600; cursor:pointer; background:transparent; color:var(--text-sub); font-family:inherit; transition:all 0.2s; }
+  .filter-btn:hover { border-color:rgba(0,200,255,0.4); color:#00C8FF; }
+  .filter-btn.active { background:rgba(0,200,255,0.12); border-color:rgba(0,200,255,0.5); color:#00C8FF; }
   /* news-manage 用大型置中上傳框 */
   .img-upload-box { padding:16px; text-align:center; position:relative; }
   .img-upload-box input[type=file] { position:absolute; inset:0; opacity:0; cursor:pointer; width:100%; height:100%; }
@@ -77,6 +78,7 @@
           <table class="data-table">
             <thead>
               <tr>
+                <th class="drag-handle-cell" title="拖曳調整順序">⇅</th>
                 <th style="width:70px;">圖片</th>
                 <th>標題</th>
                 <th>日期</th>
@@ -237,9 +239,9 @@
   var TAB_LABELS = { news:'最新消息', media:'媒體採訪', event:'活動' };
   var TAB_BADGE_CLASS = { news:'badge-news', media:'badge-news', event:'badge-news' };
   var TAB_BADGE_COLORS = {
-    news:  'background:rgba(30,42,94,0.1); color:#1E2A5E;',
-    media: 'background:rgba(59,130,246,0.1); color:#1D4ED8;',
-    event: 'background:rgba(16,185,129,0.1); color:#047857;'
+    news:  'background:rgba(0,200,255,0.1); color:#7DD9F8;',
+    media: 'background:rgba(99,179,237,0.1); color:#63B3ED;',
+    event: 'background:rgba(72,187,120,0.1); color:#68D391;'
   };
 
   // 填充相關案例下拉
@@ -320,26 +322,30 @@
     empty.style.display = 'none';
 
     var allCases = getCases();
-    tbody.innerHTML = items.slice().reverse().map(function(item) {
+    tbody.innerHTML = items.map(function(item) {
       var thumbHtml = item.image
         ? '<img class="thumb" src="' + item.image + '" alt="">'
         : '<div class="thumb-placeholder">🖼</div>';
       var caseLabel = '';
       if (item.relatedCaseId) {
         var c = allCases.find(function(c){ return c.id === item.relatedCaseId; });
-        caseLabel = c ? ('<span style="font-size:0.75rem; background:#EEF2FF; color:#4338CA; padding:2px 8px; border-radius:100px;">' + c.client + '</span>') : '—';
+        caseLabel = c ? ('<span style="font-size:0.75rem; background:rgba(0,200,255,0.1); color:#7DD9F8; padding:2px 8px; border-radius:100px;">' + c.client + '</span>') : '—';
       }
       var tabColor = TAB_BADGE_COLORS[item.tab] || '';
-      return '<tr>'
+      var pubStyle = item.published
+        ? 'background:rgba(72,187,120,0.12); color:#68D391;'
+        : 'background:rgba(80,80,80,0.2); color:var(--text-sub);';
+      return '<tr data-id="' + item.id + '" draggable="true">'
+        + '<td class="drag-handle-cell"><span class="drag-handle">⠿</span></td>'
         + '<td>' + thumbHtml + '</td>'
-        + '<td style="font-weight:600; max-width:240px;">'
+        + '<td style="font-weight:600; max-width:240px; color:#D0E0F4;">'
             + '<span style="font-size:0.72rem; padding:2px 8px; border-radius:100px; margin-right:6px; ' + tabColor + '">' + (item.badge||TAB_LABELS[item.tab]||'') + '</span>'
             + (item.title||'—')
           + '</td>'
         + '<td style="white-space:nowrap; font-size:0.82rem;">' + (item.date||'—') + '</td>'
         + '<td style="font-size:0.82rem;">' + (TAB_LABELS[item.tab]||'—') + '</td>'
-        + '<td>' + (caseLabel||'<span style="color:#ccc;">—</span>') + '</td>'
-        + '<td><span style="font-size:0.75rem; padding:3px 10px; border-radius:100px; ' + (item.published ? 'background:#D1FAE5; color:#065F46;' : 'background:#F3F4F6; color:#6B7280;') + '">' + (item.published ? '已發布' : '草稿') + '</span></td>'
+        + '<td>' + (caseLabel||'<span style="color:var(--text-sub);">—</span>') + '</td>'
+        + '<td><span style="font-size:0.75rem; padding:3px 10px; border-radius:100px; ' + pubStyle + '">' + (item.published ? '已發布' : '草稿') + '</span></td>'
         + '<td style="white-space:nowrap;">'
           + '<button class="btn-outline btn-sm" onclick="editItem(\'' + item.id + '\')">編輯</button> '
           + '<button class="btn-outline btn-sm" onclick="togglePublish(\'' + item.id + '\')">' + (item.published ? '下架' : '發布') + '</button> '
@@ -474,6 +480,7 @@
   }
 
   renderTable();
+  initTableDragSort('newsTableBody', getNews, saveNews, renderTable);
 </script>
 </body>
 </html>

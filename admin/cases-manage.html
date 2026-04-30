@@ -12,20 +12,20 @@
   .img-upload-box { padding:12px 16px; display:flex; align-items:center; gap:12px; }
   /* Tags grid */
   .tags-grid { display:flex; flex-wrap:wrap; gap:8px; margin-top:4px; }
-  .tag-check-item { display:flex; align-items:center; gap:6px; padding:6px 12px; border:1.5px solid var(--border); border-radius:100px; cursor:pointer; font-size:0.82rem; font-weight:600; transition:all 0.2s; background:#fff; }
+  .tag-check-item { display:flex; align-items:center; gap:6px; padding:6px 12px; border:1.5px solid var(--border); border-radius:100px; cursor:pointer; font-size:0.82rem; font-weight:600; transition:all 0.2s; background:rgba(0,0,0,0.2); color:var(--text-main); }
   .tag-check-item:hover { border-color:var(--navy); }
   .tag-check-item input[type=checkbox] { accent-color:var(--navy); width:14px; height:14px; cursor:pointer; }
-  .tag-check-item.checked { background:rgba(30,42,94,0.08); border-color:var(--navy); color:var(--navy); }
+  .tag-check-item.checked { background:rgba(0,200,255,0.1); border-color:var(--navy); color:var(--navy); }
   /* Stats grid */
   .stats-edit-grid { display:grid; grid-template-columns:1fr 1fr; gap:16px; }
-  .stat-edit-card { background:#FAFAF9; border:1.5px solid var(--border); border-radius:10px; padding:16px; }
+  .stat-edit-card { background:rgba(0,0,0,0.2); border:1.5px solid var(--border); border-radius:10px; padding:16px; }
   .stat-edit-card-label { font-size:0.72rem; font-weight:700; text-transform:uppercase; letter-spacing:0.08em; color:var(--text-sub); margin-bottom:10px; }
   .stat-edit-row { display:flex; gap:8px; align-items:center; }
   .stat-edit-row input { flex:1; }
   /* Partner logos */
   .logo-grid { display:grid; grid-template-columns:repeat(auto-fill, minmax(140px,1fr)); gap:12px; margin-top:8px; }
-  .logo-card { border:1.5px solid var(--border); border-radius:10px; overflow:hidden; background:#fff; position:relative; }
-  .logo-card img { width:100%; height:80px; object-fit:contain; display:block; padding:8px; background:#F8F9FA; }
+  .logo-card { border:1.5px solid var(--border); border-radius:10px; overflow:hidden; background:rgba(13,25,48,0.9); position:relative; }
+  .logo-card img { width:100%; height:80px; object-fit:contain; display:block; padding:8px; background:rgba(255,255,255,0.06); }
   .logo-card-body { padding:8px 10px; }
   .logo-card-name { font-size:0.78rem; font-weight:600; color:var(--text-main); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
   .logo-card-actions { display:flex; gap:4px; margin-top:6px; }
@@ -90,6 +90,7 @@
           <table class="data-table">
             <thead>
               <tr>
+                <th class="drag-handle-cell" title="拖曳調整順序">⇅</th>
                 <th style="width:60px;">圖片</th>
                 <th>公司</th>
                 <th>客戶名稱</th>
@@ -332,7 +333,8 @@ function renderTable() {
     var statusTxt = item.published ? "已發布" : "草稿";
     var toggleTxt = item.published ? "設為草稿" : "發布";
     var tags = (item.tags || []).slice(0,3).map(function(t){ return '<span class="badge badge-outsource" style="font-size:0.68rem;padding:2px 7px;">'+t+'</span>'; }).join('');
-    return '<tr>' +
+    return '<tr data-id="' + item.id + '" draggable="true">' +
+      '<td class="drag-handle-cell"><span class="drag-handle">⠿</span></td>' +
       '<td>' + (item.image ? '<img class="thumb" src="'+item.image+'">' : '<div class="thumb-placeholder">🏆</div>') + '</td>' +
       '<td><span class="badge ' + companyBadgeClass(co) + '">' + companyLabel(co) + '</span></td>' +
       '<td class="td-title">' + (item.client||"") + '</td>' +
@@ -727,6 +729,7 @@ if (new URLSearchParams(window.location.search).get("action") === "new") {
 renderTable();
 renderStatsEditor();
 renderLogoGrid();
+initTableDragSort('casesTableBody', getCases, saveCases, renderTable);
 </script>
 </body>
 </html>

@@ -478,3 +478,150 @@ function showPublishToast(msg, type) {
     doInject();
   }
 })();
+
+
+// ===================================================
+// 通訊網路動態背景
+// ===================================================
+function startNetBg() {
+  if (document.getElementById('ipcc-net-bg')) return;
+  if (window.innerWidth < 768) return; // 手機略過
+  var canvas = document.createElement('canvas');
+  canvas.id = 'ipcc-net-bg';
+  canvas.style.cssText = 'position:fixed;top:0;left:0;width:100%;height:100%;z-index:0;pointer-events:none;';
+  document.body.insertBefore(canvas, document.body.firstChild);
+
+  var ctx = canvas.getContext('2d');
+  var W, H;
+  var N = 52, MAX_D = 135, SPD = 0.32;
+
+  function resize() { W = canvas.width = window.innerWidth; H = canvas.height = window.innerHeight; }
+  window.addEventListener('resize', resize);
+  resize();
+
+  function rv(a, b) { return a + Math.random() * (b - a); }
+  var nodes = [];
+  for (var i = 0; i < N; i++) {
+    nodes.push({ x: rv(0,W), y: rv(0,H), vx: rv(-SPD,SPD), vy: rv(-SPD,SPD), r: rv(1.5,3) });
+  }
+
+  var pulses = [];
+  setInterval(function() {
+    var ai = Math.floor(Math.random() * N), bi = Math.floor(Math.random() * N);
+    if (ai === bi) return;
+    var a = nodes[ai], b = nodes[bi];
+    if (Math.hypot(a.x-b.x, a.y-b.y) < MAX_D) {
+      pulses.push({ a:a, b:b, t:0, spd: rv(0.009,0.018) });
+    }
+  }, 650);
+
+  function draw() {
+    ctx.clearRect(0, 0, W, H);
+    nodes.forEach(function(n) {
+      n.x += n.vx; n.y += n.vy;
+      if (n.x < -12) n.x = W+12; else if (n.x > W+12) n.x = -12;
+      if (n.y < -12) n.y = H+12; else if (n.y > H+12) n.y = -12;
+    });
+    // 連線
+    for (var i = 0; i < N; i++) {
+      for (var j = i+1; j < N; j++) {
+        var dx = nodes[i].x - nodes[j].x, dy = nodes[i].y - nodes[j].y;
+        var d = Math.sqrt(dx*dx + dy*dy);
+        if (d < MAX_D) {
+          ctx.globalAlpha = (1 - d/MAX_D) * 0.2;
+          ctx.strokeStyle = '#00C8FF';
+          ctx.lineWidth = 0.75;
+          ctx.beginPath(); ctx.moveTo(nodes[i].x, nodes[i].y); ctx.lineTo(nodes[j].x, nodes[j].y); ctx.stroke();
+        }
+      }
+    }
+    // 節點
+    ctx.globalAlpha = 0.42;
+    ctx.fillStyle = '#00C8FF';
+    nodes.forEach(function(n) { ctx.beginPath(); ctx.arc(n.x, n.y, n.r, 0, Math.PI*2); ctx.fill(); });
+    // 脈衝信號
+    ctx.globalAlpha = 1;
+    pulses = pulses.filter(function(p) {
+      p.t += p.spd;
+      if (p.t > 1) return false;
+      var px = p.a.x + (p.b.x - p.a.x) * p.t;
+      var py = p.a.y + (p.b.y - p.a.y) * p.t;
+      var g = ctx.createRadialGradient(px, py, 0, px, py, 8);
+      g.addColorStop(0, 'rgba(0,220,255,0.88)');
+      g.addColorStop(1, 'rgba(0,220,255,0)');
+      ctx.fillStyle = g;
+      ctx.beginPath(); ctx.arc(px, py, 8, 0, Math.PI*2); ctx.fill();
+      return true;
+    });
+    requestAnimationFrame(draw);
+  }
+  draw();
+}
+
+// 頁面載入後啟動背景動畫
+(function() {
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', startNetBg);
+  } else {
+    startNetBg();
+  }
+})();
+
+
+// ===================================================
+// 通用拖曳排序（供各管理頁使用）
+// ===================================================
+function initTableDragSort(tbodyId, getDataFn, saveDataFn, renderFn) {
+  var tbody = document.getElementById(tbodyId);
+  if (!tbody) return;
+  var srcId = null;
+
+  tbody.addEventListener('dragstart', function(e) {
+    var row = e.target.closest('tr[data-id]');
+    if (!row) return;
+    srcId = row.dataset.id;
+    setTimeout(function(){ row.classList.add('dragging'); }, 0);
+    e.dataTransfer.effectAllowed = 'move';
+  });
+
+  tbody.addEventListener('dragend', function() {
+    tbody.querySelectorAll('tr').forEach(function(r){ r.classList.remove('dragging','drag-over'); });
+  });
+
+  tbody.addEventListener('dragover', function(e) {
+    e.preventDefault();
+    var row = e.target.closest('tr[data-id]');
+    tbody.querySelectorAll('tr').forEach(function(r){ r.classList.remove('drag-over'); });
+    if (row && row.dataset.id !== srcId) row.classList.add('drag-over');
+    e.dataTransfer.dropEffect = 'move';
+  });
+
+  tbody.addEventListener('dragleave', function(e) {
+    if (!tbody.contains(e.relatedTarget)) {
+      tbody.querySelectorAll('tr').forEach(function(r){ r.classList.remove('drag-over'); });
+    }
+  });
+
+  tbody.addEventListener('drop', function(e) {
+    e.preventDefault();
+    var tgt = e.target.closest('tr[data-id]');
+    tbody.querySelectorAll('tr').forEach(function(r){ r.classList.remove('drag-over'); });
+    if (!tgt || !srcId || tgt.dataset.id === srcId) return;
+    var arr = getDataFn();
+    var si = -1, ti = -1;
+    for (var k = 0; k < arr.length; k++) {
+      if (arr[k].id === srcId) si = k;
+      if (arr[k].id === tgt.dataset.id) ti = k;
+    }
+    if (si < 0 || ti < 0) return;
+    var item = arr.splice(si, 1)[0];
+    arr.splice(ti, 0, item);
+    saveDataFn(arr);
+    renderFn();
+    var t = document.createElement('div');
+    t.className = 'toast success';
+    t.textContent = '✓ 順序已更新，記得發布上線';
+    document.body.appendChild(t);
+    setTimeout(function(){ t.remove(); }, 2200);
+  });
+}
