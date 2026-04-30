@@ -333,7 +333,7 @@ function generateContentData() {
 }
 
 function makeUsersConfigContent(users) {
-  var frontendUrl = window.IPCC_FRONTEND_URL || 'https://ipcc.zeabur.app';
+  var frontendUrl = window.IPCC_FRONTEND_URL || 'https://ipcc-website.vercel.app';
   var repo   = window.IPCC_GITHUB_REPO   || '';
   var branch = window.IPCC_GITHUB_BRANCH || 'main';
   var token  = _getGhToken();
