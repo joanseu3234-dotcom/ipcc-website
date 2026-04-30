@@ -95,7 +95,6 @@
                 <th>公司</th>
                 <th>客戶名稱</th>
                 <th>行業分類</th>
-                <th>標籤</th>
                 <th>狀態</th>
                 <th>操作</th>
               </tr>
@@ -166,7 +165,7 @@
           <input type="file" id="caseImgFile" accept="image/*" onchange="handleCaseImg(this)" style="display:none;">
           <div id="caseImgThumbWrap"><div class="img-upload-placeholder">🏆</div></div>
           <div>
-            <div style="font-weight:600;font-size:0.88rem;color:var(--navy-dark);" id="caseImgName">點擊上傳圖片</div>
+            <div style="font-weight:600;font-size:0.88rem;color:var(--text-main);" id="caseImgName">點擊上傳圖片</div>
             <div style="font-size:0.75rem;color:var(--text-sub);">支援 JPG / PNG，自動壓縮</div>
             <button type="button" class="btn-outline btn-sm" style="margin-top:6px;display:none;" id="caseImgClearBtn" onclick="clearCaseImg(event)">✕ 移除</button>
           </div>
@@ -239,7 +238,7 @@
           <input type="file" id="logoImgFile" accept="image/*" onchange="handleLogoImg(this)" style="display:none;">
           <div id="logoImgThumbWrap"><div class="img-upload-placeholder">🤝</div></div>
           <div>
-            <div style="font-weight:600;font-size:0.88rem;color:var(--navy-dark);" id="logoImgName">點擊上傳 Logo</div>
+            <div style="font-weight:600;font-size:0.88rem;color:var(--text-main);" id="logoImgName">點擊上傳 Logo</div>
             <div style="font-size:0.75rem;color:var(--text-sub);">建議使用透明背景 PNG，寬度 300px 以上</div>
             <button type="button" class="btn-outline btn-sm" style="margin-top:6px;display:none;" id="logoImgClearBtn" onclick="clearLogoImg(event)">✕ 移除</button>
           </div>
@@ -332,14 +331,12 @@ function renderTable() {
     var statusCls = item.published ? "published" : "draft";
     var statusTxt = item.published ? "已發布" : "草稿";
     var toggleTxt = item.published ? "設為草稿" : "發布";
-    var tags = (item.tags || []).slice(0,3).map(function(t){ return '<span class="badge badge-outsource" style="font-size:0.68rem;padding:2px 7px;">'+t+'</span>'; }).join('');
     return '<tr data-id="' + item.id + '" draggable="true">' +
       '<td class="drag-handle-cell"><span class="drag-handle">⠿</span></td>' +
       '<td>' + (item.image ? '<img class="thumb" src="'+item.image+'">' : '<div class="thumb-placeholder">🏆</div>') + '</td>' +
       '<td><span class="badge ' + companyBadgeClass(co) + '">' + companyLabel(co) + '</span></td>' +
       '<td class="td-title">' + (item.client||"") + '</td>' +
-      '<td>' + (item.category||"") + '</td>' +
-      '<td>' + (tags||'<span style="color:var(--text-sub);font-size:0.78rem;">—</span>') + '</td>' +
+      '<td style="font-size:0.82rem;color:var(--text-sub);">' + (item.category||"—") + '</td>' +
       '<td><span class="status-dot ' + statusCls + '">' + statusTxt + '</span></td>' +
       '<td><div class="td-actions">' +
         '<button class="btn-ghost btn-sm" onclick="editItem(\'' + item.id + '\')">編輯</button>' +
