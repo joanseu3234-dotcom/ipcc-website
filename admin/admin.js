@@ -414,7 +414,7 @@ async function publishToLive() {
     var contactCfg = getContactConfig();
     await _githubUpdateFile(token, repo, branch, 'contact-config.js', makeContactConfigContent(contactCfg), commitMsg);
 
-    showPublishToast('✅ 發布成功！Zeabur 正在自動部署，約 1-2 分鐘後前台即更新。\n發布時間：' + ts, 'success');
+    showPublishToast('✅ 發布成功！Vercel 正在自動部署，約 10-30 秒後前台即更新。\n發布時間：' + ts, 'success');
   } catch(e) {
     showPublishToast('❌ 發布失敗：' + e.message + '\n請確認 GitHub Token 是否正確或已過期。', 'error');
   }
@@ -427,7 +427,7 @@ function _updatePublishBtn() {
   if (token) {
     btn.textContent = '🚀 發布上線';
     btn.style.background = 'linear-gradient(135deg,#CE0000,#8B0000)';
-    btn.title = '一鍵推送到 GitHub，Zeabur 自動部署';
+    btn.title = '一鍵推送到 GitHub，Vercel 自動部署';
   } else {
     btn.textContent = '⚙️ 設定後可一鍵發布';
     btn.style.background = 'linear-gradient(135deg,#D97706,#92400E)';
