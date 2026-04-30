@@ -177,12 +177,16 @@
 
       <div style="display:grid; grid-template-columns:2fr 1fr; gap:0 20px;">
         <div class="form-group">
-          <label class="form-label">外部連結網址</label>
-          <input type="url" class="form-control" id="fExternalUrl" placeholder="https://example.com/article...（完整連結）">
+          <label class="form-label">影音 / 外部連結網址</label>
+          <input type="url" class="form-control" id="fExternalUrl" placeholder="貼上 YouTube、Spotify、Podcast 或文章連結">
+          <p style="font-size:0.75rem; color:var(--text-sub); margin-top:5px; line-height:1.6;">
+            💡 YouTube / Spotify 連結 → 前台自動嵌入播放器<br>其他連結 → 顯示大型「收聽 / 觀看 / 閱讀」按鈕
+          </p>
         </div>
         <div class="form-group">
           <label class="form-label">連結顯示文字</label>
-          <input type="text" class="form-control" id="fLinkText" placeholder="例：閱讀全文、收聽節目">
+          <input type="text" class="form-control" id="fLinkText" placeholder="例：收聽節目、觀看影片">
+          <p style="font-size:0.75rem; color:var(--text-sub); margin-top:5px;">（YouTube/Spotify 嵌入時不顯示）</p>
         </div>
       </div>
       <div class="form-group" style="margin-top:-8px;">

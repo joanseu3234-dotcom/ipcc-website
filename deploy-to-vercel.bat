@@ -2,27 +2,24 @@
 chcp 65001 >nul
 cd /d "%~dp0"
 echo ========================================
-echo  IPCC 官網  一鍵部署到 Zeabur
-echo  https://ipcc.zeabur.app/
+echo  IPCC 官網  一鍵部署到 Vercel
 echo ========================================
 echo.
 
-echo [1/3] 從 GitHub 同步最新內容資料（content-data.js）...
+echo [1/2] 從 GitHub 同步最新 content-data.js...
 curl -sf "https://raw.githubusercontent.com/joanseu3234-dotcom/ipcc-website/main/content-data.js" -o "content-data_latest.js" 2>nul
 if exist content-data_latest.js (
   move /y content-data_latest.js content-data.js >nul
   echo       已同步最新 content-data.js ✓
 ) else (
   echo       [警告] 無法從 GitHub 取得最新資料，使用本機版本
-  echo       建議先到後台點「發布上線」後再重新執行此腳本
 )
 echo.
 
-echo [2/3] 上傳至 Zeabur (前台 service)...
-npx zeabur@latest deploy --service-id=69ccdf619994d25a1d0acf9f --environment-id=69ccd3019c2b3309e23e20d8 -i=false
+echo [2/2] 部署到 Vercel（如尚未登入請先執行 npx vercel login）...
+npx vercel@latest --prod --yes
 echo.
 
-echo [3/3] 部署完成！
-echo       https://ipcc.zeabur.app/
+echo 部署完成！
 echo.
 pause

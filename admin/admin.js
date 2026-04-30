@@ -1,7 +1,15 @@
 // IPCC Admin Panel - Shared Utilities
 // =====================================
 
-// Token 讀寫 helper（localStorage + Cookie 雙重備援，避免重啟後遺失）
+// Token 讀寫 helper（localStorage + Cookie + users-config.js 三重備援）
+function _encodeToken(t) {
+  try { return btoa(unescape(encodeURIComponent(t))).split('').reverse().join(''); }
+  catch(e) { return ''; }
+}
+function _decodeToken(s) {
+  try { return decodeURIComponent(escape(atob(s.split('').reverse().join('')))); }
+  catch(e) { return ''; }
+}
 function _getGhToken() {
   var t = (localStorage.getItem('ipcc_github_token') || '').trim();
   if (!t) {
@@ -11,6 +19,11 @@ function _getGhToken() {
       if (t) localStorage.setItem('ipcc_github_token', t);
     }
   }
+  // 從部署的 users-config.js 自動還原（任何裝置、任何瀏覽器皆有效）
+  if (!t && window.IPCC_GH_TOKEN_E) {
+    t = _decodeToken(window.IPCC_GH_TOKEN_E);
+    if (t) _saveGhToken(t);
+  }
   return t;
 }
 function _saveGhToken(val) {
@@ -18,11 +31,11 @@ function _saveGhToken(val) {
   document.cookie = 'igt=' + encodeURIComponent(val) + '; max-age=31536000; path=/; SameSite=Strict';
 }
 
-// 若 localStorage 沒有文章資料或 Token，自動從 content-data.js 還原
+// 若 localStorage 沒有文章資料，自動從 content-data.js 還原初始資料
+// 注意：不因 token 缺失而載入，避免覆蓋尚未發布的新資料
 (function() {
   var needLoad = !localStorage.getItem('ipcc_news') && !localStorage.getItem('ipcc_cases');
-  var needToken = !_getGhToken();
-  if (needLoad || needToken) {
+  if (needLoad) {
     try {
       var xhr = new XMLHttpRequest();
       xhr.open('GET', '../content-data.js', false); // 同步載入
@@ -323,11 +336,14 @@ function makeUsersConfigContent(users) {
   var frontendUrl = window.IPCC_FRONTEND_URL || 'https://ipcc.zeabur.app';
   var repo   = window.IPCC_GITHUB_REPO   || '';
   var branch = window.IPCC_GITHUB_BRANCH || 'main';
+  var token  = _getGhToken();
+  var encodedToken = token ? _encodeToken(token) : (window.IPCC_GH_TOKEN_E || '');
   return '// IPCC 後台用戶設定\n// 此檔案由後台帳號管理自動產生，請勿手動修改\n\n'
     + "window.IPCC_FRONTEND_URL  = '" + frontendUrl + "';\n"
     + "window.IPCC_GITHUB_REPO   = '" + repo   + "';\n"
-    + "window.IPCC_GITHUB_BRANCH = '" + branch + "';\n\n"
-    + 'window.IPCC_USERS_CONFIG = ' + JSON.stringify(users, null, 2) + ';\n';
+    + "window.IPCC_GITHUB_BRANCH = '" + branch + "';\n"
+    + (encodedToken ? "window.IPCC_GH_TOKEN_E    = '" + encodedToken + "';\n" : '')
+    + '\nwindow.IPCC_USERS_CONFIG = ' + JSON.stringify(users, null, 2) + ';\n';
 }
 
 function makeContactConfigContent(cfg) {

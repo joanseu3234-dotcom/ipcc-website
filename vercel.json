@@ -1,0 +1,17 @@
+{
+  "cleanUrls": false,
+  "headers": [
+    {
+      "source": "/admin/(.*)",
+      "headers": [
+        { "key": "Cache-Control", "value": "no-store, no-cache" }
+      ]
+    },
+    {
+      "source": "/content-data.js",
+      "headers": [
+        { "key": "Cache-Control", "value": "no-store, no-cache" }
+      ]
+    }
+  ]
+}

@@ -84,22 +84,6 @@
   .cn-card-desc { font-size:0.83rem; color:var(--text-sub); line-height:1.8; flex:1; margin-bottom:14px; overflow-wrap:break-word; word-break:break-word; display:-webkit-box; -webkit-line-clamp:3; -webkit-box-orient:vertical; overflow:hidden; }
   .cn-card-footer { display:flex; justify-content:flex-end; }
   .cn-read-btn { font-size:0.78rem; font-weight:700; color:#047857; }
-  #caseDetailModal { display:none; position:fixed; inset:0; background:rgba(0,0,0,0.6); z-index:9000; align-items:center; justify-content:center; padding:20px; }
-  #caseDetailModal.open { display:flex; }
-  .cdm-box { background:#fff; border-radius:16px; max-width:700px; width:100%; max-height:90vh; overflow-y:auto; box-shadow:0 24px 60px rgba(0,0,0,0.28); position:relative; }
-  .cdm-img { width:100%; height:260px; overflow:hidden; border-radius:16px 16px 0 0; display:none; }
-  .cdm-img img { width:100%; height:100%; object-fit:cover; }
-  .cdm-body { padding:32px; }
-  .cdm-close { position:absolute; top:14px; right:16px; background:rgba(0,0,0,0.12); border:none; border-radius:50%; width:32px; height:32px; font-size:1rem; cursor:pointer; color:#333; line-height:1; }
-  .cdm-cat { font-size:0.72rem; font-weight:700; color:var(--text-sub); text-transform:uppercase; letter-spacing:0.08em; margin-bottom:6px; }
-  .cdm-client { font-size:1.4rem; font-weight:800; color:#12193A; margin-bottom:16px; }
-  .cdm-section-label { font-size:0.78rem; font-weight:700; text-transform:uppercase; letter-spacing:0.08em; color:#047857; margin:18px 0 6px; }
-  .cdm-text { font-size:0.92rem; color:#374151; line-height:2; overflow-wrap:break-word; word-break:break-word; white-space:pre-wrap; }
-  .cdm-divider { border:none; border-top:1px solid #E5E7EB; margin:20px 0; }
-  .cdm-results { display:flex; gap:16px; flex-wrap:wrap; margin-top:12px; }
-  .cdm-result { background:#F0FDF4; border-radius:12px; padding:14px 20px; text-align:center; min-width:80px; }
-  .cdm-result-num { font-size:1.4rem; font-weight:900; color:#047857; display:block; }
-  .cdm-result-label { font-size:0.72rem; color:var(--text-sub); margin-top:2px; }
 </style>
 
 <section class="section">
@@ -111,7 +95,7 @@
     </div>
 
     <div id="caseGrid" class="case-new-grid">
-      <div class="cn-card" onclick="openCaseModal({client:'中型銀行 C',category:'金融機構 · 客服訓練',emoji:'🏦',challenge:'新進客服人員上手速度慢，平均需要三個月才能獨立作業，服務品質落差大，金融客訴處理不當影響合規評分。',solution:'客製化金融業專屬訓練課程，涵蓋合規知識、客訴處理、情緒管理，建立標準化話術與情境模擬訓練。',results:[{value:&#39;↓50%&#39;,label:&#39;新人上手時間&#39;},{value:&#39;↑40%&#39;,label:&#39;客訴妥善率&#39;}]})">
+      <div class="cn-card" onclick="openCaseDetail({client:'中型銀行 C',category:'金融機構 · 客服訓練',emoji:'🏦',challenge:'新進客服人員上手速度慢，平均需要三個月才能獨立作業，服務品質落差大，金融客訴處理不當影響合規評分。',solution:'客製化金融業專屬訓練課程，涵蓋合規知識、客訴處理、情緒管理，建立標準化話術與情境模擬訓練。',results:[{value:&#39;↓50%&#39;,label:&#39;新人上手時間&#39;},{value:&#39;↑40%&#39;,label:&#39;客訴妥善率&#39;}]})">
         <div class="cn-card-img"><div class="cn-card-emoji">🏦</div><span class="cn-card-badge">客服訓練</span></div>
         <div class="cn-card-body">
           <div class="cn-card-cat">金融機構 · 客服訓練</div>
@@ -120,7 +104,7 @@
           <div class="cn-card-footer"><span class="cn-read-btn">查看詳情 →</span></div>
         </div>
       </div>
-      <div class="cn-card" onclick="openCaseModal({client:'連鎖零售品牌 G',category:'零售業 · 客服訓練',emoji:'🏪',challenge:'門市客服人員服務品質不一，各分店風格差異大，影響整體品牌形象，缺乏統一的服務標準與話術規範。',solution:'設計符合品牌調性的統一服務標準，建立全國門市通用的 SOP 與話術手冊，搭配定期巡迴稽核與培訓機制。',results:[{value:&#39;↑45%&#39;,label:&#39;顧客滿意度&#39;},{value:&#39;↓60%&#39;,label:&#39;客訴申訴量&#39;}]})">
+      <div class="cn-card" onclick="openCaseDetail({client:'連鎖零售品牌 G',category:'零售業 · 客服訓練',emoji:'🏪',challenge:'門市客服人員服務品質不一，各分店風格差異大，影響整體品牌形象，缺乏統一的服務標準與話術規範。',solution:'設計符合品牌調性的統一服務標準，建立全國門市通用的 SOP 與話術手冊，搭配定期巡迴稽核與培訓機制。',results:[{value:&#39;↑45%&#39;,label:&#39;顧客滿意度&#39;},{value:&#39;↓60%&#39;,label:&#39;客訴申訴量&#39;}]})">
         <div class="cn-card-img"><div class="cn-card-emoji">🏪</div><span class="cn-card-badge">客服訓練</span></div>
         <div class="cn-card-body">
           <div class="cn-card-cat">零售業 · 客服訓練</div>
@@ -129,7 +113,7 @@
           <div class="cn-card-footer"><span class="cn-read-btn">查看詳情 →</span></div>
         </div>
       </div>
-      <div class="cn-card" onclick="openCaseModal({client:'旅遊服務業者 H',category:'旅遊業 · 客服訓練',emoji:'✈️',challenge:'旅遊旺季期間客訴量暴增，客服人員無法有效處理緊急狀況，危機應對能力不足，嚴重影響顧客體驗與品牌信任。',solution:'設計旅遊業危機處理專項訓練，模擬班機延誤、行程取消等高壓情境，強化客服人員的應變能力與情緒管理技巧。',results:[{value:&#39;↑52%&#39;,label:&#39;危機處理效率&#39;},{value:&#39;↓38%&#39;,label:&#39;升級投訴率&#39;}]})">
+      <div class="cn-card" onclick="openCaseDetail({client:'旅遊服務業者 H',category:'旅遊業 · 客服訓練',emoji:'✈️',challenge:'旅遊旺季期間客訴量暴增，客服人員無法有效處理緊急狀況，危機應對能力不足，嚴重影響顧客體驗與品牌信任。',solution:'設計旅遊業危機處理專項訓練，模擬班機延誤、行程取消等高壓情境，強化客服人員的應變能力與情緒管理技巧。',results:[{value:&#39;↑52%&#39;,label:&#39;危機處理效率&#39;},{value:&#39;↓38%&#39;,label:&#39;升級投訴率&#39;}]})">
         <div class="cn-card-img"><div class="cn-card-emoji">✈️</div><span class="cn-card-badge">客服訓練</span></div>
         <div class="cn-card-body">
           <div class="cn-card-cat">旅遊業 · 客服訓練</div>
@@ -142,20 +126,6 @@
   </div>
 </section>
 
-<!-- 案例 Modal -->
-<div id="caseDetailModal" onclick="if(event.target===this)closeCaseModal()">
-  <div class="cdm-box">
-    <button class="cdm-close" onclick="closeCaseModal()">✕</button>
-    <div class="cdm-img" id="cdmImg"><img id="cdmImgEl" src="" alt=""></div>
-    <div class="cdm-body">
-      <div class="cdm-cat" id="cdmCat"></div>
-      <div class="cdm-client" id="cdmClient"></div>
-      <div id="cdmChallengeWrap"><div class="cdm-section-label">面臨挑戰</div><p class="cdm-text" id="cdmChallenge"></p></div>
-      <div id="cdmSolutionWrap"><hr class="cdm-divider"><div class="cdm-section-label">我們的解決方案</div><p class="cdm-text" id="cdmSolution"></p></div>
-      <div id="cdmResultsWrap"><hr class="cdm-divider"><div class="cdm-section-label">成果展示</div><div class="cdm-results" id="cdmResults"></div></div>
-    </div>
-  </div>
-</div>
 
 <section class="cta-section">
   <div class="container" style="position:relative; z-index:1; text-align:center;">
@@ -234,56 +204,13 @@ function toggleMenu() {
 </script>
 
 <script>
-function openCaseModal(c) {
-  var imgWrap = document.getElementById('cdmImg');
-  if (c.image) { document.getElementById('cdmImgEl').src = c.image; imgWrap.style.display = 'block'; }
-  else { imgWrap.style.display = 'none'; }
-  document.getElementById('cdmCat').textContent = c.category || '';
-  document.getElementById('cdmClient').textContent = c.client || '';
-  var chw = document.getElementById('cdmChallengeWrap');
-  if (c.challenge) { document.getElementById('cdmChallenge').innerHTML = renderContent(c.challenge); chw.style.display = ''; }
-  else { chw.style.display = 'none'; }
-  var sw = document.getElementById('cdmSolutionWrap');
-  if (c.solution) { document.getElementById('cdmSolution').innerHTML = renderContent(c.solution); sw.style.display = ''; }
-  else { sw.style.display = 'none'; }
-  var rw = document.getElementById('cdmResultsWrap');
-  var results = c.results || [];
-  if (results.length) {
-    document.getElementById('cdmResults').innerHTML = results.map(function(r){
-      return '<div class="cdm-result"><span class="cdm-result-num">'+esc(r.value||'')+'</span><div class="cdm-result-label">'+esc(r.label||'')+'</div></div>';
-    }).join('');
-    rw.style.display = '';
-  } else { rw.style.display = 'none'; }
-  document.getElementById('caseDetailModal').classList.add('open');
-  document.body.style.overflow = 'hidden';
-}
-function closeCaseModal() {
-  document.getElementById('caseDetailModal').classList.remove('open');
-  document.body.style.overflow = '';
-}
-document.addEventListener('keydown', function(e){ if(e.key==='Escape') closeCaseModal(); });
-
-// 將文字中的連結轉成可點擊超連結
-// 支援 [顯示文字](網址) 格式，以及純網址自動偵測
-function renderContent(text) {
-  if (!text) return '';
-  var re = /\[([^\]]*)\]\((https?:\/\/[^)]+)\)|(https?:\/\/[^\s<>"&]+)/g;
-  var result = '';
-  var lastIdx = 0;
-  var m;
-  while ((m = re.exec(text)) !== null) {
-    if (m.index > lastIdx) result += esc(text.slice(lastIdx, m.index));
-    if (m[1] !== undefined) {
-      result += '<a href="' + esc(m[2]) + '" target="_blank" rel="noopener" class="content-link">' + esc(m[1]) + '</a>';
-    } else {
-      result += '<a href="' + esc(m[3]) + '" target="_blank" rel="noopener" class="content-link">' + esc(m[3]) + '</a>';
-    }
-    lastIdx = m.index + m[0].length;
-  }
-  if (lastIdx < text.length) result += esc(text.slice(lastIdx));
-  return result;
-}
 function esc(s){ return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
+
+function openCaseDetail(c) {
+  c._from = 'cases-training.html';
+  try { sessionStorage.setItem('ipcc_case_viewing', JSON.stringify(c)); } catch(e) {}
+  window.location.href = 'case-detail.html';
+}
 
 (function () {
   try {
@@ -304,12 +231,12 @@ function esc(s){ return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').rep
         ? '<img src="' + c.image + '" alt="' + esc(c.client||'') + '" loading="lazy">'
         : '<div class="cn-card-emoji">' + (c.emoji || '🏆') + '</div>';
       var summary = c.description || c.challenge || '';
-      var modalData = JSON.stringify({
+      var caseData = JSON.stringify({
         client: c.client||'', category: c.category||'', emoji: c.emoji||'🏆',
         image: c.image||'', challenge: c.challenge||'', solution: c.solution||'',
         results: c.results||[], description: c.description||''
       });
-      return '<div class="cn-card" onclick=\'openCaseModal(' + modalData.replace(/'/g,'&#39;') + ')\'>'
+      return '<div class="cn-card" onclick=\'openCaseDetail(' + caseData.replace(/'/g,'&#39;') + ')\'>'
         + '<div class="cn-card-img">' + imgHtml + '<span class="cn-card-badge">客服訓練</span></div>'
         + '<div class="cn-card-body">'
         + '<div class="cn-card-cat">' + esc(c.category||'') + '</div>'

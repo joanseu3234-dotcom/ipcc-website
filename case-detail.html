@@ -1,0 +1,320 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>案例詳情 — IPCC 東州集團</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+  <style>
+    .hero-category-badge {
+      display: inline-block;
+      padding: 4px 16px;
+      background: rgba(255,255,255,0.18);
+      border: 1px solid rgba(255,255,255,0.35);
+      border-radius: 100px;
+      font-size: 0.78rem;
+      font-weight: 700;
+      color: rgba(255,255,255,0.92);
+      margin-bottom: 14px;
+    }
+    .detail-hero-emoji {
+      font-size: 3.5rem;
+      display: block;
+      margin-bottom: 12px;
+    }
+    .detail-label {
+      font-size: 0.78rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.09em;
+      color: var(--navy, #1E2A5E);
+      margin-bottom: 14px;
+      padding-bottom: 10px;
+      border-bottom: 2px solid var(--navy, #1E2A5E);
+      display: inline-block;
+    }
+    .detail-text {
+      font-size: 1rem;
+      color: #374151;
+      line-height: 2;
+      overflow-wrap: break-word;
+      word-break: break-word;
+      white-space: pre-wrap;
+      margin-top: 4px;
+    }
+    .detail-result {
+      background: #fff;
+      border: 1px solid #E5E7EB;
+      border-radius: 14px;
+      padding: 20px 28px;
+      text-align: center;
+      min-width: 110px;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.06);
+    }
+    .detail-result-num {
+      font-size: 1.8rem;
+      font-weight: 900;
+      color: var(--orange, #E85D04);
+      display: block;
+      margin-bottom: 4px;
+    }
+    .detail-result-label {
+      font-size: 0.75rem;
+      color: var(--text-sub);
+    }
+    .content-link {
+      color: var(--navy, #1E2A5E);
+      text-decoration: underline;
+    }
+    .detail-section {
+      margin-bottom: 44px;
+    }
+  </style>
+</head>
+<body>
+<script src="content-data.js"></script>
+
+<nav class="navbar" id="navbar">
+  <div class="container">
+    <div class="nav-inner">
+      <a href="index.html" class="nav-logo">
+        <img src="IPCCLOGO.png" alt="IPCC">
+        <div class="nav-logo-right">
+          <div class="nav-logo-group">東州集團</div>
+          <div class="nav-logo-companies">
+            <span>東州互聯網實業有限公司</span>
+            <span>顯榮國際股份有限公司</span>
+          </div>
+        </div>
+      </a>
+      <ul class="nav-menu" id="navMenu">
+        <li><a href="index.html" class="nav-link">首頁</a></li>
+        <li><a href="news.html" class="nav-link">最新消息</a></li>
+        <li><a href="about.html" class="nav-link">關於我們</a></li>
+        <li><a href="services.html" class="nav-link">專案服務</a></li>
+        <li><a href="cases.html" class="nav-link active">成功案例</a></li>
+      </ul>
+      <a href="contact.html" class="nav-cta">與我們聯繫</a>
+      <div class="nav-hamburger" onclick="toggleMenu()"><span></span><span></span><span></span></div>
+    </div>
+  </div>
+</nav>
+
+<div class="page-hero">
+  <div class="page-hero-signal">
+    <div class="page-hero-phone"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="rgba(220,80,80,0.95)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" style="display:block"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.26 13a19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 3.17 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L7.91 9.91a16 16 0 0 0 6.18 6.18l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg></div>
+    <div class="page-hero-ring"></div>
+    <div class="page-hero-ring"></div>
+    <div class="page-hero-ring"></div>
+    <div class="page-hero-ring"></div>
+    <div class="page-hero-ring"></div>
+  </div>
+  <div class="container">
+    <div class="breadcrumb">
+      <a href="index.html">首頁</a>
+      <span>›</span>
+      <a href="cases.html" id="breadcrumbCases">成功案例</a>
+      <span>›</span>
+      <span id="breadcrumbClient">案例詳情</span>
+    </div>
+    <span id="heroEmoji" class="detail-hero-emoji" style="display:none;"></span>
+    <div id="heroBadge" class="hero-category-badge" style="display:none;"></div>
+    <h1 id="heroClient">案例詳情</h1>
+    <p id="heroSubtitle"></p>
+  </div>
+</div>
+
+<section class="section">
+  <div class="container" style="max-width:860px; margin:0 auto;">
+
+    <!-- Large image -->
+    <div id="detailImgWrap" class="detail-section" style="display:none; border-radius:16px; overflow:hidden; max-height:500px;">
+      <img id="detailImg" src="" alt="" style="width:100%; height:500px; object-fit:cover; display:block;">
+    </div>
+
+    <!-- Results/Stats -->
+    <div id="detailResultsWrap" class="detail-section" style="display:none;">
+      <div style="background:#F8FAFF; border-radius:16px; padding:28px 32px;">
+        <div class="detail-label">成果展示</div>
+        <div id="detailResults" style="display:flex; gap:16px; flex-wrap:wrap; margin-top:16px;"></div>
+      </div>
+    </div>
+
+    <!-- Challenge -->
+    <div id="detailChallengeWrap" class="detail-section" style="display:none;">
+      <div class="detail-label">面臨挑戰</div>
+      <div class="detail-text" id="detailChallenge"></div>
+    </div>
+
+    <!-- Solution -->
+    <div id="detailSolutionWrap" class="detail-section" style="display:none;">
+      <hr style="border:none; border-top:1px solid #E5E7EB; margin-bottom:44px;">
+      <div class="detail-label">我們的解決方案</div>
+      <div class="detail-text" id="detailSolution"></div>
+    </div>
+
+    <!-- Description fallback (shown only if no challenge) -->
+    <div id="detailDescWrap" class="detail-section" style="display:none;">
+      <div class="detail-text" id="detailDesc"></div>
+    </div>
+
+    <!-- Back button -->
+    <div style="margin-top:56px; padding-top:32px; border-top:1px solid #E5E7EB;">
+      <a id="backBtn" href="cases.html" class="btn btn-outline">← 返回案例列表</a>
+    </div>
+
+  </div>
+</section>
+
+<section class="cta-section">
+  <div class="container" style="position:relative; z-index:1; text-align:center;">
+    <h2 class="section-title" style="color:#fff;">成為我們的下一個成功案例</h2>
+    <p style="color:rgba(255,255,255,0.6); margin:16px auto 36px; max-width:480px;">無論您是企業或政府機關，我們都能為您量身打造最適合的解決方案</p>
+    <div style="display:flex; justify-content:center; gap:16px; flex-wrap:wrap;">
+      <a href="contact.html" class="btn btn-primary">免費諮詢 →</a>
+      <a href="cases.html" id="ctaCasesLink" class="btn btn-outline">查看更多案例</a>
+    </div>
+  </div>
+</section>
+
+<footer class="footer">
+  <div class="container">
+    <div class="footer-grid">
+      <div class="footer-brand">
+        <div class="footer-logo">
+          <div class="footer-logo-box"><img src="IPCCLOGO.png" alt="IPCC"></div>
+          <div>
+            <span class="footer-logo-name">東州集團</span>
+            <div class="footer-logo-companies">
+              <span>東州互聯網實業有限公司</span>
+              <span>顯榮國際股份有限公司</span>
+            </div>
+          </div>
+        </div>
+        <p>整合系統、服務與數據，協助企業打造永續競爭力。</p>
+        <div class="footer-socials">
+          <a href="https://www.facebook.com/easy.ipcc/" target="_blank" rel="noopener" class="footer-social" title="Facebook">f</a>
+          <a href="#" class="footer-social">▶</a>
+          <a href="https://www.1111.com.tw/corp/8563" target="_blank" rel="noopener" class="footer-social" title="1111人力銀行">人</a>
+        </div>
+      </div>
+      <div class="footer-col">
+        <h4>快速連結</h4>
+        <ul>
+          <li><a href="news.html">最新消息</a></li>
+          <li><a href="about.html">關於我們</a></li>
+          <li><a href="services.html">專案服務</a></li>
+          <li><a href="cases.html">成功案例</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>服務項目</h4>
+        <ul>
+          <li><a href="services.html">客服委外</a></li>
+          <li><a href="services-training.html">客服訓練</a></li>
+          <li><a href="services-it.html">資訊服務</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>聯絡地址</h4>
+        <div class="footer-companies">
+          <div>東州互聯網實業有限公司</div>
+          <div>顯榮國際股份有限公司</div>
+        </div>
+        <div class="footer-address" style="margin-top:12px;"><span>北區</span><br>台北市松山區民權東路三段102號10樓</div>
+        <div class="footer-address" style="margin-top:16px;"><span>中區</span><br>台中市西區台灣大道二段307號9樓之2</div>
+        <div style="margin-top:16px; color:rgba(255,255,255,0.55);">☎ 0800-666-080</div>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span>© 2025 東州互聯網實業有限公司 / 顯榮國際股份有限公司 版權所有</span>
+      <span>IPCC Group — 創新服務．永續經營</span>
+    </div>
+  </div>
+</footer>
+
+<script>
+window.addEventListener('scroll', function() {
+  document.getElementById('navbar').classList.toggle('scrolled', window.scrollY > 20);
+});
+function toggleMenu() {
+  document.getElementById('navMenu').classList.toggle('open');
+}
+
+function esc(s) { return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
+function renderContent(text) {
+  if (!text) return '';
+  var re = /\[([^\]]*)\]\((https?:\/\/[^)]+)\)|(https?:\/\/[^\s<>"&]+)/g;
+  var result = '';
+  var lastIdx = 0;
+  var m;
+  while ((m = re.exec(text)) !== null) {
+    if (m.index > lastIdx) result += esc(text.slice(lastIdx, m.index));
+    if (m[1] !== undefined) {
+      result += '<a href="' + esc(m[2]) + '" target="_blank" rel="noopener" class="content-link">' + esc(m[1]) + '</a>';
+    } else {
+      result += '<a href="' + esc(m[3]) + '" target="_blank" rel="noopener" class="content-link">' + esc(m[3]) + '</a>';
+    }
+    lastIdx = m.index + m[0].length;
+  }
+  if (lastIdx < text.length) result += esc(text.slice(lastIdx));
+  return result;
+}
+
+var c = null;
+try { c = JSON.parse(sessionStorage.getItem('ipcc_case_viewing') || 'null'); } catch(e) {}
+if (!c) { window.location.href = 'cases.html'; }
+
+var from = c._from || 'cases.html';
+document.getElementById('backBtn').href = from;
+document.getElementById('breadcrumbCases').href = from;
+document.getElementById('ctaCasesLink').href = from;
+
+document.title = (c.client || '案例詳情') + ' — IPCC 東州集團';
+document.getElementById('heroClient').textContent = c.client || '案例詳情';
+document.getElementById('breadcrumbClient').textContent = c.client || '案例詳情';
+
+if (c.category) {
+  document.getElementById('heroBadge').textContent = c.category;
+  document.getElementById('heroBadge').style.display = '';
+  document.getElementById('heroSubtitle').textContent = c.category;
+}
+
+if (c.emoji && !c.image) {
+  document.getElementById('heroEmoji').textContent = c.emoji;
+  document.getElementById('heroEmoji').style.display = '';
+}
+
+if (c.image) {
+  document.getElementById('detailImg').src = c.image;
+  document.getElementById('detailImg').alt = c.client || '';
+  document.getElementById('detailImgWrap').style.display = '';
+}
+
+if (c.challenge) {
+  document.getElementById('detailChallenge').innerHTML = renderContent(c.challenge);
+  document.getElementById('detailChallengeWrap').style.display = '';
+}
+
+if (c.solution) {
+  document.getElementById('detailSolution').innerHTML = renderContent(c.solution);
+  document.getElementById('detailSolutionWrap').style.display = '';
+}
+
+if (c.description && !c.challenge) {
+  document.getElementById('detailDesc').innerHTML = renderContent(c.description);
+  document.getElementById('detailDescWrap').style.display = '';
+}
+
+var results = c.results || [];
+if (results.length) {
+  document.getElementById('detailResults').innerHTML = results.map(function(r) {
+    return '<div class="detail-result"><span class="detail-result-num">' + esc(r.value||'') + '</span><div class="detail-result-label">' + esc(r.label||'') + '</div></div>';
+  }).join('');
+  document.getElementById('detailResultsWrap').style.display = '';
+}
+</script>
+</body>
+</html>

@@ -164,7 +164,7 @@
     }
 
     async function testGhToken() {
-      var token = _getGhToken() || document.getElementById('ghTokenInput').value.trim();
+      var token = document.getElementById('ghTokenInput').value.trim() || _getGhToken();
       var repo  = (window.IPCC_GITHUB_REPO || '').trim();
       var el = document.getElementById('ghTestResult');
       if (!token) { el.innerHTML = '<div class="alert alert-error">請先輸入或儲存 Token</div>'; return; }

@@ -144,23 +144,30 @@
     <div class="modal-body">
       <div style="display:grid;grid-template-columns:1fr 1fr;gap:0 20px;">
         <div class="form-group">
-          <label class="form-label">所屬案例分類（決定顯示在哪個頁面）</label>
-          <select class="form-select" id="fServiceType">
-            <option value="outsource">客服委外（東州互聯網）</option>
-            <option value="training">客服訓練（顯榮國際）</option>
-            <option value="it">資訊服務解決方案</option>
+          <label class="form-label">所屬公司</label>
+          <select class="form-select" id="fCompany">
+            <option value="dongzhou">東州互聯網實業有限公司</option>
+            <option value="xianrong">顯榮國際股份有限公司</option>
           </select>
         </div>
         <div class="form-group">
-          <label class="form-label">封面圖片</label>
-          <div class="img-upload-box" onclick="document.getElementById('caseImgFile').click()">
-            <input type="file" id="caseImgFile" accept="image/*" onchange="handleCaseImg(this)" style="display:none;">
-            <div id="caseImgThumbWrap"><div class="img-upload-placeholder">🏆</div></div>
-            <div>
-              <div style="font-weight:600;font-size:0.88rem;color:var(--navy-dark);" id="caseImgName">點擊上傳圖片</div>
-              <div style="font-size:0.75rem;color:var(--text-sub);">支援 JPG / PNG，自動壓縮</div>
-              <button type="button" class="btn-outline btn-sm" style="margin-top:6px;display:none;" id="caseImgClearBtn" onclick="clearCaseImg(event)">✕ 移除</button>
-            </div>
+          <label class="form-label">案例分類（決定顯示在哪個頁面）</label>
+          <select class="form-select" id="fServiceType">
+            <option value="outsource">客服委外</option>
+            <option value="training">客服訓練</option>
+            <option value="it">資訊服務解決方案</option>
+          </select>
+        </div>
+      </div>
+      <div class="form-group">
+        <label class="form-label">封面圖片</label>
+        <div class="img-upload-box" onclick="document.getElementById('caseImgFile').click()">
+          <input type="file" id="caseImgFile" accept="image/*" onchange="handleCaseImg(this)" style="display:none;">
+          <div id="caseImgThumbWrap"><div class="img-upload-placeholder">🏆</div></div>
+          <div>
+            <div style="font-weight:600;font-size:0.88rem;color:var(--navy-dark);" id="caseImgName">點擊上傳圖片</div>
+            <div style="font-size:0.75rem;color:var(--text-sub);">支援 JPG / PNG，自動壓縮</div>
+            <button type="button" class="btn-outline btn-sm" style="margin-top:6px;display:none;" id="caseImgClearBtn" onclick="clearCaseImg(event)">✕ 移除</button>
           </div>
         </div>
       </div>
@@ -413,6 +420,7 @@ function autoSummaryCase() {
 function openAddModal() {
   editingId = null;
   document.getElementById("modalTitle").textContent = "新增案例";
+  document.getElementById("fCompany").value = "dongzhou";
   document.getElementById("fServiceType").value = "outsource";
   clearCaseImg();
   document.getElementById("fCategory").value = "";
@@ -433,13 +441,16 @@ function editItem(id) {
   if (!item) return;
   editingId = id;
   document.getElementById("modalTitle").textContent = "編輯案例";
-  var st = item.serviceType || item.caseType || '';
-  if (!st) {
-    var co = item.company || '';
-    if (co === 'xianrong' || co === 'training') st = 'training';
-    else if (co === 'it') st = 'it';
-    else st = 'outsource';
+  // 還原所屬公司（新舊資料格式相容）
+  var co = item.company || '';
+  if (!co) {
+    var ct = item.caseType || item.serviceType || '';
+    co = (ct === 'xianrong' || ct === 'training' || ct === 'it') ? 'xianrong' : 'dongzhou';
   }
+  document.getElementById("fCompany").value = co;
+  // 還原案例分類
+  var st = item.serviceType || item.caseType || '';
+  if (!st || st === 'dongzhou' || st === 'xianrong') st = 'outsource';
   document.getElementById("fServiceType").value = st;
   currentCaseImage = item.image || '';
   if (item.image) {
@@ -498,10 +509,10 @@ function saveItem() {
   var client = document.getElementById("fClient").value.trim();
   if (!client) { alert("請輸入客戶名稱"); return; }
   var arr = getCases();
+  var company = document.getElementById("fCompany").value;
   var serviceType = document.getElementById("fServiceType").value;
-  var co = serviceType === 'outsource' ? 'dongzhou' : 'xianrong';
   var data = {
-    company: co,
+    company: company,
     serviceType: serviceType,
     image: currentCaseImage || '',
     category: document.getElementById("fCategory").value.trim(),
@@ -526,7 +537,7 @@ function saveItem() {
   saveCases(arr);
   closeModal();
   renderTable();
-  showToast("&#9989; 儲存成功", "success");
+  showToast("&#9989; 儲存成功！請記得點側欄「🚀 發布上線」，資料才能在重開電腦後保留", "success");
 }
 
 function togglePublish(id) {

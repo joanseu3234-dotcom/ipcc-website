@@ -84,22 +84,6 @@
   .cn-card-desc { font-size:0.83rem; color:var(--text-sub); line-height:1.8; flex:1; margin-bottom:14px; overflow-wrap:break-word; word-break:break-word; display:-webkit-box; -webkit-line-clamp:3; -webkit-box-orient:vertical; overflow:hidden; }
   .cn-card-footer { display:flex; justify-content:flex-end; }
   .cn-read-btn { font-size:0.78rem; font-weight:700; color:#1D4ED8; }
-  #caseDetailModal { display:none; position:fixed; inset:0; background:rgba(0,0,0,0.6); z-index:9000; align-items:center; justify-content:center; padding:20px; }
-  #caseDetailModal.open { display:flex; }
-  .cdm-box { background:#fff; border-radius:16px; max-width:700px; width:100%; max-height:90vh; overflow-y:auto; box-shadow:0 24px 60px rgba(0,0,0,0.28); position:relative; }
-  .cdm-img { width:100%; height:260px; overflow:hidden; border-radius:16px 16px 0 0; display:none; }
-  .cdm-img img { width:100%; height:100%; object-fit:cover; }
-  .cdm-body { padding:32px; }
-  .cdm-close { position:absolute; top:14px; right:16px; background:rgba(0,0,0,0.12); border:none; border-radius:50%; width:32px; height:32px; font-size:1rem; cursor:pointer; color:#333; line-height:1; }
-  .cdm-cat { font-size:0.72rem; font-weight:700; color:var(--text-sub); text-transform:uppercase; letter-spacing:0.08em; margin-bottom:6px; }
-  .cdm-client { font-size:1.4rem; font-weight:800; color:#12193A; margin-bottom:16px; }
-  .cdm-section-label { font-size:0.78rem; font-weight:700; text-transform:uppercase; letter-spacing:0.08em; color:#1D4ED8; margin:18px 0 6px; }
-  .cdm-text { font-size:0.92rem; color:#374151; line-height:2; overflow-wrap:break-word; word-break:break-word; white-space:pre-wrap; }
-  .cdm-divider { border:none; border-top:1px solid #E5E7EB; margin:20px 0; }
-  .cdm-results { display:flex; gap:16px; flex-wrap:wrap; margin-top:12px; }
-  .cdm-result { background:#EFF6FF; border-radius:12px; padding:14px 20px; text-align:center; min-width:80px; }
-  .cdm-result-num { font-size:1.4rem; font-weight:900; color:#1D4ED8; display:block; }
-  .cdm-result-label { font-size:0.72rem; color:var(--text-sub); margin-top:2px; }
 </style>
 
 <section class="section">
@@ -111,7 +95,7 @@
     </div>
 
     <div id="caseGrid" class="case-new-grid">
-      <div class="cn-card" onclick="openCaseModal({client:'地方政府 D 單位',category:'政府機關 · 資訊服務',emoji:'🏛️',challenge:'民眾服務需求量大，現有人力嚴重不足，跨部門轉介流程複雜，民眾服務滿意度長期低迷，議員質詢壓力大。',solution:'建置符合政府規範的客服中心，整合多部門轉介流程，提供專業人力委外服務，確保符合驗收規範。',results:[{value:&#39;↑38%&#39;,label:&#39;民眾滿意度&#39;},{value:&#39;↓55%&#39;,label:&#39;平均等待時間&#39;}]})">
+      <div class="cn-card" onclick="openCaseDetail({client:'地方政府 D 單位',category:'政府機關 · 資訊服務',emoji:'🏛️',challenge:'民眾服務需求量大，現有人力嚴重不足，跨部門轉介流程複雜，民眾服務滿意度長期低迷，議員質詢壓力大。',solution:'建置符合政府規範的客服中心，整合多部門轉介流程，提供專業人力委外服務，確保符合驗收規範。',results:[{value:&#39;↑38%&#39;,label:&#39;民眾滿意度&#39;},{value:&#39;↓55%&#39;,label:&#39;平均等待時間&#39;}]})">
         <div class="cn-card-img"><div class="cn-card-emoji">🏛️</div><span class="cn-card-badge">資訊服務</span></div>
         <div class="cn-card-body">
           <div class="cn-card-cat">政府機關 · 資訊服務</div>
@@ -120,7 +104,7 @@
           <div class="cn-card-footer"><span class="cn-read-btn">查看詳情 →</span></div>
         </div>
       </div>
-      <div class="cn-card" onclick="openCaseModal({client:'區域醫院 F',category:'醫療機構 · 資訊服務',emoji:'🏥',challenge:'掛號諮詢電話量龐大，患者等待時間過長，診療資訊傳遞不一致，醫護人員需分心處理非醫療性客服問題。',solution:'建置醫療客服中心，整合掛號、衛教、轉介等服務，讓醫護人員專注醫療核心工作，提升整體服務效率。',results:[{value:&#39;↓65%&#39;,label:&#39;電話等待時間&#39;},{value:&#39;↑42%&#39;,label:&#39;病患滿意度&#39;}]})">
+      <div class="cn-card" onclick="openCaseDetail({client:'區域醫院 F',category:'醫療機構 · 資訊服務',emoji:'🏥',challenge:'掛號諮詢電話量龐大，患者等待時間過長，診療資訊傳遞不一致，醫護人員需分心處理非醫療性客服問題。',solution:'建置醫療客服中心，整合掛號、衛教、轉介等服務，讓醫護人員專注醫療核心工作，提升整體服務效率。',results:[{value:&#39;↓65%&#39;,label:&#39;電話等待時間&#39;},{value:&#39;↑42%&#39;,label:&#39;病患滿意度&#39;}]})">
         <div class="cn-card-img"><div class="cn-card-emoji">🏥</div><span class="cn-card-badge">資訊服務</span></div>
         <div class="cn-card-body">
           <div class="cn-card-cat">醫療機構 · 資訊服務</div>
@@ -129,7 +113,7 @@
           <div class="cn-card-footer"><span class="cn-read-btn">查看詳情 →</span></div>
         </div>
       </div>
-      <div class="cn-card" onclick="openCaseModal({client:'大眾運輸業者 I',category:'公共運輸 · 資訊服務',emoji:'🚌',challenge:'尖峰時段乘客申訴量暴增，路線查詢、票務問題、失物招領等多元需求難以分流，電話接通率僅達 62%。',solution:'導入智慧語音 IVR 分流系統，整合多渠道客服，建置 24 小時緊急服務機制，並提供即時數據報表協助管理決策。',results:[{value:&#39;↑95%&#39;,label:&#39;電話接通率&#39;},{value:&#39;↑48%&#39;,label:&#39;乘客滿意度&#39;}]})">
+      <div class="cn-card" onclick="openCaseDetail({client:'大眾運輸業者 I',category:'公共運輸 · 資訊服務',emoji:'🚌',challenge:'尖峰時段乘客申訴量暴增，路線查詢、票務問題、失物招領等多元需求難以分流，電話接通率僅達 62%。',solution:'導入智慧語音 IVR 分流系統，整合多渠道客服，建置 24 小時緊急服務機制，並提供即時數據報表協助管理決策。',results:[{value:&#39;↑95%&#39;,label:&#39;電話接通率&#39;},{value:&#39;↑48%&#39;,label:&#39;乘客滿意度&#39;}]})">
         <div class="cn-card-img"><div class="cn-card-emoji">🚌</div><span class="cn-card-badge">資訊服務</span></div>
         <div class="cn-card-body">
           <div class="cn-card-cat">公共運輸 · 資訊服務</div>
@@ -142,20 +126,6 @@
   </div>
 </section>
 
-<!-- 案例 Modal -->
-<div id="caseDetailModal" onclick="if(event.target===this)closeCaseModal()">
-  <div class="cdm-box">
-    <button class="cdm-close" onclick="closeCaseModal()">✕</button>
-    <div class="cdm-img" id="cdmImg"><img id="cdmImgEl" src="" alt=""></div>
-    <div class="cdm-body">
-      <div class="cdm-cat" id="cdmCat"></div>
-      <div class="cdm-client" id="cdmClient"></div>
-      <div id="cdmChallengeWrap"><div class="cdm-section-label">面臨挑戰</div><p class="cdm-text" id="cdmChallenge"></p></div>
-      <div id="cdmSolutionWrap"><hr class="cdm-divider"><div class="cdm-section-label">我們的解決方案</div><p class="cdm-text" id="cdmSolution"></p></div>
-      <div id="cdmResultsWrap"><hr class="cdm-divider"><div class="cdm-section-label">成果展示</div><div class="cdm-results" id="cdmResults"></div></div>
-    </div>
-  </div>
-</div>
 
 <section class="cta-section">
   <div class="container" style="position:relative; z-index:1; text-align:center;">
@@ -234,56 +204,13 @@ function toggleMenu() {
 </script>
 
 <script>
-function openCaseModal(c) {
-  var imgWrap = document.getElementById('cdmImg');
-  if (c.image) { document.getElementById('cdmImgEl').src = c.image; imgWrap.style.display = 'block'; }
-  else { imgWrap.style.display = 'none'; }
-  document.getElementById('cdmCat').textContent = c.category || '';
-  document.getElementById('cdmClient').textContent = c.client || '';
-  var chw = document.getElementById('cdmChallengeWrap');
-  if (c.challenge) { document.getElementById('cdmChallenge').innerHTML = renderContent(c.challenge); chw.style.display = ''; }
-  else { chw.style.display = 'none'; }
-  var sw = document.getElementById('cdmSolutionWrap');
-  if (c.solution) { document.getElementById('cdmSolution').innerHTML = renderContent(c.solution); sw.style.display = ''; }
-  else { sw.style.display = 'none'; }
-  var rw = document.getElementById('cdmResultsWrap');
-  var results = c.results || [];
-  if (results.length) {
-    document.getElementById('cdmResults').innerHTML = results.map(function(r){
-      return '<div class="cdm-result"><span class="cdm-result-num">'+esc(r.value||'')+'</span><div class="cdm-result-label">'+esc(r.label||'')+'</div></div>';
-    }).join('');
-    rw.style.display = '';
-  } else { rw.style.display = 'none'; }
-  document.getElementById('caseDetailModal').classList.add('open');
-  document.body.style.overflow = 'hidden';
-}
-function closeCaseModal() {
-  document.getElementById('caseDetailModal').classList.remove('open');
-  document.body.style.overflow = '';
-}
-document.addEventListener('keydown', function(e){ if(e.key==='Escape') closeCaseModal(); });
-
-// 將文字中的連結轉成可點擊超連結
-// 支援 [顯示文字](網址) 格式，以及純網址自動偵測
-function renderContent(text) {
-  if (!text) return '';
-  var re = /\[([^\]]*)\]\((https?:\/\/[^)]+)\)|(https?:\/\/[^\s<>"&]+)/g;
-  var result = '';
-  var lastIdx = 0;
-  var m;
-  while ((m = re.exec(text)) !== null) {
-    if (m.index > lastIdx) result += esc(text.slice(lastIdx, m.index));
-    if (m[1] !== undefined) {
-      result += '<a href="' + esc(m[2]) + '" target="_blank" rel="noopener" class="content-link">' + esc(m[1]) + '</a>';
-    } else {
-      result += '<a href="' + esc(m[3]) + '" target="_blank" rel="noopener" class="content-link">' + esc(m[3]) + '</a>';
-    }
-    lastIdx = m.index + m[0].length;
-  }
-  if (lastIdx < text.length) result += esc(text.slice(lastIdx));
-  return result;
-}
 function esc(s){ return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
+
+function openCaseDetail(c) {
+  c._from = 'cases-gov.html';
+  try { sessionStorage.setItem('ipcc_case_viewing', JSON.stringify(c)); } catch(e) {}
+  window.location.href = 'case-detail.html';
+}
 
 (function () {
   try {
@@ -302,12 +229,12 @@ function esc(s){ return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').rep
         ? '<img src="' + c.image + '" alt="' + esc(c.client||'') + '" loading="lazy">'
         : '<div class="cn-card-emoji">' + (c.emoji || '🏆') + '</div>';
       var summary = c.description || c.challenge || '';
-      var modalData = JSON.stringify({
+      var caseData = JSON.stringify({
         client: c.client||'', category: c.category||'', emoji: c.emoji||'🏆',
         image: c.image||'', challenge: c.challenge||'', solution: c.solution||'',
         results: c.results||[], description: c.description||''
       });
-      return '<div class="cn-card" onclick=\'openCaseModal(' + modalData.replace(/'/g,'&#39;') + ')\'>'
+      return '<div class="cn-card" onclick=\'openCaseDetail(' + caseData.replace(/'/g,'&#39;') + ')\'>'
         + '<div class="cn-card-img">' + imgHtml + '<span class="cn-card-badge">資訊服務</span></div>'
         + '<div class="cn-card-body">'
         + '<div class="cn-card-cat">' + esc(c.category||'') + '</div>'

@@ -57,6 +57,22 @@
     .content-link:hover { color: #E85D04; }
     .not-found { text-align: center; padding: 80px 20px; color: #6B7280; }
     .not-found h2 { font-size: 1.3rem; font-weight: 700; margin-bottom: 16px; color: #374151; }
+    /* 影音嵌入 / 外部連結按鈕 */
+    .media-embed-wrap { width:100%; margin-bottom:28px; }
+    .media-embed-iframe { width:100%; aspect-ratio:16/9; border-radius:12px; display:block; border:none; background:#000; }
+    .media-embed-spotify { width:100%; border-radius:12px; display:block; margin-bottom:28px; border:none; }
+    .media-play-btn {
+      display:inline-flex; align-items:center; gap:10px;
+      padding:16px 32px; border-radius:14px;
+      font-size:1.05rem; font-weight:700; text-decoration:none;
+      transition:opacity 0.2s, transform 0.15s;
+      margin-bottom:28px;
+    }
+    .media-play-btn:hover { opacity:0.88; transform:translateY(-2px); }
+    .media-play-btn.btn-podcast { background:#7C3AED; color:#fff; }
+    .media-play-btn.btn-video   { background:#DC2626; color:#fff; }
+    .media-play-btn.btn-radio   { background:#059669; color:#fff; }
+    .media-play-btn.btn-link    { background:#12193A; color:#fff; }
   </style>
 </head>
 <body>
@@ -185,6 +201,33 @@ var MEDIA_TYPE_MAP = {
 };
 
 function esc(s) { return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
+
+function getYoutubeId(url) {
+  var m = url.match(/(?:youtube\.com\/(?:watch\?[^#]*v=|embed\/)|youtu\.be\/)([A-Za-z0-9_-]{11})/);
+  return m ? m[1] : null;
+}
+function getSpotifyEmbed(url) {
+  var m = url.match(/open\.spotify\.com\/(episode|show|track|playlist)\/([A-Za-z0-9]+)/);
+  return m ? 'https://open.spotify.com/embed/' + m[1] + '/' + m[2] : null;
+}
+function buildMediaBlock(item) {
+  var url = item.externalUrl;
+  if (!url) return '';
+  var ytId = getYoutubeId(url);
+  if (ytId) {
+    return '<div class="media-embed-wrap"><iframe class="media-embed-iframe" src="https://www.youtube.com/embed/'+ytId+'" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe></div>';
+  }
+  var spotUrl = getSpotifyEmbed(url);
+  if (spotUrl) {
+    return '<iframe class="media-embed-spotify" src="'+spotUrl+'" height="152" frameborder="0" allowtransparency="true" allow="encrypted-media"></iframe>';
+  }
+  var mt = item.mediaType;
+  var btnCls = mt === 'podcast' ? 'btn-podcast' : mt === 'tv' ? 'btn-video' : mt === 'radio' ? 'btn-radio' : 'btn-link';
+  var btnIcon = mt === 'podcast' ? '🎙' : mt === 'tv' ? '▶' : mt === 'radio' ? '📻' : '🔗';
+  var defaultText = mt === 'podcast' ? '收聽節目' : mt === 'tv' ? '觀看影片' : mt === 'radio' ? '收聽廣播' : '前往閱讀';
+  return '<a href="'+esc(url)+'" target="_blank" rel="noopener" class="media-play-btn '+btnCls+'">'+btnIcon+' '+esc(item.linkText || defaultText)+'</a>';
+}
+
 function renderContent(text) {
   if (!text) return '';
   var re = /\[([^\]]*)\]\((https?:\/\/[^)]+)\)|(https?:\/\/[^\s<>"&]+)/g;
@@ -225,12 +268,9 @@ function renderContent(text) {
   document.getElementById('detailMeta').innerHTML = metaParts.join('');
 
   var html = '';
-  // 1. External link at top-left as outlined pill
+  // 1. 影音嵌入 / 外部連結按鈕
   if (item.externalUrl) {
-    var isPodcast = item.mediaType === 'podcast';
-    var topLinkCls = isPodcast ? 'type-podcast' : '';
-    var topLinkText = item.linkText || (isPodcast ? '🎙 收聽 Podcast' : '🔗 閱讀全文');
-    html += '<a href="'+esc(item.externalUrl)+'" target="_blank" rel="noopener" class="detail-top-link '+topLinkCls+'">'+esc(topLinkText)+' →</a>';
+    html += buildMediaBlock(item);
   }
   // 2. Image
   if (item.image) html += '<img class="detail-img" src="'+esc(item.image)+'" alt="">';

@@ -1,4 +1,4 @@
-name: Deploy to Zeabur
+name: Deploy to Vercel
 
 on:
   push:
@@ -11,10 +11,11 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Setup Zeabur auth
-        run: |
-          mkdir -p ~/.config/zeabur
-          echo "token: ${{ secrets.ZEABUR_TOKEN }}" > ~/.config/zeabur/cli.yaml
-
-      - name: Deploy to Zeabur
-        run: npx zeabur@latest deploy --service-id=69ccdf619994d25a1d0acf9f --environment-id=69ccd3019c2b3309e23e20d8 -i=false
+      - name: Deploy to Vercel
+        uses: amondnet/vercel-action@v25
+        with:
+          vercel-token: ${{ secrets.VERCEL_TOKEN }}
+          vercel-org-id: ${{ secrets.VERCEL_ORG_ID }}
+          vercel-project-id: ${{ secrets.VERCEL_PROJECT_ID }}
+          vercel-args: '--prod'
+          working-directory: ./
