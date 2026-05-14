@@ -1,9 +1,9 @@
 // IPCC 內容資料 — 由後台管理系統自動產生，請勿手動修改
-// 最後發布：2026/5/14 16:12:54
+// 最後發布：2026/5/14 16:29:19
 
 window.IPCC_CONTENT_DATA = {
-  "__ts": 1778746374083,
-  "__published": "2026/5/14 16:12:54",
+  "__ts": 1778747359705,
+  "__published": "2026/5/14 16:29:19",
   "ipcc_news": [
     {
       "tab": "media",
@@ -371,16 +371,19 @@ window.IPCC_CONTENT_DATA = {
       "id": "svc-3",
       "num": "Service 03",
       "icon": "💻",
-      "title": "資訊服務",
-      "desc": "提供客服建置、委外與技術人力整合方案。結合專業技術支援，協助政府單位穩定運作與優化服務品質。",
+      "title": "AI Agent 建置與維運",
+      "desc": "協助企業建立 AI 知識庫、客服助理與 AI Agent，並提供後續模型維運與資料更新",
       "tags": [
-        "客服建置",
-        "專案委外",
-        "技術支援"
+        "AI Agent",
+        "AI客服助理",
+        "AI知識庫",
+        "RAG",
+        "AI維運",
+        "AI導入"
       ],
       "link": "services-it.html",
-      "order": 2,
-      "published": true
+      "published": true,
+      "order": 2
     },
     {
       "id": "mp5794gebcw85",
