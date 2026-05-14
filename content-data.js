@@ -1,9 +1,9 @@
 // IPCC 內容資料 — 由後台管理系統自動產生，請勿手動修改
-// 最後發布：2026/5/4 16:38:45
+// 最後發布：2026/5/14 16:06:13
 
 window.IPCC_CONTENT_DATA = {
-  "__ts": 1777883925345,
-  "__published": "2026/5/4 16:38:45",
+  "__ts": 1778745973470,
+  "__published": "2026/5/14 16:06:13",
   "ipcc_news": [
     {
       "tab": "media",
@@ -261,6 +261,36 @@ window.IPCC_CONTENT_DATA = {
       "createdAt": 1777566357003
     }
   ],
+  "ipcc_outsource_grid": {
+    "title": "客服委外——實際作業內容",
+    "sub": "從導入規劃到績效優化，每個環節都有專業團隊全程負責",
+    "items": [
+      {
+        "id": "g1",
+        "icon": "📋",
+        "title": "委外導入規劃",
+        "desc": "從需求訪談、SOP 建立到人力配置，完整陪伴企業完成客服委外的每個關鍵步驟，確保無縫接軌。"
+      },
+      {
+        "id": "g2",
+        "icon": "🎧",
+        "title": "日常作業管理",
+        "desc": "專業督導即時監控服務狀況，彈性調配人力應對尖峰時段，確保每通來電、每則訊息都能即時處理。"
+      },
+      {
+        "id": "g3",
+        "icon": "🔍",
+        "title": "品質控管稽核",
+        "desc": "定期錄音抽查與 QA 評分，搭配客戶滿意度調查，從數據發現問題、持續優化服務品質。"
+      },
+      {
+        "id": "g4",
+        "icon": "📊",
+        "title": "績效報表分析",
+        "desc": "提供週報、月報及客服 KPI 儀表板，讓您隨時掌握服務成效，做出更精準的業務決策。"
+      }
+    ]
+  },
   "ipcc_about_security": {
     "title": "資訊安全政策",
     "sub": "東州集團深知資訊安全對企業及客戶的重要性，建立完善的資安管理框架，確保所有資料的機密性、完整性與可用性",
@@ -299,6 +329,96 @@ window.IPCC_CONTENT_DATA = {
       }
     ]
   },
+  "ipcc_services": [
+    {
+      "id": "svc-1",
+      "num": "Service 01",
+      "icon": "📞",
+      "title": "智能客服中心營運",
+      "desc": "受理電話、LINE、FB、文字客服與人機智能服務，提供 7×24H 顧客服務、Inbound / Outbound、話術設計與 AI 智能系統導入。",
+      "tags": [
+        "AI客服中心",
+        "智能客服中心",
+        "客服委外",
+        "電話客服外包",
+        "LINE客服外包",
+        "Inbound客服",
+        "Outbound客服",
+        "客服中心營運"
+      ],
+      "link": "services.html",
+      "published": true,
+      "order": 0
+    },
+    {
+      "id": "svc-2",
+      "num": "Service 02",
+      "icon": "🎓",
+      "title": "多渠道顧客互動服務",
+      "desc": "協助企業整合電話、社群、文字與即時通訊平台，建立一致性的客戶互動體驗。",
+      "tags": [
+        "LINE客服",
+        "FB客服",
+        "全渠道客服",
+        "Omnichannel客服",
+        "社群客服"
+      ],
+      "link": "services-training.html",
+      "published": true,
+      "order": 1
+    },
+    {
+      "id": "svc-3",
+      "num": "Service 03",
+      "icon": "💻",
+      "title": "資訊服務",
+      "desc": "提供客服建置、委外與技術人力整合方案。結合專業技術支援，協助政府單位穩定運作與優化服務品質。",
+      "tags": [
+        "客服建置",
+        "專案委外",
+        "技術支援"
+      ],
+      "link": "services-it.html",
+      "order": 2,
+      "published": true
+    },
+    {
+      "id": "mp5794gebcw85",
+      "num": "Service 04",
+      "icon": "📋",
+      "title": "AI 數據標註與資料結構化服務",
+      "desc": "AI 數據標註是將非結構化資料進行分類、標記與結構化，讓 AI 模型能理解語意、情緒與商業邏輯。",
+      "tags": [
+        "數據標註",
+        "Data Labeling",
+        "AI訓練數據",
+        "語音標註",
+        "NLP標註",
+        "中文數據標註"
+      ],
+      "link": "contact.html",
+      "published": true,
+      "order": 3
+    },
+    {
+      "id": "mp57ej8wos3qu",
+      "num": "Service 05",
+      "icon": "📋",
+      "title": "客服數據分析與營運優化",
+      "desc": "透過語音分析、CRM 與客戶互動數據，協助企業洞察客戶需求與提升營運效率。",
+      "tags": [
+        "語音分析",
+        "客服分析",
+        "客戶數據分析",
+        "客戶洞察",
+        "CRM分析",
+        "Customer Intelligence"
+      ],
+      "link": "contact.html",
+      "published": true,
+      "order": 4
+    }
+  ],
   "ipcc_about_awards": {
     "title": "獲獎事蹟",
     "sub": "數十年來持續獲得業界肯定，每一座獎項背後都是團隊的努力與對品質的堅持",
