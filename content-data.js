@@ -1,9 +1,9 @@
 // IPCC 內容資料 — 由後台管理系統自動產生，請勿手動修改
-// 最後發布：2026/5/15 09:46:34
+// 最後發布：2026/5/15 19:21:54
 
 window.IPCC_CONTENT_DATA = {
-  "__ts": 1778809594043,
-  "__published": "2026/5/15 09:46:34",
+  "__ts": 1778844114862,
+  "__published": "2026/5/15 19:21:54",
   "ipcc_news": [
     {
       "tab": "media",
@@ -335,6 +335,7 @@ window.IPCC_CONTENT_DATA = {
       "num": "Service 01",
       "icon": "📞",
       "title": "智能客服中心營運",
+      "slug": "",
       "desc": "受理電話、LINE、FB、文字客服與人機智能服務，提供 7×24H 顧客服務、Inbound / Outbound、話術設計與 AI 智能系統導入。",
       "tags": [
         "AI客服中心",
@@ -346,8 +347,22 @@ window.IPCC_CONTENT_DATA = {
         "Outbound客服",
         "客服中心營運"
       ],
-      "link": "services.html",
       "published": true,
+      "hero_title": "",
+      "hero_subtitle": "",
+      "content": "每一通客戶來電，都是企業最真實的聲音\n\n東州集團深耕客服產業近三十年，提供整合電話客服、LINE、Facebook、文字客服與 AI 人機協作的智能客服中心營運服務，協助企業建立穩定、高效率且可持續優化的客戶服務流程。\n\n我們不只是客服外包，更透過 CRM、客服紀錄與 AI 分析，協助企業掌握客戶需求、提升服務品質與優化營運效率。\n\n什麼是 AI 智能客服中心？\n\nAI 智能客服中心（AI Contact Center）是一種結合客服人員、CRM、AI Agent 與客戶數據分析的現代化客服營運模式。\n\n透過 AI 輔助與人機協作，企業可提升客服效率、降低人力成本，並將大量客服互動轉化為可分析的數據資產。",
+      "features": [
+        {
+          "icon": "✦",
+          "title": "",
+          "desc": ""
+        }
+      ],
+      "industries": [],
+      "faq": [],
+      "seo_title": "",
+      "seo_desc": "AI 智能客服中心是一種結合客服人員、CRM、AI Agent 與客戶數據分析的現代化客服營運模式。",
+      "image": "",
       "order": 0
     },
     {
