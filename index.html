@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="zh-TW">
 <head>
   <meta charset="UTF-8">
@@ -35,10 +35,11 @@
         <li><a href="cases.html" class="nav-link">成功案例</a></li>
       </ul>
 
-      <a href="contact.html" class="nav-cta">與我們聯繫</a>
-
-      <div class="nav-hamburger" id="hamburger" onclick="toggleMenu()">
-        <span></span><span></span><span></span>
+      <div class="nav-end">
+        <a href="contact.html" class="nav-cta">與我們聯繫</a>
+        <div class="nav-hamburger" onclick="toggleMenu()">
+          <span></span><span></span><span></span>
+        </div>
       </div>
     </div>
   </div>
@@ -298,9 +299,13 @@
         <span class="section-label">About Us</span>
         <h2 class="section-title">我們是誰</h2>
 
-        <p>東州互聯網實業有限公司成立於 1996 年，初期以資訊系統整合為核心。1998 年與中華電信合作，投入 HINET 客服中心營運，正式跨入資訊服務與顧客服務領域。</p>
+        <p>在數位時代之前，我們從「系統」開始。<br>在服務競爭時代，我們走向「人與體驗」。</p>
 
-        <p>歷經數十年深耕，我們逐步發展出雙核心體系，整合「系統 × 服務 × 數據」，形成完整的企業營運解決方案。</p>
+        <p>東州互聯網實業有限公司成立於 1996 年，初期以資訊系統整合為核心，參與醫療體系電腦化建置，並於 1998 年與中華電信合作，投入 HINET 客服中心營運，正式跨入資訊服務與顧客服務領域。</p>
+
+        <p>這段歷程讓我們清楚看見一件事 ——<br>企業的競爭，不僅在技術，而在「與客戶互動的每一刻」。</p>
+
+        <p>因此，我們逐步發展出雙核心體系，整合「系統 × 服務 × 數據」，形成一套完整的企業營運解決方案。</p>
 
         <div class="about-values">
           <div class="value-item">
@@ -342,9 +347,20 @@
       <div class="about-visual">
         <div class="about-card-main">
           <div class="about-year">1996</div>
-          <div class="about-year-label">成立年份</div>
-          <h3>從系統到服務，從技術到體驗</h3>
-          <p>我們專注於客服體系建置與營運服務，提供客服訓練、客服委外及公部門專案支援，協助企業與政府單位打造穩定、高品質的服務流程。</p>
+          <div class="about-year-label">東州互聯網成立</div>
+          <h3>雙核心體系</h3>
+          <div style="margin-top:24px; display:flex; flex-direction:column; gap:16px;">
+            <div style="background:rgba(255,255,255,0.07); border-radius:10px; padding:16px 20px;">
+              <div style="font-size:0.7rem; color:rgba(255,255,255,0.5); font-weight:700; letter-spacing:0.1em; margin-bottom:4px;">核心 1</div>
+              <div style="font-size:0.95rem; font-weight:800; color:#fff; margin-bottom:4px;">東州互聯網</div>
+              <div style="font-size:0.82rem; color:rgba(255,255,255,0.65); line-height:1.6;">專注於資訊系統整合與數位基礎建構，協助企業打造穩定且可擴展的營運架構</div>
+            </div>
+            <div style="background:rgba(255,255,255,0.07); border-radius:10px; padding:16px 20px;">
+              <div style="font-size:0.7rem; color:rgba(255,255,255,0.5); font-weight:700; letter-spacing:0.1em; margin-bottom:4px;">核心 2</div>
+              <div style="font-size:0.95rem; font-weight:800; color:#fff; margin-bottom:4px;">顯榮國際</div>
+              <div style="font-size:0.82rem; color:rgba(255,255,255,0.65); line-height:1.6;">專注於多渠道客服營運與顧客體驗管理，透過專業團隊與流程設計，提升服務品質</div>
+            </div>
+          </div>
         </div>
 
         <div class="about-stats-row">
@@ -452,7 +468,7 @@
           <span>中區</span><br>
           台中市西區台灣大道二段307號9樓之2
         </div>
-        <div style="margin-top:16px; color:rgba(255,255,255,0.55);">
+        <div style="margin-top:16px; color:rgba(255,255,255,0.55);" data-ci="phone">
           ☎ 0800-666-080
         </div>
       </div>
@@ -541,7 +557,8 @@ if (aboutStats) aboutObserver.observe(aboutStats);
       if (svcs.length > 0) {
         document.getElementById('servicesGrid').innerHTML = svcs.map(function(s, i) {
           var tags = (s.tags||[]).map(function(t){return '<span class="service-tag">'+t+'</span>';}).join('');
-          return '<a href="'+(s.link||'contact.html')+'" class="service-card" style="text-decoration:none;color:inherit;">'
+          var svcHref = s.slug ? '/services/'+s.slug : (s.link||'contact.html');
+          return '<a href="'+svcHref+'" class="service-card" style="text-decoration:none;color:inherit;">'
             + '<div><span class="service-num">'+s.num+'</span></div>'
             + '<div class="service-icon">'+s.icon+'</div>'
             + '<div><h3 class="service-title">'+s.title+'</h3><p class="service-desc">'+s.desc+'</p></div>'
