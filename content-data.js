@@ -1,9 +1,9 @@
 // IPCC 內容資料 — 由後台管理系統自動產生，請勿手動修改
-// 最後發布：2026/5/15 19:21:54
+// 最後發布：2026/5/15 21:34:39
 
 window.IPCC_CONTENT_DATA = {
-  "__ts": 1778844114862,
-  "__published": "2026/5/15 19:21:54",
+  "__ts": 1778852079525,
+  "__published": "2026/5/15 21:34:39",
   "ipcc_news": [
     {
       "tab": "media",
@@ -387,6 +387,7 @@ window.IPCC_CONTENT_DATA = {
       "num": "Service 03",
       "icon": "💻",
       "title": "AI Agent 建置與維運",
+      "slug": "",
       "desc": "協助企業建立 AI 知識庫、客服助理與 AI Agent，並提供後續模型維運與資料更新",
       "tags": [
         "AI Agent",
@@ -396,8 +397,123 @@ window.IPCC_CONTENT_DATA = {
         "AI維運",
         "AI導入"
       ],
-      "link": "services-it.html",
       "published": true,
+      "hero_title": "AI Agent 建置與維運",
+      "hero_subtitle": "協助企業建立 AI 知識庫、客服助理與 AI Agent 長期維運機制",
+      "content": "AI Agent 已從概念走向企業實際應用。\n\n東州集團協助企業建立 AI 知識庫、客服助理與 AI Agent 系統，並提供後續資料更新、模型監控與長期維運服務。\n\n我們不只協助企業導入 AI，更重視 AI 是否能真正落地、持續運作與符合企業實際營運需求。\n\n透過 AI Agent，企業可建立自動化客服、知識查詢、FAQ 回覆與內部流程管理系統，提升營運效率並降低重複性人工作業。",
+      "pain_points": [
+        {
+          "icon": "❌",
+          "desc": "不知道如何開始導入 AI"
+        },
+        {
+          "icon": "❌",
+          "desc": "AI 回答不準確"
+        },
+        {
+          "icon": "❌",
+          "desc": "AI 無法理解企業知識"
+        },
+        {
+          "icon": "❌",
+          "desc": "資料分散難整合"
+        },
+        {
+          "icon": "❌",
+          "desc": "AI 上線後逐漸失準"
+        },
+        {
+          "icon": "❌",
+          "desc": "缺乏 AI 維運能力"
+        },
+        {
+          "icon": "❌",
+          "desc": "員工不知道如何使用 AI"
+        },
+        {
+          "icon": "❌",
+          "desc": "AI 無法與現有系統整合"
+        },
+        {
+          "icon": "❌",
+          "desc": "導入成本高且流程複雜"
+        }
+      ],
+      "features": [
+        {
+          "icon": "✦",
+          "title": "AI 就緒度評估",
+          "desc": "協助企業盤點現有資料、流程與 IT 架構。"
+        },
+        {
+          "icon": "✦",
+          "title": "AI 知識庫建置",
+          "desc": "建立可供 AI 學習的 FAQ、SOP 與企業知識資料。"
+        },
+        {
+          "icon": "✦",
+          "title": "AI Agent 導入",
+          "desc": "協助企業建置客服助理與 AI 自動化流程。"
+        },
+        {
+          "icon": "✦",
+          "title": "CRM 與系統整合",
+          "desc": "整合 CRM、客服系統與既有企業流程。"
+        },
+        {
+          "icon": "✦",
+          "title": "模型監控與維運",
+          "desc": "持續更新資料與優化 AI 回答品質。"
+        },
+        {
+          "icon": "✦",
+          "title": "人機協作模式",
+          "desc": "建立 AI 與人工客服協同作業流程。"
+        }
+      ],
+      "industries": [
+        {
+          "icon": "🏢",
+          "name": "客服中心"
+        },
+        {
+          "icon": "🏢",
+          "name": "電商平台"
+        },
+        {
+          "icon": "🏢",
+          "name": "金融保險"
+        },
+        {
+          "icon": "🏢",
+          "name": "健康食品"
+        },
+        {
+          "icon": "🏢",
+          "name": "醫療與預約服務"
+        },
+        {
+          "icon": "🏢",
+          "name": "企業內部知識管理"
+        }
+      ],
+      "faq": [
+        {
+          "q": "什麼是 AI Agent？",
+          "a": "AI Agent 是能結合企業知識庫、流程與資料，自動完成客服、查詢與任務處理的 AI 系統。"
+        },
+        {
+          "q": "AI Agent 與 Chatbot 有什麼不同？",
+          "a": "傳統 Chatbot 多依靠固定規則回覆；AI Agent 則能結合 AI 模型、知識庫與企業資料進行更彈性的理解與回應。"
+        },
+        {
+          "q": "AI 導入後為什麼還需要維運？",
+          "a": "若缺乏持續更新與資料同步，AI 模型可能逐漸失準，因此需要定期維護與知識更新。"
+        }
+      ],
+      "seo_title": "",
+      "seo_desc": "",
+      "image": "",
       "order": 2
     },
     {
@@ -405,17 +521,133 @@ window.IPCC_CONTENT_DATA = {
       "num": "Service 04",
       "icon": "📋",
       "title": "AI 數據標註與資料結構化服務",
+      "slug": "",
       "desc": "AI 數據標註是將非結構化資料進行分類、標記與結構化，讓 AI 模型能理解語意、情緒與商業邏輯。",
       "tags": [
-        "數據標註",
-        "Data Labeling",
-        "AI訓練數據",
-        "語音標註",
-        "NLP標註",
-        "中文數據標註"
+        "AI Agent",
+        "AI客服助理",
+        "AI知識庫",
+        "RAG",
+        "企業AI導入",
+        "AI維運",
+        "生成式AI",
+        "FAQ機器人",
+        "LLM應用",
+        "AI Automation"
       ],
-      "link": "contact.html",
       "published": true,
+      "hero_title": "客服數據分析與營運優化",
+      "hero_subtitle": "透過語音分析、CRM 與 AI 數據洞察，提升客服品質與營運效率",
+      "content": "企業每天都在產生大量客服錄音、顧客互動與 CRM 資料，但許多企業缺乏有效分析能力，導致大量客戶聲音被浪費。\n東州集團透過 Voice Data、CRM 與 AI 分析技術，協助企業將客服對話轉化為可分析的營運數據。\n我們不只是做客服，更協助企業理解顧客需求、優化銷售流程、改善服務品質與提升營運效率。\n「一般市場調查是問出來的，但我們分析的是客戶在真正要消費時說出的真實需求。」",
+      "pain_points": [
+        {
+          "icon": "❌",
+          "desc": "客服錄音無法有效分析"
+        },
+        {
+          "icon": "❌",
+          "desc": "無法掌握客戶真正需求"
+        },
+        {
+          "icon": "❌",
+          "desc": "客戶情緒與流失原因不明"
+        },
+        {
+          "icon": "❌",
+          "desc": "CRM 資料分散難整合"
+        },
+        {
+          "icon": "❌",
+          "desc": "無法找出成交關鍵因素"
+        },
+        {
+          "icon": "❌",
+          "desc": "客服 KPI 難以量化"
+        },
+        {
+          "icon": "❌",
+          "desc": "客服流程缺乏優化依據"
+        },
+        {
+          "icon": "❌",
+          "desc": "缺乏即時營運洞察"
+        }
+      ],
+      "features": [
+        {
+          "icon": "✦",
+          "title": "客服語音分析",
+          "desc": "分析客服錄音、對話內容與客戶需求。"
+        },
+        {
+          "icon": "✦",
+          "title": "CRM 數據整合",
+          "desc": "整合顧客互動資料與服務歷程。"
+        },
+        {
+          "icon": "✦",
+          "title": "客戶情緒分析",
+          "desc": "透過 AI 分析客戶情緒與服務滿意度。"
+        },
+        {
+          "icon": "✦",
+          "title": "客服 KPI 與營運分析",
+          "desc": "建立客服績效與營運優化指標。"
+        },
+        {
+          "icon": "✦",
+          "title": "銷售與服務洞察",
+          "desc": "找出客戶成交關鍵與服務痛點。"
+        },
+        {
+          "icon": "✦",
+          "title": "Customer Intelligence 應用",
+          "desc": "將客戶互動轉化為企業營運決策依據。"
+        }
+      ],
+      "industries": [
+        {
+          "icon": "🏢",
+          "name": "客服中心 / BPO"
+        },
+        {
+          "icon": "🏢",
+          "name": "電商零售"
+        },
+        {
+          "icon": "🏢",
+          "name": "健康食品產業"
+        },
+        {
+          "icon": "🏢",
+          "name": "金融與會員服務"
+        },
+        {
+          "icon": "🏢",
+          "name": "醫療客服"
+        },
+        {
+          "icon": "🏢",
+          "name": "品牌會員經營"
+        }
+      ],
+      "faq": [
+        {
+          "q": "什麼是 Customer Intelligence？",
+          "a": "Customer Intelligence 是透過客戶對話、CRM 與互動數據分析，理解顧客需求與商業機會的方法。"
+        },
+        {
+          "q": "客服錄音分析可以應用在哪些地方？",
+          "a": "可應用於客服品質管理、客戶情緒分析、話術優化、銷售分析與 AI 訓練資料建立。"
+        },
+        {
+          "q": "為什麼客服數據很重要？",
+          "a": "因為客服對話通常是客戶最真實的需求與意見來源，透過分析能協助企業改善營運與提升客戶體驗"
+        }
+      ],
+      "seo_title": "",
+      "seo_desc": "",
+      "image": "",
       "order": 3
     },
     {
@@ -423,6 +655,7 @@ window.IPCC_CONTENT_DATA = {
       "num": "Service 05",
       "icon": "📋",
       "title": "客服數據分析與營運優化",
+      "slug": "",
       "desc": "透過語音分析、CRM 與客戶互動數據，協助企業洞察客戶需求與提升營運效率。",
       "tags": [
         "語音分析",
@@ -432,8 +665,17 @@ window.IPCC_CONTENT_DATA = {
         "CRM分析",
         "Customer Intelligence"
       ],
-      "link": "contact.html",
       "published": true,
+      "hero_title": "",
+      "hero_subtitle": "",
+      "content": "",
+      "pain_points": [],
+      "features": [],
+      "industries": [],
+      "faq": [],
+      "seo_title": "",
+      "seo_desc": "",
+      "image": "",
       "order": 4
     }
   ],
