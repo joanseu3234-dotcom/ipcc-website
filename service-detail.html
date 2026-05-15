@@ -68,6 +68,92 @@
       max-width: 780px;
     }
 
+    /* Pain vs Features compare */
+    .compare-section {
+      padding: 80px 0;
+      background: var(--bg-light);
+    }
+    .compare-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 0;
+      border-radius: var(--radius-lg);
+      overflow: hidden;
+      box-shadow: var(--shadow-md);
+      margin-top: 48px;
+    }
+    .compare-col {
+      padding: 44px 40px;
+    }
+    .compare-col-pain {
+      background: linear-gradient(145deg, #1a0608 0%, #2d0a0e 100%);
+      border-right: 1px solid rgba(255,255,255,0.06);
+    }
+    .compare-col-solution {
+      background: linear-gradient(145deg, #0d1a36 0%, #12243e 100%);
+    }
+    .compare-col-header {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 32px;
+      padding-bottom: 20px;
+    }
+    .compare-col-pain .compare-col-header { border-bottom: 1px solid rgba(200,22,29,0.3); }
+    .compare-col-solution .compare-col-header { border-bottom: 1px solid rgba(0,150,255,0.3); }
+    .compare-header-icon { font-size: 1.6rem; }
+    .compare-header-title {
+      font-size: 1.05rem;
+      font-weight: 800;
+      letter-spacing: 0.03em;
+    }
+    .compare-col-pain .compare-header-title { color: #FF8080; }
+    .compare-col-solution .compare-header-title { color: #7DD9F8; }
+    .compare-items { display: flex; flex-direction: column; gap: 16px; }
+    .compare-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 14px;
+    }
+    .compare-item-icon {
+      font-size: 1.2rem;
+      flex-shrink: 0;
+      width: 32px;
+      height: 32px;
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-top: 1px;
+    }
+    .compare-col-pain .compare-item-icon {
+      background: rgba(200,22,29,0.15);
+    }
+    .compare-col-solution .compare-item-icon {
+      background: rgba(0,150,255,0.15);
+    }
+    .compare-item-text {
+      font-size: 0.92rem;
+      line-height: 1.65;
+      padding-top: 4px;
+    }
+    .compare-col-pain .compare-item-text { color: rgba(255,200,200,0.85); }
+    .compare-col-solution .compare-item-text { color: rgba(180,220,255,0.88); }
+    .compare-item-label {
+      font-size: 0.7rem;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      margin-bottom: 2px;
+    }
+    .compare-col-pain .compare-item-label { color: rgba(255,100,100,0.6); }
+    .compare-col-solution .compare-item-label { color: rgba(80,180,255,0.6); }
+
+    @media (max-width: 700px) {
+      .compare-grid { grid-template-columns: 1fr; }
+      .compare-col { padding: 32px 24px; }
+      .compare-col-pain { border-right: none; border-bottom: 1px solid rgba(255,255,255,0.06); }
+    }
+
     /* Features */
     .features-grid {
       display: grid;
@@ -261,6 +347,33 @@
   </div>
 </section>
 
+<!-- 痛點 vs 服務特色 對比 -->
+<section class="compare-section" id="compareSection" style="display:none;">
+  <div class="container">
+    <div class="text-center">
+      <span class="section-label">Pain vs Solution</span>
+      <h2 class="section-title" style="margin-top:8px;">痛點解析 × 解決方案</h2>
+      <p class="section-sub">了解您面臨的挑戰，看看我們如何逐一對應解決</p>
+    </div>
+    <div class="compare-grid">
+      <div class="compare-col compare-col-pain">
+        <div class="compare-col-header">
+          <span class="compare-header-icon">⚠️</span>
+          <span class="compare-header-title">企業常見痛點</span>
+        </div>
+        <div class="compare-items" id="painItems"></div>
+      </div>
+      <div class="compare-col compare-col-solution">
+        <div class="compare-col-header">
+          <span class="compare-header-icon">✦</span>
+          <span class="compare-header-title">我們的解決方案</span>
+        </div>
+        <div class="compare-items" id="solutionItems"></div>
+      </div>
+    </div>
+  </div>
+</section>
+
 <!-- 服務特色 -->
 <section class="section section-alt" id="featuresSection" style="display:none;">
   <div class="container">
@@ -444,6 +557,30 @@ function toggleMenu() {
     document.getElementById('contentHeading').textContent = svc.title || '';
     document.getElementById('contentText').innerHTML = svc.content.replace(/\n/g, '<br>');
     document.getElementById('svcContentSection').style.display = '';
+  }
+
+  // Pain vs Solution compare
+  var hasPain = svc.pain_points && svc.pain_points.length;
+  var hasFeatsForCompare = svc.features && svc.features.length;
+  if (hasPain || hasFeatsForCompare) {
+    if (hasPain) {
+      document.getElementById('painItems').innerHTML = svc.pain_points.map(function(p) {
+        return '<div class="compare-item">'
+          + '<span class="compare-item-icon">' + (p.icon || '❌') + '</span>'
+          + '<div class="compare-item-text">' + (p.desc || '') + '</div>'
+          + '</div>';
+      }).join('');
+    }
+    if (hasFeatsForCompare) {
+      document.getElementById('solutionItems').innerHTML = svc.features.map(function(f) {
+        return '<div class="compare-item">'
+          + '<span class="compare-item-icon">✦</span>'
+          + '<div><div class="compare-item-label">' + (f.title || '') + '</div>'
+          + '<div class="compare-item-text">' + (f.desc || '') + '</div></div>'
+          + '</div>';
+      }).join('');
+    }
+    document.getElementById('compareSection').style.display = '';
   }
 
   // Features

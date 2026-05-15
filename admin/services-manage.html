@@ -183,7 +183,13 @@
           </div>
 
           <div class="form-group">
-            <label class="form-label" style="margin-bottom:10px;">服務特色（最多 6 項）</label>
+            <label class="form-label" style="margin-bottom:10px;">企業痛點（對比左欄，最多 10 項）</label>
+            <div id="painPointsList"></div>
+            <button type="button" class="dyn-add-btn" onclick="addPainPoint()">+ 新增痛點</button>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" style="margin-bottom:10px;">服務特色（對比右欄，最多 10 項）</label>
             <div id="featuresList"></div>
             <button type="button" class="dyn-add-btn" onclick="addFeature()">+ 新增特色</button>
           </div>
@@ -288,6 +294,16 @@
     }
 
     // ── Dynamic list helpers ──────────────────────────────────────
+    function addPainPoint(p) {
+      p = p || {icon:'❌', desc:''};
+      var row = document.createElement('div');
+      row.className = 'dyn-row dyn-row-2';
+      row.innerHTML = '<input type="text" value="'+escHtml(p.icon)+'" placeholder="圖示" style="text-align:center;font-size:1.3rem;" class="form-control" data-field="icon">'
+        + '<input type="text" value="'+escHtml(p.desc)+'" placeholder="痛點描述" class="form-control" data-field="desc">'
+        + '<button type="button" class="dyn-del-btn" onclick="this.closest(\'.dyn-row\').remove()">✕</button>';
+      document.getElementById('painPointsList').appendChild(row);
+    }
+
     function addFeature(f) {
       f = f || {icon:'✦', title:'', desc:''};
       var id = 'feat-' + Date.now() + Math.random();
@@ -361,11 +377,13 @@
       document.getElementById('svcImage').value     = s ? (s.image||'') : '';
 
       // Clear dynamic lists
+      document.getElementById('painPointsList').innerHTML = '';
       document.getElementById('featuresList').innerHTML = '';
       document.getElementById('industriesList').innerHTML = '';
       document.getElementById('faqList').innerHTML = '';
 
       if (s) {
+        (s.pain_points||[]).forEach(addPainPoint);
         (s.features||[]).forEach(addFeature);
         (s.industries||[]).forEach(addIndustry);
         (s.faq||[]).forEach(addFaq);
@@ -398,6 +416,7 @@
         hero_title: document.getElementById('svcHeroTitle').value.trim(),
         hero_subtitle: document.getElementById('svcHeroSub').value.trim(),
         content: document.getElementById('svcContent').value.trim(),
+        pain_points: collectList('painPointsList', ['icon','desc']),
         features: collectList('featuresList', ['icon','title','desc']),
         industries: collectList('industriesList', ['icon','name']),
         faq: collectList('faqList', ['q','a']),
