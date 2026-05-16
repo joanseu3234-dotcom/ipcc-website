@@ -1,9 +1,9 @@
 // IPCC 內容資料 — 由後台管理系統自動產生，請勿手動修改
-// 最後發布：2026/5/17 00:04:03
+// 最後發布：2026/5/17 00:09:12
 
 window.IPCC_CONTENT_DATA = {
-  "__ts": 1778947443249,
-  "__published": "2026/5/17 00:04:03",
+  "__ts": 1778947752612,
+  "__published": "2026/5/17 00:09:12",
   "ipcc_news": [
     {
       "tab": "media",
@@ -594,7 +594,7 @@ window.IPCC_CONTENT_DATA = {
       "num": "Service 03",
       "icon": "💻",
       "title": "AI Agent 建置與維運",
-      "slug": "",
+      "slug": "ai-agent",
       "desc": "協助企業建立 AI 知識庫、客服助理與 AI Agent，並提供後續模型維運與資料更新",
       "tags": [
         "AI Agent",
@@ -607,7 +607,7 @@ window.IPCC_CONTENT_DATA = {
       "published": true,
       "hero_title": "AI Agent 建置與維運",
       "hero_subtitle": "協助企業建立 AI 知識庫、客服助理與 AI Agent 長期維運機制",
-      "content": "AI Agent 已從概念走向企業實際應用。\n\n東州集團協助企業建立 AI 知識庫、客服助理與 AI Agent 系統，並提供後續資料更新、模型監控與長期維運服務。\n\n我們不只協助企業導入 AI，更重視 AI 是否能真正落地、持續運作與符合企業實際營運需求。\n\n透過 AI Agent，企業可建立自動化客服、知識查詢、FAQ 回覆與內部流程管理系統，提升營運效率並降低重複性人工作業。",
+      "content": "AI Agent 已從概念走向企業實際應用。\n東州集團協助企業建立 AI 知識庫、客服助理與 AI Agent 系統，並提供後續資料更新、模型監控與長期維運服務。\n我們不只協助企業導入 AI，更重視 AI 是否能真正落地、持續運作與符合企業實際營運需求。\n透過 AI Agent，企業可建立自動化客服、知識查詢、FAQ 回覆與內部流程管理系統，提升營運效率並降低重複性人工作業。",
       "pain_points": [
         {
           "icon": "❌",
@@ -681,27 +681,39 @@ window.IPCC_CONTENT_DATA = {
       "industries": [
         {
           "icon": "🏢",
-          "name": "客服中心"
+          "name": "客服中心",
+          "desc": "",
+          "image": ""
         },
         {
           "icon": "🏢",
-          "name": "電商平台"
+          "name": "電商平台",
+          "desc": "",
+          "image": ""
         },
         {
           "icon": "🏢",
-          "name": "金融保險"
+          "name": "金融保險",
+          "desc": "",
+          "image": ""
         },
         {
           "icon": "🏢",
-          "name": "健康食品"
+          "name": "健康食品",
+          "desc": "",
+          "image": ""
         },
         {
           "icon": "🏢",
-          "name": "醫療與預約服務"
+          "name": "醫療與預約服務",
+          "desc": "",
+          "image": ""
         },
         {
           "icon": "🏢",
-          "name": "企業內部知識管理"
+          "name": "企業內部知識管理",
+          "desc": "",
+          "image": ""
         }
       ],
       "faq": [
@@ -728,7 +740,7 @@ window.IPCC_CONTENT_DATA = {
       "num": "Service 04",
       "icon": "📋",
       "title": "AI 數據標註與資料結構化服務",
-      "slug": "",
+      "slug": "data-labeling",
       "desc": "AI 數據標註是將非結構化資料進行分類、標記與結構化，讓 AI 模型能理解語意、情緒與商業邏輯。",
       "tags": [
         "AI Agent",
@@ -802,23 +814,33 @@ window.IPCC_CONTENT_DATA = {
       "industries": [
         {
           "icon": "🏢",
-          "name": "客服中心 / BPO"
+          "name": "客服中心 / BPO",
+          "desc": "",
+          "image": ""
         },
         {
           "icon": "🏢",
-          "name": "金融與保險"
+          "name": "金融與保險",
+          "desc": "",
+          "image": ""
         },
         {
           "icon": "🏢",
-          "name": "智慧醫療與生醫"
+          "name": "智慧醫療與生醫",
+          "desc": "",
+          "image": ""
         },
         {
           "icon": "🏢",
-          "name": "電商與零售"
+          "name": "電商與零售",
+          "desc": "",
+          "image": ""
         },
         {
           "icon": "🏢",
-          "name": "人資與獵頭顧問"
+          "name": "人資與獵頭顧問",
+          "desc": "",
+          "image": ""
         }
       ],
       "faq": [
@@ -831,8 +853,8 @@ window.IPCC_CONTENT_DATA = {
           "a": "AI 模型的品質取決於訓練資料品質，沒有高品質數據，再強大的 AI 模型也可能產生錯誤結果。"
         }
       ],
-      "seo_title": "AI Agent 建置與維運｜企業AI知識庫與AI客服助理｜東州集團",
-      "seo_desc": "東州集團協助企業建置 AI Agent、AI 客服助理與企業知識庫，整合 CRM、FAQ 與 AI 模型維運，協助企業建立可持續優化的 AI 自動化流程。",
+      "seo_title": "數據標註與資料結構化｜AI訓練數據與語音標註服務｜東州集團",
+      "seo_desc": "提供 AI 數據標註與資料結構化服務，包含語音標註、文字標註、NLP 語意分析與 STT 語音轉文字，協助企業建立高品質 AI 訓練數據與可分析資料。",
       "image": "",
       "order": 3
     },
@@ -841,7 +863,7 @@ window.IPCC_CONTENT_DATA = {
       "num": "Service 05",
       "icon": "📋",
       "title": "客服數據分析與營運優化",
-      "slug": "",
+      "slug": "customer-intelligence",
       "desc": "透過語音分析、CRM 與客戶互動數據，協助企業洞察客戶需求與提升營運效率。",
       "tags": [
         "客服數據分析",
@@ -858,7 +880,7 @@ window.IPCC_CONTENT_DATA = {
       "published": true,
       "hero_title": "客服數據分析與營運優化",
       "hero_subtitle": "透過語音分析、CRM 與 AI 數據洞察，提升客服品質與營運效率",
-      "content": "企業每天都在產生大量客服錄音、顧客互動與 CRM 資料，但許多企業缺乏有效分析能力，導致大量客戶聲音被浪費。\n\n東州集團透過 Voice Data、CRM 與 AI 分析技術，協助企業將客服對話轉化為可分析的營運數據。\n\n我們不只是做客服，更協助企業理解顧客需求、優化銷售流程、改善服務品質與提升營運效率。\n\n「一般市場調查是問出來的，但我們分析的是客戶在真正要消費時說出的真實需求。」",
+      "content": "企業每天都在產生大量客服錄音、顧客互動與 CRM 資料，但許多企業缺乏有效分析能力，導致大量客戶聲音被浪費。\n東州集團透過 Voice Data、CRM 與 AI 分析技術，協助企業將客服對話轉化為可分析的營運數據。\n我們不只是做客服，更協助企業理解顧客需求、優化銷售流程、改善服務品質與提升營運效率。\n「一般市場調查是問出來的，但我們分析的是客戶在真正要消費時說出的真實需求。」",
       "pain_points": [
         {
           "icon": "❌",
@@ -928,27 +950,39 @@ window.IPCC_CONTENT_DATA = {
       "industries": [
         {
           "icon": "🏢",
-          "name": "客服中心 / BPO"
+          "name": "客服中心 / BPO",
+          "desc": "",
+          "image": ""
         },
         {
           "icon": "🏢",
-          "name": "電商零售"
+          "name": "電商零售",
+          "desc": "",
+          "image": ""
         },
         {
           "icon": "🏢",
-          "name": "健康食品產業"
+          "name": "健康食品產業",
+          "desc": "",
+          "image": ""
         },
         {
           "icon": "🏢",
-          "name": "金融與會員服務"
+          "name": "金融與會員服務",
+          "desc": "",
+          "image": ""
         },
         {
           "icon": "🏢",
-          "name": "醫療客服"
+          "name": "醫療客服",
+          "desc": "",
+          "image": ""
         },
         {
           "icon": "🏢",
-          "name": "品牌會員經營"
+          "name": "品牌會員經營",
+          "desc": "",
+          "image": ""
         }
       ],
       "faq": [
