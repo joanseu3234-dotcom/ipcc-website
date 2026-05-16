@@ -293,7 +293,7 @@ function toggleMenu() {
   var html = '<div class="' + gridClass + '">';
   published.forEach(function(s) {
     var tags = (s.tags || []).map(function(t) { return '<span class="svc-tag">' + t + '</span>'; }).join('');
-    var link = s.slug ? '/services/' + s.slug : (s.link || 'contact.html');
+    var link = s.slug ? '/services/' + s.slug : 'services.html';
     html += '<a href="' + link + '" class="svc-card">'
       + '<div class="svc-card-num">' + (s.num || '') + '</div>'
       + '<div class="svc-card-icon">' + (s.icon || '📋') + '</div>'
@@ -310,7 +310,7 @@ function toggleMenu() {
   var footerList = document.getElementById('footerSvcList');
   if (footerList && published.length) {
     footerList.innerHTML = published.map(function(s) {
-      var link = s.slug ? '/services/' + s.slug : (s.link || 'contact.html');
+      var link = s.slug ? '/services/' + s.slug : 'services.html';
       return '<li><a href="' + link + '">' + (s.title || '') + '</a></li>';
     }).join('');
   }

@@ -1,9 +1,9 @@
 // IPCC 內容資料 — 由後台管理系統自動產生，請勿手動修改
-// 最後發布：2026/5/16 23:00:20
+// 最後發布：2026/5/16 23:07:49
 
 window.IPCC_CONTENT_DATA = {
-  "__ts": 1778943620713,
-  "__published": "2026/5/16 23:00:20",
+  "__ts": 1778944069717,
+  "__published": "2026/5/16 23:07:49",
   "ipcc_news": [
     {
       "tab": "media",
@@ -335,7 +335,7 @@ window.IPCC_CONTENT_DATA = {
       "num": "Service 01",
       "icon": "📞",
       "title": "智能客服中心營運",
-      "slug": "",
+      "slug": "smart-customer-service",
       "desc": "受理電話、LINE、FB、文字客服與人機智能服務，提供 7×24H 顧客服務、Inbound / Outbound、話術設計與 AI 智能系統導入。",
       "tags": [
         "AI客服中心",
@@ -371,7 +371,7 @@ window.IPCC_CONTENT_DATA = {
       "num": "Service 02",
       "icon": "🎓",
       "title": "多渠道顧客互動服務",
-      "slug": "",
+      "slug": "multichannel-cx",
       "desc": "協助企業整合電話、社群、文字與即時通訊平台，建立一致性的客戶互動體驗。",
       "tags": [
         "LINE客服",
@@ -398,7 +398,7 @@ window.IPCC_CONTENT_DATA = {
       "num": "Service 03",
       "icon": "💻",
       "title": "AI Agent 建置與維運",
-      "slug": "",
+      "slug": "ai-agent-ops",
       "desc": "協助企業建立 AI 知識庫、客服助理與 AI Agent，並提供後續模型維運與資料更新",
       "tags": [
         "AI Agent",
@@ -532,7 +532,7 @@ window.IPCC_CONTENT_DATA = {
       "num": "Service 04",
       "icon": "📋",
       "title": "AI 數據標註與資料結構化服務",
-      "slug": "",
+      "slug": "data-annotation",
       "desc": "AI 數據標註是將非結構化資料進行分類、標記與結構化，讓 AI 模型能理解語意、情緒與商業邏輯。",
       "tags": [
         "AI Agent",
@@ -645,7 +645,7 @@ window.IPCC_CONTENT_DATA = {
       "num": "Service 05",
       "icon": "📋",
       "title": "客服數據分析與營運優化",
-      "slug": "",
+      "slug": "cx-data-analytics",
       "desc": "透過語音分析、CRM 與客戶互動數據，協助企業洞察客戶需求與提升營運效率。",
       "tags": [
         "客服數據分析",

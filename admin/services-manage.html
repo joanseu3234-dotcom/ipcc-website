@@ -409,7 +409,15 @@
         num: document.getElementById('svcNum').value.trim(),
         icon: document.getElementById('svcIcon').value.trim() || '📋',
         title: document.getElementById('svcTitle').value.trim(),
-        slug: document.getElementById('svcSlug').value.trim(),
+        slug: (function() {
+          var s = document.getElementById('svcSlug').value.trim();
+          if (!s) {
+            var existing = getServices().find(function(x){ return x.id === id; });
+            if (existing && existing.slug) return existing.slug;
+            s = titleToSlug(document.getElementById('svcTitle').value);
+          }
+          return s;
+        })(),
         desc: document.getElementById('svcDesc').value.trim(),
         tags: document.getElementById('svcTags').value.split(',').map(function(t){ return t.trim(); }).filter(Boolean),
         published: document.getElementById('svcPublished').checked,
