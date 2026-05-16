@@ -510,8 +510,8 @@ function toggleMenu() {
     var raw = localStorage.getItem('ipcc_services');
     if (raw) svcs = JSON.parse(raw);
   } catch(e) {}
-  if (!svcs.length && window.IPCC_CONTENT_DATA && window.IPCC_CONTENT_DATA.services) {
-    svcs = window.IPCC_CONTENT_DATA.services;
+  if (!svcs.length && window.IPCC_CONTENT_DATA && window.IPCC_CONTENT_DATA.ipcc_services) {
+    svcs = window.IPCC_CONTENT_DATA.ipcc_services;
   }
 
   var svc = svcs.find(function(s) { return s.slug === slug; });

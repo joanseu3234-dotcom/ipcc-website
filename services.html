@@ -276,8 +276,8 @@ function toggleMenu() {
     var raw = localStorage.getItem('ipcc_services');
     if (raw) svcs = JSON.parse(raw);
   } catch(e) {}
-  if (!svcs.length && window.IPCC_CONTENT_DATA && window.IPCC_CONTENT_DATA.services) {
-    svcs = window.IPCC_CONTENT_DATA.services;
+  if (!svcs.length && window.IPCC_CONTENT_DATA && window.IPCC_CONTENT_DATA.ipcc_services) {
+    svcs = window.IPCC_CONTENT_DATA.ipcc_services;
   }
   if (!svcs.length) {
     // fallback: show contact link
