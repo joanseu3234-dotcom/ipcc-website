@@ -13,15 +13,16 @@
     /* Hero */
     .svc-hero {
       background: linear-gradient(135deg, var(--navy-dark) 0%, var(--navy) 100%);
-      padding: 100px 0 80px;
+      padding: 140px 0 80px;
       position: relative;
       overflow: hidden;
+      text-align: center;
     }
     .svc-hero::before {
       content: '';
       position: absolute;
       inset: 0;
-      background: radial-gradient(ellipse at 70% 50%, rgba(200,22,29,0.18) 0%, transparent 60%);
+      background: radial-gradient(ellipse at 50% 60%, rgba(200,22,29,0.18) 0%, transparent 65%);
     }
     .svc-hero-inner { position: relative; z-index: 1; }
     .svc-hero-num {
@@ -45,13 +46,21 @@
       color: rgba(255,255,255,0.7);
       max-width: 560px;
       line-height: 1.8;
+      margin: 0 auto;
     }
-    .svc-hero-cta { margin-top: 36px; display: flex; gap: 16px; flex-wrap: wrap; }
+    .svc-hero-cta {
+      margin-top: 36px;
+      display: flex;
+      gap: 16px;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
 
     /* Breadcrumb */
     .svc-breadcrumb {
       display: flex;
       align-items: center;
+      justify-content: center;
       gap: 8px;
       font-size: 0.82rem;
       color: rgba(255,255,255,0.45);
@@ -61,12 +70,14 @@
     .svc-breadcrumb a:hover { color: #fff; }
 
     /* Content */
-    .svc-content-section { padding: 80px 0; }
+    .svc-content-section { padding: 80px 0; text-align: center; }
     .svc-content-text {
       font-size: 1.05rem;
       color: var(--text-sub);
       line-height: 2;
       max-width: 780px;
+      margin: 24px auto 0;
+      text-align: left;
     }
 
     /* Pain vs Features compare */
@@ -205,7 +216,7 @@
 
     /* FAQ */
     .faq-section { padding: 80px 0; }
-    .faq-list { margin-top: 40px; display: flex; flex-direction: column; gap: 0; }
+    .faq-list { margin-top: 40px; display: flex; flex-direction: column; gap: 0; max-width: 900px; margin-left: auto; margin-right: auto; }
     .faq-item {
       border-bottom: 1px solid var(--border);
     }
@@ -283,7 +294,10 @@
     }
     @media (max-width: 560px) {
       .industries-grid { grid-template-columns: repeat(2, 1fr); }
-      .svc-hero { padding: 80px 0 60px; }
+      .svc-hero { padding: 100px 0 60px; }
+      .svc-hero-cta { flex-direction: column; align-items: center; }
+      .svc-hero-cta .btn { width: 100%; max-width: 280px; text-align: center; }
+      .svc-content-text { text-align: left; }
     }
   </style>
 </head>
