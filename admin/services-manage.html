@@ -318,14 +318,53 @@
     }
 
     function addIndustry(ind) {
-      ind = ind || {icon:'🏢', name:''};
+      ind = ind || {icon:'', name:'', desc:'', image:''};
       var row = document.createElement('div');
-      row.className = 'dyn-row dyn-row-2';
-      row.style.display = 'grid';
-      row.innerHTML = '<input type="text" value="'+escHtml(ind.icon)+'" placeholder="圖示" style="text-align:center;font-size:1.3rem;" class="form-control" data-field="icon">'
-        + '<input type="text" value="'+escHtml(ind.name)+'" placeholder="產業名稱" class="form-control" data-field="name">'
-        + '<button type="button" class="dyn-del-btn" onclick="this.closest(\'.dyn-row\').remove()">✕</button>';
+      row.className = 'dyn-row';
+      row.style.cssText = 'display:block;';
+      row.innerHTML = '<div style="display:grid;grid-template-columns:60px 1fr 1fr 32px;gap:8px;align-items:center;margin-bottom:8px;">'
+        + '<input type="text" value="'+escHtml(ind.icon||'')+'" placeholder="圖示" style="text-align:center;font-size:1.3rem;" class="form-control" data-field="icon">'
+        + '<input type="text" value="'+escHtml(ind.name||'')+'" placeholder="產業名稱" class="form-control" data-field="name">'
+        + '<input type="text" value="'+escHtml(ind.desc||'')+'" placeholder="簡短描述（選填）" class="form-control" data-field="desc">'
+        + '<button type="button" class="dyn-del-btn" onclick="this.closest(\'.dyn-row\').remove()">✕</button>'
+        + '</div>'
+        + '<div style="display:flex;gap:8px;align-items:center;">'
+        + '<input type="text" value="'+escHtml(ind.image||'')+'" placeholder="產業圖片 URL（PNG / SVG / WebP，選填）" class="form-control" data-field="image" style="flex:1;">'
+        + '<button type="button" class="btn-outline btn-sm" style="white-space:nowrap;flex-shrink:0;" onclick="genIndPrompt(this)">✨ AI Prompt</button>'
+        + '</div>';
       document.getElementById('industriesList').appendChild(row);
+    }
+
+    function genIndPrompt(btn) {
+      var row = btn.closest('.dyn-row');
+      var name = row.querySelector('[data-field="name"]').value.trim() || '產業';
+      var prompt = 'Futuristic ' + name + ' industry illustration, AI technology enterprise dashboard, realistic 3D render, cinematic lighting, SaaS product visual, glassmorphism UI elements, dark deep blue gradient background, professional business tech aesthetic, high quality digital art, --ar 1:1 --style raw --q 2';
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(prompt).then(function() {
+          var orig = btn.textContent;
+          btn.textContent = '✓ 已複製';
+          btn.style.color = '#68D391';
+          setTimeout(function() { btn.textContent = orig; btn.style.color = ''; }, 2500);
+        }).catch(function() { showIndPromptBox(row, prompt); });
+      } else {
+        showIndPromptBox(row, prompt);
+      }
+    }
+    function showIndPromptBox(row, prompt) {
+      var existing = row.querySelector('.ai-prompt-box');
+      if (existing) { existing.remove(); return; }
+      var box = document.createElement('div');
+      box.className = 'ai-prompt-box';
+      box.style.cssText = 'margin-top:8px;padding:10px 12px;background:rgba(104,211,145,0.08);border:1px solid rgba(104,211,145,0.25);border-radius:8px;font-size:0.76rem;color:#68D391;word-break:break-all;cursor:pointer;line-height:1.5;';
+      box.title = '點擊複製 Prompt';
+      box.textContent = prompt;
+      box.onclick = function() {
+        var ta = document.createElement('textarea');
+        ta.value = prompt; document.body.appendChild(ta); ta.select(); document.execCommand('copy'); document.body.removeChild(ta);
+        box.style.background = 'rgba(104,211,145,0.2)';
+        setTimeout(function(){ box.style.background = 'rgba(104,211,145,0.08)'; }, 900);
+      };
+      row.appendChild(box);
     }
 
     function addFaq(f) {
@@ -426,7 +465,7 @@
         content: document.getElementById('svcContent').value.trim(),
         pain_points: collectList('painPointsList', ['icon','desc']),
         features: collectList('featuresList', ['icon','title','desc']),
-        industries: collectList('industriesList', ['icon','name']),
+        industries: collectList('industriesList', ['icon','name','desc','image']),
         faq: collectList('faqList', ['q','a']),
         seo_title: document.getElementById('svcSeoTitle').value.trim(),
         seo_desc: document.getElementById('svcSeoDesc').value.trim(),
