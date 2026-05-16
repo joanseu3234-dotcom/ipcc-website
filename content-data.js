@@ -1,9 +1,9 @@
 // IPCC 內容資料 — 由後台管理系統自動產生，請勿手動修改
-// 最後發布：2026/5/16 21:34:01
+// 最後發布：2026/5/16 21:51:31
 
 window.IPCC_CONTENT_DATA = {
-  "__ts": 1778938441812,
-  "__published": "2026/5/16 21:34:01",
+  "__ts": 1778939491343,
+  "__published": "2026/5/16 21:51:31",
   "ipcc_news": [
     {
       "tab": "media",
@@ -351,6 +351,7 @@ window.IPCC_CONTENT_DATA = {
       "hero_title": "",
       "hero_subtitle": "",
       "content": "每一通客戶來電，都是企業最真實的聲音\n\n東州集團深耕客服產業近三十年，提供整合電話客服、LINE、Facebook、文字客服與 AI 人機協作的智能客服中心營運服務，協助企業建立穩定、高效率且可持續優化的客戶服務流程。\n\n我們不只是客服外包，更透過 CRM、客服紀錄與 AI 分析，協助企業掌握客戶需求、提升服務品質與優化營運效率。\n\n什麼是 AI 智能客服中心？\n\nAI 智能客服中心（AI Contact Center）是一種結合客服人員、CRM、AI Agent 與客戶數據分析的現代化客服營運模式。\n\n透過 AI 輔助與人機協作，企業可提升客服效率、降低人力成本，並將大量客服互動轉化為可分析的數據資產。",
+      "pain_points": [],
       "features": [
         {
           "icon": "✦",
@@ -360,8 +361,8 @@ window.IPCC_CONTENT_DATA = {
       ],
       "industries": [],
       "faq": [],
-      "seo_title": "",
-      "seo_desc": "AI 智能客服中心是一種結合客服人員、CRM、AI Agent 與客戶數據分析的現代化客服營運模式。",
+      "seo_title": "AI智能客服中心營運｜24H客服委外與AI客服整合服務｜東州集團",
+      "seo_desc": "東州集團提供 AI 智能客服中心營運服務，整合電話客服、LINE、Facebook、CRM 與 AI 人機協作，協助企業提升客服效率、優化客戶體驗與建立可分析的客服數據。",
       "image": "",
       "order": 0
     },
@@ -370,6 +371,7 @@ window.IPCC_CONTENT_DATA = {
       "num": "Service 02",
       "icon": "🎓",
       "title": "多渠道顧客互動服務",
+      "slug": "",
       "desc": "協助企業整合電話、社群、文字與即時通訊平台，建立一致性的客戶互動體驗。",
       "tags": [
         "LINE客服",
@@ -378,8 +380,17 @@ window.IPCC_CONTENT_DATA = {
         "Omnichannel客服",
         "社群客服"
       ],
-      "link": "services-training.html",
       "published": true,
+      "hero_title": "",
+      "hero_subtitle": "",
+      "content": "",
+      "pain_points": [],
+      "features": [],
+      "industries": [],
+      "faq": [],
+      "seo_title": "多渠道客服委外｜LINE、FB、電話與社群客服整合服務｜東州集團",
+      "seo_desc": "東州集團提供 Omnichannel 多渠道客服委外服務，整合電話、LINE、Facebook、社群與文字客服，協助企業建立一致性的顧客互動體驗與 CRM 客戶管理流程。",
+      "image": "",
       "order": 1
     },
     {
@@ -511,8 +522,8 @@ window.IPCC_CONTENT_DATA = {
           "a": "若缺乏持續更新與資料同步，AI 模型可能逐漸失準，因此需要定期維護與知識更新。"
         }
       ],
-      "seo_title": "",
-      "seo_desc": "",
+      "seo_title": "數據標註與資料結構化｜AI訓練數據與語音標註服務｜東州集團",
+      "seo_desc": "提供 AI 數據標註與資料結構化服務，包含語音標註、文字標註、NLP 語意分析與 STT 語音轉文字，協助企業建立高品質 AI 訓練數據與可分析資料。",
       "image": "",
       "order": 2
     },
@@ -536,41 +547,33 @@ window.IPCC_CONTENT_DATA = {
         "AI Automation"
       ],
       "published": true,
-      "hero_title": "客服數據分析與營運優化",
-      "hero_subtitle": "透過語音分析、CRM 與 AI 數據洞察，提升客服品質與營運效率",
-      "content": "企業每天都在產生大量客服錄音、顧客互動與 CRM 資料，但許多企業缺乏有效分析能力，導致大量客戶聲音被浪費。\n東州集團透過 Voice Data、CRM 與 AI 分析技術，協助企業將客服對話轉化為可分析的營運數據。\n我們不只是做客服，更協助企業理解顧客需求、優化銷售流程、改善服務品質與提升營運效率。\n「一般市場調查是問出來的，但我們分析的是客戶在真正要消費時說出的真實需求。」",
+      "hero_title": "AI 數據標註與資料結構化服務",
+      "hero_subtitle": "AI 數據標註是將非結構化資料進行分類、標記與結構化，讓 AI 模型能理解語意、情緒與商業邏輯。",
+      "content": "企業每天累積大量語音、文字、文件與客服紀錄，但若沒有經過標註與結構化，這些資料很難成為 AI 可學習、可分析、可應用的數據資產。\n\n東州集團提供 AI 數據標註與資料結構化服務，協助企業將非結構化資料轉換成 AI 可使用的高品質訓練數據。\n\n我們結合 AI 預標註與人工 QA 複審機制，同時兼顧效率與高精準度。",
       "pain_points": [
         {
           "icon": "❌",
-          "desc": "客服錄音無法有效分析"
+          "desc": "大量語音與文字資料無法有效使用"
         },
         {
           "icon": "❌",
-          "desc": "無法掌握客戶真正需求"
+          "desc": "AI 模型常出現錯誤回答與 AI 幻覺"
         },
         {
           "icon": "❌",
-          "desc": "客戶情緒與流失原因不明"
+          "desc": "非結構化資料難以分析"
         },
         {
           "icon": "❌",
-          "desc": "CRM 資料分散難整合"
+          "desc": "缺乏高品質 AI 訓練數據"
         },
         {
           "icon": "❌",
-          "desc": "無法找出成交關鍵因素"
+          "desc": "純人工標註成本高且效率低"
         },
         {
           "icon": "❌",
-          "desc": "客服 KPI 難以量化"
-        },
-        {
-          "icon": "❌",
-          "desc": "客服流程缺乏優化依據"
-        },
-        {
-          "icon": "❌",
-          "desc": "缺乏即時營運洞察"
+          "desc": "AI 無法理解企業專業知識"
         }
       ],
       "features": [
@@ -632,8 +635,8 @@ window.IPCC_CONTENT_DATA = {
           "a": "AI 模型的品質取決於訓練資料品質，沒有高品質數據，再強大的 AI 模型也可能產生錯誤結果。"
         }
       ],
-      "seo_title": "",
-      "seo_desc": "",
+      "seo_title": "AI Agent 建置與維運｜企業AI知識庫與AI客服助理｜東州集團",
+      "seo_desc": "東州集團協助企業建置 AI Agent、AI 客服助理與企業知識庫，整合 CRM、FAQ 與 AI 模型維運，協助企業建立可持續優化的 AI 自動化流程。",
       "image": "",
       "order": 3
     },
@@ -766,8 +769,8 @@ window.IPCC_CONTENT_DATA = {
           "a": "因為客服對話通常是客戶最真實的需求與意見來源，透過分析能協助企業改善營運與提升客戶體驗。"
         }
       ],
-      "seo_title": "",
-      "seo_desc": "",
+      "seo_title": "客服數據分析與營運優化｜Customer Intelligence 與語音分析｜東州集團",
+      "seo_desc": "透過客服錄音分析、CRM 數據整合與 AI Customer Intelligence 技術，協助企業掌握客戶需求、分析顧客情緒、優化客服流程並提升營運效率。",
       "image": "",
       "order": 4
     }
