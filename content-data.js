@@ -1,9 +1,9 @@
 // IPCC 內容資料 — 由後台管理系統自動產生，請勿手動修改
-// 最後發布：2026/5/16 23:07:49
+// 最後發布：2026/5/16 23:51:08
 
 window.IPCC_CONTENT_DATA = {
-  "__ts": 1778944069717,
-  "__published": "2026/5/16 23:07:49",
+  "__ts": 1778946668554,
+  "__published": "2026/5/16 23:51:08",
   "ipcc_news": [
     {
       "tab": "media",
@@ -335,7 +335,7 @@ window.IPCC_CONTENT_DATA = {
       "num": "Service 01",
       "icon": "📞",
       "title": "智能客服中心營運",
-      "slug": "smart-customer-service",
+      "slug": "ai-contact-center",
       "desc": "受理電話、LINE、FB、文字客服與人機智能服務，提供 7×24H 顧客服務、Inbound / Outbound、話術設計與 AI 智能系統導入。",
       "tags": [
         "AI客服中心",
@@ -350,17 +350,116 @@ window.IPCC_CONTENT_DATA = {
       "published": true,
       "hero_title": "",
       "hero_subtitle": "",
-      "content": "每一通客戶來電，都是企業最真實的聲音\n\n東州集團深耕客服產業近三十年，提供整合電話客服、LINE、Facebook、文字客服與 AI 人機協作的智能客服中心營運服務，協助企業建立穩定、高效率且可持續優化的客戶服務流程。\n\n我們不只是客服外包，更透過 CRM、客服紀錄與 AI 分析，協助企業掌握客戶需求、提升服務品質與優化營運效率。\n\n什麼是 AI 智能客服中心？\n\nAI 智能客服中心（AI Contact Center）是一種結合客服人員、CRM、AI Agent 與客戶數據分析的現代化客服營運模式。\n\n透過 AI 輔助與人機協作，企業可提升客服效率、降低人力成本，並將大量客服互動轉化為可分析的數據資產。",
-      "pain_points": [],
+      "content": "東州集團深耕客服產業近三十年，提供整合電話客服、LINE、Facebook、文字客服與 AI 人機協作的智能客服中心營運服務。\n\n我們不只是客服外包，更透過 CRM、客服流程與 AI 分析，協助企業建立穩定、高效率且可持續優化的客戶服務流程。\n透過 AI 智能客服中心，企業可提升客服效率、降低等待時間、優化客戶體驗，並將大量客服互動轉化為可分析的營運數據。",
+      "pain_points": [
+        {
+          "icon": "❌",
+          "desc": "客服量暴增導致人力不足"
+        },
+        {
+          "icon": "❌",
+          "desc": "多渠道客服訊息分散"
+        },
+        {
+          "icon": "❌",
+          "desc": "夜間與假日客服無法即時處理"
+        },
+        {
+          "icon": "❌",
+          "desc": "客服品質不一致"
+        },
+        {
+          "icon": "❌",
+          "desc": "客戶資料難以整合"
+        },
+        {
+          "icon": "❌",
+          "desc": "客服錄音與對話無法有效分析"
+        },
+        {
+          "icon": "❌",
+          "desc": "缺乏標準化客服流程"
+        },
+        {
+          "icon": "❌",
+          "desc": "客服等待時間過長"
+        }
+      ],
       "features": [
         {
           "icon": "✦",
-          "title": "",
-          "desc": ""
+          "title": "多渠道客服整合",
+          "desc": "整合電話、LINE、Facebook、Email 與 CRM，建立統一客服管理流程。"
+        },
+        {
+          "icon": "✦",
+          "title": "7×24H 智能客服營運",
+          "desc": "提供全天候客服中心服務與 AI 人機協作支援。"
+        },
+        {
+          "icon": "✦",
+          "title": "AI 人機協作客服",
+          "desc": "透過 AI Agent 處理重複性問題，提升客服效率。"
+        },
+        {
+          "icon": "✦",
+          "title": "客服流程與話術優化",
+          "desc": "建立標準化客服 SOP、QA 與客服話術規範。"
+        },
+        {
+          "icon": "✦",
+          "title": "客服數據分析",
+          "desc": "結合 CRM 與 AI 分析，將客服互動轉化為可分析數據。"
         }
       ],
-      "industries": [],
-      "faq": [],
+      "industries": [
+        {
+          "icon": "",
+          "name": "電商零售",
+          "desc": "",
+          "image": "Futuristic 電商零售 industry illustration, AI technology enterprise dashboard, realistic 3D render, cinematic lighting, SaaS product visual, glassmorphism UI elements, dark deep blue gradient background, professional business tech aesthetic, high quality digital art, --ar 1:1 --style raw --q 2"
+        },
+        {
+          "icon": "",
+          "name": "保健食品",
+          "desc": "",
+          "image": "Futuristic 保健食品 industry illustration, AI technology enterprise dashboard, realistic 3D render, cinematic lighting, SaaS product visual, glassmorphism UI elements, dark deep blue gradient background, professional business tech aesthetic, high quality digital art, --ar 1:1 --style raw --q 2"
+        },
+        {
+          "icon": "",
+          "name": "醫療產業",
+          "desc": "",
+          "image": "Futuristic 醫療產業 industry illustration, AI technology enterprise dashboard, realistic 3D render, cinematic lighting, SaaS product visual, glassmorphism UI elements, dark deep blue gradient background, professional business tech aesthetic, high quality digital art, --ar 1:1 --style raw --q 2"
+        },
+        {
+          "icon": "",
+          "name": "金融保險",
+          "desc": "",
+          "image": "Futuristic 金融保險 industry illustration, AI technology enterprise dashboard, realistic 3D render, cinematic lighting, SaaS product visual, glassmorphism UI elements, dark deep blue gradient background, professional business tech aesthetic, high quality digital art, --ar 1:1 --style raw --q 2"
+        },
+        {
+          "icon": "",
+          "name": "品牌客服中心",
+          "desc": "",
+          "image": "Futuristic 品牌客服中心 industry illustration, AI technology enterprise dashboard, realistic 3D render, cinematic lighting, SaaS product visual, glassmorphism UI elements, dark deep blue gradient background, professional business tech aesthetic, high quality digital art, --ar 1:1 --style raw --q 2"
+        },
+        {
+          "icon": "",
+          "name": "會員服務平台",
+          "desc": "",
+          "image": "Futuristic 會員服務平台 industry illustration, AI technology enterprise dashboard, realistic 3D render, cinematic lighting, SaaS product visual, glassmorphism UI elements, dark deep blue gradient background, professional business tech aesthetic, high quality digital art, --ar 1:1 --style raw --q 2"
+        }
+      ],
+      "faq": [
+        {
+          "q": "什麼是 AI 智能客服中心？",
+          "a": "AI 智能客服中心是結合客服人員、CRM、AI Agent 與客戶數據分析的現代化客服營運模式。"
+        },
+        {
+          "q": "AI 客服會完全取代人工客服嗎？",
+          "a": "不會。AI 更適合處理重複性問題，而人工客服仍負責高情境與高情緒溝通，因此人機協作是目前最有效率的客服模式。"
+        }
+      ],
       "seo_title": "AI智能客服中心營運｜24H客服委外與AI客服整合服務｜東州集團",
       "seo_desc": "東州集團提供 AI 智能客服中心營運服務，整合電話客服、LINE、Facebook、CRM 與 AI 人機協作，協助企業提升客服效率、優化客戶體驗與建立可分析的客服數據。",
       "image": "",
@@ -371,7 +470,7 @@ window.IPCC_CONTENT_DATA = {
       "num": "Service 02",
       "icon": "🎓",
       "title": "多渠道顧客互動服務",
-      "slug": "multichannel-cx",
+      "slug": "",
       "desc": "協助企業整合電話、社群、文字與即時通訊平台，建立一致性的客戶互動體驗。",
       "tags": [
         "LINE客服",
@@ -398,7 +497,7 @@ window.IPCC_CONTENT_DATA = {
       "num": "Service 03",
       "icon": "💻",
       "title": "AI Agent 建置與維運",
-      "slug": "ai-agent-ops",
+      "slug": "",
       "desc": "協助企業建立 AI 知識庫、客服助理與 AI Agent，並提供後續模型維運與資料更新",
       "tags": [
         "AI Agent",
@@ -532,7 +631,7 @@ window.IPCC_CONTENT_DATA = {
       "num": "Service 04",
       "icon": "📋",
       "title": "AI 數據標註與資料結構化服務",
-      "slug": "data-annotation",
+      "slug": "",
       "desc": "AI 數據標註是將非結構化資料進行分類、標記與結構化，讓 AI 模型能理解語意、情緒與商業邏輯。",
       "tags": [
         "AI Agent",
@@ -645,7 +744,7 @@ window.IPCC_CONTENT_DATA = {
       "num": "Service 05",
       "icon": "📋",
       "title": "客服數據分析與營運優化",
-      "slug": "cx-data-analytics",
+      "slug": "",
       "desc": "透過語音分析、CRM 與客戶互動數據，協助企業洞察客戶需求與提升營運效率。",
       "tags": [
         "客服數據分析",
