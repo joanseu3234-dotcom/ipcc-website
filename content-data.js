@@ -1,9 +1,9 @@
 // IPCC 內容資料 — 由後台管理系統自動產生，請勿手動修改
-// 最後發布：2026/5/16 23:57:56
+// 最後發布：2026/5/17 00:04:03
 
 window.IPCC_CONTENT_DATA = {
-  "__ts": 1778947076050,
-  "__published": "2026/5/16 23:57:56",
+  "__ts": 1778947443249,
+  "__published": "2026/5/17 00:04:03",
   "ipcc_news": [
     {
       "tab": "media",
@@ -470,7 +470,7 @@ window.IPCC_CONTENT_DATA = {
       "num": "Service 02",
       "icon": "🎓",
       "title": "多渠道顧客互動服務",
-      "slug": "",
+      "slug": "multichannel-cx",
       "desc": "協助企業整合電話、社群、文字與即時通訊平台，建立一致性的客戶互動體驗。",
       "tags": [
         "LINE客服",
@@ -480,13 +480,110 @@ window.IPCC_CONTENT_DATA = {
         "社群客服"
       ],
       "published": true,
-      "hero_title": "",
-      "hero_subtitle": "",
-      "content": "",
-      "pain_points": [],
-      "features": [],
-      "industries": [],
-      "faq": [],
+      "hero_title": "多渠道顧客互動服務",
+      "hero_subtitle": "整合電話、社群與文字客服，建立一致性的顧客互動體驗",
+      "content": "企業客服已從單一電話服務，轉變為多平台、多渠道與即時化的顧客互動模式。\n\n東州集團提供電話客服、LINE、Facebook、Messenger、Email 與文字客服整合服務，協助企業建立 Omnichannel 全渠道客服體系。\n\n透過多渠道客服委外服務，企業可集中管理顧客互動、降低漏訊風險，並建立完整 CRM 客戶資料。",
+      "pain_points": [
+        {
+          "icon": "❌",
+          "desc": "客服訊息分散於不同平台"
+        },
+        {
+          "icon": "❌",
+          "desc": "LINE、FB、電話客服無法同步"
+        },
+        {
+          "icon": "❌",
+          "desc": "客服回覆速度不一致"
+        },
+        {
+          "icon": "❌",
+          "desc": "容易漏接與漏回覆"
+        },
+        {
+          "icon": "❌",
+          "desc": "客服紀錄難以統整"
+        },
+        {
+          "icon": "❌",
+          "desc": "客戶體驗不一致"
+        }
+      ],
+      "features": [
+        {
+          "icon": "✦",
+          "title": "全渠道客服整合",
+          "desc": "整合電話、LINE、Facebook、Email 與文字客服。"
+        },
+        {
+          "icon": "✦",
+          "title": "即時客服回應",
+          "desc": "建立快速回應與客服分流流程。"
+        },
+        {
+          "icon": "✦",
+          "title": "CRM 客戶資料整合",
+          "desc": "集中管理顧客互動紀錄與服務歷程。"
+        },
+        {
+          "icon": "✦",
+          "title": "標準化客服管理",
+          "desc": "建立統一客服 SOP 與服務流程。"
+        },
+        {
+          "icon": "✦",
+          "title": "AI 輔助客服分析",
+          "desc": "透過 AI 分析常見問題與客戶需求。"
+        }
+      ],
+      "industries": [
+        {
+          "icon": "",
+          "name": "電商平台",
+          "desc": "",
+          "image": "Futuristic 電商平台 industry illustration, AI technology enterprise dashboard, realistic 3D render, cinematic lighting, SaaS product visual, glassmorphism UI elements, dark deep blue gradient background, professional business tech aesthetic, high quality digital art, --ar 1:1 --style raw --q 2"
+        },
+        {
+          "icon": "",
+          "name": "品牌客服中心",
+          "desc": "",
+          "image": "Futuristic 品牌客服中心 industry illustration, AI technology enterprise dashboard, realistic 3D render, cinematic lighting, SaaS product visual, glassmorphism UI elements, dark deep blue gradient background, professional business tech aesthetic, high quality digital art, --ar 1:1 --style raw --q 2"
+        },
+        {
+          "icon": "",
+          "name": "保健食品產業",
+          "desc": "",
+          "image": "Futuristic 保健食品產業 industry illustration, AI technology enterprise dashboard, realistic 3D render, cinematic lighting, SaaS product visual, glassmorphism UI elements, dark deep blue gradient background, professional business tech aesthetic, high quality digital art, --ar 1:1 --style raw --q 2"
+        },
+        {
+          "icon": "",
+          "name": "金融與會員服務",
+          "desc": "",
+          "image": "Futuristic 金融與會員服務 industry illustration, AI technology enterprise dashboard, realistic 3D render, cinematic lighting, SaaS product visual, glassmorphism UI elements, dark deep blue gradient background, professional business tech aesthetic, high quality digital art, --ar 1:1 --style raw --q 2"
+        },
+        {
+          "icon": "",
+          "name": "醫療預約服務",
+          "desc": "",
+          "image": "Futuristic 醫療預約服務 industry illustration, AI technology enterprise dashboard, realistic 3D render, cinematic lighting, SaaS product visual, glassmorphism UI elements, dark deep blue gradient background, professional business tech aesthetic, high quality digital art, --ar 1:1 --style raw --q 2"
+        },
+        {
+          "icon": "",
+          "name": "線上服務平台",
+          "desc": "",
+          "image": "Futuristic 線上服務平台 industry illustration, AI technology enterprise dashboard, realistic 3D render, cinematic lighting, SaaS product visual, glassmorphism UI elements, dark deep blue gradient background, professional business tech aesthetic, high quality digital art, --ar 1:1 --style raw --q 2"
+        }
+      ],
+      "faq": [
+        {
+          "q": "什麼是 Omnichannel 全渠道客服？",
+          "a": "全渠道客服是整合電話、社群、文字與即時通訊平台的客服模式，可提升顧客體驗與客服效率。"
+        },
+        {
+          "q": "為什麼企業需要多渠道客服整合？",
+          "a": "因為顧客已習慣透過不同平台聯繫品牌，若客服資料分散，容易造成服務不一致與顧客流失。"
+        }
+      ],
       "seo_title": "多渠道客服委外｜LINE、FB、電話與社群客服整合服務｜東州集團",
       "seo_desc": "東州集團提供 Omnichannel 多渠道客服委外服務，整合電話、LINE、Facebook、社群與文字客服，協助企業建立一致性的顧客互動體驗與 CRM 客戶管理流程。",
       "image": "",
