@@ -9,28 +9,23 @@
   <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="style.css">
   <style>
-    /* ── Filter bar ── */
-    .insights-filter-bar { background: var(--bg-light); padding: 36px 0 0; }
-    .filter-group-label {
-      font-size: 0.7rem; font-weight: 700; letter-spacing: 0.12em;
-      text-transform: uppercase; color: var(--text-muted); margin-bottom: 10px;
-    }
-    .filter-pills { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 20px; }
-    .filter-pill {
-      padding: 6px 16px; border-radius: 100px;
+    /* ── Category strip (compact pills above grid) ── */
+    .cat-strip { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; }
+    .cat-pill {
+      padding: 5px 15px; border-radius: 100px;
       border: 1.5px solid var(--border); background: none;
-      font-size: 0.82rem; font-weight: 600; color: var(--text-sub);
-      cursor: pointer; font-family: inherit; transition: all 0.2s;
+      font-size: 0.78rem; font-weight: 600; color: var(--text-sub);
+      cursor: pointer; font-family: inherit; transition: all 0.2s; white-space: nowrap;
     }
-    .filter-pill:hover { border-color: var(--red); color: var(--red); }
-    .filter-pill.active { background: var(--red); border-color: var(--red); color: #fff; }
+    .cat-pill:hover { border-color: var(--red); color: var(--red); }
+    .cat-pill.active { background: var(--red); border-color: var(--red); color: #fff; }
 
     /* ── Card grid ── */
     .insights-grid {
       display: grid;
       grid-template-columns: repeat(3, 1fr);
       gap: 28px;
-      margin-top: 56px;
+      margin-top: 28px;
     }
     .insight-card {
       background: var(--white);
@@ -69,10 +64,12 @@
       font-size: 0.88rem; color: var(--text-sub); line-height: 1.75; flex: 1;
       display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden;
     }
-    .insight-card-tags { display: flex; flex-wrap: wrap; gap: 6px; }
+    /* Tags: metadata-level, subtle — not a filter */
+    .insight-card-tags { display: flex; flex-wrap: wrap; gap: 5px; margin-top: 2px; }
     .insight-tag {
-      font-size: 0.7rem; font-weight: 600; color: var(--text-muted);
+      font-size: 0.67rem; font-weight: 500; color: var(--text-muted);
       background: var(--bg-light); border-radius: 100px; padding: 2px 9px;
+      opacity: 0.85;
     }
     .insight-card-cta {
       font-size: 0.85rem; font-weight: 700; color: var(--red);
@@ -138,19 +135,10 @@
   </div>
 </div>
 
-<!-- Filters -->
-<div class="insights-filter-bar">
-  <div class="container">
-    <div class="filter-group-label">分類篩選</div>
-    <div class="filter-pills" id="categoryFilters"></div>
-    <div class="filter-group-label">標籤篩選</div>
-    <div class="filter-pills" id="tagFilters"></div>
-  </div>
-</div>
-
 <!-- Grid -->
 <section class="section">
   <div class="container">
+    <div class="cat-strip" id="categoryStrip"></div>
     <div class="insights-grid" id="insightsGrid"></div>
     <div class="no-results" id="noResults" style="display:none;">
       <div style="font-size:2.5rem;margin-bottom:16px;">🔍</div>
@@ -237,22 +225,21 @@ function toggleMenu() { document.getElementById('navMenu').classList.toggle('ope
     insights = window.IPCC_CONTENT_DATA.ipcc_insights;
 
   var published = insights.filter(function(a){ return a.published; }).sort(function(a,b){ return a.order - b.order; });
-  var activeCat = 'all', activeTag = 'all';
+  var activeCat = 'all';
 
   function escQ(s){ return (s||'').replace(/\\/g,'\\\\').replace(/'/g,"\\'"); }
 
-  function buildFilters() {
-    var cats = ['all'], tags = ['all'];
+  function buildCats() {
+    var cats = ['all'];
     published.forEach(function(a) {
       if (a.category && cats.indexOf(a.category) === -1) cats.push(a.category);
-      (a.tags||[]).forEach(function(t){ if (tags.indexOf(t) === -1) tags.push(t); });
     });
-    document.getElementById('categoryFilters').innerHTML = cats.map(function(c) {
-      return '<button class="filter-pill'+(c==='all'?' active':'')+'" data-cat="'+c+'" onclick="filterCat(this,\''+escQ(c)+'\')">'+(c==='all'?'全部分類':c)+'</button>';
-    }).join('');
-    document.getElementById('tagFilters').innerHTML = tags.map(function(t) {
-      return '<button class="filter-pill'+(t==='all'?' active':'')+'" data-tag="'+t+'" onclick="filterTag(this,\''+escQ(t)+'\')">'+(t==='all'?'所有標籤':'#'+t)+'</button>';
-    }).join('');
+    // Only render strip when there are 2+ real categories (else no point showing filter)
+    if (cats.length > 2) {
+      document.getElementById('categoryStrip').innerHTML = cats.map(function(c) {
+        return '<button class="cat-pill'+(c==='all'?' active':'')+'" data-cat="'+c+'" onclick="filterCat(this,\''+escQ(c)+'\')">'+(c==='all'?'全部':c)+'</button>';
+      }).join('');
+    }
     var footerCats = cats.filter(function(c){ return c!=='all'; });
     if (footerCats.length) {
       document.getElementById('footerInsightCats').innerHTML =
@@ -263,7 +250,7 @@ function toggleMenu() { document.getElementById('navMenu').classList.toggle('ope
 
   function renderGrid() {
     var items = published.filter(function(a) {
-      return (activeCat==='all'||a.category===activeCat) && (activeTag==='all'||(a.tags||[]).indexOf(activeTag)!==-1);
+      return activeCat === 'all' || a.category === activeCat;
     });
     var grid = document.getElementById('insightsGrid');
     var noRes = document.getElementById('noResults');
@@ -273,14 +260,17 @@ function toggleMenu() { document.getElementById('navMenu').classList.toggle('ope
       var imgHtml = a.cover_image
         ? '<div class="insight-card-img"><img src="'+(a.cover_image||'')+'" alt="" loading="lazy"></div>'
         : '<div class="insight-card-img">💡</div>';
-      var tags = (a.tags||[]).map(function(t){ return '<span class="insight-tag">#'+t+'</span>'; }).join('');
+      var tagSlice = (a.tags||[]).slice(0, 3);
+      var tagsHtml = tagSlice.length
+        ? '<div class="insight-card-tags">'+tagSlice.map(function(t){ return '<span class="insight-tag">#'+t+'</span>'; }).join('')+'</div>'
+        : '';
       var dateStr = (a.publish_date||'').replace(/-/g,'.').slice(0,7);
       return '<a href="/insights/'+(a.slug||'')+'" class="insight-card">'
         +imgHtml+'<div class="insight-card-body">'
         +'<div class="insight-card-meta"><span class="insight-card-cat">'+(a.category||'')+'</span><span class="insight-card-date">'+dateStr+'</span></div>'
         +'<div class="insight-card-title">'+(a.title||'')+'</div>'
         +'<div class="insight-card-excerpt">'+(a.excerpt||'')+'</div>'
-        +'<div class="insight-card-tags">'+tags+'</div>'
+        +tagsHtml
         +'<span class="insight-card-cta">閱讀更多</span>'
         +'</div></a>';
     }).join('');
@@ -291,13 +281,8 @@ function toggleMenu() { document.getElementById('navMenu').classList.toggle('ope
     document.querySelectorAll('[data-cat]').forEach(function(b){ b.classList.toggle('active', b.dataset.cat===cat); });
     renderGrid();
   };
-  window.filterTag = function(btn, tag) {
-    activeTag = tag;
-    document.querySelectorAll('[data-tag]').forEach(function(b){ b.classList.toggle('active', b.dataset.tag===tag); });
-    renderGrid();
-  };
 
-  buildFilters();
+  buildCats();
   renderGrid();
 })();
 </script>
