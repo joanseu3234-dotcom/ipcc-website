@@ -91,6 +91,17 @@
 
     /* Featured star */
     .star-feat { color:#FFD700; font-size:1rem; }
+
+    /* Image upload widget */
+    .img-upload-box { border:2px dashed rgba(0,200,255,0.22); border-radius:10px; padding:20px 14px; text-align:center; cursor:pointer; transition:border-color 0.2s,background 0.2s; background:rgba(0,0,0,0.08); }
+    .img-upload-box:hover,.img-upload-box.drag-over { border-color:rgba(0,200,255,0.55); background:rgba(0,200,255,0.05); }
+    .img-drop-icon { font-size:1.7rem; margin-bottom:5px; }
+    .img-drop-text { font-size:0.83rem; color:var(--text-sub); font-weight:600; margin-bottom:3px; }
+    .img-drop-hint { font-size:0.72rem; color:var(--text-muted); }
+    .img-url-row { display:flex; align-items:center; gap:8px; margin-top:10px; }
+    .img-preview-wrap { margin-top:10px; }
+    .img-preview-wrap img { max-width:100%; max-height:150px; border-radius:8px; border:1px solid var(--border); display:block; object-fit:cover; }
+    .img-preview-actions { display:flex; gap:8px; margin-top:8px; flex-wrap:wrap; }
   </style>
 </head>
 <body>
@@ -238,16 +249,31 @@
           <textarea class="form-control form-textarea" id="insExcerpt" rows="3" placeholder="簡短描述文章重點，約 60–120 字，顯示在列表頁與 Hero..." oninput="updateSeoPreview()"></textarea>
         </div>
 
-        <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;">
-          <div class="form-group">
-            <label class="form-label">封面圖片 URL（選填）</label>
-            <input type="text" class="form-control" id="insCoverImage" placeholder="https://...">
+        <div class="form-group">
+          <label class="form-label">封面圖片（選填）<span style="font-size:0.73rem;color:var(--text-sub);margin-left:4px;">建議 16:9</span></label>
+          <input type="hidden" id="insCoverImage">
+          <div class="img-upload-box" id="coverDropzone" onclick="document.getElementById('coverFileInput').click()">
+            <input type="file" accept="image/png,image/jpeg,image/jpg,image/webp" id="coverFileInput" style="display:none" onchange="handleImgFile(this,'cover')">
+            <div class="img-drop-icon">🖼️</div>
+            <div class="img-drop-text">點擊上傳 或 拖曳圖片至此</div>
+            <div class="img-drop-hint">支援 PNG・JPG・WebP</div>
           </div>
-          <div class="form-group">
-            <label class="form-label">延伸閱讀 Slugs（逗號分隔）</label>
-            <input type="text" class="form-control" id="insRelated" placeholder="slug-a, slug-b">
-            <div style="font-size:0.75rem;color:var(--text-sub);margin-top:4px;">留空則自動顯示其他已發布文章</div>
+          <div class="img-url-row">
+            <span style="font-size:0.73rem;color:var(--text-sub);white-space:nowrap;">或貼上 URL：</span>
+            <input type="text" class="form-control" id="coverUrlInput" placeholder="https://..." style="flex:1;" oninput="setImgFromUrl('cover',this.value)">
           </div>
+          <div class="img-preview-wrap" id="coverPreviewWrap" style="display:none;">
+            <img id="coverPreview" alt="封面預覽">
+            <div class="img-preview-actions">
+              <button type="button" class="dyn-del-btn" onclick="clearImg('cover')">✕ 移除</button>
+              <button type="button" class="md-preview-btn" onclick="triggerImgUpload('cover')" style="font-size:0.75rem;">🔄 更換</button>
+            </div>
+          </div>
+        </div>
+        <div class="form-group">
+          <label class="form-label">延伸閱讀 Slugs（逗號分隔）</label>
+          <input type="text" class="form-control" id="insRelated" placeholder="slug-a, slug-b">
+          <div style="font-size:0.75rem;color:var(--text-sub);margin-top:4px;">留空則自動顯示其他已發布文章</div>
         </div>
 
         <div style="display:grid;grid-template-columns:auto auto 1fr;gap:20px;align-items:center;margin-top:4px;">
@@ -284,9 +310,25 @@
         </div>
 
         <div class="form-group">
-          <label class="form-label">OG 圖片 URL（社群分享預覽圖）</label>
-          <input type="text" class="form-control" id="insOgImage" placeholder="https://... 建議 1200×630px">
-          <div style="font-size:0.75rem;color:var(--text-sub);margin-top:4px;">留空則使用封面圖片</div>
+          <label class="form-label">OG 圖片（社群分享）<span style="font-size:0.73rem;color:var(--text-sub);margin-left:4px;">建議 1200×630px，留空則自動使用封面圖</span></label>
+          <input type="hidden" id="insOgImage">
+          <div class="img-upload-box" id="ogDropzone" onclick="document.getElementById('ogFileInput').click()">
+            <input type="file" accept="image/png,image/jpeg,image/jpg,image/webp" id="ogFileInput" style="display:none" onchange="handleImgFile(this,'og')">
+            <div class="img-drop-icon">🔗</div>
+            <div class="img-drop-text">點擊上傳 或 拖曳圖片至此</div>
+            <div class="img-drop-hint">支援 PNG・JPG・WebP</div>
+          </div>
+          <div class="img-url-row">
+            <span style="font-size:0.73rem;color:var(--text-sub);white-space:nowrap;">或貼上 URL：</span>
+            <input type="text" class="form-control" id="ogUrlInput" placeholder="https://..." style="flex:1;" oninput="setImgFromUrl('og',this.value)">
+          </div>
+          <div class="img-preview-wrap" id="ogPreviewWrap" style="display:none;">
+            <img id="ogPreview" alt="OG 圖預覽">
+            <div class="img-preview-actions">
+              <button type="button" class="dyn-del-btn" onclick="clearImg('og')">✕ 移除</button>
+              <button type="button" class="md-preview-btn" onclick="triggerImgUpload('og')" style="font-size:0.75rem;">🔄 更換</button>
+            </div>
+          </div>
         </div>
 
         <div class="seo-preview">
@@ -559,7 +601,8 @@ function openInsModal(a) {
   document.getElementById('insDate').value         = a ? (a.publish_date || '') : new Date().toISOString().slice(0, 10);
   document.getElementById('insTags').value         = a ? (a.tags || []).join(', ') : '';
   document.getElementById('insExcerpt').value      = a ? (a.excerpt || '') : '';
-  document.getElementById('insCoverImage').value   = a ? (a.cover_image || '') : '';
+  setImgValue('cover', a ? (a.cover_image || '') : '');
+  if (a && a.cover_image && /^https?:\/\//.test(a.cover_image)) document.getElementById('coverUrlInput').value = a.cover_image;
   document.getElementById('insRelated').value      = a ? (a.related_slugs || []).join(', ') : '';
   document.getElementById('insIsFeatured').checked = a ? !!a.is_featured : false;
   document.getElementById('insSortOrder').value    = a ? (a.sort_order !== undefined ? a.sort_order : (a.order || 0)) : getInsights().length;
@@ -567,7 +610,8 @@ function openInsModal(a) {
   // SEO
   document.getElementById('insSeoTitle').value     = a ? (a.seo_title || '') : '';
   document.getElementById('insSeoDesc').value      = a ? (a.seo_description || '') : '';
-  document.getElementById('insOgImage').value      = a ? (a.og_image || '') : '';
+  setImgValue('og', a ? (a.og_image || '') : '');
+  if (a && a.og_image && /^https?:\/\//.test(a.og_image)) document.getElementById('ogUrlInput').value = a.og_image;
   // Content (backward compat: content_markdown || content)
   document.getElementById('insContent').value      = a ? (a.content_markdown || a.content || '') : '';
   // FAQ
@@ -698,8 +742,85 @@ function renderTable() {
   }).join('');
 }
 
+// ── Image upload helpers ──
+function triggerImgUpload(field) {
+  var el = document.getElementById(field + 'FileInput');
+  if (el) el.click();
+}
+
+function handleImgFile(input, field) {
+  var file = input.files[0];
+  if (!file) return;
+  if (file.size > 5 * 1024 * 1024) {
+    alert('圖片過大（上限 5MB），請壓縮後再上傳或貼上 URL。');
+    return;
+  }
+  var reader = new FileReader();
+  reader.onload = function(e) { setImgValue(field, e.target.result); };
+  reader.readAsDataURL(file);
+}
+
+function setImgValue(field, val) {
+  var hiddenId = field === 'cover' ? 'insCoverImage' : 'insOgImage';
+  document.getElementById(hiddenId).value = val || '';
+  var previewWrap = document.getElementById(field + 'PreviewWrap');
+  var dropzone    = document.getElementById(field + 'Dropzone');
+  var preview     = document.getElementById(field + 'Preview');
+  var urlInput    = document.getElementById(field + 'UrlInput');
+  if (val && val.trim()) {
+    if (preview) preview.src = val;
+    if (previewWrap) previewWrap.style.display = '';
+    if (dropzone) dropzone.style.display = 'none';
+  } else {
+    if (previewWrap) previewWrap.style.display = 'none';
+    if (dropzone) dropzone.style.display = '';
+    if (urlInput) urlInput.value = '';
+    if (preview) preview.src = '';
+    var fi = document.getElementById(field + 'FileInput');
+    if (fi) fi.value = '';
+  }
+}
+
+function setImgFromUrl(field, url) {
+  var hiddenId = field === 'cover' ? 'insCoverImage' : 'insOgImage';
+  document.getElementById(hiddenId).value = url || '';
+  var previewWrap = document.getElementById(field + 'PreviewWrap');
+  var dropzone    = document.getElementById(field + 'Dropzone');
+  var preview     = document.getElementById(field + 'Preview');
+  if (url && url.trim()) {
+    if (preview) preview.src = url;
+    if (previewWrap) previewWrap.style.display = '';
+    if (dropzone) dropzone.style.display = 'none';
+  } else {
+    if (previewWrap) previewWrap.style.display = 'none';
+    if (dropzone) dropzone.style.display = '';
+  }
+}
+
+function clearImg(field) { setImgValue(field, ''); }
+
+function initImgDropzone(field, dropzoneId) {
+  var dz = document.getElementById(dropzoneId);
+  if (!dz) return;
+  dz.addEventListener('dragover', function(e) { e.preventDefault(); dz.classList.add('drag-over'); });
+  dz.addEventListener('dragleave', function() { dz.classList.remove('drag-over'); });
+  dz.addEventListener('drop', function(e) {
+    e.preventDefault();
+    dz.classList.remove('drag-over');
+    var file = e.dataTransfer && e.dataTransfer.files && e.dataTransfer.files[0];
+    if (!file) return;
+    if (!/^image\/(png|jpeg|webp)/.test(file.type)) { alert('僅支援 PNG / JPG / WebP 格式'); return; }
+    if (file.size > 5 * 1024 * 1024) { alert('圖片過大（上限 5MB）'); return; }
+    var reader = new FileReader();
+    reader.onload = function(ev) { setImgValue(field, ev.target.result); };
+    reader.readAsDataURL(file);
+  });
+}
+
 buildSuggestions();
 renderTable();
+initImgDropzone('cover', 'coverDropzone');
+initImgDropzone('og', 'ogDropzone');
 </script>
 </body>
 </html>

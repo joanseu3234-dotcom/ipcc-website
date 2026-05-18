@@ -161,7 +161,7 @@
     /* ── 東州集團觀點 callout ── */
     .article-ipcc-persp {
       position: relative; margin: 2.4em 0; overflow: hidden;
-      padding: 28px 32px;
+      padding: 36px 44px;
       background: linear-gradient(135deg, #090f28 0%, #0e1b42 100%);
       border: 1px solid rgba(200,22,29,0.2);
       border-left: 5px solid var(--red);
@@ -177,9 +177,9 @@
     }
     .article-ipcc-persp-label {
       display: flex; align-items: center; gap: 10px;
-      font-size: 0.65rem; font-weight: 800;
-      letter-spacing: 0.18em; text-transform: uppercase;
-      color: #ff7070; margin-bottom: 16px;
+      font-size: 1.45rem; font-weight: 800;
+      letter-spacing: 0.04em;
+      color: #ff7070; margin-bottom: 18px;
     }
     .article-ipcc-persp-label::before {
       content: ''; display: inline-block; flex-shrink: 0;
@@ -188,8 +188,8 @@
       border-radius: 2px;
     }
     .article-ipcc-persp-body {
-      font-size: clamp(1.02rem, 1vw + 0.6rem, 1.1rem);
-      color: rgba(255,255,255,0.88); line-height: 1.9;
+      font-size: clamp(1.12rem, 1.2vw + 0.75rem, 1.25rem);
+      color: rgba(255,255,255,0.92); line-height: 1.9;
       font-style: italic; position: relative; z-index: 1;
     }
     .article-ipcc-persp-body strong { color: #fff; font-style: normal; font-weight: 700; }
@@ -680,10 +680,18 @@ function toggleFaq(idx) {
     if (toc.length >= 2 && h2Count >= 1) {
       document.getElementById('tocNav').innerHTML = toc.map(function(item) {
         var cls = item.level === 3 ? ' class="toc-h3"' : '';
-        return '<a href="#' + item.id + '" data-toc-id="' + item.id + '"' + cls + '>' + item.text + '</a>';
+        return '<a href="javascript:void(0)" data-toc-id="' + item.id + '"' + cls + '>' + item.text + '</a>';
       }).join('');
       document.getElementById('articleToc').style.display = '';
       var tocLinks = document.querySelectorAll('.toc-nav a[data-toc-id]');
+      // <base href="/"> intercepts hash links — use JS scroll instead
+      tocLinks.forEach(function(link) {
+        link.addEventListener('click', function(e) {
+          e.preventDefault();
+          var el = document.getElementById(this.getAttribute('data-toc-id'));
+          if (el) window.scrollTo({ top: el.getBoundingClientRect().top + window.scrollY - 110, behavior: 'smooth' });
+        });
+      });
       var observer = new IntersectionObserver(function(entries) {
         entries.forEach(function(entry) {
           if (entry.isIntersecting) {
