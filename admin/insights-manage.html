@@ -10,27 +10,82 @@
   <style>
     .ins-table { width:100%; border-collapse:collapse; }
     .ins-table th { text-align:left; padding:10px 14px; font-size:0.78rem; font-weight:700; color:var(--text-sub); text-transform:uppercase; letter-spacing:0.05em; border-bottom:2px solid var(--border); }
-    .ins-table td { padding:12px 14px; border-bottom:1px solid var(--border); vertical-align:middle; }
+    .ins-table td { padding:11px 14px; border-bottom:1px solid var(--border); vertical-align:middle; }
     .ins-table tr:last-child td { border-bottom:none; }
     .ins-tag-sm { background:rgba(0,200,255,0.1); color:#7DD9F8; border:1px solid rgba(0,200,255,0.2); padding:2px 8px; border-radius:100px; font-size:0.72rem; font-weight:600; display:inline-block; margin:2px; }
 
+    /* Tabs */
     .modal-tabs { display:flex; gap:0; border-bottom:2px solid var(--border); margin-bottom:20px; }
-    .modal-tab { padding:10px 20px; font-size:0.85rem; font-weight:600; color:var(--text-sub); cursor:pointer; border:none; background:none; border-bottom:2px solid transparent; margin-bottom:-2px; transition:all 0.2s; font-family:inherit; }
+    .modal-tab { padding:10px 18px; font-size:0.85rem; font-weight:600; color:var(--text-sub); cursor:pointer; border:none; background:none; border-bottom:2px solid transparent; margin-bottom:-2px; transition:all 0.2s; font-family:inherit; white-space:nowrap; }
     .modal-tab.active { color:var(--navy); border-bottom-color:var(--navy); }
     .tab-panel { display:none; }
     .tab-panel.active { display:block; }
 
-    .dyn-row { display:grid; gap:10px; align-items:center; background:rgba(0,0,0,0.15); border:1px solid var(--border); border-radius:8px; padding:12px; margin-bottom:8px; }
-    .dyn-row-qa { grid-template-columns:1fr 32px; }
+    /* FAQ dynamic rows */
+    .dyn-row { display:grid; gap:10px; align-items:start; background:rgba(0,0,0,0.15); border:1px solid var(--border); border-radius:8px; padding:12px; margin-bottom:8px; grid-template-columns:1fr 32px; }
     .dyn-add-btn { background:rgba(0,200,255,0.08); border:1px dashed rgba(0,200,255,0.3); color:var(--navy); border-radius:8px; padding:8px; width:100%; font-size:0.85rem; cursor:pointer; font-family:inherit; transition:background 0.2s; }
     .dyn-add-btn:hover { background:rgba(0,200,255,0.15); }
     .dyn-del-btn { background:rgba(224,69,69,0.12); border:1px solid rgba(224,69,69,0.2); color:var(--red); border-radius:6px; padding:4px 8px; cursor:pointer; font-size:0.85rem; font-family:inherit; }
-    .dyn-del-btn:hover { background:rgba(224,69,69,0.22); }
 
+    /* Slug */
     .slug-row { display:flex; align-items:center; gap:8px; }
     .slug-preview { font-size:0.78rem; color:var(--text-sub); padding:6px 10px; background:rgba(0,0,0,0.2); border-radius:6px; flex:1; word-break:break-all; }
 
-    .content-hint { font-size:0.78rem; color:var(--text-sub); margin-top:4px; line-height:1.6; }
+    /* Char counter */
+    .char-counter { font-size:0.75rem; color:var(--text-sub); text-align:right; margin-top:4px; }
+    .char-counter.warn { color:#F6AD55; }
+    .char-counter.over { color:#FC8181; font-weight:700; }
+
+    /* Suggestion chips */
+    .chips-wrap { margin-top:8px; }
+    .chips-label { font-size:0.73rem; color:var(--text-sub); margin-bottom:6px; }
+    .suggestion-chips { display:flex; flex-wrap:wrap; gap:5px; min-height:24px; }
+    .chip { font-size:0.73rem; font-weight:600; padding:3px 10px; border-radius:100px; cursor:pointer; border:1px solid var(--border); background:rgba(0,0,0,0.1); color:var(--text-sub); transition:all 0.15s; }
+    .chip:hover { border-color:rgba(0,200,255,0.45); color:#7DD9F8; background:rgba(0,200,255,0.08); }
+    .chip.active-tag { border-color:rgba(0,200,255,0.5); color:#7DD9F8; background:rgba(0,200,255,0.1); }
+
+    /* SEO preview */
+    .seo-preview { background:rgba(0,0,0,0.22); border-radius:10px; padding:16px 20px; margin-top:20px; border:1px solid var(--border); }
+    .seo-preview-label { font-size:0.68rem; font-weight:700; letter-spacing:0.1em; text-transform:uppercase; color:var(--text-muted); margin-bottom:12px; }
+    .seo-preview-site { font-size:0.78rem; color:#66BB6A; margin-bottom:4px; }
+    .seo-preview-title { font-size:1.05rem; color:#8bb8f8; font-weight:600; margin-bottom:4px; line-height:1.3; }
+    .seo-preview-desc { font-size:0.85rem; color:rgba(255,255,255,0.45); line-height:1.55; }
+
+    /* Markdown editor */
+    .md-toolbar { display:flex; justify-content:space-between; align-items:center; margin-bottom:8px; flex-wrap:wrap; gap:8px; }
+    .md-toolbar-hints { font-size:0.73rem; color:var(--text-sub); line-height:1.6; }
+    .md-toolbar-hints code { background:rgba(0,0,0,0.2); padding:1px 5px; border-radius:3px; }
+    .md-preview-btn { font-size:0.78rem; padding:5px 14px; border-radius:6px; border:1px solid var(--border); background:rgba(0,0,0,0.2); color:var(--text-sub); cursor:pointer; font-family:inherit; transition:all 0.2s; white-space:nowrap; }
+    .md-preview-btn.on { border-color:rgba(0,200,255,0.45); color:#7DD9F8; background:rgba(0,200,255,0.08); }
+    .md-wrap { display:grid; grid-template-columns:1fr; gap:0; }
+    .md-wrap.preview-on { grid-template-columns:1fr 1fr; gap:14px; }
+    .md-preview-panel {
+      display:none; border:1px solid var(--border); border-radius:8px;
+      padding:16px; overflow-y:auto; max-height:420px;
+      background:rgba(0,0,0,0.1); font-size:0.85rem;
+    }
+    .md-wrap.preview-on .md-preview-panel { display:block; }
+    .md-preview-panel h2 { font-size:1.05rem; font-weight:700; color:#e2e8f0; margin:1.2em 0 0.5em; padding-bottom:4px; border-bottom:1px solid var(--border); }
+    .md-preview-panel h3 { font-size:0.92rem; font-weight:600; color:#ccd6f6; margin:1em 0 0.4em; }
+    .md-preview-panel p { color:rgba(255,255,255,0.62); line-height:1.7; margin-bottom:0.7em; }
+    .md-preview-panel ul, .md-preview-panel ol { padding-left:1.3em; color:rgba(255,255,255,0.62); margin-bottom:0.7em; }
+    .md-preview-panel li { margin-bottom:0.25em; line-height:1.6; }
+    .md-preview-panel blockquote { border-left:3px solid rgba(0,200,255,0.4); padding:5px 12px; color:rgba(255,255,255,0.45); font-style:italic; margin:0.7em 0; background:rgba(0,0,0,0.12); border-radius:0 6px 6px 0; }
+    .md-preview-panel table { width:100%; border-collapse:collapse; font-size:0.82rem; margin-bottom:0.7em; }
+    .md-preview-panel th { background:rgba(0,0,0,0.3); padding:6px 10px; text-align:left; color:#ccd6f6; font-weight:600; border:1px solid var(--border); }
+    .md-preview-panel td { padding:6px 10px; color:rgba(255,255,255,0.55); border:1px solid var(--border); }
+    .md-preview-panel strong { color:#e2e8f0; font-weight:700; }
+    .md-preview-panel em { color:rgba(255,255,255,0.55); font-style:italic; }
+    .md-preview-panel a { color:#7DD9F8; }
+    .md-preview-panel code { background:rgba(0,0,0,0.3); padding:1px 5px; border-radius:3px; font-size:0.85em; }
+    .md-preview-panel hr { border:none; border-top:1px solid var(--border); margin:0.8em 0; }
+    .md-empty-hint { color:rgba(255,255,255,0.25); font-style:italic; font-size:0.82rem; padding:20px 0; text-align:center; }
+
+    /* Filter bar */
+    .filter-bar { display:flex; gap:10px; align-items:center; flex-wrap:wrap; padding:14px 16px; background:rgba(0,0,0,0.1); border-radius:8px; border:1px solid var(--border); margin-bottom:12px; }
+
+    /* Featured star */
+    .star-feat { color:#FFD700; font-size:1rem; }
   </style>
 </head>
 <body>
@@ -69,25 +124,37 @@
       <div class="topbar-user">管理員</div>
     </header>
     <div class="page-content">
-      <div class="page-header-row" style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;">
+      <div class="page-header-row" style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;">
         <div>
           <h1>產業新知管理</h1>
-          <p style="color:var(--text-sub);font-size:0.9rem;">管理客服產業新知文章，支援分類、標籤、TOC 目錄與 FAQ</p>
+          <p style="color:var(--text-sub);font-size:0.9rem;">管理客服產業新知文章，支援 Markdown、分類、標籤、SEO、FAQ</p>
         </div>
         <button class="btn-primary" onclick="openInsModal()">+ 新增文章</button>
       </div>
+
+      <!-- Filter bar -->
+      <div class="filter-bar">
+        <select id="filterStatus" class="form-control" style="width:auto;min-width:110px;" onchange="renderTable()">
+          <option value="">全部狀態</option>
+          <option value="published">已發布</option>
+          <option value="draft">草稿</option>
+        </select>
+        <select id="filterCat" class="form-control" style="width:auto;min-width:120px;" onchange="renderTable()">
+          <option value="">全部分類</option>
+        </select>
+        <input type="text" id="filterSearch" class="form-control" placeholder="搜尋標題..." style="min-width:160px;flex:1;" oninput="renderTable()">
+        <span id="insCount" style="font-size:0.82rem;color:var(--text-sub);white-space:nowrap;"></span>
+      </div>
+
       <div class="section-card">
-        <div class="section-card-header">
-          <h2 class="section-card-title">文章清單</h2>
-          <span id="insCount" style="font-size:0.82rem;color:var(--text-sub);"></span>
-        </div>
         <div style="overflow-x:auto;">
           <table class="ins-table">
             <thead>
               <tr>
                 <th>文章標題</th>
+                <th>作者</th>
                 <th>分類</th>
-                <th>標籤</th>
+                <th style="text-align:center;">精選</th>
                 <th>發布日期</th>
                 <th>狀態</th>
                 <th>操作</th>
@@ -101,30 +168,31 @@
   </main>
 </div>
 
-<!-- Article Modal -->
+<!-- ── Modal ── -->
 <div class="modal-overlay" id="insModal">
-  <div class="modal modal-lg" style="max-width:820px;">
+  <div class="modal modal-lg" style="max-width:920px;">
     <div class="modal-header">
       <h3 id="insModalTitle">新增文章</h3>
       <button class="modal-close" onclick="closeInsModal()">✕</button>
     </div>
-    <div class="modal-body" style="max-height:74vh;overflow-y:auto;padding-right:4px;">
+    <div class="modal-body" style="max-height:76vh;overflow-y:auto;padding-right:4px;">
       <input type="hidden" id="insId">
 
       <div class="modal-tabs">
         <button class="modal-tab active" onclick="switchTab('basic')">基本資訊</button>
+        <button class="modal-tab" onclick="switchTab('seo')">SEO 設定</button>
         <button class="modal-tab" onclick="switchTab('content')">文章內容 &amp; FAQ</button>
       </div>
 
-      <!-- 基本資訊 -->
+      <!-- ── Tab 1: 基本資訊 ── -->
       <div class="tab-panel active" id="tab-basic">
         <div class="form-group">
-          <label class="form-label">文章標題</label>
-          <input type="text" class="form-control" id="insTitle" placeholder="文章主標題" oninput="insAutoSlug()">
+          <label class="form-label">文章標題 <span style="color:var(--red);">*</span></label>
+          <input type="text" class="form-control" id="insTitle" placeholder="文章主標題" oninput="insAutoSlug(); updateSeoPreview();">
         </div>
 
         <div class="form-group">
-          <label class="form-label">Slug（URL 識別碼）</label>
+          <label class="form-label">Slug（URL 路徑）</label>
           <div class="slug-row">
             <input type="text" class="form-control" id="insSlug" placeholder="如：ai-customer-service-2026" style="flex:1;" oninput="updateInsSlugPreview()">
             <button type="button" class="btn-outline btn-sm" onclick="insAutoSlug(true)">自動產生</button>
@@ -132,10 +200,18 @@
           <div class="slug-preview" id="insSlugPreview" style="margin-top:6px;">/insights/（請輸入 slug）</div>
         </div>
 
-        <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;">
+        <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px;">
+          <div class="form-group">
+            <label class="form-label">作者</label>
+            <input type="text" class="form-control" id="insAuthor" placeholder="IPCC 編輯部">
+          </div>
           <div class="form-group">
             <label class="form-label">分類</label>
-            <input type="text" class="form-control" id="insCategory" placeholder="如：產業趨勢、客服管理、數據分析">
+            <input type="text" class="form-control" id="insCategory" placeholder="如：產業趨勢" oninput="updateSeoPreview()">
+            <div class="chips-wrap">
+              <div class="chips-label">現有分類（點擊填入）</div>
+              <div class="suggestion-chips" id="catChips"></div>
+            </div>
           </div>
           <div class="form-group">
             <label class="form-label">發布日期</label>
@@ -144,50 +220,105 @@
         </div>
 
         <div class="form-group">
-          <label class="form-label">標籤（用逗號分隔）</label>
+          <label class="form-label">標籤（逗號分隔）</label>
           <input type="text" class="form-control" id="insTags" placeholder="AI客服, LLM, 趨勢分析">
+          <div class="chips-wrap">
+            <div class="chips-label">現有標籤（點擊切換）</div>
+            <div class="suggestion-chips" id="tagChips"></div>
+          </div>
         </div>
 
         <div class="form-group">
-          <label class="form-label">文章摘要（顯示在列表頁與 Hero 區）</label>
-          <textarea class="form-control form-textarea" id="insExcerpt" rows="3" placeholder="簡短描述文章重點，約 60-120 字..."></textarea>
+          <label class="form-label">文章摘要</label>
+          <textarea class="form-control form-textarea" id="insExcerpt" rows="3" placeholder="簡短描述文章重點，約 60–120 字，顯示在列表頁與 Hero..." oninput="updateSeoPreview()"></textarea>
         </div>
 
-        <div class="form-group">
-          <label class="form-label">封面圖片 URL（選填）</label>
-          <input type="text" class="form-control" id="insCoverImage" placeholder="https://...">
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;">
+          <div class="form-group">
+            <label class="form-label">封面圖片 URL（選填）</label>
+            <input type="text" class="form-control" id="insCoverImage" placeholder="https://...">
+          </div>
+          <div class="form-group">
+            <label class="form-label">延伸閱讀 Slugs（逗號分隔）</label>
+            <input type="text" class="form-control" id="insRelated" placeholder="slug-a, slug-b">
+            <div style="font-size:0.75rem;color:var(--text-sub);margin-top:4px;">留空則自動顯示其他已發布文章</div>
+          </div>
         </div>
 
-        <div class="form-group">
-          <label class="form-label">延伸閱讀 Slugs（用逗號分隔）</label>
-          <input type="text" class="form-control" id="insRelated" placeholder="omnichannel-cx-best-practices, cx-data-analytics-kpi">
-          <div style="font-size:0.78rem;color:var(--text-sub);margin-top:4px;">填入其他文章的 slug，顯示為延伸閱讀；若空白則自動顯示其他文章</div>
-        </div>
-
-        <div class="form-group" style="display:flex;align-items:center;gap:10px;">
-          <input type="checkbox" id="insPublished" style="width:18px;height:18px;cursor:pointer;">
-          <label for="insPublished" class="form-label" style="margin:0;cursor:pointer;">發布（顯示在前台）</label>
+        <div style="display:grid;grid-template-columns:auto auto 1fr;gap:20px;align-items:center;margin-top:4px;">
+          <div style="display:flex;align-items:center;gap:8px;">
+            <input type="checkbox" id="insIsFeatured" style="width:18px;height:18px;cursor:pointer;">
+            <label for="insIsFeatured" class="form-label" style="margin:0;cursor:pointer;">⭐ 精選文章</label>
+          </div>
+          <div style="display:flex;align-items:center;gap:8px;">
+            <label class="form-label" style="margin:0;white-space:nowrap;">排序值</label>
+            <input type="number" class="form-control" id="insSortOrder" value="0" min="0" style="width:80px;">
+          </div>
+          <div style="display:flex;align-items:center;gap:10px;">
+            <label class="form-label" style="margin:0;white-space:nowrap;">狀態</label>
+            <select class="form-control" id="insStatus" style="flex:1;">
+              <option value="published">✅ 已發布（前台可見）</option>
+              <option value="draft">📝 草稿（隱藏）</option>
+            </select>
+          </div>
         </div>
       </div>
 
-      <!-- 文章內容 & FAQ -->
+      <!-- ── Tab 2: SEO 設定 ── -->
+      <div class="tab-panel" id="tab-seo">
+        <div class="form-group">
+          <label class="form-label">SEO 標題（建議 50–60 字元）</label>
+          <input type="text" class="form-control" id="insSeoTitle" placeholder="留空則使用文章標題" oninput="updateSeoPreview()" maxlength="80">
+          <div class="char-counter" id="seoTitleCount">0 / 60</div>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">SEO 描述（建議 130–160 字元）</label>
+          <textarea class="form-control form-textarea" id="insSeoDesc" rows="3" placeholder="留空則使用文章摘要" oninput="updateSeoPreview()" maxlength="200"></textarea>
+          <div class="char-counter" id="seoDescCount">0 / 160</div>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">OG 圖片 URL（社群分享預覽圖）</label>
+          <input type="text" class="form-control" id="insOgImage" placeholder="https://... 建議 1200×630px">
+          <div style="font-size:0.75rem;color:var(--text-sub);margin-top:4px;">留空則使用封面圖片</div>
+        </div>
+
+        <div class="seo-preview">
+          <div class="seo-preview-label">Google 搜尋結果預覽</div>
+          <div class="seo-preview-site" id="seoPreviewSite">ipcc-website.vercel.app/insights/...</div>
+          <div class="seo-preview-title" id="seoPreviewTitle">文章標題 — IPCC 東州集團</div>
+          <div class="seo-preview-desc" id="seoPreviewDesc">文章摘要會顯示在這裡...</div>
+        </div>
+      </div>
+
+      <!-- ── Tab 3: 文章內容 & FAQ ── -->
       <div class="tab-panel" id="tab-content">
         <div class="form-group">
-          <label class="form-label">文章內容</label>
-          <textarea class="form-control form-textarea" id="insContent" rows="16" placeholder="輸入文章內容...
-
-支援以下格式：
-## 二級標題（自動加入目錄）
-### 三級標題
-空行分段（段落間空一行）
-一般文字直接輸入"></textarea>
-          <div class="content-hint">
-            💡 使用 <code>## 標題</code> 建立 H2（自動加入文章目錄）／<code>### 標題</code> 建立 H3／空行分段
+          <div class="md-toolbar">
+            <div class="md-toolbar-hints">
+              <code>## H2</code> &nbsp;
+              <code>### H3</code> &nbsp;
+              <code>**粗體**</code> &nbsp;
+              <code>> 引言</code> &nbsp;
+              <code>| 表格 |</code> &nbsp;
+              <code>- 清單</code> &nbsp;
+              <code>[文字](網址)</code>
+            </div>
+            <button type="button" id="mdPreviewBtn" class="md-preview-btn" onclick="toggleMdPreview()">切換預覽</button>
+          </div>
+          <div class="md-wrap" id="mdWrap">
+            <textarea class="form-control form-textarea" id="insContent" rows="20"
+              placeholder="## 第一節標題&#10;&#10;在此輸入文章內容...&#10;&#10;### 小節標題&#10;&#10;> 這是引言段落&#10;&#10;- 條列項目一&#10;- 條列項目二&#10;&#10;| 欄一 | 欄二 |&#10;|------|------|&#10;| A    | B    |&#10;&#10;**粗體文字** 和 [超連結](https://example.com)"
+              oninput="onMdInput()"></textarea>
+            <div class="md-preview-panel" id="mdPreviewPanel">
+              <div class="md-empty-hint">開始輸入內容後即時預覽...</div>
+            </div>
           </div>
         </div>
 
         <div class="form-group" style="margin-top:24px;">
-          <label class="form-label" style="margin-bottom:10px;">FAQ 常見問題</label>
+          <label class="form-label" style="margin-bottom:10px;">FAQ 常見問題（顯示為獨立手風琴區塊）</label>
           <div id="insFaqList"></div>
           <button type="button" class="dyn-add-btn" onclick="addInsFaq()">+ 新增 Q&amp;A</button>
         </div>
@@ -195,7 +326,7 @@
     </div>
     <div class="modal-footer">
       <button class="btn-outline" onclick="closeInsModal()">取消</button>
-      <button class="btn-primary" onclick="saveInsight()">儲存</button>
+      <button class="btn-primary" onclick="saveInsight()">儲存文章</button>
     </div>
   </div>
 </div>
@@ -203,151 +334,351 @@
 <script src="users-config.js"></script>
 <script src="admin.js"></script>
 <script>
-  requireLogin();
-  initAdminUI();
+requireLogin();
+initAdminUI();
 
-  function switchTab(name) {
-    var names = ['basic', 'content'];
-    document.querySelectorAll('.modal-tab').forEach(function(t, i) {
-      t.classList.toggle('active', names[i] === name);
+var TAB_NAMES = ['basic', 'seo', 'content'];
+function switchTab(name) {
+  document.querySelectorAll('.modal-tab').forEach(function(t, i) {
+    t.classList.toggle('active', TAB_NAMES[i] === name);
+  });
+  document.querySelectorAll('.tab-panel').forEach(function(p) {
+    p.classList.toggle('active', p.id === 'tab-' + name);
+  });
+}
+
+// ── Slug helpers ──
+function titleToSlug(str) {
+  return (str || '').toLowerCase()
+    .replace(/[一-鿿㐀-䶿豈-﫿　-〿＀-￯]+/g, '')
+    .replace(/[^a-z0-9]+/g, '-')
+    .replace(/^-+|-+$/g, '') || 'insight-' + Date.now();
+}
+function insAutoSlug(force) {
+  var slug = document.getElementById('insSlug');
+  if (force || !slug.value.trim()) {
+    slug.value = titleToSlug(document.getElementById('insTitle').value);
+  }
+  updateInsSlugPreview();
+}
+function updateInsSlugPreview() {
+  var v = document.getElementById('insSlug').value.trim();
+  document.getElementById('insSlugPreview').textContent = v ? '/insights/' + v : '/insights/（請輸入 slug）';
+  updateSeoPreview();
+}
+
+// ── Char counters ──
+function updateCharCount(inputId, counterId, max) {
+  var len = (document.getElementById(inputId).value || '').length;
+  var el = document.getElementById(counterId);
+  el.textContent = len + ' / ' + max;
+  el.className = 'char-counter' + (len > max ? ' over' : len > max * 0.88 ? ' warn' : '');
+}
+
+// ── SEO preview ──
+function updateSeoPreview() {
+  var title = document.getElementById('insSeoTitle').value.trim()
+    || ((document.getElementById('insTitle').value.trim() || '文章標題') + ' — IPCC 東州集團');
+  var desc = document.getElementById('insSeoDesc').value.trim()
+    || document.getElementById('insExcerpt').value.trim()
+    || '文章摘要會顯示在這裡...';
+  var slug = document.getElementById('insSlug').value.trim() || '...';
+  document.getElementById('seoPreviewTitle').textContent = title;
+  document.getElementById('seoPreviewSite').textContent = 'ipcc-website.vercel.app/insights/' + slug;
+  document.getElementById('seoPreviewDesc').textContent = desc;
+  updateCharCount('insSeoTitle', 'seoTitleCount', 60);
+  updateCharCount('insSeoDesc', 'seoDescCount', 160);
+}
+
+// ── Category & Tag chips ──
+function buildSuggestions() {
+  var all = getInsights();
+  var cats = [];
+  var tags = [];
+  all.forEach(function(a) {
+    if (a.category && cats.indexOf(a.category) === -1) cats.push(a.category);
+    (a.tags || []).forEach(function(t) { if (t && tags.indexOf(t) === -1) tags.push(t); });
+  });
+
+  var filterSel = document.getElementById('filterCat');
+  var savedVal = filterSel.value;
+  filterSel.innerHTML = '<option value="">全部分類</option>' +
+    cats.map(function(c) { return '<option value="' + escHtml(c) + '">' + escHtml(c) + '</option>'; }).join('');
+  filterSel.value = savedVal;
+
+  document.getElementById('catChips').innerHTML = cats.map(function(c) {
+    return '<span class="chip" onclick="document.getElementById(\'insCategory\').value=\'' + escHtml(c) + '\'">' + escHtml(c) + '</span>';
+  }).join('') || '<span style="font-size:0.75rem;color:var(--text-muted);">尚無分類</span>';
+
+  var currentTags = (document.getElementById('insTags').value || '').split(',').map(function(t) { return t.trim(); }).filter(Boolean);
+  document.getElementById('tagChips').innerHTML = tags.map(function(t) {
+    var active = currentTags.indexOf(t) !== -1 ? ' active-tag' : '';
+    return '<span class="chip' + active + '" onclick="toggleTagChip(\'' + escHtml(t) + '\')">' + escHtml(t) + '</span>';
+  }).join('') || '<span style="font-size:0.75rem;color:var(--text-muted);">尚無標籤</span>';
+}
+
+function toggleTagChip(tag) {
+  var input = document.getElementById('insTags');
+  var current = input.value.split(',').map(function(t) { return t.trim(); }).filter(Boolean);
+  var idx = current.indexOf(tag);
+  if (idx >= 0) { current.splice(idx, 1); } else { current.push(tag); }
+  input.value = current.join(', ');
+  buildSuggestions();
+}
+
+// ── Markdown preview ──
+function onMdInput() {
+  var panel = document.getElementById('mdPreviewPanel');
+  if (document.getElementById('mdWrap').classList.contains('preview-on')) {
+    panel.innerHTML = renderMarkdownPreview(document.getElementById('insContent').value);
+  }
+}
+
+function toggleMdPreview() {
+  var btn = document.getElementById('mdPreviewBtn');
+  var wrap = document.getElementById('mdWrap');
+  var on = !wrap.classList.contains('preview-on');
+  wrap.classList.toggle('preview-on', on);
+  btn.classList.toggle('on', on);
+  btn.textContent = on ? '關閉預覽' : '切換預覽';
+  if (on) document.getElementById('mdPreviewPanel').innerHTML = renderMarkdownPreview(document.getElementById('insContent').value);
+}
+
+function renderMarkdownPreview(raw) {
+  if (!raw || !raw.trim()) return '<div class="md-empty-hint">開始輸入內容後即時預覽...</div>';
+  var lines = raw.split('\n');
+  var out = [], state = 'idle', buf = [];
+
+  function esc(s) { return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+  function fmt(s) {
+    s = esc(s);
+    s = s.replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>');
+    s = s.replace(/\*([^*\n]+?)\*/g, '<em>$1</em>');
+    s = s.replace(/\[([^\]]+)\]\(([^)]+)\)/g, '<a href="$2">$1</a>');
+    s = s.replace(/`([^`]+)`/g, '<code>$1</code>');
+    return s;
+  }
+
+  function flush() {
+    if (!buf.length) { state = 'idle'; return; }
+    if (state === 'p') out.push('<p>' + buf.map(fmt).join('<br>') + '</p>');
+    else if (state === 'ul') out.push('<ul>' + buf.map(function(l){ return '<li>' + fmt(l) + '</li>'; }).join('') + '</ul>');
+    else if (state === 'ol') out.push('<ol>' + buf.map(function(l){ return '<li>' + fmt(l) + '</li>'; }).join('') + '</ol>');
+    else if (state === 'bq') out.push('<blockquote>' + buf.map(fmt).join('<br>') + '</blockquote>');
+    else if (state === 'tbl') out.push(buildTbl(buf));
+    state = 'idle'; buf = [];
+  }
+
+  function buildTbl(rows) {
+    var hdr = null, body = [];
+    rows.forEach(function(r) {
+      if (/^\|[\s\-:|]+\|/.test(r.trim())) return;
+      var cells = r.trim().split('|').slice(1, -1);
+      if (!hdr) { hdr = cells; } else { body.push(cells); }
     });
-    document.querySelectorAll('.tab-panel').forEach(function(p) {
-      p.classList.toggle('active', p.id === 'tab-' + name);
-    });
+    if (!hdr) return '';
+    var t = '<table><thead><tr>' + hdr.map(function(c){ return '<th>' + fmt(c.trim()) + '</th>'; }).join('') + '</tr></thead><tbody>';
+    body.forEach(function(r) { t += '<tr>' + r.map(function(c){ return '<td>' + fmt(c.trim()) + '</td>'; }).join('') + '</tr>'; });
+    return t + '</tbody></table>';
   }
 
-  function renderTable() {
-    var items = getInsights().slice().sort(function(a,b){ return a.order - b.order; });
-    document.getElementById('insCount').textContent = items.length + ' 篇文章';
-    document.getElementById('insTableBody').innerHTML = items.map(function(a) {
-      var tags = (a.tags||[]).map(function(t){ return '<span class="ins-tag-sm">'+t+'</span>'; }).join('');
-      var pub = a.published
-        ? '<span style="font-size:0.75rem;padding:3px 10px;border-radius:100px;background:rgba(72,187,120,0.12);color:#68D391;">已發布</span>'
-        : '<span style="font-size:0.75rem;padding:3px 10px;border-radius:100px;background:rgba(80,80,80,0.2);color:var(--text-sub);">草稿</span>';
-      return '<tr data-id="'+a.id+'">'
-        +'<td><strong>'+(a.title||'')+'</strong><div style="font-size:0.75rem;color:var(--text-sub);margin-top:2px;font-family:monospace;">'+(a.slug?'/insights/'+a.slug:'—')+'</div></td>'
-        +'<td style="font-size:0.85rem;">'+(a.category||'—')+'</td>'
-        +'<td>'+tags+'</td>'
-        +'<td style="font-size:0.82rem;color:var(--text-sub);">'+(a.publish_date||'—')+'</td>'
-        +'<td>'+pub+'</td>'
-        +'<td style="white-space:nowrap;">'
-        +'<button class="btn-outline btn-sm" onclick="editIns(\''+a.id+'\')">編輯</button>'
-        +(a.slug?' <a href="../insights/'+a.slug+'" target="_blank" class="btn-outline btn-sm" style="font-size:0.72rem;">預覽</a>':'')
-        +' <button class="btn-red btn-sm" onclick="deleteIns(\''+a.id+'\')">刪除</button>'
-        +'</td>'
-        +'</tr>';
-    }).join('');
-  }
+  lines.forEach(function(line) {
+    var tr = line.trim();
+    if (/^## /.test(line))  { flush(); out.push('<h2>' + fmt(line.slice(3).trim()) + '</h2>'); return; }
+    if (/^### /.test(line)) { flush(); out.push('<h3>' + fmt(line.slice(4).trim()) + '</h3>'); return; }
+    if (/^> /.test(line))   { if (state !== 'bq') { flush(); state = 'bq'; } buf.push(line.slice(2)); return; }
+    if (/^\|/.test(tr))     { if (state !== 'tbl'){ flush(); state = 'tbl'; } buf.push(line); return; }
+    if (/^[-*+] /.test(line)) { if (state !== 'ul') { flush(); state = 'ul'; } buf.push(line.replace(/^[-*+] /, '')); return; }
+    if (/^\d+\. /.test(line)) { if (state !== 'ol') { flush(); state = 'ol'; } buf.push(line.replace(/^\d+\. /, '')); return; }
+    if (/^---+$/.test(tr))  { flush(); out.push('<hr>'); return; }
+    if (!tr)                { flush(); return; }
+    if (state !== 'p') { flush(); state = 'p'; } buf.push(line);
+  });
+  flush();
+  return out.join('') || '<div class="md-empty-hint">開始輸入內容後即時預覽...</div>';
+}
 
-  // ── Slug helpers ──
-  function titleToSlug(str) {
-    return (str||'').toLowerCase()
-      .replace(/[一-鿿㐀-䶿]+/g, '')
-      .replace(/[^a-z0-9]+/g, '-')
-      .replace(/^-+|-+$/g, '') || 'insight-' + Date.now();
-  }
-  function insAutoSlug(force) {
-    var slug = document.getElementById('insSlug');
-    if (force || !slug.value.trim()) {
-      slug.value = titleToSlug(document.getElementById('insTitle').value);
-    }
-    updateInsSlugPreview();
-  }
-  function updateInsSlugPreview() {
-    var v = document.getElementById('insSlug').value.trim();
-    document.getElementById('insSlugPreview').textContent = v ? '/insights/' + v : '/insights/（請輸入 slug）';
-  }
+// ── FAQ rows ──
+function addInsFaq(f) {
+  f = f || { q: '', a: '' };
+  var row = document.createElement('div');
+  row.className = 'dyn-row';
+  row.innerHTML = '<div>'
+    + '<input type="text" value="' + escHtml(f.q) + '" placeholder="問題（Q）" class="form-control" data-field="q" style="margin-bottom:8px;">'
+    + '<textarea placeholder="回答（A）..." class="form-control form-textarea" data-field="a" rows="2" style="margin:0;">' + escHtml(f.a) + '</textarea>'
+    + '</div>'
+    + '<button type="button" class="dyn-del-btn" style="margin-top:2px;" onclick="this.closest(\'.dyn-row\').remove()">✕</button>';
+  document.getElementById('insFaqList').appendChild(row);
+}
 
-  // ── FAQ dynamic rows ──
-  function addInsFaq(f) {
-    f = f || {q:'', a:''};
-    var row = document.createElement('div');
-    row.className = 'dyn-row';
-    row.style.gridTemplateColumns = '1fr 32px';
-    row.innerHTML = '<div>'
-      +'<input type="text" value="'+escHtml(f.q)+'" placeholder="問題" class="form-control" data-field="q" style="margin-bottom:8px;">'
-      +'<textarea placeholder="回答..." class="form-control form-textarea" data-field="a" rows="2" style="margin:0;">'+escHtml(f.a)+'</textarea>'
-      +'</div>'
-      +'<button type="button" class="dyn-del-btn" style="align-self:start;margin-top:4px;" onclick="this.closest(\'.dyn-row\').remove()">✕</button>';
-    document.getElementById('insFaqList').appendChild(row);
-  }
-
-  function collectFaq() {
-    return Array.from(document.querySelectorAll('#insFaqList .dyn-row')).map(function(row) {
-      return {
-        q: (row.querySelector('[data-field="q"]') || {}).value || '',
-        a: (row.querySelector('[data-field="a"]') || {}).value || ''
-      };
-    }).filter(function(o){ return o.q || o.a; });
-  }
-
-  function escHtml(s) {
-    return (s||'').replace(/&/g,'&amp;').replace(/"/g,'&quot;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
-  }
-
-  // ── Modal ──
-  function openInsModal(a) {
-    switchTab('basic');
-    document.getElementById('insModalTitle').textContent = a ? '編輯文章' : '新增文章';
-    document.getElementById('insId').value          = a ? a.id : '';
-    document.getElementById('insTitle').value       = a ? (a.title||'') : '';
-    document.getElementById('insSlug').value        = a ? (a.slug||'') : '';
-    document.getElementById('insCategory').value    = a ? (a.category||'') : '';
-    document.getElementById('insTags').value        = a ? (a.tags||[]).join(', ') : '';
-    document.getElementById('insExcerpt').value     = a ? (a.excerpt||'') : '';
-    document.getElementById('insCoverImage').value  = a ? (a.cover_image||'') : '';
-    document.getElementById('insContent').value     = a ? (a.content||'') : '';
-    document.getElementById('insDate').value        = a ? (a.publish_date||'') : new Date().toISOString().slice(0,10);
-    document.getElementById('insRelated').value     = a ? (a.related_slugs||[]).join(', ') : '';
-    document.getElementById('insPublished').checked = a ? !!a.published : true;
-    document.getElementById('insFaqList').innerHTML = '';
-    if (a) (a.faq||[]).forEach(addInsFaq);
-    updateInsSlugPreview();
-    document.getElementById('insModal').classList.add('open');
-  }
-  function closeInsModal() { document.getElementById('insModal').classList.remove('open'); }
-  function editIns(id) { var a = getInsights().find(function(a){ return a.id===id; }); if(a) openInsModal(a); }
-  function deleteIns(id) {
-    if (!confirm('確定要刪除此文章？')) return;
-    saveInsights(getInsights().filter(function(a){ return a.id!==id; }));
-    renderTable();
-  }
-
-  function saveInsight() {
-    var id = document.getElementById('insId').value || genId();
-    var insights = getInsights();
-    var idx = insights.findIndex(function(a){ return a.id===id; });
-    var slug = (function() {
-      var s = document.getElementById('insSlug').value.trim();
-      if (!s) {
-        var existing = insights.find(function(x){ return x.id===id; });
-        if (existing && existing.slug) return existing.slug;
-        s = titleToSlug(document.getElementById('insTitle').value);
-      }
-      return s;
-    })();
-    var item = {
-      id: id,
-      slug: slug,
-      title: document.getElementById('insTitle').value.trim(),
-      excerpt: document.getElementById('insExcerpt').value.trim(),
-      category: document.getElementById('insCategory').value.trim(),
-      tags: document.getElementById('insTags').value.split(',').map(function(t){ return t.trim(); }).filter(Boolean),
-      cover_image: document.getElementById('insCoverImage').value.trim(),
-      content: document.getElementById('insContent').value,
-      faq: collectFaq(),
-      related_slugs: document.getElementById('insRelated').value.split(',').map(function(s){ return s.trim(); }).filter(Boolean),
-      published: document.getElementById('insPublished').checked,
-      publish_date: document.getElementById('insDate').value,
-      order: idx >= 0 ? insights[idx].order : insights.length
+function collectFaq() {
+  return Array.from(document.querySelectorAll('#insFaqList .dyn-row')).map(function(row) {
+    return {
+      q: (row.querySelector('[data-field="q"]') || {}).value || '',
+      a: (row.querySelector('[data-field="a"]') || {}).value || ''
     };
-    if (idx >= 0) insights[idx] = item; else insights.push(item);
-    saveInsights(insights);
-    closeInsModal();
-    renderTable();
-  }
+  }).filter(function(o) { return o.q || o.a; });
+}
 
+// ── Helpers ──
+function escHtml(s) {
+  return (s || '').replace(/&/g, '&amp;').replace(/"/g, '&quot;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+}
+
+// ── Modal open/close ──
+function openInsModal(a) {
+  switchTab('basic');
+  buildSuggestions();
+  document.getElementById('insModalTitle').textContent = a ? '編輯文章' : '新增文章';
+  document.getElementById('insId').value           = a ? a.id : '';
+  document.getElementById('insTitle').value        = a ? (a.title || '') : '';
+  document.getElementById('insSlug').value         = a ? (a.slug || '') : '';
+  document.getElementById('insAuthor').value       = a ? (a.author || '') : '';
+  document.getElementById('insCategory').value     = a ? (a.category || '') : '';
+  document.getElementById('insDate').value         = a ? (a.publish_date || '') : new Date().toISOString().slice(0, 10);
+  document.getElementById('insTags').value         = a ? (a.tags || []).join(', ') : '';
+  document.getElementById('insExcerpt').value      = a ? (a.excerpt || '') : '';
+  document.getElementById('insCoverImage').value   = a ? (a.cover_image || '') : '';
+  document.getElementById('insRelated').value      = a ? (a.related_slugs || []).join(', ') : '';
+  document.getElementById('insIsFeatured').checked = a ? !!a.is_featured : false;
+  document.getElementById('insSortOrder').value    = a ? (a.sort_order !== undefined ? a.sort_order : (a.order || 0)) : getInsights().length;
+  document.getElementById('insStatus').value       = a ? (a.published ? 'published' : 'draft') : 'published';
+  // SEO
+  document.getElementById('insSeoTitle').value     = a ? (a.seo_title || '') : '';
+  document.getElementById('insSeoDesc').value      = a ? (a.seo_description || '') : '';
+  document.getElementById('insOgImage').value      = a ? (a.og_image || '') : '';
+  // Content (backward compat: content_markdown || content)
+  document.getElementById('insContent').value      = a ? (a.content_markdown || a.content || '') : '';
+  // FAQ
+  document.getElementById('insFaqList').innerHTML = '';
+  if (a) (a.faq || []).forEach(addInsFaq);
+  // Reset preview
+  var wrap = document.getElementById('mdWrap');
+  wrap.classList.remove('preview-on');
+  document.getElementById('mdPreviewBtn').classList.remove('on');
+  document.getElementById('mdPreviewBtn').textContent = '切換預覽';
+  document.getElementById('mdPreviewPanel').innerHTML = '<div class="md-empty-hint">開始輸入內容後即時預覽...</div>';
+
+  updateInsSlugPreview();
+  updateSeoPreview();
+  buildSuggestions();
+  document.getElementById('insModal').classList.add('open');
+}
+
+function closeInsModal() {
+  document.getElementById('insModal').classList.remove('open');
+}
+
+function editIns(id) {
+  var a = getInsights().find(function(a) { return a.id === id; });
+  if (a) openInsModal(a);
+}
+
+function deleteIns(id) {
+  if (!confirm('確定要刪除此文章？此操作無法復原。')) return;
+  saveInsights(getInsights().filter(function(a) { return a.id !== id; }));
+  buildSuggestions();
   renderTable();
+}
+
+// ── Save ──
+function saveInsight() {
+  var titleEl = document.getElementById('insTitle');
+  if (!titleEl.value.trim()) { alert('請輸入文章標題'); switchTab('basic'); titleEl.focus(); return; }
+
+  var id = document.getElementById('insId').value || genId();
+  var insights = getInsights();
+  var idx = insights.findIndex(function(a) { return a.id === id; });
+
+  var slug = (function() {
+    var s = document.getElementById('insSlug').value.trim();
+    if (!s) {
+      var existing = insights.find(function(x) { return x.id === id; });
+      if (existing && existing.slug) return existing.slug;
+      s = titleToSlug(titleEl.value);
+    }
+    return s;
+  })();
+
+  var sortOrder = parseInt(document.getElementById('insSortOrder').value, 10);
+  if (isNaN(sortOrder)) sortOrder = idx >= 0 ? (insights[idx].sort_order || 0) : insights.length;
+
+  var published = document.getElementById('insStatus').value === 'published';
+
+  var item = {
+    id: id,
+    slug: slug,
+    title: titleEl.value.trim(),
+    excerpt: document.getElementById('insExcerpt').value.trim(),
+    author: document.getElementById('insAuthor').value.trim(),
+    category: document.getElementById('insCategory').value.trim(),
+    tags: document.getElementById('insTags').value.split(',').map(function(t) { return t.trim(); }).filter(Boolean),
+    cover_image: document.getElementById('insCoverImage').value.trim(),
+    content_markdown: document.getElementById('insContent').value,
+    faq: collectFaq(),
+    related_slugs: document.getElementById('insRelated').value.split(',').map(function(s) { return s.trim(); }).filter(Boolean),
+    published: published,
+    publish_date: document.getElementById('insDate').value,
+    is_featured: document.getElementById('insIsFeatured').checked,
+    sort_order: sortOrder,
+    order: sortOrder,
+    seo_title: document.getElementById('insSeoTitle').value.trim(),
+    seo_description: document.getElementById('insSeoDesc').value.trim(),
+    og_image: document.getElementById('insOgImage').value.trim()
+  };
+
+  if (idx >= 0) { insights[idx] = item; } else { insights.push(item); }
+  saveInsights(insights);
+  closeInsModal();
+  buildSuggestions();
+  renderTable();
+}
+
+// ── Table rendering ──
+function renderTable() {
+  var all = getInsights();
+  var filterStatus = document.getElementById('filterStatus').value;
+  var filterCat    = document.getElementById('filterCat').value;
+  var filterSearch = (document.getElementById('filterSearch').value || '').toLowerCase();
+
+  var items = all.filter(function(a) {
+    if (filterStatus === 'published' && !a.published) return false;
+    if (filterStatus === 'draft' && a.published) return false;
+    if (filterCat && a.category !== filterCat) return false;
+    if (filterSearch && (a.title || '').toLowerCase().indexOf(filterSearch) === -1) return false;
+    return true;
+  }).sort(function(a, b) {
+    var sa = a.sort_order !== undefined ? a.sort_order : (a.order || 0);
+    var sb = b.sort_order !== undefined ? b.sort_order : (b.order || 0);
+    return sa - sb;
+  });
+
+  document.getElementById('insCount').textContent = items.length + ' / ' + all.length + ' 篇';
+  document.getElementById('insTableBody').innerHTML = items.map(function(a) {
+    var tags = (a.tags || []).map(function(t) { return '<span class="ins-tag-sm">' + escHtml(t) + '</span>'; }).join('');
+    var pub = a.published
+      ? '<span style="font-size:0.75rem;padding:3px 10px;border-radius:100px;background:rgba(72,187,120,0.12);color:#68D391;">已發布</span>'
+      : '<span style="font-size:0.75rem;padding:3px 10px;border-radius:100px;background:rgba(80,80,80,0.2);color:var(--text-sub);">草稿</span>';
+    var feat = a.is_featured ? '<span class="star-feat">⭐</span>' : '<span style="color:var(--text-muted);">—</span>';
+    return '<tr>'
+      + '<td><strong>' + escHtml(a.title || '') + '</strong>'
+      + '<div style="font-size:0.74rem;color:var(--text-sub);margin-top:2px;font-family:monospace;">' + (a.slug ? '/insights/' + a.slug : '—') + '</div></td>'
+      + '<td style="font-size:0.82rem;color:var(--text-sub);">' + escHtml(a.author || '—') + '</td>'
+      + '<td style="font-size:0.85rem;">' + escHtml(a.category || '—') + '</td>'
+      + '<td style="text-align:center;">' + feat + '</td>'
+      + '<td style="font-size:0.82rem;color:var(--text-sub);">' + (a.publish_date || '—') + '</td>'
+      + '<td>' + pub + '</td>'
+      + '<td style="white-space:nowrap;">'
+      + '<button class="btn-outline btn-sm" onclick="editIns(\'' + a.id + '\')">編輯</button>'
+      + (a.slug ? ' <a href="../insights/' + a.slug + '" target="_blank" class="btn-outline btn-sm" style="font-size:0.72rem;">預覽</a>' : '')
+      + ' <button class="btn-red btn-sm" onclick="deleteIns(\'' + a.id + '\')">刪除</button>'
+      + '</td>'
+      + '</tr>';
+  }).join('');
+}
+
+buildSuggestions();
+renderTable();
 </script>
 </body>
 </html>

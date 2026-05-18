@@ -107,6 +107,43 @@
       font-size: 1.2rem; font-weight: 700; color: var(--navy-dark);
       margin: 2em 0 0.6em;
     }
+    .article-h4 {
+      font-size: 1.05rem; font-weight: 700; color: var(--navy-dark);
+      margin: 1.6em 0 0.5em;
+    }
+    .article-list { padding-left: 1.7em; margin-bottom: 1.4em; }
+    .article-list li {
+      font-size: 1.05rem; color: var(--text-sub);
+      line-height: 1.9; margin-bottom: 0.3em;
+    }
+    .article-blockquote {
+      border-left: 4px solid var(--red);
+      padding: 14px 20px; margin: 1.6em 0;
+      background: rgba(200,22,29,0.04);
+      border-radius: 0 10px 10px 0;
+      color: var(--text-sub); font-style: italic;
+    }
+    .article-blockquote p { margin-bottom: 0; }
+    .article-table-wrap {
+      overflow-x: auto; margin: 1.6em 0;
+      border-radius: 10px; border: 1.5px solid var(--border);
+    }
+    .article-table { width: 100%; border-collapse: collapse; font-size: 0.98rem; }
+    .article-table th {
+      background: var(--bg-light); padding: 12px 16px;
+      text-align: left; font-weight: 700; color: var(--navy-dark);
+      border-bottom: 2px solid var(--border);
+    }
+    .article-table td {
+      padding: 11px 16px; color: var(--text-sub);
+      border-bottom: 1px solid var(--border);
+    }
+    .article-table tr:last-child td { border-bottom: none; }
+    .article-hr { border: none; border-top: 2px solid var(--border); margin: 2.2em 0; }
+    .article-body code {
+      background: rgba(0,0,0,0.05); padding: 2px 7px;
+      border-radius: 4px; font-size: 0.88em;
+    }
 
     /* ── FAQ ── */
     .article-faq-section { padding: 80px 0; background: var(--bg-light); }
@@ -196,11 +233,15 @@
       <a href="insights.html">產業新知</a><span>›</span>
       <span id="heroBreadcrumb"></span>
     </div>
+    <div id="heroFeaturedBadge" style="display:none;margin-bottom:14px;">
+      <span style="background:rgba(255,193,7,0.14);border:1px solid rgba(255,193,7,0.32);color:#FFD700;border-radius:100px;padding:4px 16px;font-size:0.73rem;font-weight:700;letter-spacing:0.06em;">⭐ 精選文章</span>
+    </div>
     <div class="article-cat-badge" id="heroCat"></div>
     <h1 id="heroTitle"></h1>
     <p class="article-hero-excerpt" id="heroExcerpt"></p>
     <div class="article-hero-meta">
       <span class="article-hero-date" id="heroDate"></span>
+      <span id="heroAuthor" style="font-size:0.82rem;color:rgba(255,255,255,0.42);"></span>
       <div class="article-hero-tags" id="heroTags"></div>
     </div>
   </div>
@@ -351,9 +392,19 @@ function toggleFaq(idx) {
     return;
   }
 
-  // ── Page meta ──
-  document.getElementById('pageTitle').textContent = (article.title || '') + ' — IPCC 東州集團';
-  document.getElementById('pageDesc').setAttribute('content', article.excerpt || '');
+  // ── Page meta & OG ──
+  document.getElementById('pageTitle').textContent = (article.seo_title || article.title || '') + ' — IPCC 東州集團';
+  document.getElementById('pageDesc').setAttribute('content', article.seo_description || article.excerpt || '');
+  function setOgMeta(prop, content) {
+    if (!content) return;
+    var el = document.querySelector('meta[property="' + prop + '"]') || document.createElement('meta');
+    el.setAttribute('property', prop);
+    el.setAttribute('content', content);
+    document.head.appendChild(el);
+  }
+  setOgMeta('og:title', article.seo_title || article.title || '');
+  setOgMeta('og:description', article.seo_description || article.excerpt || '');
+  setOgMeta('og:image', article.og_image || article.cover_image || '');
 
   // ── Hero ──
   document.getElementById('heroBreadcrumb').textContent = article.title || '';
@@ -362,6 +413,8 @@ function toggleFaq(idx) {
   document.getElementById('heroExcerpt').textContent = article.excerpt || '';
   var dateStr = (article.publish_date || '').replace(/-/g, ' / ');
   document.getElementById('heroDate').textContent = dateStr ? '📅 ' + dateStr : '';
+  if (article.author) document.getElementById('heroAuthor').textContent = '✍️ ' + article.author;
+  if (article.is_featured) document.getElementById('heroFeaturedBadge').style.display = '';
   document.getElementById('heroTags').innerHTML = (article.tags || []).map(function(t){
     return '<span class="article-hero-tag">#' + t + '</span>';
   }).join('');
@@ -375,47 +428,90 @@ function toggleFaq(idx) {
     document.getElementById('articleMain').classList.add('has-cover');
   }
 
-  // ── Content renderer ──
-  function renderContent(raw) {
+  // ── Markdown renderer ──
+  function renderMarkdown(raw) {
     if (!raw) return '';
-    var lines = (raw || '').split('\n');
-    var html = '', inP = false;
+    var lines = raw.split('\n');
+    var out = [], state = 'idle', buf = [];
+
+    function escH(s) { return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+    function fmt(s) {
+      s = escH(s);
+      s = s.replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>');
+      s = s.replace(/\*([^*\n]+?)\*/g, '<em>$1</em>');
+      s = s.replace(/\[([^\]]+)\]\(([^)]+)\)/g, '<a href="$2" target="_blank" rel="noopener">$1</a>');
+      s = s.replace(/`([^`]+)`/g, '<code>$1</code>');
+      return s;
+    }
+
+    function flush() {
+      if (!buf.length) { state = 'idle'; return; }
+      if (state === 'p')   out.push('<p>' + buf.map(fmt).join('<br>') + '</p>');
+      else if (state === 'ul') out.push('<ul class="article-list">' + buf.map(function(l){ return '<li>' + fmt(l) + '</li>'; }).join('') + '</ul>');
+      else if (state === 'ol') out.push('<ol class="article-list">' + buf.map(function(l){ return '<li>' + fmt(l) + '</li>'; }).join('') + '</ol>');
+      else if (state === 'bq') out.push('<blockquote class="article-blockquote">' + buf.map(fmt).join('<br>') + '</blockquote>');
+      else if (state === 'tbl') out.push(buildTbl(buf));
+      state = 'idle'; buf = [];
+    }
+
+    function buildTbl(rows) {
+      var hdr = null, body = [];
+      rows.forEach(function(r) {
+        if (/^\|[\s\-:|]+\|/.test(r.trim())) return;
+        var cells = r.trim().split('|').slice(1, -1);
+        if (!hdr) { hdr = cells; } else { body.push(cells); }
+      });
+      if (!hdr) return '';
+      var t = '<div class="article-table-wrap"><table class="article-table"><thead><tr>';
+      t += hdr.map(function(c){ return '<th>' + fmt(c.trim()) + '</th>'; }).join('');
+      t += '</tr></thead><tbody>';
+      body.forEach(function(r) {
+        t += '<tr>' + r.map(function(c){ return '<td>' + fmt(c.trim()) + '</td>'; }).join('') + '</tr>';
+      });
+      return t + '</tbody></table></div>';
+    }
+
     lines.forEach(function(line) {
-      if (line.startsWith('## ')) {
-        if (inP) { html += '</p>'; inP = false; }
+      var tr = line.trim();
+      if (/^## /.test(line)) {
+        flush();
         var txt = line.slice(3).trim();
-        var id = 'h-' + txt.replace(/[^\w一-鿿]+/g, '-').toLowerCase().slice(0, 40);
-        html += '<h2 class="article-h2" id="' + id + '">' + txt + '</h2>';
-      } else if (line.startsWith('### ')) {
-        if (inP) { html += '</p>'; inP = false; }
-        html += '<h3 class="article-h3">' + line.slice(4).trim() + '</h3>';
-      } else if (line.trim() === '') {
-        if (inP) { html += '</p>'; inP = false; }
-      } else {
-        if (!inP) { html += '<p>'; inP = true; } else { html += '<br>'; }
-        html += line;
+        var id = 'h-' + txt.replace(/[^\w一-鿿]+/g, '-').toLowerCase().replace(/-+$/, '').slice(0, 40);
+        out.push('<h2 class="article-h2" id="' + escH(id) + '">' + fmt(txt) + '</h2>');
+        return;
       }
+      if (/^### /.test(line)) { flush(); out.push('<h3 class="article-h3">' + fmt(line.slice(4).trim()) + '</h3>'); return; }
+      if (/^#### /.test(line)) { flush(); out.push('<h4 class="article-h4">' + fmt(line.slice(5).trim()) + '</h4>'); return; }
+      if (/^> /.test(line))   { if (state !== 'bq') { flush(); state = 'bq'; } buf.push(line.slice(2)); return; }
+      if (/^\|/.test(tr))     { if (state !== 'tbl'){ flush(); state = 'tbl'; } buf.push(line); return; }
+      if (/^[-*+] /.test(line)) { if (state !== 'ul') { flush(); state = 'ul'; } buf.push(line.replace(/^[-*+] /, '')); return; }
+      if (/^\d+\. /.test(line)) { if (state !== 'ol') { flush(); state = 'ol'; } buf.push(line.replace(/^\d+\. /, '')); return; }
+      if (/^---+$/.test(tr))  { flush(); out.push('<hr class="article-hr">'); return; }
+      if (!tr) { flush(); return; }
+      if (state !== 'p') { flush(); state = 'p'; }
+      buf.push(line);
     });
-    if (inP) html += '</p>';
-    return html;
+    flush();
+    return out.join('\n');
   }
 
   function buildTOC(raw) {
     var toc = [];
     (raw || '').split('\n').forEach(function(line) {
-      if (line.startsWith('## ')) {
+      if (/^## /.test(line)) {
         var txt = line.slice(3).trim();
-        var id = 'h-' + txt.replace(/[^\w一-鿿]+/g, '-').toLowerCase().slice(0, 40);
+        var id = 'h-' + txt.replace(/[^\w一-鿿]+/g, '-').toLowerCase().replace(/-+$/, '').slice(0, 40);
         toc.push({ text: txt, id: id });
       }
     });
     return toc;
   }
 
-  // ── Render content ──
-  if (article.content) {
-    document.getElementById('articleBody').innerHTML = renderContent(article.content);
-    var toc = buildTOC(article.content);
+  // ── Render content (supports content_markdown with fallback to content) ──
+  var rawContent = article.content_markdown || article.content || '';
+  if (rawContent) {
+    document.getElementById('articleBody').innerHTML = renderMarkdown(rawContent);
+    var toc = buildTOC(rawContent);
     if (toc.length >= 2) {
       document.getElementById('tocNav').innerHTML = toc.map(function(item) {
         return '<a href="#' + item.id + '" data-toc-id="' + item.id + '">' + item.text + '</a>';
