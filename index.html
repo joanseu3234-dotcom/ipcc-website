@@ -290,6 +290,38 @@
   </div>
 </section>
 
+<!-- ── 客服產業新知 ── -->
+<style>
+  .insight-home-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:24px; margin-top:40px; }
+  .insight-home-card { background:var(--white); border:1.5px solid var(--border); border-radius:18px; overflow:hidden; text-decoration:none; color:inherit; display:flex; flex-direction:column; transition:border-color 0.25s, box-shadow 0.25s, transform 0.25s; }
+  .insight-home-card:hover { border-color:rgba(200,22,29,0.3); box-shadow:0 8px 32px rgba(0,0,0,0.09); transform:translateY(-3px); }
+  .insight-home-img { height:180px; background:linear-gradient(135deg,var(--navy-dark),var(--navy)); display:flex; align-items:center; justify-content:center; font-size:3rem; flex-shrink:0; }
+  .insight-home-img img { width:100%; height:100%; object-fit:cover; display:block; }
+  .insight-home-body { padding:22px; display:flex; flex-direction:column; flex:1; gap:8px; }
+  .insight-home-meta { display:flex; align-items:center; gap:8px; }
+  .insight-home-cat { font-size:0.7rem; font-weight:700; background:rgba(200,22,29,0.08); color:var(--red); border:1px solid rgba(200,22,29,0.18); border-radius:100px; padding:2px 9px; }
+  .insight-home-date { font-size:0.75rem; color:var(--text-muted); }
+  .insight-home-title { font-size:1rem; font-weight:800; color:var(--navy-dark); line-height:1.4; }
+  .insight-home-excerpt { font-size:0.86rem; color:var(--text-sub); line-height:1.7; display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden; flex:1; }
+  .insight-home-link { font-size:0.83rem; font-weight:700; color:var(--red); margin-top:8px; }
+  .insight-home-link::after { content:' →'; }
+  @media(max-width:900px){ .insight-home-grid{ grid-template-columns:repeat(2,1fr); } }
+  @media(max-width:560px){ .insight-home-grid{ grid-template-columns:1fr; } .insight-home-img{ height:150px; } }
+</style>
+<section class="section section-alt" id="homeInsightsSection" style="display:none;">
+  <div class="container">
+    <div style="display:flex; justify-content:space-between; align-items:flex-end; flex-wrap:wrap; gap:24px; margin-bottom:8px;">
+      <div>
+        <span class="section-label">Knowledge Center</span>
+        <h2 class="section-title">客服產業新知</h2>
+        <p class="section-sub" style="margin-top:8px;">深度解析客服趨勢、AI 應用與管理實踐</p>
+      </div>
+      <a href="insights.html" class="btn btn-navy" style="margin-bottom:8px;">查看全部 →</a>
+    </div>
+    <div class="insight-home-grid" id="homeInsightsGrid"></div>
+  </div>
+</section>
+
 <!-- ── 關於我們 ── -->
 <section class="section section-alt">
   <div class="container">
@@ -597,6 +629,33 @@ if (aboutStats) aboutObserver.observe(aboutStats);
       }).join('');
     });
   } catch(e) {}
+})();
+</script>
+
+<script>
+// 客服產業新知 — 首頁區塊
+(function() {
+  var insights = [];
+  try { var r = localStorage.getItem('ipcc_insights'); if (r) insights = JSON.parse(r); } catch(e) {}
+  if (!insights.length && window.IPCC_CONTENT_DATA && window.IPCC_CONTENT_DATA.ipcc_insights)
+    insights = window.IPCC_CONTENT_DATA.ipcc_insights;
+  var items = insights.filter(function(a){ return a.published; }).sort(function(a,b){ return a.order-b.order; }).slice(0,3);
+  if (!items.length) return;
+  document.getElementById('homeInsightsSection').style.display = '';
+  document.getElementById('homeInsightsGrid').innerHTML = items.map(function(a) {
+    var imgHtml = a.cover_image
+      ? '<div class="insight-home-img"><img src="'+a.cover_image+'" alt="" loading="lazy"></div>'
+      : '<div class="insight-home-img">💡</div>';
+    var dateStr = (a.publish_date||'').replace(/-/g,'.').slice(0,7);
+    return '<a href="/insights/'+(a.slug||'')+'" class="insight-home-card">'
+      + imgHtml
+      + '<div class="insight-home-body">'
+      + '<div class="insight-home-meta"><span class="insight-home-cat">'+(a.category||'')+'</span><span class="insight-home-date">'+dateStr+'</span></div>'
+      + '<div class="insight-home-title">'+(a.title||'')+'</div>'
+      + '<div class="insight-home-excerpt">'+(a.excerpt||'')+'</div>'
+      + '<span class="insight-home-link">閱讀更多</span>'
+      + '</div></a>';
+  }).join('');
 })();
 </script>
 

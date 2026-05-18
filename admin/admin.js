@@ -275,6 +275,58 @@ function getServices() {
 }
 function saveServices(arr) { localStorage.setItem('ipcc_services', JSON.stringify(arr)); }
 
+// --- Insights CRUD ---
+function getInsights() {
+  try {
+    var s = JSON.parse(localStorage.getItem('ipcc_insights') || 'null');
+    if (s) return s;
+  } catch(e) {}
+  return [
+    {
+      id:'ins-1', slug:'ai-customer-service-trend-2026',
+      title:'AI 客服 2026 趨勢：從自動回覆到情感智慧的進化',
+      excerpt:'隨著大型語言模型持續成熟，AI 客服正從簡單的 FAQ 機器人演化為能夠理解語境、辨識情緒的智慧代理人。本文深度解析 2026 年客服產業最值得關注的五大 AI 趨勢。',
+      category:'產業趨勢', tags:['AI客服','LLM','趨勢分析'],
+      cover_image:'',
+      content:'AI 客服技術的發展速度持續超越業界預期。從早期只能回答固定問題的規則式機器人，到如今能夠理解複雜語境、辨識情緒並給出個性化回應的 AI Agent，這場變革正深刻影響著每一個客服中心的日常運作。\n\n## 趨勢一：LLM 成為客服新標配\n\n2024 年以前，多數企業的 AI 客服仍依賴傳統 NLP 與意圖識別引擎。但隨著 GPT-4、Claude 等 LLM 的商業化落地，客服領域的 AI 應用正在經歷本質性升級。\n\n## 趨勢二：情感智慧與同理心 AI\n\n下一代 AI 客服的核心競爭力，不再只是「正確回答問題」，而是能夠識別顧客的情緒狀態，並以適合的語氣和方式給出回應。',
+      faq:[
+        {q:'AI 客服是否會完全取代人工客服？', a:'短期內不會。AI 客服最大的優勢在於處理大量標準化請求，而複雜問題、情緒性投訴以及高價值客戶關係仍需要人工介入。最理想的模式是「AI + 人工」的混合協作。'},
+        {q:'企業導入 AI 客服的最大挑戰是什麼？', a:'資料品質與系統整合是最常見的挑戰。AI 的表現高度依賴訓練資料的品質，加上需要與現有 CRM、工單系統等整合，導入過程需要充分規劃。'}
+      ],
+      related_slugs:['omnichannel-cx-best-practices'],
+      published:true, publish_date:'2026-05-10', order:0
+    },
+    {
+      id:'ins-2', slug:'omnichannel-cx-best-practices',
+      title:'全渠道客戶體驗：打破溝通孤島的七個最佳實踐',
+      excerpt:'當顧客可以透過電話、LINE、Instagram、Email 同時聯繫品牌，如何確保跨渠道服務體驗的一致性，成為現代客服管理的核心課題。',
+      category:'客服管理', tags:['全渠道','CX','客戶體驗'],
+      cover_image:'',
+      content:'根據研究，超過 60% 的消費者在與品牌互動時，會同時使用兩種以上的溝通渠道。然而，許多企業的客服系統仍是孤立的：電話客服不知道顧客在社群上發過什麼、LINE 客服看不到顧客過去的購買紀錄。\n\n## 實踐一：建立統一的顧客資料平台\n\n跨渠道一致性的基礎，是讓每位客服人員都能即時看到同一份顧客資料。統一客戶資料平台（CDP）是解決這個問題的關鍵基礎設施。\n\n## 實踐二：渠道切換的無縫銜接\n\n顧客從 LINE 轉到電話時，客服人員應已掌握對話歷史，不讓顧客重複陳述問題。這需要系統層面的整合，也需要客服人員的流程訓練。',
+      faq:[
+        {q:'全渠道整合需要多大的技術投入？', a:'這取決於現有系統的狀況。若已有基礎 CRM，整合成本相對可控；建議從使用量最高的兩個渠道開始，逐步擴展，避免一次性大規模投入的風險。'}
+      ],
+      related_slugs:['ai-customer-service-trend-2026','cx-data-analytics-kpi'],
+      published:true, publish_date:'2026-04-28', order:1
+    },
+    {
+      id:'ins-3', slug:'cx-data-analytics-kpi',
+      title:'客服數據分析入門：你必須追蹤的 8 個核心 KPI',
+      excerpt:'數據是客服管理的羅盤。了解哪些指標真正重要、如何解讀這些數字，以及如何將分析結果轉化為具體改善行動。',
+      category:'數據分析', tags:['KPI','數據分析','客服優化'],
+      cover_image:'',
+      content:'許多客服中心每天都在收集大量資料，但真正能從這些數字中找出改善機會的管理者並不多。問題不在於資料不夠，而在於不知道該看什麼、怎麼看。\n\n## 1. 首次解決率（FCR）\n\n首次解決率是衡量客服效率最核心的指標之一，代表顧客在第一次聯繫就獲得完整解決的比率。業界標竿約 70-75%，優秀的客服中心可達 80% 以上。\n\n## 2. 平均處理時間（AHT）\n\n平均處理時間包含通話時間與後續處理時間。降低 AHT 可提高效率，但不能以犧牲品質為代價。',
+      faq:[
+        {q:'什麼是 FCR（首次解決率）？', a:'首次解決率（First Contact Resolution）是指顧客在第一次聯繫時，問題就獲得完整解決的比率。這是衡量客服效率最重要的指標之一，業界平均值約為 70-75%。'},
+        {q:'多久應該進行一次 KPI 檢視？', a:'建議每週進行短期指標（回應時間、通話量）的檢視，每月進行完整 KPI 分析，每季度進行深度趨勢分析與策略調整。'}
+      ],
+      related_slugs:['omnichannel-cx-best-practices'],
+      published:true, publish_date:'2026-04-15', order:2
+    }
+  ];
+}
+function saveInsights(arr) { localStorage.setItem('ipcc_insights', JSON.stringify(arr)); }
+
 // --- About CRUD ---
 function getAboutData(key) {
   try { return JSON.parse(localStorage.getItem('ipcc_about_' + key) || 'null'); } catch(e) { return null; }
@@ -423,6 +475,7 @@ function saveContactConfig(obj) {
 if (typeof PAGE_PERMS !== 'undefined') {
   PAGE_PERMS['contacts-manage.html'] = 'contacts';
   PAGE_PERMS['contact-config.html'] = 'settings';
+  PAGE_PERMS['insights-manage.html'] = 'news';
 }
 
 

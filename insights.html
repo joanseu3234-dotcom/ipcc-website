@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>客服產業新知 — IPCC 東州集團</title>
+  <meta name="description" content="東州集團客服產業知識中心，深度解析客服趨勢、AI 應用與管理實踐，助企業掌握最新行業動態。">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+  <style>
+    /* ── Filter bar ── */
+    .insights-filter-bar { background: var(--bg-light); padding: 36px 0 0; }
+    .filter-group-label {
+      font-size: 0.7rem; font-weight: 700; letter-spacing: 0.12em;
+      text-transform: uppercase; color: var(--text-muted); margin-bottom: 10px;
+    }
+    .filter-pills { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 20px; }
+    .filter-pill {
+      padding: 6px 16px; border-radius: 100px;
+      border: 1.5px solid var(--border); background: none;
+      font-size: 0.82rem; font-weight: 600; color: var(--text-sub);
+      cursor: pointer; font-family: inherit; transition: all 0.2s;
+    }
+    .filter-pill:hover { border-color: var(--red); color: var(--red); }
+    .filter-pill.active { background: var(--red); border-color: var(--red); color: #fff; }
+
+    /* ── Card grid ── */
+    .insights-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 28px;
+      margin-top: 56px;
+    }
+    .insight-card {
+      background: var(--white);
+      border: 1.5px solid var(--border);
+      border-radius: 18px;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      text-decoration: none;
+      color: inherit;
+      transition: border-color 0.25s, box-shadow 0.25s, transform 0.25s;
+    }
+    .insight-card:hover {
+      border-color: rgba(200,22,29,0.3);
+      box-shadow: 0 8px 32px rgba(0,0,0,0.08);
+      transform: translateY(-4px);
+    }
+    .insight-card-img {
+      height: 200px;
+      background: linear-gradient(135deg, var(--navy-dark) 0%, #1a2f5e 100%);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 3.5rem; flex-shrink: 0; overflow: hidden;
+    }
+    .insight-card-img img { width: 100%; height: 100%; object-fit: cover; display: block; }
+    .insight-card-body { padding: 24px; display: flex; flex-direction: column; flex: 1; gap: 10px; }
+    .insight-card-meta { display: flex; align-items: center; gap: 10px; }
+    .insight-card-cat {
+      font-size: 0.72rem; font-weight: 700;
+      background: rgba(200,22,29,0.07); color: var(--red);
+      border: 1px solid rgba(200,22,29,0.18); border-radius: 100px;
+      padding: 3px 10px;
+    }
+    .insight-card-date { font-size: 0.78rem; color: var(--text-muted); }
+    .insight-card-title { font-size: 1.05rem; font-weight: 800; color: var(--navy-dark); line-height: 1.45; }
+    .insight-card-excerpt {
+      font-size: 0.88rem; color: var(--text-sub); line-height: 1.75; flex: 1;
+      display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden;
+    }
+    .insight-card-tags { display: flex; flex-wrap: wrap; gap: 6px; }
+    .insight-tag {
+      font-size: 0.7rem; font-weight: 600; color: var(--text-muted);
+      background: var(--bg-light); border-radius: 100px; padding: 2px 9px;
+    }
+    .insight-card-cta {
+      font-size: 0.85rem; font-weight: 700; color: var(--red);
+      display: inline-flex; align-items: center; gap: 4px; margin-top: 4px;
+    }
+    .insight-card-cta::after { content: '→'; transition: transform 0.2s; }
+    .insight-card:hover .insight-card-cta::after { transform: translateX(4px); }
+
+    .no-results { text-align: center; padding: 80px 0; color: var(--text-sub); }
+
+    @media (max-width: 900px) { .insights-grid { grid-template-columns: repeat(2, 1fr); gap: 20px; } }
+    @media (max-width: 560px) {
+      .insights-grid { grid-template-columns: 1fr; gap: 16px; }
+      .insight-card-body { padding: 20px; }
+    }
+  </style>
+</head>
+<body>
+<script src="content-data.js"></script>
+
+<nav class="navbar" id="navbar">
+  <div class="container">
+    <div class="nav-inner">
+      <a href="index.html" class="nav-logo">
+        <img src="IPCCLOGO.png" alt="IPCC">
+        <div class="nav-logo-right">
+          <div class="nav-logo-group">東州集團</div>
+          <div class="nav-logo-companies">
+            <span>東州互聯網實業有限公司</span>
+            <span>顯榮國際股份有限公司</span>
+          </div>
+        </div>
+      </a>
+      <ul class="nav-menu" id="navMenu">
+        <li><a href="index.html" class="nav-link">首頁</a></li>
+        <li><a href="news.html" class="nav-link">最新消息</a></li>
+        <li><a href="about.html" class="nav-link">關於我們</a></li>
+        <li><a href="services.html" class="nav-link">專案服務</a></li>
+        <li><a href="cases.html" class="nav-link">成功案例</a></li>
+        <li><a href="insights.html" class="nav-link active">產業新知</a></li>
+      </ul>
+      <div class="nav-end">
+        <a href="contact.html" class="nav-cta">與我們聯繫</a>
+        <div class="nav-hamburger" onclick="toggleMenu()"><span></span><span></span><span></span></div>
+      </div>
+    </div>
+  </div>
+</nav>
+
+<div class="page-hero">
+  <div class="page-hero-signal">
+    <div class="page-hero-phone"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="rgba(220,80,80,0.95)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" style="display:block"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.26 13a19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 3.17 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L7.91 9.91a16 16 0 0 0 6.18 6.18l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg></div>
+    <div class="page-hero-ring"></div><div class="page-hero-ring"></div>
+    <div class="page-hero-ring"></div><div class="page-hero-ring"></div>
+    <div class="page-hero-ring"></div>
+  </div>
+  <div class="container">
+    <div class="breadcrumb">
+      <a href="index.html">首頁</a><span>›</span><span>客服產業新知</span>
+    </div>
+    <h1>客服產業新知</h1>
+    <p>深度解析客服趨勢、AI 應用與管理實踐，助您掌握產業脈動</p>
+  </div>
+</div>
+
+<!-- Filters -->
+<div class="insights-filter-bar">
+  <div class="container">
+    <div class="filter-group-label">分類篩選</div>
+    <div class="filter-pills" id="categoryFilters"></div>
+    <div class="filter-group-label">標籤篩選</div>
+    <div class="filter-pills" id="tagFilters"></div>
+  </div>
+</div>
+
+<!-- Grid -->
+<section class="section">
+  <div class="container">
+    <div class="insights-grid" id="insightsGrid"></div>
+    <div class="no-results" id="noResults" style="display:none;">
+      <div style="font-size:2.5rem;margin-bottom:16px;">🔍</div>
+      <p>沒有符合篩選條件的文章</p>
+    </div>
+  </div>
+</section>
+
+<section class="cta-section">
+  <div class="container" style="position:relative;z-index:1;text-align:center;">
+    <h2 class="section-title" style="color:#fff;">想了解更多客服解決方案？</h2>
+    <p style="color:rgba(255,255,255,0.6);margin:16px auto 36px;max-width:480px;">與我們的顧問深談，量身規劃最適合您的服務方案</p>
+    <a href="contact.html" class="btn btn-primary">免費諮詢 →</a>
+  </div>
+</section>
+
+<footer class="footer">
+  <div class="container">
+    <div class="footer-grid">
+      <div class="footer-brand">
+        <div class="footer-logo">
+          <div class="footer-logo-box"><img src="IPCCLOGO.png" alt="IPCC"></div>
+          <div>
+            <span class="footer-logo-name">東州集團</span>
+            <div class="footer-logo-companies">
+              <span>東州互聯網實業有限公司</span>
+              <span>顯榮國際股份有限公司</span>
+            </div>
+          </div>
+        </div>
+        <p>整合系統、服務與數據，協助企業打造永續競爭力。</p>
+        <div class="footer-socials">
+          <a href="https://www.facebook.com/easy.ipcc/" target="_blank" rel="noopener" class="footer-social" title="Facebook">f</a>
+          <a href="#" class="footer-social">▶</a>
+          <a href="https://www.1111.com.tw/corp/8563" target="_blank" rel="noopener" class="footer-social" title="1111人力銀行">人</a>
+        </div>
+      </div>
+      <div class="footer-col">
+        <h4>快速連結</h4>
+        <ul>
+          <li><a href="news.html">最新消息</a></li>
+          <li><a href="about.html">關於我們</a></li>
+          <li><a href="services.html">專案服務</a></li>
+          <li><a href="cases.html">成功案例</a></li>
+          <li><a href="insights.html">產業新知</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>產業新知</h4>
+        <ul id="footerInsightCats">
+          <li><a href="insights.html">所有文章</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>聯絡地址</h4>
+        <div class="footer-companies">
+          <div>東州互聯網實業有限公司</div>
+          <div>顯榮國際股份有限公司</div>
+        </div>
+        <div class="footer-address" style="margin-top:12px;"><span>北區</span><br>台北市松山區民權東路三段102號10樓</div>
+        <div class="footer-address" style="margin-top:16px;"><span>中區</span><br>台中市西區台灣大道二段307號9樓之2</div>
+        <div style="margin-top:16px;color:rgba(255,255,255,0.55);">☎ 0800-666-080</div>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span>© 2025 東州互聯網實業有限公司 / 顯榮國際股份有限公司 版權所有</span>
+      <span>IPCC Group — 創新服務．永續經營</span>
+    </div>
+  </div>
+</footer>
+
+<script>
+window.addEventListener('scroll', function() {
+  document.getElementById('navbar').classList.toggle('scrolled', window.scrollY > 20);
+});
+function toggleMenu() { document.getElementById('navMenu').classList.toggle('open'); }
+</script>
+
+<script>
+(function() {
+  var insights = [];
+  try { var r = localStorage.getItem('ipcc_insights'); if (r) insights = JSON.parse(r); } catch(e) {}
+  if (!insights.length && window.IPCC_CONTENT_DATA && window.IPCC_CONTENT_DATA.ipcc_insights)
+    insights = window.IPCC_CONTENT_DATA.ipcc_insights;
+
+  var published = insights.filter(function(a){ return a.published; }).sort(function(a,b){ return a.order - b.order; });
+  var activeCat = 'all', activeTag = 'all';
+
+  function escQ(s){ return (s||'').replace(/\\/g,'\\\\').replace(/'/g,"\\'"); }
+
+  function buildFilters() {
+    var cats = ['all'], tags = ['all'];
+    published.forEach(function(a) {
+      if (a.category && cats.indexOf(a.category) === -1) cats.push(a.category);
+      (a.tags||[]).forEach(function(t){ if (tags.indexOf(t) === -1) tags.push(t); });
+    });
+    document.getElementById('categoryFilters').innerHTML = cats.map(function(c) {
+      return '<button class="filter-pill'+(c==='all'?' active':'')+'" data-cat="'+c+'" onclick="filterCat(this,\''+escQ(c)+'\')">'+(c==='all'?'全部分類':c)+'</button>';
+    }).join('');
+    document.getElementById('tagFilters').innerHTML = tags.map(function(t) {
+      return '<button class="filter-pill'+(t==='all'?' active':'')+'" data-tag="'+t+'" onclick="filterTag(this,\''+escQ(t)+'\')">'+(t==='all'?'所有標籤':'#'+t)+'</button>';
+    }).join('');
+    var footerCats = cats.filter(function(c){ return c!=='all'; });
+    if (footerCats.length) {
+      document.getElementById('footerInsightCats').innerHTML =
+        '<li><a href="insights.html">所有文章</a></li>' +
+        footerCats.map(function(c){ return '<li><a href="insights.html">'+c+'</a></li>'; }).join('');
+    }
+  }
+
+  function renderGrid() {
+    var items = published.filter(function(a) {
+      return (activeCat==='all'||a.category===activeCat) && (activeTag==='all'||(a.tags||[]).indexOf(activeTag)!==-1);
+    });
+    var grid = document.getElementById('insightsGrid');
+    var noRes = document.getElementById('noResults');
+    if (!items.length) { grid.innerHTML=''; noRes.style.display=''; return; }
+    noRes.style.display = 'none';
+    grid.innerHTML = items.map(function(a) {
+      var imgHtml = a.cover_image
+        ? '<div class="insight-card-img"><img src="'+(a.cover_image||'')+'" alt="" loading="lazy"></div>'
+        : '<div class="insight-card-img">💡</div>';
+      var tags = (a.tags||[]).map(function(t){ return '<span class="insight-tag">#'+t+'</span>'; }).join('');
+      var dateStr = (a.publish_date||'').replace(/-/g,'.').slice(0,7);
+      return '<a href="/insights/'+(a.slug||'')+'" class="insight-card">'
+        +imgHtml+'<div class="insight-card-body">'
+        +'<div class="insight-card-meta"><span class="insight-card-cat">'+(a.category||'')+'</span><span class="insight-card-date">'+dateStr+'</span></div>'
+        +'<div class="insight-card-title">'+(a.title||'')+'</div>'
+        +'<div class="insight-card-excerpt">'+(a.excerpt||'')+'</div>'
+        +'<div class="insight-card-tags">'+tags+'</div>'
+        +'<span class="insight-card-cta">閱讀更多</span>'
+        +'</div></a>';
+    }).join('');
+  }
+
+  window.filterCat = function(btn, cat) {
+    activeCat = cat;
+    document.querySelectorAll('[data-cat]').forEach(function(b){ b.classList.toggle('active', b.dataset.cat===cat); });
+    renderGrid();
+  };
+  window.filterTag = function(btn, tag) {
+    activeTag = tag;
+    document.querySelectorAll('[data-tag]').forEach(function(b){ b.classList.toggle('active', b.dataset.tag===tag); });
+    renderGrid();
+  };
+
+  buildFilters();
+  renderGrid();
+})();
+</script>
+</body>
+</html>
