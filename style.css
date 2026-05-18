@@ -193,6 +193,74 @@ img { max-width: 100%; display: block; }
 .nav-hamburger { display: none; flex-direction: column; gap: 5px; cursor: pointer; padding: 8px; }
 .nav-hamburger span { display: block; width: 24px; height: 2px; background: var(--text-main); border-radius: 2px; transition: var(--transition); }
 
+/* nav-end 包裹 CTA + 語言切換器 + 漢堡 */
+.nav-end { display: flex; align-items: center; gap: 8px; }
+.nav-end .nav-cta { margin-left: 0; }
+
+/* ━━━━━━━━━━━━━━━━━━━━━
+   語言切換器
+━━━━━━━━━━━━━━━━━━━━━ */
+.lang-switcher { position: relative; }
+
+.lang-btn {
+  display: flex; align-items: center; gap: 5px;
+  background: transparent;
+  border: 1.5px solid var(--border);
+  border-radius: 100px;
+  padding: 6px 12px;
+  cursor: pointer;
+  font-family: inherit;
+  font-size: 0.8rem; font-weight: 700;
+  color: var(--text-sub);
+  transition: var(--transition);
+  white-space: nowrap;
+  line-height: 1;
+}
+.lang-btn:hover { border-color: var(--red); color: var(--red); background: rgba(200,22,29,0.05); }
+.lang-flag { font-size: 0.9rem; }
+.lang-code { font-size: 0.78rem; }
+.lang-arrow { font-size: 0.6rem; opacity: 0.6; }
+
+.lang-menu {
+  display: none;
+  position: absolute;
+  top: calc(100% + 8px);
+  right: 0;
+  background: var(--white);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  box-shadow: 0 8px 32px rgba(0,0,0,0.13);
+  overflow: hidden;
+  min-width: 148px;
+  z-index: 1200;
+  animation: langMenuIn 0.15s ease;
+}
+.lang-menu.open { display: block; }
+
+@keyframes langMenuIn {
+  from { opacity: 0; transform: translateY(-6px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.lang-opt {
+  display: flex; align-items: center; gap: 9px;
+  width: 100%; padding: 10px 16px;
+  background: transparent; border: none;
+  cursor: pointer;
+  font-family: inherit; font-size: 0.85rem; font-weight: 600;
+  color: var(--text-sub);
+  transition: background 0.15s;
+  text-align: left;
+}
+.lang-opt:hover { background: var(--bg-light); color: var(--text-main); }
+.lang-opt.active { color: var(--red); font-weight: 700; }
+.lang-opt span { font-size: 1rem; line-height: 1; }
+
+@media (max-width: 768px) {
+  .lang-btn { padding: 5px 9px; font-size: 0.72rem; }
+  .lang-code { display: none; }
+}
+
 /* ━━━━━━━━━━━━━━━━━━━━━
    Hero — 電話通訊動態背景
 ━━━━━━━━━━━━━━━━━━━━━ */

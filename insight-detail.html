@@ -13,60 +13,77 @@
   <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="style.css">
   <style>
-    /* ── Article Hero ── */
+    /* ── Article Hero (SaaS info-style: text left | image right) ── */
     .article-hero {
       background: linear-gradient(135deg, var(--navy-dark) 0%, #182a50 100%);
-      padding: 140px 0 80px;
-      text-align: center;
-      position: relative;
-      overflow: hidden;
+      padding: 108px 0 64px;
+      position: relative; overflow: hidden;
     }
     .article-hero::before {
-      content: '';
-      position: absolute; inset: 0;
-      background: radial-gradient(ellipse at 50% 70%, rgba(200,22,29,0.14) 0%, transparent 65%);
+      content: ''; position: absolute; inset: 0;
+      background: radial-gradient(ellipse at 22% 85%, rgba(200,22,29,0.11) 0%, transparent 55%);
     }
     .article-hero-inner { position: relative; z-index: 1; }
+
+    /* Breadcrumb */
     .article-breadcrumb {
-      display: flex; align-items: center; justify-content: center;
-      gap: 8px; font-size: 0.82rem; color: rgba(255,255,255,0.45); margin-bottom: 24px;
+      display: flex; align-items: center;
+      gap: 8px; font-size: 0.82rem; color: rgba(255,255,255,0.45); margin-bottom: 32px;
     }
-    .article-breadcrumb a { color: rgba(255,255,255,0.55); transition: color 0.2s; }
+    .article-breadcrumb a { color: rgba(255,255,255,0.55); transition: color 0.2s; text-decoration: none; }
     .article-breadcrumb a:hover { color: #fff; }
+
+    /* Split grid: single col by default, becomes 2-col when cover image exists */
+    .article-hero-split { display: grid; grid-template-columns: 1fr; align-items: center; }
+    .article-hero-split.has-image { grid-template-columns: 1fr 420px; gap: 56px; }
+
+    /* Left: all text content */
+    .article-hero-left { display: flex; flex-direction: column; }
+    .article-hero-top-meta {
+      display: flex; align-items: center; gap: 14px; flex-wrap: wrap; margin-bottom: 18px;
+    }
     .article-cat-badge {
-      display: inline-block; font-size: 0.75rem; font-weight: 700;
-      background: rgba(200,22,29,0.2); color: #FF9A9A;
-      border: 1px solid rgba(200,22,29,0.35); border-radius: 100px;
-      padding: 4px 14px; letter-spacing: 0.04em; margin-bottom: 20px;
-    }
-    .article-hero h1 {
-      font-size: clamp(1.6rem, 3.5vw, 2.5rem);
-      font-weight: 900; color: #fff; line-height: 1.2;
-      margin: 0 auto 20px; max-width: 820px;
-    }
-    .article-hero-excerpt {
-      font-size: 1.05rem; color: rgba(255,255,255,0.68);
-      max-width: 680px; margin: 0 auto 24px; line-height: 1.8;
-    }
-    .article-hero-meta {
-      display: flex; align-items: center; justify-content: center;
-      gap: 20px; flex-wrap: wrap;
+      display: inline-block; font-size: 0.73rem; font-weight: 700;
+      background: rgba(200,22,29,0.18); color: #FF9A9A;
+      border: 1px solid rgba(200,22,29,0.3); border-radius: 100px;
+      padding: 4px 14px; letter-spacing: 0.04em;
     }
     .article-hero-date { font-size: 0.82rem; color: rgba(255,255,255,0.45); }
-    .article-hero-tags { display: flex; gap: 6px; flex-wrap: wrap; justify-content: center; }
+    .article-hero-author { font-size: 0.82rem; color: rgba(255,255,255,0.42); }
+    .article-featured-badge {
+      display: inline-block;
+      background: rgba(255,193,7,0.14); border: 1px solid rgba(255,193,7,0.32);
+      color: #FFD700; border-radius: 100px; padding: 4px 16px;
+      font-size: 0.73rem; font-weight: 700; letter-spacing: 0.06em;
+    }
+    #heroFeaturedBadge { margin-bottom: 14px; }
+
+    /* H1 — primary headline, large & bold */
+    .article-hero h1 {
+      font-size: clamp(1.85rem, 4vw, 3.2rem);
+      font-weight: 800; color: #fff; line-height: 1.15;
+      margin: 0 0 18px; letter-spacing: -0.01em;
+    }
+    /* Excerpt */
+    .article-hero-excerpt {
+      font-size: clamp(1rem, 1.3vw, 1.15rem);
+      color: rgba(255,255,255,0.65); max-width: 680px;
+      margin: 0 0 24px; line-height: 1.85;
+    }
+    /* Tag pills */
+    .article-hero-tags { display: flex; gap: 8px; flex-wrap: wrap; }
     .article-hero-tag {
-      font-size: 0.72rem; font-weight: 600; color: rgba(255,255,255,0.55);
-      background: rgba(255,255,255,0.08); border-radius: 100px; padding: 3px 10px;
+      font-size: 0.75rem; font-weight: 600; color: rgba(255,255,255,0.6);
+      background: rgba(255,255,255,0.07); border: 1px solid rgba(255,255,255,0.13);
+      border-radius: 100px; padding: 5px 14px;
     }
 
-    /* ── Cover image ── */
-    .article-cover-wrap {
-      max-width: 860px; margin: -40px auto 0; padding: 0 24px;
-      position: relative; z-index: 2;
-    }
-    .article-cover-wrap img {
-      width: 100%; border-radius: 16px;
-      box-shadow: 0 24px 60px rgba(0,0,0,0.2); display: block;
+    /* Right: article image — contained (16:9, rounded), not a full banner */
+    .article-hero-right { flex-shrink: 0; }
+    .article-hero-right img {
+      width: 100%; aspect-ratio: 16/9; object-fit: cover;
+      border-radius: 22px; display: block;
+      box-shadow: 0 20px 56px rgba(0,0,0,0.42), 0 4px 16px rgba(0,0,0,0.22);
     }
 
     /* ── Article layout ── */
@@ -233,6 +250,11 @@
     .related-card-date { font-size: 0.75rem; color: var(--text-muted); }
 
     /* ── RWD ── */
+    @media (max-width: 960px) {
+      /* Hero split → single column on tablet */
+      .article-hero-split.has-image { grid-template-columns: 1fr; gap: 32px; }
+      .article-hero-right { max-width: 520px; }
+    }
     @media (max-width: 900px) {
       .article-layout { grid-template-columns: 1fr; }
       .article-toc { display: none !important; }
@@ -240,8 +262,9 @@
       .related-grid { grid-template-columns: repeat(2, 1fr); }
     }
     @media (max-width: 640px) {
-      .article-hero { padding: 100px 0 60px; }
-      .article-cover-wrap { margin-top: -20px; }
+      .article-hero { padding: 100px 0 48px; }
+      /* Cover image moves above text on mobile */
+      .article-hero-right { order: -1; max-width: 100%; }
       .article-main { padding: 48px 0 72px; }
       .related-grid { grid-template-columns: 1fr; }
       .article-faq-section { padding: 56px 0; }
@@ -291,24 +314,29 @@
       <a href="insights.html">產業新知</a><span>›</span>
       <span id="heroBreadcrumb"></span>
     </div>
-    <div id="heroFeaturedBadge" style="display:none;margin-bottom:14px;">
-      <span style="background:rgba(255,193,7,0.14);border:1px solid rgba(255,193,7,0.32);color:#FFD700;border-radius:100px;padding:4px 16px;font-size:0.73rem;font-weight:700;letter-spacing:0.06em;">⭐ 精選文章</span>
-    </div>
-    <div class="article-cat-badge" id="heroCat"></div>
-    <h1 id="heroTitle"></h1>
-    <p class="article-hero-excerpt" id="heroExcerpt"></p>
-    <div class="article-hero-meta">
-      <span class="article-hero-date" id="heroDate"></span>
-      <span id="heroAuthor" style="font-size:0.82rem;color:rgba(255,255,255,0.42);"></span>
-      <div class="article-hero-tags" id="heroTags"></div>
+    <div class="article-hero-split" id="heroSplit">
+      <div class="article-hero-left">
+        <div id="heroFeaturedBadge" style="display:none;">
+          <span class="article-featured-badge">⭐ 精選文章</span>
+        </div>
+        <div class="article-hero-top-meta">
+          <span class="article-cat-badge" id="heroCat"></span>
+          <span class="article-hero-date" id="heroDate"></span>
+          <span class="article-hero-author" id="heroAuthor"></span>
+        </div>
+        <h1 id="heroTitle"></h1>
+        <p class="article-hero-excerpt" id="heroExcerpt"></p>
+        <div class="article-hero-tags" id="heroTags"></div>
+      </div>
+      <div class="article-hero-right" id="heroCoverRight" style="display:none;">
+        <img id="heroCoverImg" src="" alt="" loading="lazy">
+      </div>
     </div>
   </div>
 </div>
 
-<!-- Cover image -->
-<div class="article-cover-wrap" id="coverWrap" style="display:none;">
-  <img id="coverImg" src="" alt="" loading="lazy">
-</div>
+<!-- Cover image (now rendered inside .article-hero-right — this placeholder kept for JS compat) -->
+<div id="coverWrap" style="display:none;"><img id="coverImg" src="" alt=""></div>
 
 <!-- Content -->
 <div id="articleMain" class="article-main" style="display:none;">
@@ -573,12 +601,12 @@ function toggleFaq(idx) {
   }).join('');
   document.getElementById('articleHero').style.display = '';
 
-  // ── Cover image ──
+  // ── Cover image (rendered in hero right column) ──
   if (article.cover_image && article.cover_image.trim()) {
-    document.getElementById('coverImg').src = article.cover_image;
-    document.getElementById('coverImg').alt = article.title || '';
-    document.getElementById('coverWrap').style.display = '';
-    document.getElementById('articleMain').classList.add('has-cover');
+    document.getElementById('heroCoverImg').src = article.cover_image;
+    document.getElementById('heroCoverImg').alt = article.title || '';
+    document.getElementById('heroCoverRight').style.display = '';
+    document.getElementById('heroSplit').classList.add('has-image');
   }
 
   // ── Markdown renderer ──
