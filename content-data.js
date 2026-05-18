@@ -1070,8 +1070,8 @@ window.IPCC_CONTENT_DATA = {
     {
       "id": "mpbcqkiqh6nmy",
       "slug": "enterprise-ai-customer-service-guide",
-      "title": "成企業 AI 客服上線後悄悄喊停：7 大焦點與台灣企業導入實務指引",
-      "excerpt": "",
+      "title": "七成企業 AI 客服上線後悄悄喊停：7 大焦點與台灣企業導入實務指引",
+      "excerpt": "七成以上企業在導入 AI 客服後選擇縮減或暫停計畫——問題不在技術，而在知識庫與流程沒跟上。東州集團深度解析 2026 年 AI 客服 7 大焦點，協助台灣企業找到真正落地的關鍵。",
       "author": "東州集團",
       "category": "產業趨勢",
       "tags": [],

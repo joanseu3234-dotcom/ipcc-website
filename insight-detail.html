@@ -440,8 +440,14 @@ function toggleFaq(idx) {
 
   var insights = [];
   try { var r = localStorage.getItem('ipcc_insights'); if (r) insights = JSON.parse(r); } catch(e) {}
-  if (!insights.length && window.IPCC_CONTENT_DATA && window.IPCC_CONTENT_DATA.ipcc_insights)
-    insights = window.IPCC_CONTENT_DATA.ipcc_insights;
+  // Merge: also include content-data.js articles NOT already in localStorage (slug-based dedup).
+  // This is critical: localStorage has admin-created articles; content-data.js has deployed articles.
+  // A slug may exist in one but not the other — always search both.
+  if (window.IPCC_CONTENT_DATA && window.IPCC_CONTENT_DATA.ipcc_insights) {
+    var cdArr = window.IPCC_CONTENT_DATA.ipcc_insights;
+    var lsSlugs = insights.map(function(a){ return a.slug; });
+    cdArr.forEach(function(a){ if (lsSlugs.indexOf(a.slug) === -1) insights.push(a); });
+  }
 
   var article = insights.find(function(a){ return a.slug === slug; });
 
@@ -450,9 +456,18 @@ function toggleFaq(idx) {
     return;
   }
 
+  // ── Excerpt fallback: auto-extract first real paragraph when article.excerpt is empty ──
+  var displayExcerpt = article.excerpt || (function() {
+    var raw = article.content_markdown || article.content || '';
+    var plain = raw.replace(/^#+\s+.+/gm, '').replace(/\*\*(.+?)\*\*/g, '$1')
+      .replace(/\*([^*]+)\*/g, '$1').replace(/[|`>\[\]()!]/g, '').replace(/---+/g, '');
+    var lines = plain.split(/\n+/).map(function(l){ return l.trim(); }).filter(function(l){ return l.length > 30; });
+    return lines.length ? lines[0].slice(0, 160) : '';
+  })();
+
   // ── Page meta & OG ──
   document.getElementById('pageTitle').textContent = (article.seo_title || article.title || '') + ' — IPCC 東州集團';
-  document.getElementById('pageDesc').setAttribute('content', article.seo_description || article.excerpt || '');
+  document.getElementById('pageDesc').setAttribute('content', article.seo_description || displayExcerpt || '');
   function setOgMeta(prop, content) {
     if (!content) return;
     var el = document.querySelector('meta[property="' + prop + '"]') || document.createElement('meta');
@@ -461,7 +476,7 @@ function toggleFaq(idx) {
     document.head.appendChild(el);
   }
   setOgMeta('og:title', article.seo_title || article.title || '');
-  setOgMeta('og:description', article.seo_description || article.excerpt || '');
+  setOgMeta('og:description', article.seo_description || displayExcerpt || '');
   setOgMeta('og:image', article.og_image || article.cover_image || '');
 
   // ── Canonical URL ──
@@ -548,7 +563,7 @@ function toggleFaq(idx) {
   document.getElementById('heroBreadcrumb').textContent = article.title || '';
   document.getElementById('heroCat').textContent = article.category || '';
   document.getElementById('heroTitle').textContent = article.title || '';
-  document.getElementById('heroExcerpt').textContent = article.excerpt || '';
+  document.getElementById('heroExcerpt').textContent = displayExcerpt;
   var dateStr = (article.publish_date || '').replace(/-/g, ' / ');
   document.getElementById('heroDate').textContent = dateStr ? '📅 ' + dateStr : '';
   if (article.author) document.getElementById('heroAuthor').textContent = '✍️ ' + article.author;
@@ -627,6 +642,8 @@ function toggleFaq(idx) {
 
     lines.forEach(function(line) {
       var tr = line.trim();
+      // Skip bare H1 (# Title) — the article title is already rendered in the hero
+      if (/^# (?!#)/.test(line)) { flush(); return; }
       if (/^## /.test(line)) {
         flush();
         var txt = line.slice(3).trim();
