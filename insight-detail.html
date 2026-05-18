@@ -6,6 +6,9 @@
   <base href="/">
   <title id="pageTitle">產業新知 — IPCC 東州集團</title>
   <meta name="description" id="pageDesc" content="IPCC 東州集團客服產業知識中心">
+  <meta property="og:type" content="article">
+  <meta property="og:site_name" content="IPCC 東州集團">
+  <link rel="canonical" id="pageCanonical" href="https://ipcc-website.vercel.app/insights/">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="style.css">
@@ -93,56 +96,66 @@
     .toc-nav a.active { color: var(--red); border-left-color: var(--red); font-weight: 600; }
 
     /* ── Article body typography ── */
-    .article-body { min-width: 0; }
+    .article-body { min-width: 0; max-width: 860px; }
     .article-body p {
-      font-size: 1.05rem; color: var(--text-sub);
-      line-height: 1.9; margin-bottom: 1.4em;
+      font-size: clamp(1.05rem, 1.1vw + 0.6rem, 1.15rem);
+      color: var(--text-sub); line-height: 1.9; margin-bottom: 1.5em;
     }
     .article-h2 {
-      font-size: 1.5rem; font-weight: 800; color: var(--navy-dark);
-      margin: 2.6em 0 0.8em; padding-top: 1rem;
+      font-size: clamp(1.3rem, 2vw, 1.55rem); font-weight: 800; color: var(--navy-dark);
+      margin: 2.8em 0 0.9em; padding-top: 1rem;
       border-bottom: 2px solid var(--border); padding-bottom: 0.5rem;
+      scroll-margin-top: 100px;
     }
     .article-h3 {
-      font-size: 1.2rem; font-weight: 700; color: var(--navy-dark);
-      margin: 2em 0 0.6em;
+      font-size: clamp(1.1rem, 1.5vw, 1.25rem); font-weight: 700; color: var(--navy-dark);
+      margin: 2.2em 0 0.65em; scroll-margin-top: 100px;
     }
     .article-h4 {
       font-size: 1.05rem; font-weight: 700; color: var(--navy-dark);
-      margin: 1.6em 0 0.5em;
+      margin: 1.8em 0 0.5em;
     }
-    .article-list { padding-left: 1.7em; margin-bottom: 1.4em; }
+    .article-list { padding-left: 1.8em; margin-bottom: 1.5em; }
     .article-list li {
-      font-size: 1.05rem; color: var(--text-sub);
-      line-height: 1.9; margin-bottom: 0.3em;
+      font-size: clamp(1.05rem, 1.1vw + 0.6rem, 1.15rem);
+      color: var(--text-sub); line-height: 1.9; margin-bottom: 0.4em;
     }
     .article-blockquote {
       border-left: 4px solid var(--red);
-      padding: 14px 20px; margin: 1.6em 0;
+      padding: 16px 22px; margin: 1.8em 0;
       background: rgba(200,22,29,0.04);
       border-radius: 0 10px 10px 0;
       color: var(--text-sub); font-style: italic;
+      font-size: clamp(1.02rem, 1vw + 0.6rem, 1.1rem);
     }
     .article-blockquote p { margin-bottom: 0; }
     .article-table-wrap {
-      overflow-x: auto; margin: 1.6em 0;
+      overflow-x: auto; margin: 1.8em 0;
       border-radius: 10px; border: 1.5px solid var(--border);
     }
-    .article-table { width: 100%; border-collapse: collapse; font-size: 0.98rem; }
+    .article-table { width: 100%; border-collapse: collapse; font-size: 1rem; }
     .article-table th {
-      background: var(--bg-light); padding: 12px 16px;
+      background: var(--bg-light); padding: 13px 16px;
       text-align: left; font-weight: 700; color: var(--navy-dark);
       border-bottom: 2px solid var(--border);
     }
     .article-table td {
-      padding: 11px 16px; color: var(--text-sub);
-      border-bottom: 1px solid var(--border);
+      padding: 12px 16px; color: var(--text-sub);
+      border-bottom: 1px solid var(--border); line-height: 1.7;
     }
     .article-table tr:last-child td { border-bottom: none; }
-    .article-hr { border: none; border-top: 2px solid var(--border); margin: 2.2em 0; }
+    .article-hr { border: none; border-top: 2px solid var(--border); margin: 2.4em 0; }
     .article-body code {
       background: rgba(0,0,0,0.05); padding: 2px 7px;
       border-radius: 4px; font-size: 0.88em;
+    }
+    /* TOC H3 indented items */
+    .toc-nav a.toc-h3 {
+      padding-left: 26px; font-size: 0.78rem;
+      color: var(--text-muted); border-left-color: transparent;
+    }
+    .toc-nav a.toc-h3:hover, .toc-nav a.toc-h3.active {
+      color: var(--red); border-left-color: var(--red);
     }
 
     /* ── FAQ ── */
@@ -181,15 +194,18 @@
     @media (max-width: 900px) {
       .article-layout { grid-template-columns: 1fr; }
       .article-toc { display: none !important; }
+      .article-body { max-width: 100%; }
       .related-grid { grid-template-columns: repeat(2, 1fr); }
     }
-    @media (max-width: 560px) {
+    @media (max-width: 640px) {
       .article-hero { padding: 100px 0 60px; }
       .article-cover-wrap { margin-top: -20px; }
       .article-main { padding: 48px 0 72px; }
       .related-grid { grid-template-columns: 1fr; }
       .article-faq-section { padding: 56px 0; }
       .related-section { padding: 56px 0; }
+      .article-body p, .article-list li { font-size: 1.05rem; }
+      .faq-q { font-size: 0.95rem; padding: 20px 4px; }
     }
   </style>
 </head>
@@ -256,11 +272,11 @@
 <div id="articleMain" class="article-main" style="display:none;">
   <div class="container">
     <div class="article-layout">
-      <aside class="article-toc" id="articleToc" style="display:none;">
+      <aside class="article-toc" id="articleToc" style="display:none;" aria-label="文章目錄">
         <div class="toc-label">文章目錄</div>
         <nav class="toc-nav" id="tocNav"></nav>
       </aside>
-      <div class="article-body" id="articleBody"></div>
+      <article class="article-body" id="articleBody" itemprop="articleBody"></article>
     </div>
   </div>
 </div>
@@ -406,6 +422,72 @@ function toggleFaq(idx) {
   setOgMeta('og:description', article.seo_description || article.excerpt || '');
   setOgMeta('og:image', article.og_image || article.cover_image || '');
 
+  // ── Canonical URL ──
+  var SITE = 'https://ipcc-website.vercel.app';
+  var articleUrl = SITE + '/insights/' + slug;
+  var canonEl = document.getElementById('pageCanonical');
+  if (canonEl) canonEl.href = articleUrl;
+  setOgMeta('og:url', articleUrl);
+
+  // ── JSON-LD Schemas (SEO / GEO) ──
+  function injectJsonLd(obj) {
+    var s = document.createElement('script');
+    s.type = 'application/ld+json';
+    s.textContent = JSON.stringify(obj, null, 0);
+    document.head.appendChild(s);
+  }
+
+  // Article Schema
+  injectJsonLd({
+    '@context': 'https://schema.org',
+    '@type': 'Article',
+    'headline': article.seo_title || article.title || '',
+    'description': article.seo_description || article.excerpt || '',
+    'image': article.og_image || article.cover_image || (SITE + '/IPCCLOGO.png'),
+    'datePublished': article.publish_date || '',
+    'dateModified': article.publish_date || '',
+    'author': {
+      '@type': article.author ? 'Person' : 'Organization',
+      'name': article.author || 'IPCC 東州集團'
+    },
+    'publisher': {
+      '@type': 'Organization',
+      'name': 'IPCC 東州集團',
+      'logo': { '@type': 'ImageObject', 'url': SITE + '/IPCCLOGO.png' }
+    },
+    'mainEntityOfPage': { '@type': 'WebPage', '@id': articleUrl },
+    'keywords': (article.tags || []).join(', '),
+    'articleSection': article.category || '',
+    'inLanguage': 'zh-TW'
+  });
+
+  // BreadcrumbList Schema
+  injectJsonLd({
+    '@context': 'https://schema.org',
+    '@type': 'BreadcrumbList',
+    'itemListElement': [
+      { '@type': 'ListItem', 'position': 1, 'name': '首頁', 'item': SITE + '/' },
+      { '@type': 'ListItem', 'position': 2, 'name': '產業新知', 'item': SITE + '/insights' },
+      { '@type': 'ListItem', 'position': 3, 'name': article.title || '', 'item': articleUrl }
+    ]
+  });
+
+  // FAQPage Schema (only if FAQ entries exist)
+  var faqValid = (article.faq || []).filter(function(f) { return f.q && f.a; });
+  if (faqValid.length) {
+    injectJsonLd({
+      '@context': 'https://schema.org',
+      '@type': 'FAQPage',
+      'mainEntity': faqValid.map(function(f) {
+        return {
+          '@type': 'Question',
+          'name': f.q,
+          'acceptedAnswer': { '@type': 'Answer', 'text': f.a }
+        };
+      })
+    });
+  }
+
   // ── Hero ──
   document.getElementById('heroBreadcrumb').textContent = article.title || '';
   document.getElementById('heroCat').textContent = article.category || '';
@@ -480,7 +562,13 @@ function toggleFaq(idx) {
         out.push('<h2 class="article-h2" id="' + escH(id) + '">' + fmt(txt) + '</h2>');
         return;
       }
-      if (/^### /.test(line)) { flush(); out.push('<h3 class="article-h3">' + fmt(line.slice(4).trim()) + '</h3>'); return; }
+      if (/^### /.test(line)) {
+        flush();
+        var h3txt = line.slice(4).trim();
+        var h3id = 'h3-' + h3txt.replace(/[^\w一-鿿]+/g, '-').toLowerCase().replace(/-+$/, '').slice(0, 40);
+        out.push('<h3 class="article-h3" id="' + escH(h3id) + '">' + fmt(h3txt) + '</h3>');
+        return;
+      }
       if (/^#### /.test(line)) { flush(); out.push('<h4 class="article-h4">' + fmt(line.slice(5).trim()) + '</h4>'); return; }
       if (/^> /.test(line))   { if (state !== 'bq') { flush(); state = 'bq'; } buf.push(line.slice(2)); return; }
       if (/^\|/.test(tr))     { if (state !== 'tbl'){ flush(); state = 'tbl'; } buf.push(line); return; }
@@ -501,7 +589,11 @@ function toggleFaq(idx) {
       if (/^## /.test(line)) {
         var txt = line.slice(3).trim();
         var id = 'h-' + txt.replace(/[^\w一-鿿]+/g, '-').toLowerCase().replace(/-+$/, '').slice(0, 40);
-        toc.push({ text: txt, id: id });
+        toc.push({ text: txt, id: id, level: 2 });
+      } else if (/^### /.test(line)) {
+        var txt = line.slice(4).trim();
+        var id = 'h3-' + txt.replace(/[^\w一-鿿]+/g, '-').toLowerCase().replace(/-+$/, '').slice(0, 40);
+        toc.push({ text: txt, id: id, level: 3 });
       }
     });
     return toc;
@@ -512,12 +604,13 @@ function toggleFaq(idx) {
   if (rawContent) {
     document.getElementById('articleBody').innerHTML = renderMarkdown(rawContent);
     var toc = buildTOC(rawContent);
-    if (toc.length >= 2) {
+    var h2Count = toc.filter(function(t){ return t.level === 2; }).length;
+    if (toc.length >= 2 && h2Count >= 1) {
       document.getElementById('tocNav').innerHTML = toc.map(function(item) {
-        return '<a href="#' + item.id + '" data-toc-id="' + item.id + '">' + item.text + '</a>';
+        var cls = item.level === 3 ? ' class="toc-h3"' : '';
+        return '<a href="#' + item.id + '" data-toc-id="' + item.id + '"' + cls + '>' + item.text + '</a>';
       }).join('');
       document.getElementById('articleToc').style.display = '';
-      // Scroll spy
       var tocLinks = document.querySelectorAll('.toc-nav a[data-toc-id]');
       var observer = new IntersectionObserver(function(entries) {
         entries.forEach(function(entry) {
@@ -527,7 +620,7 @@ function toggleFaq(idx) {
             if (link) link.classList.add('active');
           }
         });
-      }, { rootMargin: '-80px 0px -60% 0px' });
+      }, { rootMargin: '-80px 0px -55% 0px' });
       toc.forEach(function(item) {
         var el = document.getElementById(item.id);
         if (el) observer.observe(el);
