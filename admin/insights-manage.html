@@ -71,6 +71,11 @@
     .md-preview-panel ul, .md-preview-panel ol { padding-left:1.3em; color:rgba(255,255,255,0.62); margin-bottom:0.7em; }
     .md-preview-panel li { margin-bottom:0.25em; line-height:1.6; }
     .md-preview-panel blockquote { border-left:3px solid rgba(0,200,255,0.4); padding:5px 12px; color:rgba(255,255,255,0.45); font-style:italic; margin:0.7em 0; background:rgba(0,0,0,0.12); border-radius:0 6px 6px 0; }
+    /* 東州集團觀點 in preview */
+    .md-preview-panel .ipcc-persp { border:1px solid rgba(200,22,29,0.22); border-left:3px solid rgba(200,22,29,0.8); background:rgba(9,18,40,0.7); border-radius:0 8px 8px 0; padding:12px 16px; margin:0.8em 0; }
+    .md-preview-panel .ipcc-persp-lbl { font-size:0.62rem; font-weight:800; letter-spacing:0.14em; text-transform:uppercase; color:#ff7070; margin-bottom:6px; display:flex; align-items:center; gap:5px; }
+    .md-preview-panel .ipcc-persp-lbl::before { content:''; display:inline-block; width:2px; height:10px; background:rgba(200,22,29,0.9); border-radius:1px; }
+    .md-preview-panel .ipcc-persp p { color:rgba(255,255,255,0.78); font-style:italic; margin:0; }
     .md-preview-panel table { width:100%; border-collapse:collapse; font-size:0.82rem; margin-bottom:0.7em; }
     .md-preview-panel th { background:rgba(0,0,0,0.3); padding:6px 10px; text-align:left; color:#ccd6f6; font-weight:600; border:1px solid var(--border); }
     .md-preview-panel td { padding:6px 10px; color:rgba(255,255,255,0.55); border:1px solid var(--border); }
@@ -303,13 +308,14 @@
               <code>> 引言</code> &nbsp;
               <code>| 表格 |</code> &nbsp;
               <code>- 清單</code> &nbsp;
-              <code>[文字](網址)</code>
+              <code>[文字](網址)</code> &nbsp;
+              <span style="color:#ff7070;font-weight:700;">⭐</span> <code>> 東州集團觀點：觀點內容</code>
             </div>
             <button type="button" id="mdPreviewBtn" class="md-preview-btn" onclick="toggleMdPreview()">切換預覽</button>
           </div>
           <div class="md-wrap" id="mdWrap">
             <textarea class="form-control form-textarea" id="insContent" rows="20"
-              placeholder="## 第一節標題&#10;&#10;在此輸入文章內容...&#10;&#10;### 小節標題&#10;&#10;> 這是引言段落&#10;&#10;- 條列項目一&#10;- 條列項目二&#10;&#10;| 欄一 | 欄二 |&#10;|------|------|&#10;| A    | B    |&#10;&#10;**粗體文字** 和 [超連結](https://example.com)"
+              placeholder="## 第一節標題&#10;&#10;在此輸入文章內容...&#10;&#10;### 小節標題&#10;&#10;> 這是一般引言段落&#10;&#10;> 東州集團觀點：IPCC 認為 AI 客服是未來十年客服產業最重要的轉型方向。&#10;&#10;- 條列項目一&#10;- 條列項目二&#10;&#10;| 指標 | 說明 |&#10;|------|------|&#10;| FCR  | 首次解決率 |&#10;&#10;**粗體文字** 和 [超連結](https://example.com)"
               oninput="onMdInput()"></textarea>
             <div class="md-preview-panel" id="mdPreviewPanel">
               <div class="md-empty-hint">開始輸入內容後即時預覽...</div>
@@ -459,12 +465,27 @@ function renderMarkdownPreview(raw) {
     return s;
   }
 
+  var PERSP_RE = /^(?:\*\*)?(東州集團觀點|客服總監觀點|專家觀點|作者觀點)(?:\*\*)?[：:\s]*/;
+
   function flush() {
     if (!buf.length) { state = 'idle'; return; }
     if (state === 'p') out.push('<p>' + buf.map(fmt).join('<br>') + '</p>');
     else if (state === 'ul') out.push('<ul>' + buf.map(function(l){ return '<li>' + fmt(l) + '</li>'; }).join('') + '</ul>');
     else if (state === 'ol') out.push('<ol>' + buf.map(function(l){ return '<li>' + fmt(l) + '</li>'; }).join('') + '</ol>');
-    else if (state === 'bq') out.push('<blockquote>' + buf.map(fmt).join('<br>') + '</blockquote>');
+    else if (state === 'bq') {
+      var fl = (buf[0] || '').trim();
+      if (PERSP_RE.test(fl)) {
+        var m = fl.match(PERSP_RE);
+        var after = fl.slice(m[0].length).trim();
+        var body = (after ? [after] : []).concat(buf.slice(1));
+        out.push('<div class="ipcc-persp">'
+          + '<div class="ipcc-persp-lbl">東州集團觀點</div>'
+          + '<p>' + (body.length ? body.map(fmt).join('<br>') : '') + '</p>'
+          + '</div>');
+      } else {
+        out.push('<blockquote>' + buf.map(fmt).join('<br>') + '</blockquote>');
+      }
+    }
     else if (state === 'tbl') out.push(buildTbl(buf));
     state = 'idle'; buf = [];
   }
