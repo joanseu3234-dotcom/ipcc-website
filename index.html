@@ -223,71 +223,10 @@
     <div class="text-center">
       <span class="section-label">Our Services</span>
       <h2 class="section-title">我們的服務</h2>
-      <p class="section-sub">整合客服委外、訓練與資訊技術，為企業和政府單位打造穩定、高效的服務體系</p>
+      <p class="section-sub">整合 AI 技術與人力資源，提供智能客服中心、AI Agent 建置到數據分析的全方位解決方案</p>
     </div>
 
-    <div class="services-grid" id="servicesGrid">
-      <!-- 01 -->
-      <a href="services.html#outsource" class="service-card" style="text-decoration:none; color:inherit;">
-        <div>
-          <span class="service-num">Service 01</span>
-        </div>
-        <div class="service-icon">📞</div>
-        <div>
-          <h3 class="service-title">客服委外</h3>
-          <p class="service-desc">
-            整合多渠道客服，建立穩定高效的服務體系。從電話、文字到社群平台，一站式外包解決方案，讓您專注核心業務。
-          </p>
-        </div>
-        <div class="service-tags">
-          <span class="service-tag">電話</span>
-          <span class="service-tag">文字</span>
-          <span class="service-tag">電商</span>
-          <span class="service-tag">社群</span>
-        </div>
-        <span class="service-link">了解更多 →</span>
-      </a>
-
-      <!-- 02 -->
-      <div class="service-card">
-        <div>
-          <span class="service-num">Service 02</span>
-        </div>
-        <div class="service-icon">🎓</div>
-        <div>
-          <h3 class="service-title">客服服務訓練</h3>
-          <p class="service-desc">
-            打造專業客服團隊，提升服務品質與應對能力。從接待禮儀到危機處理，建立一致且高品質的服務標準。
-          </p>
-        </div>
-        <div class="service-tags">
-          <span class="service-tag">接待禮儀</span>
-          <span class="service-tag">客訴處理</span>
-          <span class="service-tag">客製化課程</span>
-        </div>
-        <a href="services.html#training" class="service-link">了解更多 →</a>
-      </div>
-
-      <!-- 03 -->
-      <div class="service-card">
-        <div>
-          <span class="service-num">Service 03</span>
-        </div>
-        <div class="service-icon">💻</div>
-        <div>
-          <h3 class="service-title">資訊服務</h3>
-          <p class="service-desc">
-            提供客服建置、委外與技術人力整合方案。結合專業技術支援，協助政府單位穩定運作與優化服務品質。
-          </p>
-        </div>
-        <div class="service-tags">
-          <span class="service-tag">客服建置</span>
-          <span class="service-tag">專案委外</span>
-          <span class="service-tag">技術支援</span>
-        </div>
-        <a href="services.html#it" class="service-link">了解更多 →</a>
-      </div>
-    </div>
+    <div id="homeServicesGrid"></div>
   </div>
 </section>
 
@@ -480,10 +419,8 @@
 
       <div class="footer-col">
         <h4>服務項目</h4>
-        <ul>
-          <li><a href="services.html#outsource">客服委外</a></li>
-          <li><a href="services.html#training">客服訓練</a></li>
-          <li><a href="services.html#it">資訊服務</a></li>
+        <ul id="footerSvcList">
+          <li><a href="services.html">專案服務</a></li>
         </ul>
       </div>
 
@@ -684,5 +621,6 @@ function openIdxQrModal(e) {
 function closeIdxQrModal() { document.getElementById('idxQrModal').style.display = 'none'; }
 </script>
 <script src="contact-info.js"></script>
+<script src="ipcc-services.js"></script>
 </body>
 </html>

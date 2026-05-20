@@ -529,6 +529,13 @@ img { max-width: 100%; display: block; }
    服務卡片
 ━━━━━━━━━━━━━━━━━━━━━ */
 .services-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 28px; margin-top: 56px; }
+/* 5-card layout: row1=3, row2=2 centered */
+.services-grid-5 {
+  display: grid; grid-template-columns: repeat(6, 1fr); gap: 28px; margin-top: 56px;
+}
+.services-grid-5 .service-card { grid-column: span 2; }
+.services-grid-5 .service-card:nth-child(4) { grid-column: 2 / span 2; }
+.services-grid-5 .service-card:nth-child(5) { grid-column: 4 / span 2; }
 
 .service-card {
   background: var(--white); border-radius: var(--radius-lg);
@@ -1077,6 +1084,10 @@ img { max-width: 100%; display: block; }
 ━━━━━━━━━━━━━━━━━━━━━ */
 @media (max-width: 1024px) {
   .services-grid { grid-template-columns: 1fr 1fr; }
+  .services-grid-5 { grid-template-columns: repeat(2, 1fr); }
+  .services-grid-5 .service-card,
+  .services-grid-5 .service-card:nth-child(4),
+  .services-grid-5 .service-card:nth-child(5) { grid-column: span 1; }
   .footer-grid { grid-template-columns: 1fr 1fr; gap: 32px; }
   .about-grid { gap: 48px; }
   .process-steps { grid-template-columns: repeat(3,1fr); }
@@ -1139,7 +1150,11 @@ img { max-width: 100%; display: block; }
   .flow-line { display: none; }
 
   /* ── 版面格線 ── */
-  .services-grid { grid-template-columns: 1fr; }
+  .services-grid,
+  .services-grid-5 { grid-template-columns: 1fr; }
+  .services-grid-5 .service-card,
+  .services-grid-5 .service-card:nth-child(4),
+  .services-grid-5 .service-card:nth-child(5) { grid-column: span 1; }
   .about-grid { grid-template-columns: 1fr; }
   .about-stats-row { grid-template-columns: repeat(3,1fr); }
   .news-grid { grid-template-columns: 1fr; }
