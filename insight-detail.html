@@ -175,46 +175,25 @@
       color: var(--red); border-left-color: var(--red);
     }
 
-    /* ── 東州集團觀點 callout ── */
-    .article-ipcc-persp {
-      position: relative; margin: 2.4em 0; overflow: hidden;
-      padding: 36px 44px;
-      background: linear-gradient(135deg, #090f28 0%, #0e1b42 100%);
-      border: 1px solid rgba(200,22,29,0.2);
-      border-left: 5px solid var(--red);
-      border-radius: 0 16px 16px 0;
-      box-shadow: 0 12px 40px rgba(0,0,0,0.12), inset 0 0 80px rgba(200,22,29,0.03);
-    }
-    .article-ipcc-persp::after {
-      content: '\201C';
-      position: absolute; top: -16px; right: 22px;
-      font-size: 7.5rem; font-weight: 900; line-height: 1;
-      color: rgba(200,22,29,0.07); font-family: Georgia, serif;
-      pointer-events: none; user-select: none;
-    }
+    /* ── 東州集團觀點 ── */
+    .article-ipcc-persp { margin: 2.8em 0; }
     .article-ipcc-persp-label {
-      display: flex; align-items: center; gap: 10px;
-      font-size: 1.45rem; font-weight: 800;
-      letter-spacing: 0.04em;
-      color: #ff7070; margin-bottom: 18px;
-    }
-    .article-ipcc-persp-label::before {
-      content: ''; display: inline-block; flex-shrink: 0;
-      width: 3px; height: 14px;
-      background: linear-gradient(180deg, var(--red) 0%, #ff6060 100%);
-      border-radius: 2px;
+      display: block;
+      font-size: 1.05rem; font-weight: 800; letter-spacing: 0.06em;
+      color: var(--red); text-transform: uppercase;
+      padding-bottom: 10px; margin-bottom: 20px;
+      border-bottom: 2.5px solid var(--red);
     }
     .article-ipcc-persp-body {
-      font-size: clamp(1.12rem, 1.2vw + 0.75rem, 1.25rem);
-      color: rgba(255,255,255,0.92); line-height: 1.9;
-      font-style: italic; position: relative; z-index: 1;
+      font-size: clamp(1.05rem, 1.1vw + 0.6rem, 1.15rem);
+      color: var(--text-sub); line-height: 1.9;
     }
-    .article-ipcc-persp-body strong { color: #fff; font-style: normal; font-weight: 700; }
-    .article-ipcc-persp-body em { color: rgba(255,255,255,0.7); }
-    .article-ipcc-persp-body a { color: #7DD9F8; text-decoration: underline; font-style: normal; }
+    .article-ipcc-persp-body strong { color: var(--navy-dark); font-weight: 700; }
+    .article-ipcc-persp-body em { color: var(--text-sub); font-style: italic; }
+    .article-ipcc-persp-body a { color: var(--red); text-decoration: underline; }
     .article-ipcc-persp-body code {
-      background: rgba(255,255,255,0.1); padding: 2px 7px;
-      border-radius: 4px; font-size: 0.88em; font-style: normal;
+      background: rgba(0,0,0,0.05); padding: 2px 7px;
+      border-radius: 4px; font-size: 0.88em;
     }
 
     /* ── FAQ ── */
@@ -455,10 +434,7 @@ window.addEventListener('scroll', function() {
 function toggleMenu() { document.getElementById('navMenu').classList.toggle('open'); }
 function toggleFaq(idx) {
   var item = document.getElementById('afaq' + idx);
-  if (!item) return;
-  var isOpen = item.classList.contains('open');
-  document.querySelectorAll('.faq-item.open').forEach(function(el){ el.classList.remove('open'); });
-  if (!isOpen) item.classList.add('open');
+  if (item) item.classList.toggle('open');
 }
 </script>
 
@@ -633,18 +609,20 @@ function toggleFaq(idx) {
       else if (state === 'ul') out.push('<ul class="article-list">' + buf.map(function(l){ return '<li>' + fmt(l) + '</li>'; }).join('') + '</ul>');
       else if (state === 'ol') out.push('<ol class="article-list">' + buf.map(function(l){ return '<li>' + fmt(l) + '</li>'; }).join('') + '</ol>');
       else if (state === 'bq') {
-        var firstLine = (buf[0] || '').trim();
+        var bqLines = buf.filter(function(l){ return l.trim(); });
+        if (!bqLines.length) { state = 'idle'; buf = []; return; } // skip empty blockquotes
+        var firstLine = bqLines[0].trim();
         if (PERSP_RE.test(firstLine)) {
           var m = firstLine.match(PERSP_RE);
           var afterLabel = firstLine.slice(m[0].length).trim();
-          var bodyLines = (afterLabel ? [afterLabel] : []).concat(buf.slice(1));
+          var bodyLines = (afterLabel ? [afterLabel] : []).concat(bqLines.slice(1));
           out.push('<div class="article-ipcc-persp">'
             + '<div class="article-ipcc-persp-label">東州集團觀點</div>'
             + '<div class="article-ipcc-persp-body">'
             + (bodyLines.length ? bodyLines.map(fmt).join('<br>') : '')
             + '</div></div>');
         } else {
-          out.push('<blockquote class="article-blockquote">' + buf.map(fmt).join('<br>') + '</blockquote>');
+          out.push('<blockquote class="article-blockquote">' + bqLines.map(fmt).join('<br>') + '</blockquote>');
         }
       }
       else if (state === 'tbl') out.push(buildTbl(buf));
@@ -687,7 +665,7 @@ function toggleFaq(idx) {
         return;
       }
       if (/^#### /.test(line)) { flush(); out.push('<h4 class="article-h4">' + fmt(line.slice(5).trim()) + '</h4>'); return; }
-      if (/^> /.test(line))   { if (state !== 'bq') { flush(); state = 'bq'; } buf.push(line.slice(2)); return; }
+      if (/^>/.test(line))    { if (state !== 'bq') { flush(); state = 'bq'; } buf.push(line.replace(/^>\s?/, '')); return; }
       if (/^\|/.test(tr))     { if (state !== 'tbl'){ flush(); state = 'tbl'; } buf.push(line); return; }
       if (/^[-*+] /.test(line)) { if (state !== 'ul') { flush(); state = 'ul'; } buf.push(line.replace(/^[-*+] /, '')); return; }
       if (/^\d+\. /.test(line)) { if (state !== 'ol') { flush(); state = 'ol'; } buf.push(line.replace(/^\d+\. /, '')); return; }
