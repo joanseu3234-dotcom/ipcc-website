@@ -129,90 +129,17 @@
 
     <!-- 最新消息 -->
     <div id="tab-news" class="tab-panel">
-      <div class="news-grid">
-        <a href="news.html" class="news-card">
-          <div class="news-card-img">📢</div>
-          <div class="news-card-body">
-            <div class="news-card-meta">
-              <span class="news-card-badge">公告</span>
-              <span class="news-card-date">2025.03</span>
-            </div>
-            <h4>東州集團持續深化多渠道客服解決方案，助企業打造全天候服務能力</h4>
-          </div>
-        </a>
-        <a href="news.html" class="news-card">
-          <div class="news-card-img">🤝</div>
-          <div class="news-card-body">
-            <div class="news-card-meta">
-              <span class="news-card-badge">合作</span>
-              <span class="news-card-date">2025.01</span>
-            </div>
-            <h4>顯榮國際與多家政府單位合作，提供公部門客服委外服務</h4>
-          </div>
-        </a>
-        <a href="news.html" class="news-card">
-          <div class="news-card-img">📈</div>
-          <div class="news-card-body">
-            <div class="news-card-meta">
-              <span class="news-card-badge">動態</span>
-              <span class="news-card-date">2024.12</span>
-            </div>
-            <h4>集團導入 AI 輔助分析系統，提升客服效率與數據洞察能力</h4>
-          </div>
-        </a>
-      </div>
+      <div class="news-grid"></div>
     </div>
 
     <!-- 媒體採訪 -->
     <div id="tab-media" class="tab-panel" style="display:none;">
-      <div class="news-grid">
-        <a href="news-media.html" class="news-card">
-          <div class="news-card-img">📸</div>
-          <div class="news-card-body">
-            <div class="news-card-meta">
-              <span class="news-card-badge">媒體</span>
-              <span class="news-card-date">2025.01</span>
-            </div>
-            <h4>東州集團接受《商業周刊》專訪，分享客服外包的數位轉型之路</h4>
-          </div>
-        </a>
-        <a href="news-media.html" class="news-card">
-          <div class="news-card-img">📺</div>
-          <div class="news-card-body">
-            <div class="news-card-meta">
-              <span class="news-card-badge">媒體</span>
-              <span class="news-card-date">2024.10</span>
-            </div>
-            <h4>年代新聞財經頻道報導：客服委外如何成為企業成長新動力</h4>
-          </div>
-        </a>
-      </div>
+      <div class="news-grid"></div>
     </div>
 
     <!-- 活動 -->
     <div id="tab-event" class="tab-panel" style="display:none;">
-      <div class="news-grid">
-        <a href="news-event.html" class="news-card">
-          <div class="news-card-img">📅</div>
-          <div class="news-card-body">
-            <div class="news-card-meta">
-              <span class="news-card-badge">活動</span>
-              <span class="news-card-date">2025.03</span>
-            </div>
-            <h4>2025 客服產業高峰論壇：東州集團擔任主題演講嘉賓</h4>
-          </div>
-        </a>
-        <a href="news-event.html" class="news-card">
-          <div class="news-card-img">🤝</div>
-          <div class="news-card-body">
-            <div class="news-card-meta">
-              <span class="news-card-badge">活動</span>
-              <span class="news-card-date">2024.12</span>
-            </div>
-            <h4>第三屆客服卓越獎頒獎典禮，集團四大項目入圍表揚</h4>
-          </div>
-        </a>
-      </div>
+      <div class="news-grid"></div>
     </div>
   </div>
 </section>
@@ -520,50 +447,52 @@ if (aboutStats) aboutObserver.observe(aboutStats);
         document.getElementById('heroSubEl').innerHTML = h.heroSubtitle.replace(/\n/g,'<br>');
     }
 
-    // 服務卡片
-    var svcsRaw = localStorage.getItem('ipcc_services');
-    if (svcsRaw) {
-      var svcs = JSON.parse(svcsRaw).filter(function(s){return s.published;}).sort(function(a,b){return a.order-b.order;});
-      if (svcs.length > 0) {
-        document.getElementById('servicesGrid').innerHTML = svcs.map(function(s, i) {
-          var tags = (s.tags||[]).map(function(t){return '<span class="service-tag">'+t+'</span>';}).join('');
-          var svcHref = s.slug ? '/services/'+s.slug : (s.link||'contact.html');
-          return '<a href="'+svcHref+'" class="service-card" style="text-decoration:none;color:inherit;">'
-            + '<div><span class="service-num">'+s.num+'</span></div>'
-            + '<div class="service-icon">'+s.icon+'</div>'
-            + '<div><h3 class="service-title">'+s.title+'</h3><p class="service-desc">'+s.desc+'</p></div>'
-            + '<div class="service-tags">'+tags+'</div>'
-            + '<span class="service-link">了解更多 →</span>'
-            + '</a>';
-        }).join('');
-      }
-    }
+    // 最新消息 — 讀取後台 News 資料（localStorage → IPCC_CONTENT_DATA fallback）
+    var allNews = [];
+    try { var _r = localStorage.getItem('ipcc_news'); if (_r) allNews = JSON.parse(_r); } catch(e) {}
+    if (!allNews.length && window.IPCC_CONTENT_DATA && window.IPCC_CONTENT_DATA.ipcc_news)
+      allNews = window.IPCC_CONTENT_DATA.ipcc_news;
 
-    // 精選消息
-    var homeData = JSON.parse(localStorage.getItem('ipcc_home') || 'null');
-    var allNews = JSON.parse(localStorage.getItem('ipcc_news') || '[]');
-    var featured = homeData && homeData.featuredNews;
+    var featured = h && h.featuredNews ? h.featuredNews : {};
+    var tabIcons = { news:'📢', media:'📸', event:'📅' };
+
     ['news','media','event'].forEach(function(tab) {
-      var panelId = 'tab-' + tab;
-      var panel = document.getElementById(panelId);
+      var panel = document.getElementById('tab-' + tab);
       if (!panel) return;
-      var ids = featured && featured[tab] && featured[tab].length ? featured[tab] : null;
-      var items = ids
-        ? ids.map(function(id){return allNews.find(function(n){return n.id===id;});}).filter(Boolean)
-        : allNews.filter(function(n){return n.published && n.tab===tab;}).slice(-3).reverse();
-      if (items.length === 0) return;
-      var tabLinks = { news:'news.html', media:'news-media.html', event:'news-event.html' };
-      var tabIcons = { news:'📢', media:'📸', event:'📅' };
-      panel.querySelector('.news-grid').innerHTML = items.map(function(n) {
+      var grid = panel.querySelector('.news-grid');
+      if (!grid) return;
+
+      // 優先使用後台「首頁精選」的 ID 清單；無選取時顯示最新 3 篇已發布
+      var ids = featured[tab] && featured[tab].length ? featured[tab] : null;
+      var items;
+      if (ids) {
+        items = ids.map(function(id) {
+          return allNews.find(function(n) { return n.id === id; });
+        }).filter(Boolean);
+      } else {
+        items = allNews
+          .filter(function(n) { return n.published && n.tab === tab; })
+          .sort(function(a, b) { return (b.createdAt || 0) - (a.createdAt || 0); })
+          .slice(0, 3);
+      }
+
+      // 無資料時保持空狀態，不顯示任何假資料
+      if (!items.length) {
+        grid.innerHTML = '';
+        return;
+      }
+
+      grid.innerHTML = items.map(function(n) {
+        var link = 'news-detail.html?id=' + encodeURIComponent(n.id || '');
         var imgHtml = n.image
-          ? '<img src="'+n.image+'" style="width:100%; height:100%; object-fit:cover;" alt="">'
-          : (tabIcons[tab]||'📢');
-        return '<a href="'+(tabLinks[tab]||'news.html')+'" class="news-card">'
-          + '<div class="news-card-img">'+imgHtml+'</div>'
+          ? '<img src="' + n.image + '" style="width:100%;height:100%;object-fit:cover;" alt="">'
+          : (tabIcons[tab] || '📢');
+        return '<a href="' + link + '" class="news-card">'
+          + '<div class="news-card-img">' + imgHtml + '</div>'
           + '<div class="news-card-body"><div class="news-card-meta">'
-          + '<span class="news-card-badge">'+(n.badge||'')+'</span>'
-          + '<span class="news-card-date">'+(n.date||'')+'</span></div>'
-          + '<h4>'+n.title+'</h4></div></a>';
+          + '<span class="news-card-badge">' + (n.badge || '') + '</span>'
+          + '<span class="news-card-date">' + (n.date || '') + '</span>'
+          + '</div><h4>' + (n.title || '') + '</h4></div></a>';
       }).join('');
     });
   } catch(e) {}
