@@ -1,9 +1,9 @@
-﻿// IPCC 內容資料 — 由後台管理系統自動產生，請勿手動修改
-// 最後發布：2026/5/19 00:11:57
+// IPCC 內容資料 — 由後台管理系統自動產生，請勿手動修改
+// 最後發布：2026/5/21 00:40:18
 
 window.IPCC_CONTENT_DATA = {
-  "__ts": 1779120717802,
-  "__published": "2026/5/19 00:11:57",
+  "__ts": 1779295218474,
+  "__published": "2026/5/21 00:40:18",
   "ipcc_news": [
     {
       "tab": "media",
@@ -78,6 +78,24 @@ window.IPCC_CONTENT_DATA = {
       "createdAt": 1776667190518
     }
   ],
+  "ipcc_home": {
+    "heroBadge": "東州互聯網 ✕ 顯榮國際 — 深耕台灣客服產業三十年",
+    "heroTitle1": "客戶每一則訊息",
+    "heroTitle2": "都值得被認真對待",
+    "heroSubtitle": "我們相信，卓越的服務不只是回答問題——\n而是在每一次對話中，為品牌建立信任、為企業創造價值。",
+    "featuredNews": {
+      "news": [
+        "mo12egd24oty9"
+      ],
+      "media": [
+        "mo6trtvabfh24",
+        "mo0xduai3tpi3"
+      ],
+      "event": [
+        "mo13hdcf7gtf6"
+      ]
+    }
+  },
   "ipcc_contact_config": {
     "phone0800": "0800-666-080",
     "phoneHours": "週一至週五 09:00 - 18:00",
