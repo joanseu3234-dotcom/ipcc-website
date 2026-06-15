@@ -17,6 +17,25 @@ async function ipccVerifyPw(user, plain) {
   }
   return stored === plain; // 舊明碼相容（升級期間仍可登入）
 }
+// 一次性遷移：把 localStorage 裡殘留的明碼密碼轉成雜湊，
+// 確保下次「發布上線」不會又把明碼寫回公開的 users-config.js
+(async function _migratePlaintextPasswords() {
+  try {
+    var raw = localStorage.getItem('ipcc_users');
+    if (!raw) return;
+    var users = JSON.parse(raw);
+    if (!Array.isArray(users)) return;
+    var changed = false;
+    for (var i = 0; i < users.length; i++) {
+      var pw = users[i] && users[i].password;
+      if (pw && String(pw).indexOf('sha256$') !== 0) {
+        users[i].password = await ipccHashPw(users[i].username, pw);
+        changed = true;
+      }
+    }
+    if (changed) localStorage.setItem('ipcc_users', JSON.stringify(users));
+  } catch (e) {}
+})();
 
 // Token 讀寫 helper（localStorage + Cookie + users-config.js 三重備援）
 function _encodeToken(t) {
