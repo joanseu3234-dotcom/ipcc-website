@@ -4,7 +4,6 @@
 window.IPCC_FRONTEND_URL  = 'https://ipcc-website.vercel.app';
 window.IPCC_GITHUB_REPO   = 'joanseu3234-dotcom/ipcc-website';
 window.IPCC_GITHUB_BRANCH = 'main';
-// GitHub 金鑰已移除，改由伺服器端 /api/publish 以 Vercel 環境變數保管
 
 window.IPCC_USERS_CONFIG = [
   {
@@ -23,7 +22,7 @@ window.IPCC_USERS_CONFIG = [
       "users": true
     },
     "createdAt": 1775951284136,
-    "lastLogin": 1781538136715
+    "lastLogin": 1781541714672
   },
   {
     "id": "mo01aonyqrv79",
