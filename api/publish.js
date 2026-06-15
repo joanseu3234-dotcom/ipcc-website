@@ -11,6 +11,8 @@
 //   PUBLISH_SECRET  （自訂一串密碼，後台「系統設定」也要填同一串）
 // =====================================================
 
+var zlib = require('zlib');
+
 module.exports = async function handler(req, res) {
   res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
@@ -85,9 +87,17 @@ module.exports = async function handler(req, res) {
         sha = existing.sha;
       }
 
+      // 內容可能是 gzip+base64（大檔）或純文字
+      var fileText;
+      if (file.contentGzipB64) {
+        fileText = zlib.gunzipSync(Buffer.from(file.contentGzipB64, 'base64')).toString('utf8');
+      } else {
+        fileText = String(file.content);
+      }
+
       var putBody = {
         message: commitMsg,
-        content: Buffer.from(String(file.content), 'utf8').toString('base64'),
+        content: Buffer.from(fileText, 'utf8').toString('base64'),
         branch: BRANCH
       };
       if (sha) putBody.sha = sha;

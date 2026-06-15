@@ -76,6 +76,20 @@ function _savePublishKey(val) {
   localStorage.setItem('ipcc_publish_key', (val || '').trim());
 }
 
+// 將字串用 gzip 壓縮後轉 base64（content-data.js 很大，壓縮後才不會超過伺服器上傳上限）
+async function _gzipToBase64(str) {
+  if (typeof CompressionStream === 'undefined') return null; // 舊瀏覽器不支援 → 回傳 null 走未壓縮路徑
+  var input = new TextEncoder().encode(str);
+  var stream = new Blob([input]).stream().pipeThrough(new CompressionStream('gzip'));
+  var buf = new Uint8Array(await new Response(stream).arrayBuffer());
+  var bin = '';
+  var CHUNK = 0x8000;
+  for (var i = 0; i < buf.length; i += CHUNK) {
+    bin += String.fromCharCode.apply(null, buf.subarray(i, i + CHUNK));
+  }
+  return btoa(bin);
+}
+
 // 若 localStorage 沒有文章資料，自動從 content-data.js 還原初始資料
 // 注意：不因 token 缺失而載入，避免覆蓋尚未發布的新資料
 (function() {
@@ -654,11 +668,22 @@ async function publishToLive() {
   var ts = new Date().toLocaleString('zh-TW', {timeZone:'Asia/Taipei', hour12:false});
   var commitMsg = '🔄 後台發布：' + ts;
 
-  var files = [
+  var rawFiles = [
     { path: 'content-data.js',       content: generateContentData() },
     { path: 'admin/users-config.js', content: makeUsersConfigContent(getUsers()) },
     { path: 'contact-config.js',     content: makeContactConfigContent(getContactConfig()) }
   ];
+
+  // 壓縮每個檔案內容（避免大檔超過伺服器上傳上限 413）
+  var files = [];
+  for (var i = 0; i < rawFiles.length; i++) {
+    var gz = await _gzipToBase64(rawFiles[i].content);
+    if (gz) {
+      files.push({ path: rawFiles[i].path, contentGzipB64: gz });
+    } else {
+      files.push({ path: rawFiles[i].path, content: rawFiles[i].content });
+    }
+  }
 
   try {
     var res = await fetch('/api/publish', {
