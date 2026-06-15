@@ -155,6 +155,22 @@
       location.href = 'dashboard.html';
     }
 
+    // 密碼雜湊（SHA-256）— 與 admin.js 的 ipccHashPw 必須完全相同
+    async function ipccHashPw(username, plain) {
+      // 固定 salt（不混入帳號名稱，避免改帳號名後被鎖在外面）
+      var msg = 'ipcc-admin::v1::' + String(plain);
+      var buf = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(msg));
+      var hex = Array.prototype.map.call(new Uint8Array(buf), function(b){ return ('0' + b.toString(16)).slice(-2); }).join('');
+      return 'sha256$' + hex;
+    }
+    async function ipccVerifyPw(user, plain) {
+      var stored = (user && user.password) || '';
+      if (stored.indexOf('sha256$') === 0) {
+        return (await ipccHashPw(user.username, plain)) === stored;
+      }
+      return stored === plain; // 舊明碼相容
+    }
+
     function getUsers() {
       // 優先使用已部署的 users-config.js（最新帳號清單，跨電腦共用）
       if (window.IPCC_USERS_CONFIG && window.IPCC_USERS_CONFIG.length > 0) {
@@ -168,7 +184,7 @@
       return [{
         id: 'admin-root',
         username: 'admin',
-        password: 'ipcc2024',
+        password: 'sha256$363a7a620436351edbe6c1fdccc799b18de49f42c0f88ed37159ddd2f87d27a1', // admin / ipcc2024
         displayName: '超級管理員',
         isSuper: true,
         permissions: { home:true, about:true, services:true, news:true, cases:true, settings:true, users:true, contacts:true },
@@ -177,14 +193,14 @@
       }];
     }
 
-    function doLogin(e) {
+    async function doLogin(e) {
       e.preventDefault();
       var u = document.getElementById('username').value.trim();
       var p = document.getElementById('password').value;
       var users = getUsers();
       var found = null;
       for (var i = 0; i < users.length; i++) {
-        if (users[i].username === u && users[i].password === p) { found = users[i]; break; }
+        if (users[i].username === u && (await ipccVerifyPw(users[i], p))) { found = users[i]; break; }
       }
       if (found) {
         sessionStorage.setItem('ipcc_admin_logged', '1');

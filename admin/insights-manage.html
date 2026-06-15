@@ -246,7 +246,8 @@
 
         <div class="form-group">
           <label class="form-label">文章摘要</label>
-          <textarea class="form-control form-textarea" id="insExcerpt" rows="3" placeholder="簡短描述文章重點，約 60–120 字，顯示在列表頁與 Hero..." oninput="updateSeoPreview()"></textarea>
+          <textarea class="form-control form-textarea" id="insExcerpt" rows="3" maxlength="200" placeholder="簡短描述文章重點，最多 200 字（含標點），顯示在列表頁與 Hero..." oninput="updateSeoPreview()"></textarea>
+          <div class="char-counter" id="excerptCount">0 / 200</div>
         </div>
 
         <div class="form-group">
@@ -436,6 +437,7 @@ function updateSeoPreview() {
   document.getElementById('seoPreviewDesc').textContent = desc;
   updateCharCount('insSeoTitle', 'seoTitleCount', 60);
   updateCharCount('insSeoDesc', 'seoDescCount', 160);
+  updateCharCount('insExcerpt', 'excerptCount', 200);
 }
 
 // ── Category & Tag chips ──
@@ -693,7 +695,13 @@ function saveInsight() {
   };
 
   if (idx >= 0) { insights[idx] = item; } else { insights.push(item); }
-  saveInsights(insights);
+  try {
+    saveInsights(insights);
+  } catch (err) {
+    // localStorage 容量超過（多半因為圖片轉成 base64 後太大）
+    alert('儲存失敗：瀏覽器儲存空間已滿，通常是封面/OG 圖片太大造成。\n\n建議改用較小的圖片，或在「貼上 URL」欄位填入圖片網址後再儲存。\n（你剛輸入的文字內容仍保留在視窗中，不會遺失。）');
+    return;
+  }
   closeInsModal();
   buildSuggestions();
   renderTable();
@@ -751,12 +759,50 @@ function triggerImgUpload(field) {
 function handleImgFile(input, field) {
   var file = input.files[0];
   if (!file) return;
-  if (file.size > 5 * 1024 * 1024) {
-    alert('圖片過大（上限 5MB），請壓縮後再上傳或貼上 URL。');
+  if (!/^image\/(png|jpe?g|webp)/.test(file.type)) { alert('僅支援 PNG / JPG / WebP 格式'); return; }
+  if (file.size > 10 * 1024 * 1024) {
+    alert('圖片過大（上限 10MB），請先壓縮或改貼上圖片網址（URL）。');
     return;
   }
+  compressImage(file, function(dataUrl) {
+    setImgValue(field, dataUrl);
+  }, function(msg) {
+    alert('圖片讀取失敗：' + msg);
+  });
+}
+
+// 上傳前先在瀏覽器內縮圖＋壓縮，避免 base64 過大塞爆 localStorage 導致存檔失敗
+function compressImage(file, onDone, onErr) {
   var reader = new FileReader();
-  reader.onload = function(e) { setImgValue(field, e.target.result); };
+  reader.onerror = function() { onErr && onErr('無法讀取檔案'); };
+  reader.onload = function(e) {
+    var img = new Image();
+    img.onerror = function() { onErr && onErr('圖片格式無法解析'); };
+    img.onload = function() {
+      try {
+        var maxDim = 1600;
+        var w = img.naturalWidth || img.width;
+        var h = img.naturalHeight || img.height;
+        if (w > maxDim || h > maxDim) {
+          if (w >= h) { h = Math.round(h * maxDim / w); w = maxDim; }
+          else { w = Math.round(w * maxDim / h); h = maxDim; }
+        }
+        var canvas = document.createElement('canvas');
+        canvas.width = w; canvas.height = h;
+        var ctx = canvas.getContext('2d');
+        // PNG 透明背景轉 JPEG 會變黑，先鋪白底
+        ctx.fillStyle = '#ffffff';
+        ctx.fillRect(0, 0, w, h);
+        ctx.drawImage(img, 0, 0, w, h);
+        var out = canvas.toDataURL('image/jpeg', 0.82);
+        // 萬一壓縮後反而更大（極少數情況），就用原圖
+        onDone(out && out.length < e.target.result.length ? out : e.target.result);
+      } catch (err) {
+        onDone(e.target.result);
+      }
+    };
+    img.src = e.target.result;
+  };
   reader.readAsDataURL(file);
 }
 
@@ -809,11 +855,13 @@ function initImgDropzone(field, dropzoneId) {
     dz.classList.remove('drag-over');
     var file = e.dataTransfer && e.dataTransfer.files && e.dataTransfer.files[0];
     if (!file) return;
-    if (!/^image\/(png|jpeg|webp)/.test(file.type)) { alert('僅支援 PNG / JPG / WebP 格式'); return; }
-    if (file.size > 5 * 1024 * 1024) { alert('圖片過大（上限 5MB）'); return; }
-    var reader = new FileReader();
-    reader.onload = function(ev) { setImgValue(field, ev.target.result); };
-    reader.readAsDataURL(file);
+    if (!/^image\/(png|jpe?g|webp)/.test(file.type)) { alert('僅支援 PNG / JPG / WebP 格式'); return; }
+    if (file.size > 10 * 1024 * 1024) { alert('圖片過大（上限 10MB），請先壓縮或改貼上圖片網址（URL）。'); return; }
+    compressImage(file, function(dataUrl) {
+      setImgValue(field, dataUrl);
+    }, function(msg) {
+      alert('圖片讀取失敗：' + msg);
+    });
   });
 }
 

@@ -310,7 +310,12 @@ function openQrModal() {
 function closeQrModal() {
   document.getElementById('qrModal').style.display = 'none';
 }
-function submitForm(e) {
+// ★ 把這裡換成你的 Web3Forms access key（到 https://web3forms.com 用 email 免費申請）
+// 這支 key 本來就是設計成放在前端的「公開」金鑰，只能用來「送出表單→寄到你信箱」，
+// 別人拿到也讀不到你收到的任何資料，所以放在這裡是安全的。
+const WEB3FORMS_KEY = 'fe7e83d6-4811-400a-a2e0-ef3247f71b09';
+
+async function submitForm(e) {
   e.preventDefault();
   const form = e.target;
   const inputs = form.querySelectorAll('input, textarea, select');
@@ -330,15 +335,50 @@ function submitForm(e) {
     submittedAt: Date.now()
   };
 
-  // 儲存到 localStorage
+  // 仍存到本機 localStorage（同一台電腦／同瀏覽器的後台可即時查看）
   try {
     var list = JSON.parse(localStorage.getItem('ipcc_contacts') || '[]');
     list.unshift(data);
     localStorage.setItem('ipcc_contacts', JSON.stringify(list));
   } catch(err) {}
 
-  // 成功提示
   const btn = form.querySelector('[type=submit]');
+  const origText = btn.innerHTML;
+
+  // 送到 Web3Forms → 即時 email 通知（這才是真正能收到客戶詢問的管道）
+  if (WEB3FORMS_KEY) {
+    btn.disabled = true;
+    btn.innerHTML = '送出中…';
+    try {
+      const payload = {
+        access_key: WEB3FORMS_KEY,
+        subject: 'IPCC 官網新諮詢：' + (data.name || '') + '（' + (data.company || '') + '）',
+        from_name: 'IPCC 官網聯絡表單',
+        '姓名': data.name,
+        '職稱': data.jobTitle,
+        '公司名稱': data.company,
+        '聯絡電話': data.phone,
+        '電子郵件': data.email,
+        '感興趣的服務': data.service,
+        '方便聯繫時段': data.contactTime,
+        '需求說明': data.message
+      };
+      const res = await fetch('https://api.web3forms.com/submit', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+        body: JSON.stringify(payload)
+      });
+      const out = await res.json();
+      if (!out.success) throw new Error(out.message || '送出失敗');
+    } catch (err) {
+      btn.disabled = false;
+      btn.innerHTML = origText;
+      alert('送出失敗，請稍後再試，或直接來電 0800-666-080 / 加 LINE 與我們聯繫。');
+      return;
+    }
+  }
+
+  // 成功提示
   btn.innerHTML = '✓ 已送出！我們將盡快與您聯繫';
   btn.style.background = '#16A34A';
   btn.disabled = true;

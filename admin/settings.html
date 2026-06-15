@@ -50,22 +50,22 @@
         </div>
 
         <div class="section-card" style="max-width:520px; border-color:#1E2A5E;">
-          <h2 class="section-card-title">🚀 一鍵發布設定（GitHub Token）</h2>
+          <h2 class="section-card-title">🚀 一鍵發布設定（發布金鑰）</h2>
           <p style="color:var(--text-sub); font-size:0.9rem; margin-bottom:16px;">
-            設定後，後台所有頁面右下角的「發布上線」按鈕可直接推送到 GitHub，Vercel 自動部署，<strong>無需任何本機操作</strong>。<br>
-            <strong style="color:#1E2A5E;">Token 一旦設定並發布一次，就會永久寫入設定檔，之後任何人從任何裝置登入後台都不需要重新輸入。</strong>
+            填入發布金鑰後，後台右下角的「發布上線」按鈕即可使用，由伺服器端安全推送、Vercel 自動部署。<br>
+            <strong style="color:#1E2A5E;">這串金鑰要與 Vercel 環境變數 <code>PUBLISH_SECRET</code> 相同。</strong>
+            它只存在你這台電腦的瀏覽器，不會寫進任何公開檔案；換電腦時再輸入一次即可。
           </p>
           <div id="ghTokenStatus" style="margin-bottom:14px;"></div>
           <div class="form-group">
-            <label class="form-label">GitHub Personal Access Token</label>
-            <input type="password" class="form-control" id="ghTokenInput" placeholder="ghp_xxxxxxxxxxxxxxxx" autocomplete="off">
+            <label class="form-label">發布金鑰（Publish Key）</label>
+            <input type="password" class="form-control" id="ghTokenInput" placeholder="與 Vercel 的 PUBLISH_SECRET 相同" autocomplete="off">
             <p style="font-size:0.78rem;color:var(--text-sub);margin-top:6px;">
-              需要 <code>repo</code> 或 <code>contents:write</code> 權限。
-              <a href="https://github.com/settings/tokens/new?scopes=repo&description=IPCC+Admin" target="_blank" rel="noopener" style="color:var(--navy);font-weight:600;">點此產生 Token ↗</a>
+              此金鑰由你在 Vercel → Settings → Environment Variables 設定的 <code>PUBLISH_SECRET</code> 決定。
             </p>
           </div>
           <div style="display:flex;gap:10px;flex-wrap:wrap;">
-            <button class="btn-primary" onclick="saveGhToken()">💾 儲存 Token</button>
+            <button class="btn-primary" onclick="saveGhToken()">💾 儲存金鑰</button>
             <button class="btn-secondary" onclick="testGhToken()" id="ghTestBtn">🔍 測試連線</button>
             <button class="btn-red" onclick="clearGhToken()" style="padding:8px 16px;font-size:0.85rem;">清除</button>
           </div>
@@ -132,55 +132,59 @@
     requireLogin();
     initAdminUI();
 
-    // ── GitHub Token ──────────────────────────────
+    // ── 發布金鑰（Publish Key）────────────────────
     function loadGhTokenStatus() {
-      var token = _getGhToken();
+      var key = _getPublishKey();
       var el = document.getElementById('ghTokenStatus');
-      if (token) {
-        el.innerHTML = '<div class="alert alert-success">✅ Token 已設定（' + token.slice(0,8) + '...）</div>';
+      if (key) {
+        el.innerHTML = '<div class="alert alert-success">✅ 發布金鑰已設定。</div>';
         document.getElementById('ghTokenInput').placeholder = '已設定，輸入新值可覆蓋';
       } else {
-        el.innerHTML = '<div class="alert" style="background:#FEF3C7;color:#92400E;border:1px solid #FDE68A;">⚠️ 尚未設定 Token，發布上線功能無法使用。</div>';
+        el.innerHTML = '<div class="alert" style="background:#FEF3C7;color:#92400E;border:1px solid #FDE68A;">⚠️ 尚未設定發布金鑰，發布上線功能無法使用。</div>';
       }
     }
     loadGhTokenStatus();
 
     function saveGhToken() {
       var val = document.getElementById('ghTokenInput').value.trim();
-      if (!val) { alert('請輸入 Token'); return; }
-      _saveGhToken(val);
+      if (!val) { alert('請輸入發布金鑰'); return; }
+      _savePublishKey(val);
       document.getElementById('ghTokenInput').value = '';
       loadGhTokenStatus();
       _updatePublishBtn();
-      document.getElementById('ghTestResult').innerHTML = '<div class="alert alert-success">✅ Token 已儲存，重新啟動電腦後也不需要重新輸入。</div>';
+      document.getElementById('ghTestResult').innerHTML = '<div class="alert alert-success">✅ 發布金鑰已儲存（僅存在這台電腦的瀏覽器）。建議按「測試連線」確認正確。</div>';
     }
 
     function clearGhToken() {
-      if (!confirm('確定要清除 GitHub Token？清除後「發布上線」將無法使用。')) return;
-      localStorage.removeItem('ipcc_github_token');
-      document.cookie = 'igt=; max-age=0; path=/';
+      if (!confirm('確定要清除發布金鑰？清除後「發布上線」將無法使用。')) return;
+      localStorage.removeItem('ipcc_publish_key');
       loadGhTokenStatus();
       _updatePublishBtn();
       document.getElementById('ghTestResult').innerHTML = '';
     }
 
     async function testGhToken() {
-      var token = document.getElementById('ghTokenInput').value.trim() || _getGhToken();
-      var repo  = (window.IPCC_GITHUB_REPO || '').trim();
+      var key = document.getElementById('ghTokenInput').value.trim() || _getPublishKey();
       var el = document.getElementById('ghTestResult');
-      if (!token) { el.innerHTML = '<div class="alert alert-error">請先輸入或儲存 Token</div>'; return; }
-      if (!repo)  { el.innerHTML = '<div class="alert alert-error">找不到 GitHub Repo 設定，請確認 users-config.js</div>'; return; }
+      if (!key) { el.innerHTML = '<div class="alert alert-error">請先輸入或儲存發布金鑰</div>'; return; }
       el.innerHTML = '<div class="alert" style="background:#EFF6FF;color:#1E40AF;">⏳ 測試中...</div>';
       try {
-        var r = await fetch('https://api.github.com/repos/' + repo, {
-          headers: { 'Authorization': 'Bearer ' + token, 'Accept': 'application/vnd.github+json' }
+        var r = await fetch('/api/publish', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ secret: key })   // 不帶 files：僅驗證金鑰與連線
         });
-        if (r.ok) {
-          var d = await r.json();
-          el.innerHTML = '<div class="alert alert-success">✅ 連線成功！Repo：' + d.full_name + '，預設分支：' + d.default_branch + '</div>';
+        var out = await r.json().catch(function(){ return {}; });
+        if (r.ok && out.success) {
+          el.innerHTML = '<div class="alert alert-success">✅ 連線成功、發布金鑰正確！可以使用「發布上線」。</div>';
+        } else if (r.status === 401) {
+          el.innerHTML = '<div class="alert alert-error">❌ 發布金鑰錯誤，請確認與 Vercel 的 PUBLISH_SECRET 一致。</div>';
+        } else if (r.status === 500) {
+          el.innerHTML = '<div class="alert alert-error">❌ 伺服器尚未設定環境變數（' + (out.error || '請在 Vercel 設定 GITHUB_TOKEN / GITHUB_REPO / PUBLISH_SECRET') + '）</div>';
+        } else if (r.status === 404) {
+          el.innerHTML = '<div class="alert alert-error">❌ 找不到 /api/publish，請先把這次的程式碼部署上線（git push）。</div>';
         } else {
-          var err = await r.json().catch(function(){ return {}; });
-          el.innerHTML = '<div class="alert alert-error">❌ 連線失敗（' + r.status + '）：' + (err.message || '權限不足或 Token 錯誤') + '</div>';
+          el.innerHTML = '<div class="alert alert-error">❌ 測試失敗（' + r.status + '）：' + (out.error || '未知錯誤') + '</div>';
         }
       } catch(e) {
         el.innerHTML = '<div class="alert alert-error">❌ 網路錯誤：' + e.message + '</div>';

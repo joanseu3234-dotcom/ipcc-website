@@ -28,7 +28,7 @@
     .msg-preview { max-width:200px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; color:var(--text-sub); font-size:0.82rem; }
     .detail-field { margin-bottom:14px; }
     .detail-label { font-size:0.72rem; font-weight:700; text-transform:uppercase; letter-spacing:0.08em; color:var(--text-sub); margin-bottom:4px; }
-    .detail-value { font-size:0.92rem; color:var(--navy-dark); font-weight:500; line-height:1.6; }
+    .detail-value { font-size:0.92rem; color:var(--text-main); font-weight:500; line-height:1.6; }
     .detail-grid { display:grid; grid-template-columns:1fr 1fr; gap:0 24px; }
     .export-bar { display:flex; gap:10px; align-items:center; flex-wrap:wrap; }
     .new-dot { display:inline-block; width:8px; height:8px; background:#C8161D; border-radius:50%; margin-right:4px; vertical-align:middle; }
@@ -76,7 +76,7 @@
         <!-- 標題列 -->
         <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:20px; flex-wrap:wrap; gap:12px;">
           <div>
-            <h1 style="font-size:1.6rem; font-weight:800; color:var(--navy-dark); margin-bottom:4px;">聯絡表單管理</h1>
+            <h1 style="font-size:1.6rem; font-weight:800; color:#E2EEF8; margin-bottom:4px;">聯絡表單管理</h1>
             <p style="color:var(--text-sub); font-size:0.9rem;">管理客戶諮詢表單，追蹤處理進度並匯出資料</p>
           </div>
           <div class="export-bar">
@@ -264,7 +264,7 @@
         + '</div>'
         + '<div class="detail-field" style="margin-top:16px;">'
         + '<div class="detail-label">需求說明</div>'
-        + '<div class="detail-value" style="background:#F4F2EE; border-radius:8px; padding:14px; line-height:1.9; white-space:pre-wrap;">' + (c.message||'（無填寫）') + '</div>'
+        + '<div class="detail-value" style="background:rgba(0,0,0,0.22); border:1px solid var(--border); border-radius:8px; padding:14px; line-height:1.9; white-space:pre-wrap;">' + (c.message||'（無填寫）') + '</div>'
         + '</div>'
         + '<div class="detail-field" style="margin-top:16px;">'
         + '<div class="detail-label">更改狀態</div>'

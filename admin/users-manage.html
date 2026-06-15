@@ -65,7 +65,7 @@
       <div class="page-content">
         <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:20px;">
           <div>
-            <h1 style="font-size:1.6rem; font-weight:800; color:var(--navy-dark); margin-bottom:4px;">帳號管理</h1>
+            <h1 style="font-size:1.6rem; font-weight:800; color:#E2EEF8; margin-bottom:4px;">帳號管理</h1>
             <p style="color:var(--text-sub); font-size:0.9rem;">新增使用者帳號並設定後台操作權限</p>
           </div>
           <div style="display:flex; gap:8px;">
@@ -163,7 +163,7 @@
       </div>
       <div class="modal-body">
         <input type="hidden" id="changePwUserId">
-        <div id="changePwTargetName" style="font-weight:700; color:var(--navy-dark); margin-bottom:16px; font-size:1rem;"></div>
+        <div id="changePwTargetName" style="font-weight:700; color:#E2EEF8; margin-bottom:16px; font-size:1rem;"></div>
         <div class="form-group">
           <label class="form-label">新密碼</label>
           <input type="password" class="form-control" id="newPw" placeholder="至少 6 字元" autocomplete="new-password">
@@ -251,7 +251,7 @@
       });
     }
 
-    function saveUser() {
+    async function saveUser() {
       const uid = document.getElementById('userId').value;
       const username = document.getElementById('userUsername').value.trim();
       const displayName = document.getElementById('userDisplay').value.trim();
@@ -285,11 +285,11 @@
         users[idx].username = username;
         users[idx].displayName = displayName;
         users[idx].permissions = permissions;
-        if (pw) users[idx].password = pw;
+        if (pw) users[idx].password = await ipccHashPw(username, pw);
       } else {
         users.push({
           id: genId(),
-          username, displayName, password: pw,
+          username, displayName, password: await ipccHashPw(username, pw),
           isSuper: false, permissions,
           createdAt: Date.now(), lastLogin: null
         });
@@ -321,7 +321,7 @@
       document.getElementById('changePwModal').classList.add('open');
     }
 
-    function doChangePassword() {
+    async function doChangePassword() {
       const uid = document.getElementById('changePwUserId').value;
       const pw = document.getElementById('newPw').value;
       const pwc = document.getElementById('newPwConfirm').value;
@@ -331,7 +331,7 @@
       const users = getUsers();
       const idx = users.findIndex(function(u){return u.id===uid;});
       if (idx < 0) { msg.innerHTML = '<div class="alert alert-error">找不到使用者</div>'; return; }
-      users[idx].password = pw;
+      users[idx].password = await ipccHashPw(users[idx].username, pw);
       document.getElementById('changePwModal').classList.remove('open');
       saveAndSync(users);
       renderTable();

@@ -1,6 +1,23 @@
 // IPCC Admin Panel - Shared Utilities
 // =====================================
 
+// 密碼雜湊（SHA-256）— 避免明碼出現在公開的 users-config.js
+// 注意：index.html 登入頁未載入 admin.js，內有一份完全相同的實作，修改時請同步兩邊
+async function ipccHashPw(username, plain) {
+  // 固定 salt（不混入帳號名稱，避免改帳號名後被鎖在外面）
+  var msg = 'ipcc-admin::v1::' + String(plain);
+  var buf = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(msg));
+  var hex = Array.prototype.map.call(new Uint8Array(buf), function(b){ return ('0' + b.toString(16)).slice(-2); }).join('');
+  return 'sha256$' + hex;
+}
+async function ipccVerifyPw(user, plain) {
+  var stored = (user && user.password) || '';
+  if (stored.indexOf('sha256$') === 0) {
+    return (await ipccHashPw(user.username, plain)) === stored;
+  }
+  return stored === plain; // 舊明碼相容（升級期間仍可登入）
+}
+
 // Token 讀寫 helper（localStorage + Cookie + users-config.js 三重備援）
 function _encodeToken(t) {
   try { return btoa(unescape(encodeURIComponent(t))).split('').reverse().join(''); }
@@ -29,6 +46,15 @@ function _getGhToken() {
 function _saveGhToken(val) {
   localStorage.setItem('ipcc_github_token', val);
   document.cookie = 'igt=' + encodeURIComponent(val) + '; max-age=31536000; path=/; SameSite=Strict';
+}
+
+// 發布金鑰：對應 Vercel 環境變數 PUBLISH_SECRET。只存在管理員本機瀏覽器，
+// 不會寫進任何公開檔案。發布時送到 /api/publish 由伺服器驗證。
+function _getPublishKey() {
+  return (localStorage.getItem('ipcc_publish_key') || '').trim();
+}
+function _savePublishKey(val) {
+  localStorage.setItem('ipcc_publish_key', (val || '').trim());
 }
 
 // 若 localStorage 沒有文章資料，自動從 content-data.js 還原初始資料
@@ -368,7 +394,7 @@ function getUsers() {
   return [{
     id: SUPER_ADMIN_ID,
     username: 'admin',
-    password: 'ipcc2024',
+    password: 'sha256$363a7a620436351edbe6c1fdccc799b18de49f42c0f88ed37159ddd2f87d27a1', // admin / ipcc2024
     displayName: '超級管理員',
     isSuper: true,
     permissions: { home:true, about:true, services:true, news:true, cases:true, settings:true, users:true, contacts:true },
@@ -514,7 +540,7 @@ function generateContentData() {
   var published = new Date().toLocaleString('zh-TW', {timeZone:'Asia/Taipei', hour12:false});
   var data = { __ts: ts, __published: published };
   // 敏感 key 不納入（避免推送到 GitHub 觸發 Secret Scanning）
-  var SKIP = { ipcc_users: 1, ipcc_deploy_ts: 1, ipcc_github_token: 1, ipcc_admin_password: 1, ipcc_admin_username: 1 };
+  var SKIP = { ipcc_users: 1, ipcc_deploy_ts: 1, ipcc_github_token: 1, ipcc_admin_password: 1, ipcc_admin_username: 1, ipcc_contacts: 1 };
   Object.keys(localStorage).forEach(function(key) {
     if (key.indexOf('ipcc_') === 0 && !SKIP[key]) {
       var raw = localStorage.getItem(key);
@@ -545,13 +571,11 @@ function makeUsersConfigContent(users) {
   var frontendUrl = window.IPCC_FRONTEND_URL || 'https://ipcc-website.vercel.app';
   var repo   = window.IPCC_GITHUB_REPO   || '';
   var branch = window.IPCC_GITHUB_BRANCH || 'main';
-  var token  = _getGhToken();
-  var encodedToken = token ? _encodeToken(token) : (window.IPCC_GH_TOKEN_E || '');
+  // 注意：不再寫入任何 GitHub 金鑰（金鑰已移到伺服器端的 Vercel 環境變數）
   return '// IPCC 後台用戶設定\n// 此檔案由後台帳號管理自動產生，請勿手動修改\n\n'
     + "window.IPCC_FRONTEND_URL  = '" + frontendUrl + "';\n"
     + "window.IPCC_GITHUB_REPO   = '" + repo   + "';\n"
     + "window.IPCC_GITHUB_BRANCH = '" + branch + "';\n"
-    + (encodedToken ? "window.IPCC_GH_TOKEN_E    = '" + encodedToken + "';\n" : '')
     + '\nwindow.IPCC_USERS_CONFIG = ' + JSON.stringify(users, null, 2) + ';\n';
 }
 
@@ -595,14 +619,13 @@ async function _githubUpdateFile(token, repo, branch, path, content, commitMsg) 
 }
 
 // 主發布函式（點「🚀 發布上線」時呼叫）
+// 不再於瀏覽器直接帶 GitHub 金鑰，改送到伺服器端 /api/publish 由伺服器推送。
 async function publishToLive() {
-  var token  = _getGhToken();
-  var repo   = (window.IPCC_GITHUB_REPO   || '').trim();
-  var branch = (window.IPCC_GITHUB_BRANCH || 'main').trim();
+  var key = _getPublishKey();
 
-  // 尚未設定 Token → 引導到系統設定
-  if (!token || !repo) {
-    showPublishToast('請先到「⚙️ 系統設定」填入 GitHub Token，才能一鍵發布。', 'warn');
+  // 尚未設定發布金鑰 → 引導到系統設定
+  if (!key) {
+    showPublishToast('請先到「⚙️ 系統設定」填入發布金鑰，才能一鍵發布。', 'warn');
     setTimeout(function(){ location.href = 'settings.html'; }, 2000);
     return;
   }
@@ -612,35 +635,39 @@ async function publishToLive() {
   var ts = new Date().toLocaleString('zh-TW', {timeZone:'Asia/Taipei', hour12:false});
   var commitMsg = '🔄 後台發布：' + ts;
 
+  var files = [
+    { path: 'content-data.js',       content: generateContentData() },
+    { path: 'admin/users-config.js', content: makeUsersConfigContent(getUsers()) },
+    { path: 'contact-config.js',     content: makeContactConfigContent(getContactConfig()) }
+  ];
+
   try {
-    // 1. content-data.js（所有文章/案例/首頁內容）
-    await _githubUpdateFile(token, repo, branch, 'content-data.js', generateContentData(), commitMsg);
-
-    // 2. admin/users-config.js（帳號）
-    await _githubUpdateFile(token, repo, branch, 'admin/users-config.js', makeUsersConfigContent(getUsers()), commitMsg);
-
-    // 3. contact-config.js（聯絡資訊）
-    var contactCfg = getContactConfig();
-    await _githubUpdateFile(token, repo, branch, 'contact-config.js', makeContactConfigContent(contactCfg), commitMsg);
+    var res = await fetch('/api/publish', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ secret: key, commitMsg: commitMsg, files: files })
+    });
+    var out = await res.json().catch(function(){ return {}; });
+    if (!res.ok || !out.success) throw new Error(out.error || ('HTTP ' + res.status));
 
     showPublishToast('✅ 發布成功！Vercel 正在自動部署，約 10-30 秒後前台即更新。\n發布時間：' + ts, 'success');
   } catch(e) {
-    showPublishToast('❌ 發布失敗：' + e.message + '\n請確認 GitHub Token 是否正確或已過期。', 'error');
+    showPublishToast('❌ 發布失敗：' + e.message + '\n請確認發布金鑰是否正確，或 Vercel 環境變數是否已設定。', 'error');
   }
 }
 
 function _updatePublishBtn() {
   var btn = document.getElementById('ipcc-publish-btn');
   if (!btn) return;
-  var token = _getGhToken();
-  if (token) {
+  var key = _getPublishKey();
+  if (key) {
     btn.textContent = '🚀 發布上線';
     btn.style.background = 'linear-gradient(135deg,#CE0000,#8B0000)';
-    btn.title = '一鍵推送到 GitHub，Vercel 自動部署';
+    btn.title = '一鍵發布（伺服器端推送，Vercel 自動部署）';
   } else {
     btn.textContent = '⚙️ 設定後可一鍵發布';
     btn.style.background = 'linear-gradient(135deg,#D97706,#92400E)';
-    btn.title = '請先到系統設定填入 GitHub Token';
+    btn.title = '請先到系統設定填入發布金鑰';
   }
 }
 
