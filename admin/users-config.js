@@ -10,7 +10,7 @@ window.IPCC_USERS_CONFIG = [
   {
     "id": "admin-root",
     "username": "admin",
-    "password": "ipcc2024",
+    "password": "80254223",
     "displayName": "超級管理員",
     "isSuper": true,
     "permissions": {
@@ -23,7 +23,7 @@ window.IPCC_USERS_CONFIG = [
       "users": true
     },
     "createdAt": 1775951284136,
-    "lastLogin": 1781501407564
+    "lastLogin": 1781538136715
   },
   {
     "id": "mo01aonyqrv79",
