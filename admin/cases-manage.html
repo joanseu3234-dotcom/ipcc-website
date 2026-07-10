@@ -353,17 +353,27 @@ function handleCaseImg(input) {
   if (!input.files || !input.files[0]) return;
   var file = input.files[0];
   if (file.size > 5 * 1024 * 1024) { alert('圖片上限 5MB'); input.value=''; return; }
+  // ponytail: 硬性上限 ~500KB/張，逐步降尺寸與畫質直到達標，避免撐爆 content-data.js 的發布上限
+  var MAX_LEN = 700 * 1024;
   var reader = new FileReader();
   reader.onload = function(e) {
     var img = new Image();
     img.onload = function() {
-      var MAX = 1600;
-      var w = img.width, h = img.height;
-      if (w > MAX) { h = Math.round(h*MAX/w); w = MAX; }
-      var canvas = document.createElement('canvas');
-      canvas.width = w; canvas.height = h;
-      canvas.getContext('2d').drawImage(img,0,0,w,h);
-      currentCaseImage = canvas.toDataURL('image/jpeg', 0.92);
+      var w0 = img.width, h0 = img.height;
+      function render(md, q) {
+        var w = w0, h = h0;
+        if (w > md || h > md) { if (w >= h) { h = Math.round(h*md/w); w = md; } else { w = Math.round(w*md/h); h = md; } }
+        var canvas = document.createElement('canvas');
+        canvas.width = w; canvas.height = h;
+        var ctx = canvas.getContext('2d');
+        ctx.fillStyle = '#ffffff'; ctx.fillRect(0,0,w,h); // PNG 透明底轉 JPEG 會變黑，先鋪白底
+        ctx.drawImage(img,0,0,w,h);
+        return canvas.toDataURL('image/jpeg', q);
+      }
+      var out = render(1600, 0.85);
+      var D = [1600,1280,1024,800], Q = [0.85,0.7,0.6,0.5];
+      for (var i=0;i<D.length&&out.length>MAX_LEN;i++) for (var j=0;j<Q.length&&out.length>MAX_LEN;j++) out = render(D[i], Q[j]);
+      currentCaseImage = out;
       document.getElementById('caseImgThumbWrap').innerHTML = '<img class="img-upload-preview" src="'+currentCaseImage+'">';
       document.getElementById('caseImgName').textContent = file.name;
       document.getElementById('caseImgClearBtn').style.display = '';

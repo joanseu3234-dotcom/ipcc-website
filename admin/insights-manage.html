@@ -771,8 +771,10 @@ function handleImgFile(input, field) {
   });
 }
 
-// 上傳前先在瀏覽器內縮圖＋壓縮，避免 base64 過大塞爆 localStorage 導致存檔失敗
+// 上傳前先在瀏覽器內縮圖＋壓縮，避免 base64 過大塞爆 content-data.js 導致無法發布
+// ponytail: 硬性上限 ~500KB/張，逐步降尺寸與畫質直到達標；不再保留原圖（原圖過大正是先前 content-data.js 破 4.5MB 上傳上限、發布失敗的原因）
 function compressImage(file, onDone, onErr) {
+  var MAX_LEN = 700 * 1024; // dataURL 字串長度上限（約 500KB 實際位元組）
   var reader = new FileReader();
   reader.onerror = function() { onErr && onErr('無法讀取檔案'); };
   reader.onload = function(e) {
@@ -780,25 +782,32 @@ function compressImage(file, onDone, onErr) {
     img.onerror = function() { onErr && onErr('圖片格式無法解析'); };
     img.onload = function() {
       try {
-        var maxDim = 1600;
-        var w = img.naturalWidth || img.width;
-        var h = img.naturalHeight || img.height;
-        if (w > maxDim || h > maxDim) {
-          if (w >= h) { h = Math.round(h * maxDim / w); w = maxDim; }
-          else { w = Math.round(w * maxDim / h); h = maxDim; }
+        var w0 = img.naturalWidth || img.width;
+        var h0 = img.naturalHeight || img.height;
+        function render(maxDim, q) {
+          var w = w0, h = h0;
+          if (w > maxDim || h > maxDim) {
+            if (w >= h) { h = Math.round(h * maxDim / w); w = maxDim; }
+            else { w = Math.round(w * maxDim / h); h = maxDim; }
+          }
+          var canvas = document.createElement('canvas');
+          canvas.width = w; canvas.height = h;
+          var ctx = canvas.getContext('2d');
+          ctx.fillStyle = '#ffffff'; // PNG 透明背景轉 JPEG 會變黑，先鋪白底
+          ctx.fillRect(0, 0, w, h);
+          ctx.drawImage(img, 0, 0, w, h);
+          return canvas.toDataURL('image/jpeg', q);
         }
-        var canvas = document.createElement('canvas');
-        canvas.width = w; canvas.height = h;
-        var ctx = canvas.getContext('2d');
-        // PNG 透明背景轉 JPEG 會變黑，先鋪白底
-        ctx.fillStyle = '#ffffff';
-        ctx.fillRect(0, 0, w, h);
-        ctx.drawImage(img, 0, 0, w, h);
-        var out = canvas.toDataURL('image/jpeg', 0.82);
-        // 萬一壓縮後反而更大（極少數情況），就用原圖
-        onDone(out && out.length < e.target.result.length ? out : e.target.result);
+        var out = render(1600, 0.82);
+        var dims = [1600, 1280, 1024, 800], qs = [0.82, 0.7, 0.6, 0.5];
+        for (var d = 0; d < dims.length && out.length > MAX_LEN; d++) {
+          for (var q = 0; q < qs.length && out.length > MAX_LEN; q++) {
+            out = render(dims[d], qs[q]);
+          }
+        }
+        onDone(out);
       } catch (err) {
-        onDone(e.target.result);
+        onErr && onErr('圖片壓縮失敗，請改用較小的圖片或貼上圖片網址');
       }
     };
     img.src = e.target.result;
