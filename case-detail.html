@@ -140,22 +140,36 @@
     <!-- Results/Stats -->
     <div id="detailResultsWrap" class="detail-section" style="display:none;">
       <div style="background:#F8FAFF; border-radius:16px; padding:28px 32px;">
-        <div class="detail-label">成果展示</div>
+        <div class="detail-label">執行成果</div>
         <div id="detailResults" style="display:flex; gap:16px; flex-wrap:wrap; margin-top:16px;"></div>
       </div>
     </div>
 
     <!-- Challenge -->
     <div id="detailChallengeWrap" class="detail-section" style="display:none;">
-      <div class="detail-label">面臨挑戰</div>
+      <div class="detail-label">專案背景</div>
       <div class="detail-text" id="detailChallenge"></div>
     </div>
 
     <!-- Solution -->
     <div id="detailSolutionWrap" class="detail-section" style="display:none;">
       <hr style="border:none; border-top:1px solid #E5E7EB; margin-bottom:44px;">
-      <div class="detail-label">我們的解決方案</div>
+      <div class="detail-label">執行方式</div>
       <div class="detail-text" id="detailSolution"></div>
+    </div>
+
+    <!-- Benefits -->
+    <div id="detailBenefitsWrap" class="detail-section" style="display:none;">
+      <hr style="border:none; border-top:1px solid #E5E7EB; margin-bottom:44px;">
+      <div class="detail-label">導入效益</div>
+      <div class="detail-text" id="detailBenefits"></div>
+    </div>
+
+    <!-- Highlights -->
+    <div id="detailHighlightsWrap" class="detail-section" style="display:none;">
+      <hr style="border:none; border-top:1px solid #E5E7EB; margin-bottom:44px;">
+      <div class="detail-label">案例亮點</div>
+      <div class="detail-text" id="detailHighlights"></div>
     </div>
 
     <!-- Description fallback (shown only if no challenge) -->
@@ -302,6 +316,17 @@ if (c.challenge) {
 if (c.solution) {
   document.getElementById('detailSolution').innerHTML = renderContent(c.solution);
   document.getElementById('detailSolutionWrap').style.display = '';
+}
+
+// 導入效益／案例亮點為新欄位，舊案例沒填就整段不出現
+if (c.benefits) {
+  document.getElementById('detailBenefits').innerHTML = renderContent(c.benefits);
+  document.getElementById('detailBenefitsWrap').style.display = '';
+}
+
+if (c.highlights) {
+  document.getElementById('detailHighlights').innerHTML = renderContent(c.highlights);
+  document.getElementById('detailHighlightsWrap').style.display = '';
 }
 
 if (c.description && !c.challenge) {

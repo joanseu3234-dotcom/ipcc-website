@@ -202,24 +202,32 @@
         <div style="font-size:0.72rem;color:var(--text-sub);margin-top:4px;">從專案服務勾選，或在下方輸入自訂標籤</div>
       </div>
       <div class="form-group">
-        <label class="form-label">面臨問題</label>
-        <textarea class="form-textarea" id="fChallenge" rows="3" placeholder="客戶面臨的挑戰或問題..."></textarea>
+        <label class="form-label">專案背景</label>
+        <textarea class="form-textarea" id="fChallenge" rows="3" placeholder="客戶的專案背景、面臨的挑戰或問題..."></textarea>
       </div>
       <div class="form-group">
-        <label class="form-label">解決方案</label>
-        <textarea class="form-textarea" id="fSolution" rows="3" placeholder="我們提供的解決方案..."></textarea>
+        <label class="form-label">執行方式</label>
+        <textarea class="form-textarea" id="fSolution" rows="3" placeholder="我們實際怎麼做、導入哪些機制..."></textarea>
       </div>
       <div class="form-group">
         <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:4px;">
-          <label class="form-label" style="margin:0;">卡片摘要（顯示在案例卡片，建議 80 字內）</label>
-          <button type="button" class="btn-outline btn-sm" onclick="autoSummaryCase()" title="從「面臨問題」自動擷取前 80 字作為摘要">✨ 自動摘要</button>
+          <label class="form-label" style="margin:0;">摘要（顯示在案例卡片，建議 80 字內）</label>
+          <button type="button" class="btn-outline btn-sm" onclick="autoSummaryCase()" title="從「專案背景」自動擷取前 80 字作為摘要">✨ 自動摘要</button>
         </div>
-        <textarea class="form-textarea" id="fDescription" rows="2" placeholder="不填則自動以「面臨問題」前段作為摘要..."></textarea>
+        <textarea class="form-textarea" id="fDescription" rows="2" placeholder="不填則自動以「專案背景」前段作為摘要..."></textarea>
       </div>
       <div class="form-group">
-        <label class="form-label" style="margin-bottom:10px;">成果展示</label>
+        <label class="form-label" style="margin-bottom:10px;">執行成果（數字看板）</label>
         <div class="results-list" id="resultsList"></div>
         <button type="button" class="btn-ghost btn-sm" style="margin-top:8px;" onclick="addResultRow()">&#43; 新增成果項目</button>
+      </div>
+      <div class="form-group">
+        <label class="form-label">導入效益</label>
+        <textarea class="form-textarea" id="fBenefits" rows="3" placeholder="專案為客戶帶來的實質效益（可空白，空白就不顯示這一段）..."></textarea>
+      </div>
+      <div class="form-group">
+        <label class="form-label">案例亮點</label>
+        <textarea class="form-textarea" id="fHighlights" rows="3" placeholder="這個案例最值得一提的地方（可空白，空白就不顯示這一段）..."></textarea>
       </div>
       <div class="form-group">
         <label class="form-check">
@@ -459,7 +467,7 @@ function getSelectedTags() {
 // ── Modal open/close ──────────────────────────────────────────
 function autoSummaryCase() {
   var ch = document.getElementById('fChallenge').value.trim();
-  if (!ch) { alert('請先填寫「面臨問題」，再點自動摘要'); return; }
+  if (!ch) { alert('請先填寫「專案背景」，再點自動摘要'); return; }
   var summary = ch.replace(/\s+/g,' ').trim().substring(0, 80);
   if (ch.length > 80) summary += '⋯';
   document.getElementById('fDescription').value = summary;
@@ -476,6 +484,8 @@ function openAddModal() {
   document.getElementById("fChallenge").value = "";
   document.getElementById("fSolution").value = "";
   document.getElementById("fDescription").value = "";
+  document.getElementById("fBenefits").value = "";
+  document.getElementById("fHighlights").value = "";
   document.getElementById("fTagsInput").value = "";
   document.getElementById("fPublished").checked = true;
   document.getElementById("resultsList").innerHTML = "";
@@ -511,6 +521,8 @@ function editItem(id) {
   document.getElementById("fChallenge").value = item.challenge || "";
   document.getElementById("fSolution").value = item.solution || "";
   document.getElementById("fDescription").value = item.description || "";
+  document.getElementById("fBenefits").value = item.benefits || "";
+  document.getElementById("fHighlights").value = item.highlights || "";
   var tags = item.tags || [];
   renderTagsGrid(tags);
   // custom tags: those not from services
@@ -569,6 +581,8 @@ function saveItem() {
     challenge: document.getElementById("fChallenge").value.trim(),
     solution: document.getElementById("fSolution").value.trim(),
     description: document.getElementById("fDescription").value.trim(),
+    benefits: document.getElementById("fBenefits").value.trim(),
+    highlights: document.getElementById("fHighlights").value.trim(),
     results: getResultRows(),
     published: document.getElementById("fPublished").checked
   };

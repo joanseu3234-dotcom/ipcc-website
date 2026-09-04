@@ -273,7 +273,8 @@ function openCaseDetail(c) {
       var caseData = JSON.stringify({
         client: c.client||'', category: c.category||'', emoji: c.emoji||'🏆',
         image: c.image||'', challenge: c.challenge||'', solution: c.solution||'',
-        results: c.results||[], description: c.description||''
+        results: c.results||[], description: c.description||'',
+        benefits: c.benefits||'', highlights: c.highlights||''
       });
       return '<div class="cn-card" onclick=\'openCaseDetail(' + caseData.replace(/'/g,'&#39;') + ')\'>'
         + '<div class="cn-card-img">' + imgHtml + '<span class="cn-card-badge">客服委外</span></div>'
