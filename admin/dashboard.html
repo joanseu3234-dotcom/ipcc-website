@@ -129,7 +129,7 @@ function renderDashboard() {
     casesEl.innerHTML = '<div class="empty-state"><div class="empty-icon">&#128188;</div><p>尚無案例，點擊「新增案例」開始建立。</p></div>';
   } else {
     casesEl.innerHTML = recentC.map(function(item) {
-      var typeBadge = item.caseType === "training" ? '<span class="badge badge-training">客服訓練</span>' : item.caseType === "it" ? '<span class="badge badge-it">資訊服務</span>' : '<span class="badge badge-outsource">客服委外</span>';
+      var typeBadge = item.caseType === "training" ? '<span class="badge badge-training">客服訓練</span>' : item.caseType === "it" ? '<span class="badge badge-it">客戶服務整合</span>' : '<span class="badge badge-outsource">客服委外</span>';
       var statusCls = item.published ? "published" : "draft";
       var statusTxt = item.published ? "已發布" : "草稿";
       return '<div class="list-row"><div class="list-row-emoji">' + (item.emoji||"&#127942;") + '</div><div class="list-row-info"><div class="list-row-title">' + item.client + '</div><div class="list-row-meta">' + item.category + '</div></div><div class="list-row-aside">' + typeBadge + '<span class="status-dot ' + statusCls + '">' + statusTxt + '</span></div></div>';
