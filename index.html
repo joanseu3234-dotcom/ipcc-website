@@ -125,6 +125,8 @@
       <button class="news-tab active" onclick="switchTab(this, 'tab-news')">最新消息</button>
       <button class="news-tab" onclick="switchTab(this, 'tab-media')">媒體採訪</button>
       <button class="news-tab" onclick="switchTab(this, 'tab-event')">活動</button>
+      <button class="news-tab" onclick="switchTab(this, 'tab-cases')">成功案例</button>
+      <button class="news-tab" onclick="switchTab(this, 'tab-insights')">產業新知</button>
     </div>
 
     <!-- 最新消息 -->
@@ -139,6 +141,16 @@
 
     <!-- 活動 -->
     <div id="tab-event" class="tab-panel" style="display:none;">
+      <div class="news-grid"></div>
+    </div>
+
+    <!-- 成功案例 -->
+    <div id="tab-cases" class="tab-panel" style="display:none;">
+      <div class="news-grid"></div>
+    </div>
+
+    <!-- 產業新知 -->
+    <div id="tab-insights" class="tab-panel" style="display:none;">
       <div class="news-grid"></div>
     </div>
   </div>
@@ -454,25 +466,60 @@ if (aboutStats) aboutObserver.observe(aboutStats);
       allNews = window.IPCC_CONTENT_DATA.ipcc_news;
 
     var featured = h && h.featuredNews ? h.featuredNews : {};
-    var tabIcons = { news:'📢', media:'📸', event:'📅' };
+    var tabIcons = { news:'📢', media:'📸', event:'📅', cases:'🏆', insights:'💡' };
 
-    ['news','media','event'].forEach(function(tab) {
+    function fromStore(key) {
+      var arr = [];
+      try { var r = localStorage.getItem(key); if (r) arr = JSON.parse(r); } catch(e) {}
+      if (!arr.length && window.IPCC_CONTENT_DATA && window.IPCC_CONTENT_DATA[key])
+        arr = window.IPCC_CONTENT_DATA[key];
+      return arr || [];
+    }
+
+    // 成功案例／產業新知也能被後台選進精選消息，先各自正規化成同一種卡片資料
+    function cardsFor(tab) {
+      if (tab === 'cases') {
+        return fromStore('ipcc_cases').map(function(c) {
+          return { id: c.id, published: !!c.published, sort: c.createdAt || 0,
+                   title: c.client || '', date: '', image: c.image || '',
+                   badge: c.category || '成功案例',
+                   link: 'case-detail.html?id=' + encodeURIComponent(c.id || '') };
+        });
+      }
+      if (tab === 'insights') {
+        return fromStore('ipcc_insights').map(function(a) {
+          return { id: a.id, published: !!a.published, sort: -(a.order || 0),
+                   title: a.title || '', date: (a.publish_date || '').replace(/-/g, '.').slice(0, 7),
+                   image: a.cover_image || '', badge: a.category || '產業新知',
+                   link: '/insights/' + (a.slug || '') };
+        });
+      }
+      return allNews.filter(function(n) { return n.tab === tab; }).map(function(n) {
+        return { id: n.id, published: !!n.published, sort: n.createdAt || 0,
+                 title: n.title || '', date: n.date || '', image: n.image || '',
+                 badge: n.badge || '',
+                 link: 'news-detail.html?id=' + encodeURIComponent(n.id || '') };
+      });
+    }
+
+    ['news','media','event','cases','insights'].forEach(function(tab) {
       var panel = document.getElementById('tab-' + tab);
       if (!panel) return;
       var grid = panel.querySelector('.news-grid');
       if (!grid) return;
 
+      var all = cardsFor(tab);
       // 優先使用後台「首頁精選」的 ID 清單；無選取時顯示最新 3 篇已發布
       var ids = featured[tab] && featured[tab].length ? featured[tab] : null;
       var items;
       if (ids) {
         items = ids.map(function(id) {
-          return allNews.find(function(n) { return n.id === id; });
+          return all.find(function(n) { return n.id === id; });
         }).filter(Boolean);
       } else {
-        items = allNews
-          .filter(function(n) { return n.published && n.tab === tab; })
-          .sort(function(a, b) { return (b.createdAt || 0) - (a.createdAt || 0); })
+        items = all
+          .filter(function(n) { return n.published; })
+          .sort(function(a, b) { return b.sort - a.sort; })
           .slice(0, 3);
       }
 
@@ -483,16 +530,15 @@ if (aboutStats) aboutObserver.observe(aboutStats);
       }
 
       grid.innerHTML = items.map(function(n) {
-        var link = 'news-detail.html?id=' + encodeURIComponent(n.id || '');
         var imgHtml = n.image
           ? '<img src="' + n.image + '" style="width:100%;height:100%;object-fit:cover;" alt="">'
           : (tabIcons[tab] || '📢');
-        return '<a href="' + link + '" class="news-card">'
+        return '<a href="' + n.link + '" class="news-card">'
           + '<div class="news-card-img">' + imgHtml + '</div>'
           + '<div class="news-card-body"><div class="news-card-meta">'
-          + '<span class="news-card-badge">' + (n.badge || '') + '</span>'
-          + '<span class="news-card-date">' + (n.date || '') + '</span>'
-          + '</div><h4>' + (n.title || '') + '</h4></div></a>';
+          + '<span class="news-card-badge">' + n.badge + '</span>'
+          + '<span class="news-card-date">' + n.date + '</span>'
+          + '</div><h4>' + n.title + '</h4></div></a>';
       }).join('');
     });
   } catch(e) {}

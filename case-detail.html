@@ -286,9 +286,21 @@ function renderContent(text) {
 
 var c = null;
 try { c = JSON.parse(sessionStorage.getItem('ipcc_case_viewing') || 'null'); } catch(e) {}
+
+// 從首頁等地方用 ?id= 直接連進來時，改從 ipcc_cases 撈；網址的 id 優先於上一次瀏覽的暫存
+var urlId = new URLSearchParams(window.location.search).get('id');
+if (urlId && (!c || c.id !== urlId)) {
+  var pool = [];
+  try { var raw = localStorage.getItem('ipcc_cases'); if (raw) pool = JSON.parse(raw); } catch(e) {}
+  if (!pool.length && window.IPCC_CONTENT_DATA && window.IPCC_CONTENT_DATA.ipcc_cases)
+    pool = window.IPCC_CONTENT_DATA.ipcc_cases;
+  c = (pool || []).find(function(x) { return x.id === urlId; }) || c;
+}
+
 if (!c) { window.location.href = 'cases.html'; }
 
-var from = c._from || 'cases.html';
+var CASE_LIST_PAGE = { training: 'cases-training.html', it: 'cases-cx.html' };
+var from = c._from || CASE_LIST_PAGE[c.serviceType || c.caseType] || 'cases.html';
 document.getElementById('backBtn').href = from;
 document.getElementById('breadcrumbCases').href = from;
 document.getElementById('ctaCasesLink').href = from;

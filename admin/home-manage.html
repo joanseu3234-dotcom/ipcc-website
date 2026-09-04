@@ -45,6 +45,8 @@
     .badge-news  { background:rgba(30,42,94,0.1);  color:#1E2A5E; font-size:0.68rem; padding:2px 7px; border-radius:100px; font-weight:700; }
     .badge-media { background:rgba(59,130,246,0.1); color:#1D4ED8; font-size:0.68rem; padding:2px 7px; border-radius:100px; font-weight:700; }
     .badge-event { background:rgba(16,185,129,0.1); color:#047857; font-size:0.68rem; padding:2px 7px; border-radius:100px; font-weight:700; }
+    .badge-cases { background:rgba(200,22,29,0.1); color:#C8161D; font-size:0.68rem; padding:2px 7px; border-radius:100px; font-weight:700; }
+    .badge-insights { background:rgba(139,92,246,0.1); color:#6D28D9; font-size:0.68rem; padding:2px 7px; border-radius:100px; font-weight:700; }
     .badge-draft { background:#F3F4F6; color:#9CA3AF; font-size:0.68rem; padding:2px 7px; border-radius:100px; font-weight:700; margin-left:4px; }
     .selected-order { background:#F4F2EE; border-radius:10px; padding:14px 16px; margin-top:12px; }
     .order-item { display:flex; align-items:center; gap:10px; padding:6px 0; border-bottom:1px solid var(--border); }
@@ -92,7 +94,7 @@
       <div class="page-content">
         <div class="page-header">
           <h1>首頁管理</h1>
-          <p>管理首頁的服務項目與精選消息（最新消息 / 媒體採訪 / 活動）</p>
+          <p>管理首頁的服務項目與精選消息（最新消息 / 媒體採訪 / 活動 / 成功案例 / 產業新知）</p>
         </div>
 
         <div class="tab-nav">
@@ -122,11 +124,15 @@
               <button class="picker-tab active" id="ptab-news"  onclick="switchPickerTab('news')">最新消息 <span class="tab-count" id="cnt-news">0</span></button>
               <button class="picker-tab"        id="ptab-media" onclick="switchPickerTab('media')">媒體採訪 <span class="tab-count" id="cnt-media">0</span></button>
               <button class="picker-tab"        id="ptab-event" onclick="switchPickerTab('event')">活動 <span class="tab-count" id="cnt-event">0</span></button>
-              <button class="picker-refresh-btn" onclick="renderPickers()" title="重新從最新消息管理載入">↻ 重新整理</button>
+              <button class="picker-tab"        id="ptab-cases" onclick="switchPickerTab('cases')">成功案例 <span class="tab-count" id="cnt-cases">0</span></button>
+              <button class="picker-tab"        id="ptab-insights" onclick="switchPickerTab('insights')">產業新知 <span class="tab-count" id="cnt-insights">0</span></button>
+              <button class="picker-refresh-btn" onclick="renderPickers()" title="重新從各管理頁載入">↻ 重新整理</button>
             </div>
             <div id="pickerNews"  class="news-picker-grid"></div>
             <div id="pickerMedia" class="news-picker-grid" style="display:none;"></div>
             <div id="pickerEvent" class="news-picker-grid" style="display:none;"></div>
+            <div id="pickerCases" class="news-picker-grid" style="display:none;"></div>
+            <div id="pickerInsights" class="news-picker-grid" style="display:none;"></div>
             <div style="margin-top:20px;">
               <div id="selectedOrder" class="selected-order" style="display:none;">
                 <div style="font-size:0.82rem; font-weight:700; color:var(--text-sub); margin-bottom:8px;">✅ 已選取（將依此順序在首頁顯示）</div>
@@ -277,9 +283,30 @@
 
     // ====== 精選消息選取 ======
     let currentPickerTab = 'news';
-    let selectedIds = {news:[], media:[], event:[]};
-    const TAB_LABELS = {news:'最新消息', media:'媒體採訪', event:'活動'};
-    const TAB_KEYS   = ['news','media','event'];
+    let selectedIds = {news:[], media:[], event:[], cases:[], insights:[]};
+    const TAB_LABELS = {news:'最新消息', media:'媒體採訪', event:'活動', cases:'成功案例', insights:'產業新知'};
+    const TAB_KEYS   = ['news','media','event','cases','insights'];
+
+    // 各分頁的來源資料統一成同一種形狀，勾選 / 排序 / 首頁渲染才能共用同一套邏輯
+    function pickerItems(tab) {
+      if (tab === 'cases') {
+        return getCases()
+          .sort((a,b) => (b.createdAt||0)-(a.createdAt||0))
+          .map(c => ({ id:c.id, title:c.client||'(未命名案例)', date:'', image:c.image||'',
+                       published:!!c.published, badge:c.category||'成功案例' }));
+      }
+      if (tab === 'insights') {
+        return getInsights()
+          .sort((a,b) => (a.order||0)-(b.order||0))
+          .map(a => ({ id:a.id, title:a.title||'(未命名文章)', date:(a.publish_date||'').replace(/-/g,'.'),
+                       image:a.cover_image||'', published:!!a.published, badge:a.category||'產業新知' }));
+      }
+      return getNews()
+        .filter(n => n.tab === tab)
+        .sort((a,b) => (b.createdAt||0)-(a.createdAt||0))
+        .map(n => ({ id:n.id, title:n.title||'', date:n.date||'', image:n.image||'',
+                     published:!!n.published, badge:n.badge||TAB_LABELS[tab] }));
+    }
 
     function switchPickerTab(tab) {
       currentPickerTab = tab;
@@ -295,22 +322,22 @@
     function renderPickers() {
       const h = getHomeData();
       // 保留已選取的 id，不覆蓋（避免刷新時取消勾選）
-      const saved = h.featuredNews||{news:[],media:[],event:[]};
+      const saved = h.featuredNews||{};
       TAB_KEYS.forEach(t => { if(!selectedIds[t].length) selectedIds[t] = [...(saved[t]||[])]; });
 
-      const allNews = getNews();
-
       TAB_KEYS.forEach(tab => {
-        const items = allNews.filter(n=>n.tab===tab)
-                             .sort((a,b)=>(b.createdAt||0)-(a.createdAt||0));
+        const items = pickerItems(tab);
         // 更新 tab 計數
         const pubCount = items.filter(n=>n.published).length;
         document.getElementById('cnt-'+tab).textContent = pubCount;
 
         const el = document.getElementById('picker'+cap(tab));
         if(items.length===0) {
+          const newHref = tab==='cases' ? 'cases-manage.html?action=new'
+                        : tab==='insights' ? 'insights-manage.html'
+                        : 'news-manage.html?action=new';
           el.innerHTML = `<div style="grid-column:1/-1; padding:28px 0; text-align:center; color:var(--text-sub); font-size:0.88rem;">
-            此分類尚無消息 — <a href="news-manage.html?action=new" style="color:var(--navy); font-weight:700;">立即新增</a>
+            此分類尚無內容 — <a href="${newHref}" style="color:var(--navy); font-weight:700;">立即新增</a>
           </div>`;
           return;
         }
@@ -321,7 +348,7 @@
             ? `<img class="news-picker-thumb" src="${n.image}" alt="">`
             : `<div class="news-picker-thumb-placeholder">📰</div>`;
           const statusBadge = n.published
-            ? `<span class="badge-${tab}">${n.badge||TAB_LABELS[tab]}</span>`
+            ? `<span class="badge-${tab}">${n.badge}</span>`
             : `<span class="badge-draft">草稿</span>`;
           return `<div class="news-picker-card ${sel?'selected':''} ${n.published?'':'is-draft'}" onclick="togglePick('${tab}','${n.id}',this)">
             ${thumbHtml}
@@ -360,9 +387,9 @@
       const wrap = document.getElementById('selectedOrder');
       if(!arr || arr.length===0) { wrap.style.display='none'; return; }
       wrap.style.display='block';
-      const allNews = getNews();
+      const all = pickerItems(currentPickerTab);
       el.innerHTML = arr.map((id,i) => {
-        const n = allNews.find(n=>n.id===id);
+        const n = all.find(n=>n.id===id);
         if(!n) return '';
         const status = n.published ? '' : ' <span class="badge-draft">草稿</span>';
         return `<div class="order-item">
@@ -384,7 +411,7 @@
 
     // ── 監聽 ipcc_news 變動（在其他頁籤新增/修改新聞後自動刷新）
     window.addEventListener('storage', e => {
-      if (e.key === 'ipcc_news') renderPickers();
+      if (['ipcc_news','ipcc_cases','ipcc_insights'].indexOf(e.key) >= 0) renderPickers();
     });
 
     // Init
