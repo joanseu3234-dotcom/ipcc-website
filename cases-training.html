@@ -94,7 +94,7 @@
     <div style="margin-bottom:48px;">
       <span class="section-label">Training Cases</span>
       <h2 class="section-title" style="margin-top:8px;">客服訓練成功案例</h2>
-      <p class="section-sub">系統化的訓練計畫，讓客服團隊蛻變成品牌最強大的競爭力</p>
+      <p class="section-sub" id="casesTrainingSub">系統化的訓練計畫，讓客服團隊蛻變成品牌最強大的競爭力</p>
     </div>
 
     <div id="caseGrid" class="case-new-grid">
@@ -190,6 +190,15 @@ function openCaseDetail(c) {
   try { sessionStorage.setItem('ipcc_case_viewing', JSON.stringify(c)); } catch(e) {}
   window.location.href = 'case-detail.html';
 }
+
+// 副標語：後台「頁面副標語」可改；沒設定就用 HTML 裡的預設字
+(function () {
+  try {
+    var sub = (localStorage.getItem('ipcc_cases_training_sub') || '').trim();
+    var el = document.getElementById('casesTrainingSub');
+    if (sub && el) el.textContent = sub;
+  } catch (e) {}
+})();
 
 (function () {
   try {
