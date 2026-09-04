@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>資訊服務解決方案案例 — 成功案例 — IPCC 東州集團</title>
+  <title>客戶服務整合案例 — 成功案例 — IPCC 東州集團</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="style.css">
@@ -55,7 +55,7 @@
       <span>›</span>
       <a href="cases.html">成功案例</a>
       <span>›</span>
-      <span>資訊服務解決方案</span>
+      <span>客戶服務整合</span>
     </div>
     <h1>成功案例</h1>
     <p>超過 50 家企業與政府機關的信賴，見證服務創造的真實價值</p>
@@ -67,7 +67,7 @@
   <div class="container">
     <a href="cases.html">客服委外</a>
     <a href="cases-training.html">客服訓練</a>
-    <a href="cases-gov.html" class="active">資訊服務解決方案</a>
+    <a href="cases-cx.html" class="active">客戶服務整合</a>
   </div>
 </nav>
 
@@ -93,7 +93,7 @@
   <div class="container">
     <div style="margin-bottom:48px;">
       <span class="section-label">Government Cases</span>
-      <h2 class="section-title" style="margin-top:8px;">資訊服務解決方案成功案例</h2>
+      <h2 class="section-title" style="margin-top:8px;">客戶服務整合成功案例</h2>
       <p class="section-sub" id="casesGovSub">符合政府規範的完整解決方案，提升服務品質，增進民眾滿意度</p>
     </div>
 
@@ -186,7 +186,7 @@ function toggleMenu() {
 function esc(s){ return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
 
 function openCaseDetail(c) {
-  c._from = 'cases-gov.html';
+  c._from = 'cases-cx.html';
   try { sessionStorage.setItem('ipcc_case_viewing', JSON.stringify(c)); } catch(e) {}
   window.location.href = 'case-detail.html';
 }
@@ -223,7 +223,7 @@ function openCaseDetail(c) {
         results: c.results||[], description: c.description||''
       });
       return '<div class="cn-card" onclick=\'openCaseDetail(' + caseData.replace(/'/g,'&#39;') + ')\'>'
-        + '<div class="cn-card-img">' + imgHtml + '<span class="cn-card-badge">資訊服務</span></div>'
+        + '<div class="cn-card-img">' + imgHtml + '<span class="cn-card-badge">客戶服務整合</span></div>'
         + '<div class="cn-card-body">'
         + '<div class="cn-card-cat">' + esc(c.category||'') + '</div>'
         + '<div class="cn-card-client">' + esc(c.client||'') + '</div>'

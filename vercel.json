@@ -1,5 +1,8 @@
 {
   "cleanUrls": false,
+  "redirects": [
+    {"source": "/cases-gov.html", "destination": "/cases-cx.html", "permanent": true}
+  ],
   "rewrites": [
     {"source": "/services/:slug", "destination": "/service-detail.html"},
     {"source": "/insights/:slug", "destination": "/insight-detail.html"}

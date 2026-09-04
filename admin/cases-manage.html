@@ -298,7 +298,8 @@ function saveCaseStatsData(d) { localStorage.setItem('ipcc_case_stats', JSON.str
 var SUBS_DEF = [
   { key: 'ipcc_cases_bpo_sub',      page: '客服委外成功案例（cases.html）',              def: '協助企業打造穩定高效的客服體系，讓服務成為競爭優勢' },
   { key: 'ipcc_cases_training_sub', page: '客服訓練成功案例（cases-training.html）',      def: '系統化的訓練計畫，讓客服團隊蛻變成品牌最強大的競爭力' },
-  { key: 'ipcc_cases_gov_sub',      page: '資訊服務解決方案成功案例（cases-gov.html）',   def: '符合政府規範的完整解決方案，提升服務品質，增進民眾滿意度' }
+  // ponytail: key 沿用舊的 gov 命名，改 key 會弄丟後台已存好的字
+  { key: 'ipcc_cases_gov_sub',      page: '客戶服務整合成功案例（cases-cx.html）',        def: '符合政府規範的完整解決方案，提升服務品質，增進民眾滿意度' }
 ];
 function renderSubsEditor() {
   document.getElementById('subsEditGrid').innerHTML = SUBS_DEF.map(function(d) {

@@ -1,7 +1,7 @@
 /**
  * sync_and_update.js
  * 1. 更新 style.css — 讓 .case-logo / .news-card-img / .news-full-img 支援 <img>
- * 2. 在 cases.html / cases-training.html / cases-gov.html 加入動態載入腳本
+ * 2. 在 cases.html / cases-training.html / cases-cx.html 加入動態載入腳本
  * 3. 同步 IPCCOWB → IPCC（排除 admin/）
  */
 const fs   = require('fs');
@@ -95,7 +95,7 @@ function makeCasesScript(caseType) {
 [
   { file: 'cases.html',          type: 'outsource' },
   { file: 'cases-training.html', type: 'training'  },
-  { file: 'cases-gov.html',      type: 'it'        },
+  { file: 'cases-cx.html',       type: 'it'        },
 ].forEach(function ({ file, type }) {
   let html = readFile(SRC + '/' + file);
   const marker = '/* DYNAMIC_CASES_' + type.toUpperCase() + ' */';
