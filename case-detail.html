@@ -145,6 +145,12 @@
       </div>
     </div>
 
+    <!-- Intro -->
+    <div id="detailIntroWrap" class="detail-section" style="display:none;">
+      <div class="detail-label">前言</div>
+      <div class="detail-text" id="detailIntro"></div>
+    </div>
+
     <!-- Challenge -->
     <div id="detailChallengeWrap" class="detail-section" style="display:none;">
       <div class="detail-label">專案背景</div>
@@ -306,6 +312,11 @@ if (c.image) {
   document.getElementById('detailImg').src = c.image;
   document.getElementById('detailImg').alt = c.client || '';
   document.getElementById('detailImgWrap').style.display = '';
+}
+
+if (c.intro) {
+  document.getElementById('detailIntro').innerHTML = renderContent(c.intro);
+  document.getElementById('detailIntroWrap').style.display = '';
 }
 
 if (c.challenge) {

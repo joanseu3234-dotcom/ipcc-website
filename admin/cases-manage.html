@@ -202,6 +202,10 @@
         <div style="font-size:0.72rem;color:var(--text-sub);margin-top:4px;">從專案服務勾選，或在下方輸入自訂標籤</div>
       </div>
       <div class="form-group">
+        <label class="form-label">前言</label>
+        <textarea class="form-textarea" id="fIntro" rows="3" placeholder="案例開頭的引言／概述（可空白，空白就不顯示這一段）..."></textarea>
+      </div>
+      <div class="form-group">
         <label class="form-label">專案背景</label>
         <textarea class="form-textarea" id="fChallenge" rows="3" placeholder="客戶的專案背景、面臨的挑戰或問題..."></textarea>
       </div>
@@ -481,6 +485,7 @@ function openAddModal() {
   clearCaseImg();
   document.getElementById("fCategory").value = "";
   document.getElementById("fClient").value = "";
+  document.getElementById("fIntro").value = "";
   document.getElementById("fChallenge").value = "";
   document.getElementById("fSolution").value = "";
   document.getElementById("fDescription").value = "";
@@ -518,6 +523,7 @@ function editItem(id) {
   } else { clearCaseImg(); }
   document.getElementById("fCategory").value = item.category || "";
   document.getElementById("fClient").value = item.client || "";
+  document.getElementById("fIntro").value = item.intro || "";
   document.getElementById("fChallenge").value = item.challenge || "";
   document.getElementById("fSolution").value = item.solution || "";
   document.getElementById("fDescription").value = item.description || "";
@@ -578,6 +584,7 @@ function saveItem() {
     category: document.getElementById("fCategory").value.trim(),
     client: client,
     tags: getSelectedTags(),
+    intro: document.getElementById("fIntro").value.trim(),
     challenge: document.getElementById("fChallenge").value.trim(),
     solution: document.getElementById("fSolution").value.trim(),
     description: document.getElementById("fDescription").value.trim(),
