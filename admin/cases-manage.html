@@ -105,6 +105,21 @@
         </div>
       </div>
 
+      <!-- ── 頁面副標語 ── -->
+      <div class="section-card" style="margin-top:24px;">
+        <div class="section-card-header">
+          <h2>✏️ 頁面副標語</h2>
+          <button class="btn-ghost btn-sm" onclick="saveGovSub()">儲存副標語</button>
+        </div>
+        <div class="section-card-body">
+          <p style="font-size:0.82rem;color:var(--text-sub);margin-bottom:16px;">
+            「資訊服務解決方案成功案例」標題底下那行灰色小字（cases-gov.html）。留空則使用預設文字。
+          </p>
+          <input type="text" class="form-control" id="govSubInput" maxlength="80"
+                 placeholder="符合政府規範的完整解決方案，提升服務品質，增進民眾滿意度">
+        </div>
+      </div>
+
       <!-- ── 數字統計管理 ── -->
       <div class="section-card" style="margin-top:24px;">
         <div class="section-card-header">
@@ -279,6 +294,15 @@ function getCaseStatsData() {
   };
 }
 function saveCaseStatsData(d) { localStorage.setItem('ipcc_case_stats', JSON.stringify(d)); }
+
+// ── 資訊服務案例頁副標語 ───────────────────────────────────────
+function renderGovSub() {
+  document.getElementById('govSubInput').value = localStorage.getItem('ipcc_cases_gov_sub') || '';
+}
+function saveGovSub() {
+  localStorage.setItem('ipcc_cases_gov_sub', document.getElementById('govSubInput').value.trim());
+  showToast('&#9989; 副標語已儲存，記得點側欄「🚀 發布上線」', 'success');
+}
 
 // ── Auth & UI init ────────────────────────────────────────────
 requireLogin();
@@ -737,6 +761,7 @@ if (new URLSearchParams(window.location.search).get("action") === "new") {
 renderTable();
 renderStatsEditor();
 renderLogoGrid();
+renderGovSub();
 initTableDragSort('casesTableBody', getCases, saveCases, renderTable);
 </script>
 </body>
