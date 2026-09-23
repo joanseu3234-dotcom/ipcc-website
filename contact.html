@@ -391,7 +391,7 @@ async function submitForm(e) {
 
   // GTM → GA4 轉換事件
   window.dataLayer = window.dataLayer || [];
-  window.dataLayer.push({ event: 'form_submit_success', form_service: data.service });
+  window.dataLayer.push({ event: '表單送出成功', form_service: data.service });
 
   // 成功提示
   btn.innerHTML = '✓ 已送出！我們將盡快與您聯繫';
