@@ -22,7 +22,7 @@ window.IPCC_USERS_CONFIG = [
       "users": true
     },
     "createdAt": 1775951284136,
-    "lastLogin": 1788493409820
+    "lastLogin": 1790736743452
   },
   {
     "id": "mo01aonyqrv79",
@@ -60,6 +60,25 @@ window.IPCC_USERS_CONFIG = [
       "users": true
     },
     "createdAt": 1776306788461,
+    "lastLogin": null
+  },
+  {
+    "id": "munigso505eqk",
+    "username": "PA",
+    "displayName": "助理小編",
+    "password": "sha256$b9c1e8055ff48893b0e13f6148a5e3ddbc3ee1a67d75df6405abc5f298d4c135",
+    "isSuper": false,
+    "permissions": {
+      "home": true,
+      "about": true,
+      "services": true,
+      "news": true,
+      "cases": true,
+      "contacts": true,
+      "settings": false,
+      "users": false
+    },
+    "createdAt": 1790736818981,
     "lastLogin": null
   }
 ];
