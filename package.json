@@ -1,0 +1,16 @@
+{
+  "name": "ipcc-website",
+  "private": true,
+  "description": "IPCC 東州集團官網（靜態網站 + Vercel Functions）",
+  "dependencies": {
+    "@vercel/blob": "^2.0.0"
+  },
+  "devDependencies": {
+    "@mediabunny/aac-encoder": "^1.61.3",
+    "esbuild": "^0.28.2",
+    "mediabunny": "^1.61.3"
+  },
+  "scripts": {
+    "build:video-lib": "esbuild admin/src/video-lib-entry.js --bundle --minify --format=iife --platform=browser --target=es2020 --outfile=admin/vendor/video-lib.js"
+  }
+}

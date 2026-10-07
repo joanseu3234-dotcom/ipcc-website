@@ -1238,3 +1238,16 @@ img { max-width: 100%; display: block; }
 .case-logo { overflow: hidden; flex-shrink: 0; }
 .case-logo img { width:100%; height:100%; object-fit:cover; display:block; border-radius: 10px; }
 
+
+/* 最新消息：後台上傳的影片（詳情頁播放器 + 列表卡片播放標記） */
+.detail-video-wrap { width:100%; margin:0 auto 32px; }
+.detail-video-wrap.is-portrait { max-width:400px; }
+.detail-video { width:100%; max-height:82vh; display:block; border-radius:16px; background:#000; }
+.news-card-img, .media-card-img, .event-card-img { position:relative; }
+.card-play-badge {
+  position:absolute; left:50%; top:50%; transform:translate(-50%,-50%);
+  width:56px; height:56px; border-radius:50%;
+  background:rgba(18,25,58,0.72); color:#fff; font-size:1.3rem;
+  display:flex; align-items:center; justify-content:center; padding-left:4px;
+  box-shadow:0 4px 18px rgba(0,0,0,0.3); pointer-events:none;
+}

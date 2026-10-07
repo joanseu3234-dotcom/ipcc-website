@@ -534,7 +534,7 @@ var _mediaItemsStore = [];
       }
 
       return '<div class="media-card" onclick="location.href=\'media-detail.html?id=\'+encodeURIComponent(\'' + (n.id||'').replace(/'/g,"\\'") + '\')">'
-        + '<div class="media-card-img">' + imgHtml + '</div>'
+        + '<div class="media-card-img">' + imgHtml + (n.videoUrl ? '<span class="card-play-badge">▶</span>' : '') + '</div>'
         + '<div class="media-card-body">'
         + '<div class="media-card-meta">'
         + (n.mediaSource ? '<span class="media-source">' + esc(n.mediaSource) + '</span>' : '')

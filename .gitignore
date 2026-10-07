@@ -11,3 +11,4 @@ start-deploy-server.bat
 sync-from-ipccowb.bat
 sync-to-ipccowb.bat
 *.log
+.vercel

@@ -18,6 +18,12 @@
   .img-placeholder { color:var(--text-sub); font-size:0.88rem; padding:16px 0; }
   .img-placeholder span { font-size:2rem; display:block; margin-bottom:6px; }
   .related-case-select { width:100%; }
+  #newsModal button:disabled { opacity:0.5; cursor:not-allowed; }
+  .video-box { border:1.5px dashed var(--border); border-radius:12px; padding:16px; text-align:center; }
+  .video-preview { max-width:100%; max-height:300px; border-radius:8px; display:block; margin:0 auto; background:#000; }
+  .video-progress { height:8px; border-radius:100px; background:rgba(255,255,255,0.08); overflow:hidden; margin:12px auto 8px; max-width:420px; }
+  .video-progress-bar { height:100%; width:0%; background:#00C8FF; border-radius:100px; transition:width 0.2s; }
+  .video-status { font-size:0.82rem; color:var(--text-sub); line-height:1.7; }
 </style>
 </head>
 <body>
@@ -198,6 +204,27 @@
       </div>
 
       <div class="form-group">
+        <label class="form-label">上傳影片（短影音等自製影片，不需經過 YouTube）</label>
+        <div class="video-box">
+          <input type="file" id="fVideoFile" accept="video/*" onchange="handleVideoUpload(this)" style="display:none;">
+          <video id="fVideoPreview" class="video-preview" controls playsinline preload="metadata" style="display:none;"></video>
+          <div class="img-placeholder" id="videoPlaceholder">
+            <span>🎬</span>
+            點「選擇影片」上傳 MP4 / MOV / WebM<br>
+            <span style="font-size:0.75rem; color:#aaa;">系統會自動壓縮成網頁適用的高畫質 MP4（最高 1080p），前台直接播放</span>
+          </div>
+          <div id="videoProgressWrap" style="display:none;">
+            <div class="video-progress"><div class="video-progress-bar" id="videoProgressBar"></div></div>
+          </div>
+          <div class="video-status" id="videoStatus"></div>
+        </div>
+        <div style="margin-top:8px; display:flex; gap:8px; align-items:center;">
+          <button type="button" class="btn-outline btn-sm" id="btnPickVideo" onclick="document.getElementById('fVideoFile').click()">選擇影片</button>
+          <button type="button" class="btn-outline btn-sm" onclick="clearVideo()" id="btnClearVideo" style="display:none;">✕ 移除影片</button>
+        </div>
+      </div>
+
+      <div class="form-group">
         <label class="form-label">封面圖片</label>
         <div class="img-upload-box" id="uploadBox" onclick="document.getElementById('fImageFile').click()">
           <input type="file" id="fImageFile" accept="image/*" onchange="handleImageUpload(this)" style="display:none;">
@@ -222,7 +249,7 @@
     </div>
     <div class="modal-footer">
       <button class="btn-outline" onclick="closeModal()">取消</button>
-      <button class="btn-primary" onclick="saveItem()">💾 儲存文章</button>
+      <button class="btn-primary" id="btnSaveItem" onclick="saveItem()">💾 儲存文章</button>
     </div>
   </div>
 </div>
@@ -236,6 +263,10 @@
   var currentFilter = 'all';
   var editingId = null;
   var currentImageBase64 = '';
+  var coverFromVideo = false;      // 封面是否為影片自動擷取的畫面
+  var currentVideo = null;         // { url, width, height }
+  var videoBusy = false;           // 壓縮 / 上傳進行中
+  var unsavedVideoUrls = [];       // 這次開啟視窗後上傳、尚未存進文章的影片
 
   var TAB_LABELS = { news:'最新消息', media:'媒體採訪', event:'活動' };
   var TAB_BADGE_CLASS = { news:'badge-news', media:'badge-news', event:'badge-news' };
@@ -281,6 +312,7 @@
         canvas.getContext('2d').drawImage(img, 0, 0, w, h);
         var base64 = canvas.toDataURL('image/jpeg', 0.82);
         currentImageBase64 = base64;
+        coverFromVideo = false;
         var preview = document.getElementById('fImagePreview');
         preview.src = base64;
         preview.style.display = 'block';
@@ -296,12 +328,193 @@
 
   function clearImage() {
     currentImageBase64 = '';
+    coverFromVideo = false;
     document.getElementById('fImageFile').value = '';
     document.getElementById('fImagePreview').style.display = 'none';
     document.getElementById('fImagePreview').src = '';
     document.getElementById('imgPlaceholder').style.display = 'block';
     document.getElementById('btnClearImg').style.display = 'none';
     document.getElementById('imgSizeHint').textContent = '';
+  }
+
+
+  // ── 影片上傳：瀏覽器端壓縮 → 直傳 Vercel Blob ──
+  var VIDEO_MAX_INPUT = 2 * 1024 * 1024 * 1024;   // 原始檔上限 2GB
+  var VIDEO_MAX_UPLOAD = 200 * 1024 * 1024;       // 壓縮後上限 200MB
+
+  // 影片工具約 1.6MB，選了影片才載入，不拖慢平常開後台的速度
+  var videoLibPromise = null;
+  function loadVideoLib() {
+    if (window.IPCCVideoLib) return Promise.resolve();
+    if (!videoLibPromise) {
+      videoLibPromise = new Promise(function(resolve, reject) {
+        var sc = document.createElement('script');
+        sc.src = 'vendor/video-lib.js';
+        sc.onload = resolve;
+        sc.onerror = function() { videoLibPromise = null; reject(new Error('影片工具載入失敗，請檢查網路後再試')); };
+        document.head.appendChild(sc);
+      });
+    }
+    return videoLibPromise;
+  }
+
+  function fmtMB(bytes) { return (bytes / 1024 / 1024).toFixed(1) + 'MB'; }
+
+  function setVideoBusy(busy) {
+    videoBusy = busy;
+    document.getElementById('btnPickVideo').disabled = busy;
+    document.getElementById('btnSaveItem').disabled = busy;
+    document.getElementById('videoProgressWrap').style.display = busy ? 'block' : 'none';
+  }
+  function setVideoProgress(label, ratio) {
+    var pct = Math.max(0, Math.min(100, Math.round(ratio * 100)));
+    document.getElementById('videoProgressBar').style.width = pct + '%';
+    document.getElementById('videoStatus').textContent = label + ' ' + pct + '%';
+  }
+
+  function showVideo(video, statusText) {
+    currentVideo = video;
+    var el = document.getElementById('fVideoPreview');
+    if (video) {
+      el.src = video.url + '#t=0.1';
+      el.style.display = 'block';
+    } else {
+      el.removeAttribute('src');
+      el.load();
+      el.style.display = 'none';
+    }
+    document.getElementById('videoPlaceholder').style.display = video ? 'none' : 'block';
+    document.getElementById('btnClearVideo').style.display = video ? '' : 'none';
+    document.getElementById('videoStatus').textContent = statusText || '';
+  }
+
+  // 只刪「這次上傳但沒存進文章」的影片；已發布文章用到的影片一律不動
+  function discardUnsavedVideos(keepUrl) {
+    var key = _getPublishKey();
+    unsavedVideoUrls.forEach(function(url) {
+      if (url === keepUrl) return;
+      fetch('/api/video-upload', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'x-publish-key': key },
+        body: JSON.stringify({ action: 'delete', url: url })
+      }).catch(function(){});
+    });
+    unsavedVideoUrls = [];
+  }
+
+  function clearVideo() {
+    if (videoBusy) return;
+    document.getElementById('fVideoFile').value = '';
+    // 封面若是從這支影片擷取的，一併拿掉
+    if (coverFromVideo) clearImage();
+    showVideo(null, '');
+  }
+
+  // 從影片擷取一格畫面當封面（僅在尚未設定封面時使用）
+  function captureVideoCover(blob) {
+    return new Promise(function(resolve) {
+      var v = document.createElement('video');
+      var objUrl = URL.createObjectURL(blob);
+      var done = false;
+      function finish(result) {
+        if (done) return;
+        done = true;
+        URL.revokeObjectURL(objUrl);
+        resolve(result);
+      }
+      v.muted = true; v.playsInline = true; v.preload = 'auto';
+      v.onloadeddata = function() { v.currentTime = Math.min(0.5, (v.duration || 1) / 2); };
+      v.onseeked = function() {
+        try {
+          var MAX = 800;
+          var s = Math.min(1, MAX / Math.max(v.videoWidth, v.videoHeight));
+          var c = document.createElement('canvas');
+          c.width = Math.round(v.videoWidth * s); c.height = Math.round(v.videoHeight * s);
+          c.getContext('2d').drawImage(v, 0, 0, c.width, c.height);
+          finish(c.toDataURL('image/jpeg', 0.8));
+        } catch (e) { finish(''); }
+      };
+      v.onerror = function() { finish(''); };
+      setTimeout(function() { finish(''); }, 8000);
+      v.src = objUrl;
+    });
+  }
+
+  async function handleVideoUpload(input) {
+    if (!input.files || !input.files[0] || videoBusy) return;
+    var file = input.files[0];
+    input.value = '';
+    var key = _getPublishKey();
+    if (!key) { alert('請先到「系統設定」填入發布金鑰，才能上傳影片'); return; }
+    if (file.size > VIDEO_MAX_INPUT) { alert('影片檔案太大（上限 2GB），請先剪短後再上傳'); return; }
+
+    var statusEl = document.getElementById('videoStatus');
+    setVideoBusy(true);
+    try {
+      statusEl.textContent = '準備中…';
+      // 先確認金鑰，避免壓縮完才發現不能上傳
+      var ping = await fetch('/api/video-upload', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'x-publish-key': key },
+        body: JSON.stringify({ action: 'ping' })
+      });
+      if (ping.status === 401) throw new Error('發布金鑰錯誤，請到「系統設定」確認金鑰後再試。');
+      if (!ping.ok) throw new Error('影片上傳服務暫時無法使用（' + ping.status + '），請稍後再試。');
+      await loadVideoLib();
+      // 1. 壓縮
+      var result;
+      try {
+        setVideoProgress('🎞 影片壓縮中（請勿關閉視窗）', 0);
+        result = await IPCCVideoLib.compressVideo(file, function(p) { setVideoProgress('🎞 影片壓縮中（請勿關閉視窗）', p); });
+      } catch (err) {
+        // 瀏覽器無法轉檔時：MP4 / WebM 可改傳原檔
+        var playable = /^video\/(mp4|webm)$/.test(file.type);
+        if (!playable || file.size > VIDEO_MAX_UPLOAD) {
+          throw new Error('無法處理這個影片（' + (err.message || err) + '）。請改用 Chrome 或 Edge 瀏覽器，或先將影片轉成 MP4 再上傳。');
+        }
+        if (!confirm('這個影片無法在瀏覽器中自動壓縮，要直接上傳原始檔（' + fmtMB(file.size) + '）嗎？')) {
+          statusEl.textContent = '';
+          return;
+        }
+        result = { blob: file, width: 0, height: 0, compressed: false, originalSize: file.size };
+      }
+      if (result.blob.size > VIDEO_MAX_UPLOAD) {
+        throw new Error('影片壓縮後仍有 ' + fmtMB(result.blob.size) + '，超過 200MB 上限，請先剪短後再上傳。');
+      }
+
+      // 2. 上傳
+      setVideoProgress('⬆ 影片上傳中', 0);
+      var ext = /webm/.test(result.blob.type) ? 'webm' : 'mp4';
+      var url = await IPCCVideoLib.uploadVideo(result.blob, 'v' + Date.now() + '.' + ext, key, function(p) { setVideoProgress('⬆ 影片上傳中', p); });
+      unsavedVideoUrls.push(url);
+
+      // 3. 還沒有封面 → 擷取影片畫面當封面
+      if (!currentImageBase64 || coverFromVideo) {
+        var cover = await captureVideoCover(result.blob);
+        if (cover) {
+          currentImageBase64 = cover;
+          coverFromVideo = true;
+          var preview = document.getElementById('fImagePreview');
+          preview.src = cover;
+          preview.style.display = 'block';
+          document.getElementById('imgPlaceholder').style.display = 'none';
+          document.getElementById('btnClearImg').style.display = '';
+          document.getElementById('imgSizeHint').textContent = '已自動擷取影片畫面作為封面，可另外上傳圖片替換';
+        }
+      }
+
+      var sizeText = result.compressed
+        ? '原始 ' + fmtMB(result.originalSize) + ' → 壓縮後 ' + fmtMB(result.blob.size)
+        : '檔案 ' + fmtMB(result.blob.size) + '（已是適合網頁的格式，未重新壓縮）';
+      var dimText = result.width ? '　' + result.width + '×' + result.height : '';
+      showVideo({ url: url, width: result.width, height: result.height }, '✅ 上傳完成　' + sizeText + dimText + '　記得按「儲存文章」');
+    } catch (err) {
+      statusEl.textContent = '';
+      alert('影片上傳失敗：' + (err && err.message || err));
+      if (currentVideo) showVideo(currentVideo, '');
+    } finally {
+      setVideoBusy(false);
+    }
   }
 
   function setFilter(tab, btn) {
@@ -341,6 +554,7 @@
         + '<td>' + thumbHtml + '</td>'
         + '<td style="font-weight:600; max-width:240px; color:#D0E0F4;">'
             + '<span style="font-size:0.72rem; padding:2px 8px; border-radius:100px; margin-right:6px; ' + tabColor + '">' + (item.badge||TAB_LABELS[item.tab]||'') + '</span>'
+            + (item.videoUrl ? '🎬 ' : '')
             + (item.title||'—')
           + '</td>'
         + '<td style="white-space:nowrap; font-size:0.82rem;">' + (item.date||'—') + '</td>'
@@ -372,6 +586,7 @@
     document.getElementById('fRelatedService').value = '';
     document.getElementById('fPublished').checked = true;
     clearImage();
+    showVideo(null, '');
     populateCasesDropdown('');
     document.getElementById('newsModal').classList.add('open');
   }
@@ -406,15 +621,22 @@
     } else {
       clearImage();
     }
+    coverFromVideo = !!item.imageFromVideo;
+    showVideo(item.videoUrl ? { url: item.videoUrl, width: item.videoWidth || 0, height: item.videoHeight || 0 } : null, '');
     document.getElementById('newsModal').classList.add('open');
   }
 
   function closeModal() {
+    if (videoBusy) { alert('影片還在處理中，請等待完成後再關閉'); return; }
+    // 取消編輯：把這次上傳但沒存檔的影片清掉
+    discardUnsavedVideos('');
+    document.getElementById('fVideoPreview').pause();
     document.getElementById('newsModal').classList.remove('open');
     editingId = null;
   }
 
   function saveItem() {
+    if (videoBusy) { alert('影片還在處理中，請等待完成後再儲存'); return; }
     var title = document.getElementById('fTitle').value.trim();
     if (!title) { alert('請輸入標題'); return; }
     var arr = getNews();
@@ -434,6 +656,10 @@
       externalUrl:    document.getElementById('fExternalUrl').value.trim(),
       linkText:       document.getElementById('fLinkText').value.trim(),
       image:          currentImageBase64 || '',
+      imageFromVideo: !!(currentImageBase64 && coverFromVideo),
+      videoUrl:       currentVideo ? currentVideo.url : '',
+      videoWidth:     currentVideo ? currentVideo.width : 0,
+      videoHeight:    currentVideo ? currentVideo.height : 0,
       relatedCaseId:  document.getElementById('fRelatedCase').value,
       relatedService: document.getElementById('fRelatedService').value,
       published:      document.getElementById('fPublished').checked
@@ -449,6 +675,7 @@
       arr.push(newItem);
     }
     saveNews(arr);
+    discardUnsavedVideos(newItem.videoUrl);
     closeModal();
     renderTable();
   }

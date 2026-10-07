@@ -404,7 +404,7 @@ document.addEventListener('keydown', function(e) { if (e.key === 'Escape') close
       }
 
       return '<div class="event-card" onclick="location.href=\'event-detail.html?id=\'+encodeURIComponent(\'' + (n.id||'').replace(/'/g,"\\'") + '\')">'
-        + '<div class="event-card-img">' + imgHtml + '</div>'
+        + '<div class="event-card-img">' + imgHtml + (n.videoUrl ? '<span class="card-play-badge">▶</span>' : '') + '</div>'
         + '<div class="event-card-body">'
         + '<div class="event-card-meta">'
         + (n.date ? '<span class="event-card-date">' + esc(n.date) + '</span>' : '')

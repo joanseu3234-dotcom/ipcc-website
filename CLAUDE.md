@@ -21,3 +21,9 @@
 ## GitHub Actions
 - `.github/workflows/deploy.yml` 已設定 Vercel 自動部署
 - 每次 push 到 main 都會觸發
+
+## 最新消息影片上傳
+- 後台「最新消息」可直接上傳影片：瀏覽器端先壓縮（最高 1080p、H.264/AAC MP4），再直傳 Vercel Blob（`ipcc-website-blob`，路徑 `news-videos/`）
+- `api/video-upload.js`：驗證發布金鑰（`PUBLISH_SECRET`）後簽發短效上傳網址；用專案 OIDC + `BLOB_STORE_ID`，不需要 `BLOB_READ_WRITE_TOKEN`
+- `admin/vendor/video-lib.js` 是打包產物，原始碼在 `admin/src/video-lib-entry.js`，修改後執行 `npm run build:video-lib`
+- 文章欄位：`videoUrl` / `videoWidth` / `videoHeight` / `imageFromVideo`（封面是否為影片自動擷取）

@@ -176,6 +176,16 @@ window.addEventListener('scroll', function() {
 function toggleMenu() { document.getElementById('navMenu').classList.toggle('open'); }
 
 function esc(s) { return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
+// 後台上傳的影片 → 直接內嵌播放器（直式短影音置中窄版顯示）
+function buildVideoBlock(item) {
+  if (!item.videoUrl) return '';
+  var w = item.videoWidth, h = item.videoHeight;
+  var ratio = (w && h) ? ' style="aspect-ratio:'+w+'/'+h+';"' : '';
+  var poster = (item.image && item.imageFromVideo) ? ' poster="'+esc(item.image)+'"' : '';
+  return '<div class="detail-video-wrap'+(h > w ? ' is-portrait' : '')+'">'
+    + '<video class="detail-video" src="'+esc(item.videoUrl)+'#t=0.1" controls playsinline preload="metadata"'+poster+ratio+'></video></div>';
+}
+
 function renderContent(text) {
   if (!text) return '';
   var re = /\[([^\]]*)\]\((https?:\/\/[^)]+)\)|(https?:\/\/[^\s<>"&]+)/g;
@@ -213,8 +223,9 @@ function renderContent(text) {
   if (item.externalUrl) {
     html += '<a href="'+esc(item.externalUrl)+'" target="_blank" rel="noopener" class="detail-top-link">'+esc(item.linkText || '🔗 閱讀全文')+' →</a>';
   }
+  html += buildVideoBlock(item);
   // 2. Image
-  if (item.image) html += '<img class="detail-img" src="'+esc(item.image)+'" alt="">';
+  if (item.image && !(item.videoUrl && item.imageFromVideo)) html += '<img class="detail-img" src="'+esc(item.image)+'" alt="">';
   // 3. Description
   if (item.description) html += '<p class="detail-desc">'+renderContent(item.description)+'</p>';
   // 4. Full content
