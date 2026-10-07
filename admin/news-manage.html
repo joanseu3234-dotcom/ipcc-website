@@ -220,6 +220,7 @@
         </div>
         <div style="margin-top:8px; display:flex; gap:8px; align-items:center;">
           <button type="button" class="btn-outline btn-sm" id="btnPickVideo" onclick="document.getElementById('fVideoFile').click()">選擇影片</button>
+          <button type="button" class="btn-outline btn-sm" onclick="useCurrentFrameAsCover()" id="btnFrameCover" style="display:none;" title="先把上方影片拖到想要的畫面，再按這顆">📸 用目前畫面當封面</button>
           <button type="button" class="btn-outline btn-sm" onclick="clearVideo()" id="btnClearVideo" style="display:none;">✕ 移除影片</button>
         </div>
       </div>
@@ -376,7 +377,7 @@
     currentVideo = video;
     var el = document.getElementById('fVideoPreview');
     if (video) {
-      el.src = video.url + '#t=0.1';
+      el.src = (video.localUrl || video.url) + '#t=0.1';
       el.style.display = 'block';
     } else {
       el.removeAttribute('src');
@@ -385,6 +386,7 @@
     }
     document.getElementById('videoPlaceholder').style.display = video ? 'none' : 'block';
     document.getElementById('btnClearVideo').style.display = video ? '' : 'none';
+    document.getElementById('btnFrameCover').style.display = video ? '' : 'none';
     document.getElementById('videoStatus').textContent = statusText || '';
   }
 
@@ -410,34 +412,83 @@
     showVideo(null, '');
   }
 
-  // 從影片擷取一格畫面當封面（僅在尚未設定封面時使用）
-  function captureVideoCover(blob) {
+  // 把 <video> 目前的畫面畫成封面圖；同時回傳平均亮度（用來避開全黑的開場畫面）
+  function grabVideoFrame(v) {
+    var MAX = 800;
+    var sc = Math.min(1, MAX / Math.max(v.videoWidth, v.videoHeight));
+    var c = document.createElement('canvas');
+    c.width = Math.round(v.videoWidth * sc); c.height = Math.round(v.videoHeight * sc);
+    c.getContext('2d').drawImage(v, 0, 0, c.width, c.height);
+    var t = document.createElement('canvas'); t.width = 32; t.height = 32;
+    var tg = t.getContext('2d'); tg.drawImage(c, 0, 0, 32, 32);
+    var px = tg.getImageData(0, 0, 32, 32).data, sum = 0;
+    for (var i = 0; i < px.length; i += 4) sum += px[i] * 0.299 + px[i+1] * 0.587 + px[i+2] * 0.114;
+    return { data: c.toDataURL('image/jpeg', 0.8), brightness: sum / (px.length / 4) };
+  }
+
+  // 自動挑封面：依序試幾個時間點，取第一張夠亮的畫面（都很暗就取最亮的那張）
+  // 傳入 atTime 時只擷取該時間點的畫面（手動指定）
+  function captureVideoCover(src, atTime) {
     return new Promise(function(resolve) {
       var v = document.createElement('video');
-      var objUrl = URL.createObjectURL(blob);
-      var done = false;
-      function finish(result) {
+      var done = false, times = [], idx = 0, best = null;
+      function finish() {
         if (done) return;
         done = true;
-        URL.revokeObjectURL(objUrl);
-        resolve(result);
+        v.removeAttribute('src'); v.load();
+        resolve(best ? best.data : '');
       }
-      v.muted = true; v.playsInline = true; v.preload = 'auto';
-      v.onloadeddata = function() { v.currentTime = Math.min(0.5, (v.duration || 1) / 2); };
+      function next() {
+        if (idx >= times.length) { finish(); return; }
+        v.currentTime = times[idx++];
+      }
+      v.muted = true; v.playsInline = true; v.preload = 'auto'; v.crossOrigin = 'anonymous';
+      v.onloadeddata = function() {
+        var d = v.duration || 1;
+        times = [0.5, 1.5, 3, d * 0.25, d * 0.5, d * 0.75].filter(function(t) { return t < d; });
+        if (!times.length) times = [0];
+        if (atTime != null) times = [Math.min(atTime, Math.max(0, d - 0.05))];
+        next();
+      };
       v.onseeked = function() {
         try {
-          var MAX = 800;
-          var s = Math.min(1, MAX / Math.max(v.videoWidth, v.videoHeight));
-          var c = document.createElement('canvas');
-          c.width = Math.round(v.videoWidth * s); c.height = Math.round(v.videoHeight * s);
-          c.getContext('2d').drawImage(v, 0, 0, c.width, c.height);
-          finish(c.toDataURL('image/jpeg', 0.8));
-        } catch (e) { finish(''); }
+          var f = grabVideoFrame(v);
+          if (!best || f.brightness > best.brightness) best = f;
+          if (f.brightness >= 40 || atTime != null) { finish(); return; }
+        } catch (e) { finish(); return; }
+        next();
       };
-      v.onerror = function() { finish(''); };
-      setTimeout(function() { finish(''); }, 8000);
-      v.src = objUrl;
+      v.onerror = finish;
+      setTimeout(finish, 15000);
+      v.src = src;
     });
+  }
+
+  function applyVideoCover(cover, hint) {
+    currentImageBase64 = cover;
+    coverFromVideo = true;
+    var preview = document.getElementById('fImagePreview');
+    preview.src = cover;
+    preview.style.display = 'block';
+    document.getElementById('imgPlaceholder').style.display = 'none';
+    document.getElementById('btnClearImg').style.display = '';
+    document.getElementById('imgSizeHint').textContent = hint;
+  }
+
+  // 手動：把預覽播放器停在想要的畫面，按一下就設為封面
+  async function useCurrentFrameAsCover() {
+    var v = document.getElementById('fVideoPreview');
+    if (!currentVideo || !v.videoWidth) { alert('影片還沒載入完成，請稍候再試'); return; }
+    var cover = '';
+    if (currentVideo.localUrl) {
+      try { cover = grabVideoFrame(v).data; } catch (e) { cover = ''; }
+    } else {
+      // 先前上傳的影片在另一個網域，需另外載入一份才能擷取畫面
+      document.getElementById('imgSizeHint').textContent = '擷取畫面中…';
+      cover = await captureVideoCover(currentVideo.url, v.currentTime);
+    }
+    if (cover) applyVideoCover(cover, '已將影片目前畫面設為封面，記得按「儲存文章」');
+    else alert('無法擷取這個畫面，請改用「選擇圖片」上傳封面');
   }
 
   async function handleVideoUpload(input) {
@@ -489,25 +540,17 @@
       unsavedVideoUrls.push(url);
 
       // 3. 還沒有封面 → 擷取影片畫面當封面
+      var localUrl = URL.createObjectURL(result.blob);
       if (!currentImageBase64 || coverFromVideo) {
-        var cover = await captureVideoCover(result.blob);
-        if (cover) {
-          currentImageBase64 = cover;
-          coverFromVideo = true;
-          var preview = document.getElementById('fImagePreview');
-          preview.src = cover;
-          preview.style.display = 'block';
-          document.getElementById('imgPlaceholder').style.display = 'none';
-          document.getElementById('btnClearImg').style.display = '';
-          document.getElementById('imgSizeHint').textContent = '已自動擷取影片畫面作為封面，可另外上傳圖片替換';
-        }
+        var cover = await captureVideoCover(localUrl);
+        if (cover) applyVideoCover(cover, '已自動擷取影片畫面作為封面；也可拖動影片後按「用目前畫面當封面」');
       }
 
       var sizeText = result.compressed
         ? '原始 ' + fmtMB(result.originalSize) + ' → 壓縮後 ' + fmtMB(result.blob.size)
         : '檔案 ' + fmtMB(result.blob.size) + '（已是適合網頁的格式，未重新壓縮）';
       var dimText = result.width ? '　' + result.width + '×' + result.height : '';
-      showVideo({ url: url, width: result.width, height: result.height }, '✅ 上傳完成　' + sizeText + dimText + '　記得按「儲存文章」');
+      showVideo({ url: url, localUrl: localUrl, width: result.width, height: result.height }, '✅ 上傳完成　' + sizeText + dimText + '　記得按「儲存文章」');
     } catch (err) {
       statusEl.textContent = '';
       alert('影片上傳失敗：' + (err && err.message || err));
