@@ -22,6 +22,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 <!-- End Google Tag Manager (noscript) -->
 <script src="content-data.js"></script>
+<script src="card-video.js"></script>
 
 <!-- ── 導航 ── -->
 <nav class="navbar" id="navbar">
@@ -508,7 +509,7 @@ if (aboutStats) aboutObserver.observe(aboutStats);
       return allNews.filter(function(n) { return n.tab === tab; }).map(function(n) {
         return { id: n.id, published: !!n.published, sort: n.createdAt || 0,
                  title: n.title || '', date: n.date || '', image: n.image || '',
-                 badge: n.badge || '',
+                 badge: n.badge || '', videoUrl: n.videoUrl || '',
                  link: 'news-detail.html?id=' + encodeURIComponent(n.id || '') };
       });
     }
@@ -544,6 +545,7 @@ if (aboutStats) aboutObserver.observe(aboutStats);
         var imgHtml = n.image
           ? '<img src="' + n.image + '" style="width:100%;height:100%;object-fit:cover;" alt="">'
           : (tabIcons[tab] || '📢');
+        if (n.videoUrl && window.ipccCardVideoHtml) imgHtml = ipccCardVideoHtml(n.videoUrl, n.image) || imgHtml;
         return '<a href="' + n.link + '" class="news-card">'
           + '<div class="news-card-img">' + imgHtml + '</div>'
           + '<div class="news-card-body"><div class="news-card-meta">'

@@ -147,6 +147,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 <!-- End Google Tag Manager (noscript) -->
 <script src="content-data.js"></script>
+<script src="card-video.js"></script>
 
 <nav class="navbar" id="navbar">
   <div class="container">
@@ -393,6 +394,7 @@ document.addEventListener('keydown', function(e) { if (e.key === 'Escape') close
     if (!grid) return;
 
     grid.innerHTML = items.map(function(n) {
+      var videoHtml = (n.videoUrl && window.ipccCardVideoHtml) ? ipccCardVideoHtml(n.videoUrl, n.image) : '';
       var imgHtml = n.image
         ? '<img src="' + n.image + '" alt="" loading="lazy">'
         : '<div class="event-card-placeholder">📅</div>';
@@ -404,7 +406,7 @@ document.addEventListener('keydown', function(e) { if (e.key === 'Escape') close
       }
 
       return '<div class="event-card" onclick="location.href=\'event-detail.html?id=\'+encodeURIComponent(\'' + (n.id||'').replace(/'/g,"\\'") + '\')">'
-        + '<div class="event-card-img">' + imgHtml + (n.videoUrl ? '<span class="card-play-badge">▶</span>' : '') + '</div>'
+        + '<div class="event-card-img">' + (videoHtml || imgHtml + (n.videoUrl ? '<span class="card-play-badge">▶</span>' : '')) + '</div>'
         + '<div class="event-card-body">'
         + '<div class="event-card-meta">'
         + (n.date ? '<span class="event-card-date">' + esc(n.date) + '</span>' : '')

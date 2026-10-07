@@ -174,6 +174,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 <!-- End Google Tag Manager (noscript) -->
 <script src="content-data.js"></script>
+<script src="card-video.js"></script>
 
 <nav class="navbar" id="navbar">
   <div class="container">
@@ -508,6 +509,7 @@ var _mediaItemsStore = [];
 
     grid.innerHTML = items.map(function(n, idx) {
       var mt = MEDIA_TYPE_MAP[n.mediaType] || {};
+      var videoHtml = (n.videoUrl && window.ipccCardVideoHtml) ? ipccCardVideoHtml(n.videoUrl, n.image) : '';
       var imgHtml = n.image
         ? '<img src="' + n.image + '" alt="" loading="lazy">'
         : '<div class="media-card-placeholder">' + (mt.icon||'📸') + '</div>';
@@ -534,7 +536,7 @@ var _mediaItemsStore = [];
       }
 
       return '<div class="media-card" onclick="location.href=\'media-detail.html?id=\'+encodeURIComponent(\'' + (n.id||'').replace(/'/g,"\\'") + '\')">'
-        + '<div class="media-card-img">' + imgHtml + (n.videoUrl ? '<span class="card-play-badge">▶</span>' : '') + '</div>'
+        + '<div class="media-card-img">' + (videoHtml || imgHtml + (n.videoUrl ? '<span class="card-play-badge">▶</span>' : '')) + '</div>'
         + '<div class="media-card-body">'
         + '<div class="media-card-meta">'
         + (n.mediaSource ? '<span class="media-source">' + esc(n.mediaSource) + '</span>' : '')
