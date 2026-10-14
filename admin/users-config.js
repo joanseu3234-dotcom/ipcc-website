@@ -22,7 +22,7 @@ window.IPCC_USERS_CONFIG = [
       "users": true
     },
     "createdAt": 1775951284136,
-    "lastLogin": 1791958548811
+    "lastLogin": 1790736743452
   },
   {
     "id": "mo01aonyqrv79",
@@ -79,6 +79,6 @@ window.IPCC_USERS_CONFIG = [
       "users": false
     },
     "createdAt": 1790736818981,
-    "lastLogin": null
+    "lastLogin": 1791959805134
   }
 ];
