@@ -80,6 +80,7 @@
             <p style="color:var(--text-sub); font-size:0.9rem;">管理客戶諮詢表單，追蹤處理進度並匯出資料</p>
           </div>
           <div class="export-bar">
+            <button class="btn-outline" onclick="loadContacts()">↻ 重新整理</button>
             <button class="btn-primary" onclick="exportExcel()">⬇ 匯出 Excel</button>
             <button class="btn-outline" onclick="exportExcel(true)">匯出篩選結果</button>
             <button class="btn-red btn-sm" onclick="clearAll()" style="margin-left:4px;">🗑 清除全部</button>
@@ -141,6 +142,7 @@
           <div id="emptyState" class="empty-state" style="padding:40px; display:none;">
             尚無聯絡表單資料
           </div>
+          <div id="loadError" class="empty-state" style="padding:40px; display:none; color:#F87171;"></div>
         </div>
       </div>
     </main>
@@ -170,6 +172,62 @@
 
     var currentFilter = 'all';
     var currentDetailId = null;
+    var contacts = [];
+
+    // 客戶填的內容一律轉義後才放進畫面，避免被植入程式碼
+    function esc(v) {
+      return String(v == null ? '' : v).replace(/[&<>"']/g, function(ch) {
+        return { '&':'&amp;', '<':'&lt;', '>':'&gt;', '"':'&quot;', "'":'&#39;' }[ch];
+      });
+    }
+
+    function getContacts() { return contacts; }
+
+    async function contactApi(payload) {
+      var key = _getPublishKey();
+      if (!key) throw new Error('請先到「⚙️ 系統設定」填入發布金鑰，才能讀取聯絡表單');
+      var res = await fetch('/api/contact', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'x-publish-key': key },
+        body: JSON.stringify(payload)
+      });
+      var out = await res.json().catch(function(){ return {}; });
+      if (!res.ok || !out.success) throw new Error(out.error || ('HTTP ' + res.status));
+      return out;
+    }
+
+    async function loadContacts() {
+      var errBox = document.getElementById('loadError');
+      errBox.style.display = 'none';
+      document.getElementById('emptyState').textContent = '讀取中…';
+      try {
+        contacts = (await contactApi({ action: 'list' })).items || [];
+        document.getElementById('emptyState').textContent = '尚無聯絡表單資料';
+      } catch (e) {
+        contacts = [];
+        document.getElementById('emptyState').style.display = 'none';
+        errBox.textContent = '讀取失敗：' + e.message;
+        errBox.style.display = 'block';
+        renderStats();
+        document.getElementById('tableBody').innerHTML = '';
+        return;
+      }
+      renderTable();
+    }
+
+    async function updateStatus(id, status) {
+      var c = contacts.find(function(x){ return x.id === id; });
+      var prev = c ? c.status : null;
+      if (c) c.status = status;
+      try {
+        await contactApi({ action: 'update', id: id, status: status });
+        return true;
+      } catch (e) {
+        if (c) c.status = prev;
+        alert('狀態更新失敗：' + e.message);
+        return false;
+      }
+    }
 
     function formatDT(ts) {
       if (!ts) return '—';
@@ -220,12 +278,12 @@
         return '<tr>'
           + '<td style="color:var(--text-sub);font-size:0.78rem;">' + (isNew ? '<span class="new-dot"></span>' : '') + (i+1) + '</td>'
           + '<td style="white-space:nowrap;font-size:0.8rem;">' + formatDT(c.submittedAt) + '</td>'
-          + '<td><strong>' + (c.name||'—') + '</strong>' + (c.jobTitle ? '<br><span style="font-size:0.75rem;color:var(--text-sub);">' + c.jobTitle + '</span>' : '') + '</td>'
-          + '<td>' + (c.company||'—') + '</td>'
-          + '<td style="white-space:nowrap;">' + (c.phone||'—') + '</td>'
-          + '<td style="font-size:0.82rem;">' + (c.email||'—') + '</td>'
-          + '<td style="font-size:0.8rem;white-space:nowrap;">' + (c.service||'—') + '</td>'
-          + '<td><div class="msg-preview">' + (c.message||'（無）') + '</div></td>'
+          + '<td><strong>' + esc(c.name||'—') + '</strong>' + (c.jobTitle ? '<br><span style="font-size:0.75rem;color:var(--text-sub);">' + esc(c.jobTitle) + '</span>' : '') + '</td>'
+          + '<td>' + esc(c.company||'—') + '</td>'
+          + '<td style="white-space:nowrap;">' + esc(c.phone||'—') + '</td>'
+          + '<td style="font-size:0.82rem;">' + esc(c.email||'—') + '</td>'
+          + '<td style="font-size:0.8rem;white-space:nowrap;">' + esc(c.service||'—') + '</td>'
+          + '<td><div class="msg-preview">' + esc(c.message||'（無）') + '</div></td>'
           + '<td><select class="status-select status-' + (c.status||'未處理') + '" onchange="changeStatus(\'' + c.id + '\',this)">'
           + ['未處理','處理中','已完成'].map(s => '<option' + (c.status===s?' selected':'') + '>'+s+'</option>').join('')
           + '</select></td>'
@@ -236,14 +294,10 @@
       }).join('');
     }
 
-    function changeStatus(id, sel) {
-      var all = getContacts();
-      var idx = all.findIndex(c=>c.id===id);
-      if (idx<0) return;
-      all[idx].status = sel.value;
-      sel.className = 'status-select status-' + sel.value;
-      saveContacts(all);
-      renderStats();
+    async function changeStatus(id, sel) {
+      sel.disabled = true;
+      await updateStatus(id, sel.value);
+      renderTable();
     }
 
     function openDetail(id) {
@@ -253,18 +307,18 @@
       var body = document.getElementById('detailBody');
       body.innerHTML =
         '<div class="detail-grid">'
-        + '<div class="detail-field"><div class="detail-label">姓名</div><div class="detail-value">' + (c.name||'—') + '</div></div>'
-        + '<div class="detail-field"><div class="detail-label">職稱</div><div class="detail-value">' + (c.jobTitle||'—') + '</div></div>'
-        + '<div class="detail-field"><div class="detail-label">公司名稱</div><div class="detail-value">' + (c.company||'—') + '</div></div>'
-        + '<div class="detail-field"><div class="detail-label">聯絡電話</div><div class="detail-value">' + (c.phone||'—') + '</div></div>'
-        + '<div class="detail-field"><div class="detail-label">電子郵件</div><div class="detail-value">' + (c.email||'—') + '</div></div>'
-        + '<div class="detail-field"><div class="detail-label">感興趣的服務</div><div class="detail-value">' + (c.service||'—') + '</div></div>'
-        + '<div class="detail-field"><div class="detail-label">方便聯繫時段</div><div class="detail-value">' + (c.contactTime||'—') + '</div></div>'
+        + '<div class="detail-field"><div class="detail-label">姓名</div><div class="detail-value">' + esc(c.name||'—') + '</div></div>'
+        + '<div class="detail-field"><div class="detail-label">職稱</div><div class="detail-value">' + esc(c.jobTitle||'—') + '</div></div>'
+        + '<div class="detail-field"><div class="detail-label">公司名稱</div><div class="detail-value">' + esc(c.company||'—') + '</div></div>'
+        + '<div class="detail-field"><div class="detail-label">聯絡電話</div><div class="detail-value">' + esc(c.phone||'—') + '</div></div>'
+        + '<div class="detail-field"><div class="detail-label">電子郵件</div><div class="detail-value">' + esc(c.email||'—') + '</div></div>'
+        + '<div class="detail-field"><div class="detail-label">感興趣的服務</div><div class="detail-value">' + esc(c.service||'—') + '</div></div>'
+        + '<div class="detail-field"><div class="detail-label">方便聯繫時段</div><div class="detail-value">' + esc(c.contactTime||'—') + '</div></div>'
         + '<div class="detail-field"><div class="detail-label">送出時間</div><div class="detail-value">' + formatDT(c.submittedAt) + '</div></div>'
         + '</div>'
         + '<div class="detail-field" style="margin-top:16px;">'
         + '<div class="detail-label">需求說明</div>'
-        + '<div class="detail-value" style="background:rgba(0,0,0,0.22); border:1px solid var(--border); border-radius:8px; padding:14px; line-height:1.9; white-space:pre-wrap;">' + (c.message||'（無填寫）') + '</div>'
+        + '<div class="detail-value" style="background:rgba(0,0,0,0.22); border:1px solid var(--border); border-radius:8px; padding:14px; line-height:1.9; white-space:pre-wrap;">' + esc(c.message||'（無填寫）') + '</div>'
         + '</div>'
         + '<div class="detail-field" style="margin-top:16px;">'
         + '<div class="detail-label">更改狀態</div>'
@@ -274,17 +328,13 @@
           ).join('')
         + '</div></div>';
       document.getElementById('detailStatusBar').textContent = '目前狀態：' + (c.status||'未處理');
-      document.getElementById('detailDeleteBtn').onclick = function(){ deleteOne(id); closeDetail(); };
+      document.getElementById('detailDeleteBtn').onclick = function(){ deleteOne(id); };
       document.getElementById('detailModal').classList.add('open');
     }
 
-    function setDetailStatus(s) {
+    async function setDetailStatus(s) {
       if (!currentDetailId) return;
-      var all = getContacts();
-      var idx = all.findIndex(c=>c.id===currentDetailId);
-      if (idx<0) return;
-      all[idx].status = s;
-      saveContacts(all);
+      if (!(await updateStatus(currentDetailId, s))) return;
       document.getElementById('detailStatusBar').textContent = '目前狀態：' + s;
       document.querySelectorAll('[id^="dsbtn-"]').forEach(function(b){
         b.style.background = ''; b.style.color = ''; b.style.borderColor = '';
@@ -296,17 +346,28 @@
 
     function closeDetail() { document.getElementById('detailModal').classList.remove('open'); currentDetailId = null; }
 
-    function deleteOne(id) {
-      if (!confirm('確定要刪除此筆資料？')) return;
-      saveContacts(getContacts().filter(c=>c.id!==id));
+    async function deleteIds(ids) {
+      try {
+        await contactApi({ action: 'delete', ids: ids });
+      } catch (e) {
+        alert('刪除失敗：' + e.message);
+        return false;
+      }
+      contacts = contacts.filter(function(c){ return ids.indexOf(c.id) === -1; });
       renderTable();
+      return true;
     }
 
-    function clearAll() {
+    async function deleteOne(id) {
+      if (!confirm('確定要刪除此筆資料？')) return;
+      if (await deleteIds([id])) closeDetail();
+    }
+
+    async function clearAll() {
+      if (!contacts.length) return;
       if (!confirm('確定要清除所有聯絡表單資料？此操作無法復原！')) return;
       if (!confirm('再次確認：清除全部聯絡記錄？')) return;
-      saveContacts([]);
-      renderTable();
+      await deleteIds(contacts.map(function(c){ return c.id; }));
     }
 
     // ====== Excel 匯出 ======
@@ -358,7 +419,7 @@
     }
 
     // 初始化
-    renderTable();
+    loadContacts();
   </script>
 </body>
 </html>

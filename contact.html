@@ -167,6 +167,8 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
         <p style="font-size:0.85rem; color:var(--text-muted); margin-bottom:32px;">我們將在 1 個工作日內回覆您的需求</p>
 
         <form class="contact-form" onsubmit="submitForm(event)">
+          <!-- 防機器人隱藏欄位，真人看不到也不會填 -->
+          <input type="text" name="website" tabindex="-1" autocomplete="off" aria-hidden="true" style="position:absolute; left:-9999px; width:1px; height:1px; opacity:0;">
           <div class="form-row">
             <div class="form-group">
               <label>姓名 *</label>
@@ -329,11 +331,10 @@ const WEB3FORMS_KEY = 'fe7e83d6-4811-400a-a2e0-ef3247f71b09';
 async function submitForm(e) {
   e.preventDefault();
   const form = e.target;
-  const inputs = form.querySelectorAll('input, textarea, select');
+  const inputs = form.querySelectorAll('input:not([name=website]), textarea, select');
 
   // 收集欄位（依照表單順序）
   const data = {
-    id: Date.now().toString(36) + Math.random().toString(36).substr(2,4),
     name:        inputs[0] ? inputs[0].value.trim() : '',
     jobTitle:    inputs[1] ? inputs[1].value.trim() : '',
     company:     inputs[2] ? inputs[2].value.trim() : '',
@@ -342,24 +343,28 @@ async function submitForm(e) {
     service:     inputs[5] ? inputs[5].value : '',
     contactTime: inputs[6] ? inputs[6].value : '',
     message:     inputs[7] ? inputs[7].value.trim() : '',
-    status: '未處理',
-    submittedAt: Date.now()
   };
-
-  // 仍存到本機 localStorage（同一台電腦／同瀏覽器的後台可即時查看）
-  try {
-    var list = JSON.parse(localStorage.getItem('ipcc_contacts') || '[]');
-    list.unshift(data);
-    localStorage.setItem('ipcc_contacts', JSON.stringify(list));
-  } catch(err) {}
 
   const btn = form.querySelector('[type=submit]');
   const origText = btn.innerHTML;
+  btn.disabled = true;
+  btn.innerHTML = '送出中…';
 
-  // 送到 Web3Forms → 即時 email 通知（這才是真正能收到客戶詢問的管道）
+  // 存進伺服器（後台「聯絡表單管理」看得到），並通知業務 Teams 頻道
+  var savedOk = false;
+  try {
+    const saveRes = await fetch('/api/contact', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(Object.assign({ action: 'submit', website: form.querySelector('[name=website]').value }, data))
+    });
+    const saveOut = await saveRes.json().catch(function(){ return {}; });
+    savedOk = saveRes.ok && saveOut.success;
+  } catch (err) {}
+
+  // 送到 Web3Forms → email 通知
+  var mailedOk = false;
   if (WEB3FORMS_KEY) {
-    btn.disabled = true;
-    btn.innerHTML = '送出中…';
     try {
       const payload = {
         access_key: WEB3FORMS_KEY,
@@ -380,13 +385,16 @@ async function submitForm(e) {
         body: JSON.stringify(payload)
       });
       const out = await res.json();
-      if (!out.success) throw new Error(out.message || '送出失敗');
-    } catch (err) {
-      btn.disabled = false;
-      btn.innerHTML = origText;
-      alert('送出失敗，請稍後再試，或直接來電 0800-666-080 / 加 LINE 與我們聯繫。');
-      return;
-    }
+      mailedOk = !!out.success;
+    } catch (err) {}
+  }
+
+  // 兩個管道都失敗才算失敗
+  if (!savedOk && !mailedOk) {
+    btn.disabled = false;
+    btn.innerHTML = origText;
+    alert('送出失敗，請稍後再試，或直接來電 0800-666-080 / 加 LINE 與我們聯繫。');
+    return;
   }
 
   // GTM → GA4 轉換事件
