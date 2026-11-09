@@ -1,9 +1,9 @@
 // IPCC 內容資料 — 由後台管理系統自動產生，請勿手動修改
-// 最後發布：2026/11/9 10:23:37
+// 最後發布：2026/11/9 10:24:40
 
 window.IPCC_CONTENT_DATA = {
-  "__ts": 1794191017829,
-  "__published": "2026/11/9 10:23:37",
+  "__ts": 1794191080119,
+  "__published": "2026/11/9 10:24:40",
   "ipcc_news": [
     {
       "tab": "news",
@@ -358,11 +358,12 @@ window.IPCC_CONTENT_DATA = {
     "heroSubtitle": "我們相信，卓越的服務不只是回答問題——\n而是在每一次對話中，為品牌建立信任、為企業創造價值。",
     "featuredNews": {
       "news": [
+        "mw8mv7eckhelz",
         "mtmf8fsc1w0i8",
-        "mo12egd24oty9",
-        "muxh11ecjonpu",
+        "muxtvwzm3f12c",
         "muxktdiw2j509",
-        "muxtvwzm3f12c"
+        "muxh11ecjonpu",
+        "mo12egd24oty9"
       ],
       "media": [
         "mo6trtvabfh24",
