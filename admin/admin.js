@@ -90,21 +90,29 @@ async function _gzipToBase64(str) {
   return btoa(bin);
 }
 
-// 若 localStorage 沒有文章資料，自動從 content-data.js 還原初始資料
-// 注意：不因 token 缺失而載入，避免覆蓋尚未發布的新資料
+// 載入線上 content-data.js：本機沒資料、或線上版本比本機上次同步的還新時，以線上版本為準
+// （例如有人從別台電腦發布、或工程直接更新了內容檔）。避免用舊資料「發布上線」把新內容蓋掉。
 (function() {
-  var needLoad = !localStorage.getItem('ipcc_news') && !localStorage.getItem('ipcc_cases');
-  if (needLoad) {
-    try {
-      var xhr = new XMLHttpRequest();
-      xhr.open('GET', '../content-data.js', false); // 同步載入
-      xhr.send();
-      if (xhr.status === 200) {
-        new Function(xhr.responseText)();
-      }
-    } catch(e) {}
-  }
+  try {
+    var xhr = new XMLHttpRequest();
+    xhr.open('GET', '../content-data.js?_=' + Date.now(), false); // 同步載入
+    xhr.send();
+    if (xhr.status !== 200) return;
+    var m = xhr.responseText.match(/"__ts":\s*(\d+)/);
+    var remoteTs = m ? parseInt(m[1], 10) : 0;
+    var localTs = parseInt(localStorage.getItem('ipcc_deploy_ts') || '0', 10);
+    var empty = !localStorage.getItem('ipcc_news') && !localStorage.getItem('ipcc_cases');
+    if (empty || remoteTs > localTs) {
+      new Function(xhr.responseText)();
+      if (!empty) window.__ipccSyncedFromLive = true;
+    }
+  } catch(e) {}
 })();
+document.addEventListener('DOMContentLoaded', function() {
+  if (window.__ipccSyncedFromLive && typeof showPublishToast === 'function') {
+    showPublishToast('🔄 已同步線上最新內容', 'success');
+  }
+});
 
 // --- Auth ---
 function requireLogin() {
@@ -570,6 +578,7 @@ function _idbSet(db, key, val) {
 // 產生 content-data.js 的完整內容
 function generateContentData() {
   var ts = Date.now();
+  window.__ipccLastGenTs = ts;
   var published = new Date().toLocaleString('zh-TW', {timeZone:'Asia/Taipei', hour12:false});
   var data = { __ts: ts, __published: published };
   // 敏感 key 不納入（避免推送到 GitHub 觸發 Secret Scanning）
@@ -694,6 +703,7 @@ async function publishToLive() {
     var out = await res.json().catch(function(){ return {}; });
     if (!res.ok || !out.success) throw new Error(out.error || ('HTTP ' + res.status));
 
+    if (window.__ipccLastGenTs) localStorage.setItem('ipcc_deploy_ts', String(window.__ipccLastGenTs));
     showPublishToast('✅ 發布成功！Vercel 正在自動部署，約 10-30 秒後前台即更新。\n發布時間：' + ts, 'success');
   } catch(e) {
     showPublishToast('❌ 發布失敗：' + e.message + '\n請確認發布金鑰是否正確，或 Vercel 環境變數是否已設定。', 'error');
