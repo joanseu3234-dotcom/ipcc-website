@@ -1,9 +1,9 @@
 // IPCC 內容資料 — 由後台管理系統自動產生，請勿手動修改
-// 最後發布：2026/11/23 13:35:50
+// 最後發布：2026/11/23 13:50:37
 
 window.IPCC_CONTENT_DATA = {
-  "__ts": 1795412150307,
-  "__published": "2026/11/23 13:35:50",
+  "__ts": 1795413037956,
+  "__published": "2026/11/23 13:50:37",
   "ipcc_news": [
     {
       "tab": "news",
@@ -1261,6 +1261,143 @@ window.IPCC_CONTENT_DATA = {
   "ipcc_services": [
     {
       "id": "svc-1",
+      "layout": "story",
+      "theme": "navy",
+      "story_show_intro": true,
+      "story": [
+        {
+          "type": "hero",
+          "eyebrow": "東州集團｜智能客服中心營運",
+          "title": "每一通來電，",
+          "highlight": "都有人準備好接住",
+          "lead": "從開線前的人力調度、尖峰進線的多渠道接聽，到 AI 協作與品質稽核——東州集團以近三十年客服營運經驗，為企業打造 7×24 小時穩定運作的智能客服中心。",
+          "primary_text": "立即諮詢",
+          "primary_link": "/contact.html",
+          "secondary_text": "看我們的一天 ↓",
+          "secondary_link": "#timeline",
+          "panel_title": "今日營運看板",
+          "note": "＊畫面為示意",
+          "panel_items": [
+            {
+              "left": "08:30",
+              "label": "排班完成，活動重點已推播",
+              "right": "✓ 到位"
+            },
+            {
+              "left": "10:00",
+              "label": "進線尖峰・四渠道同步接聽",
+              "right": "進行中"
+            },
+            {
+              "left": "11:30",
+              "label": "滿線溢流・AI 接手記錄需求",
+              "right": "AI 協作"
+            },
+            {
+              "left": "14:00",
+              "label": "依約回電・確認後轉專員",
+              "right": "回電中"
+            },
+            {
+              "left": "16:00",
+              "label": "品質稽核・錄音抽查與 QA",
+              "right": "稽核中"
+            },
+            {
+              "left": "18:00",
+              "label": "日報表與儀表板",
+              "right": "✓ 已產出"
+            }
+          ]
+        },
+        {
+          "type": "timeline",
+          "eyebrow": "A DAY AT IPCC",
+          "title": "從開線到收線，",
+          "highlight": "每個環節都有人負責",
+          "hint": "往下捲動，跟著時鐘走過一天",
+          "steps": [
+            {
+              "time": "08:30",
+              "title": "開線前，人力與資訊到位",
+              "desc": "依預估話務排定人力，當日活動重點與話術更新同步給每一位專員。",
+              "tag": "排班與人力調度"
+            },
+            {
+              "time": "10:00",
+              "title": "尖峰進線，多渠道一次接住",
+              "desc": "電話、LINE、Facebook、文字客服整合在同一平台，每一則訊息都不漏接。",
+              "tag": "多渠道客服整合"
+            },
+            {
+              "time": "11:30",
+              "title": "滿線時，AI 先接手",
+              "desc": "AI 處理重複性問題並記錄需求，複雜與高情緒的案件再轉給真人專員。",
+              "tag": "AI 人機協作"
+            },
+            {
+              "time": "14:00",
+              "title": "依約回電，把問題處理完",
+              "desc": "依 CRM 紀錄主動回電，確認需求後由專員完成後續處理。",
+              "tag": "CRM 客戶資料整合"
+            },
+            {
+              "time": "16:00",
+              "title": "品質稽核，持續優化話術",
+              "desc": "錄音抽查與 QA 評核，把發現的問題回饋到 SOP 與話術規範。",
+              "tag": "客服流程與話術優化"
+            },
+            {
+              "time": "18:00",
+              "title": "收線後，數據成為洞察",
+              "desc": "產出日報表與儀表板，把大量客服互動轉化為可分析的營運數據。",
+              "tag": "客服數據分析"
+            }
+          ]
+        },
+        {
+          "type": "pain_solution"
+        },
+        {
+          "type": "stats",
+          "eyebrow": "WHY IPCC",
+          "title": "穩定營運，",
+          "highlight": "來自長期累積",
+          "note": "",
+          "items": [
+            {
+              "num": "30",
+              "unit": "年",
+              "label": "近三十年客服產業經驗"
+            },
+            {
+              "num": "24",
+              "unit": "H",
+              "label": "7×24 小時全天候營運"
+            },
+            {
+              "num": "4",
+              "unit": "大渠道",
+              "label": "電話・LINE・FB・文字客服"
+            }
+          ]
+        },
+        {
+          "type": "industries"
+        },
+        {
+          "type": "faq"
+        },
+        {
+          "type": "cta",
+          "title": "讓我們幫您接住每一位客戶",
+          "desc": "告訴我們您的客服量、渠道與服務時段，顧問將為您規劃最適合的營運方案。",
+          "primary_text": "免費諮詢",
+          "primary_link": "/contact.html",
+          "secondary_text": "LINE 官方帳號",
+          "secondary_link": "https://lin.ee/rp9TNMU"
+        }
+      ],
       "num": "Service 01",
       "icon": "📞",
       "title": "智能客服中心營運",
@@ -1659,8 +1796,8 @@ window.IPCC_CONTENT_DATA = {
           "a": "若缺乏持續更新與資料同步，AI 模型可能逐漸失準，因此需要定期維護與知識更新。"
         }
       ],
-      "seo_title": "數據標註與資料結構化｜AI訓練數據與語音標註服務｜東州集團",
-      "seo_desc": "提供 AI 數據標註與資料結構化服務，包含語音標註、文字標註、NLP 語意分析與 STT 語音轉文字，協助企業建立高品質 AI 訓練數據與可分析資料。",
+      "seo_title": "AI Agent 建置與維運｜企業 AI 知識庫與 AI 客服助理導入｜東州集團",
+      "seo_desc": "東州集團協助企業建立 AI 知識庫、AI 客服助理與 AI Agent，從 AI 就緒度評估、知識庫建置到上線後的資料更新與模型維運，讓 AI 真正落地並持續準確。",
       "image": "",
       "order": 2
     },
@@ -1935,6 +2072,8 @@ window.IPCC_CONTENT_DATA = {
     },
     {
       "id": "svc-ai-training",
+      "layout": "custom",
+      "custom_path": "/ipcc-day/",
       "num": "Service 06",
       "icon": "🎯",
       "title": "AI 教育訓練與情境對練",
@@ -1951,7 +2090,7 @@ window.IPCC_CONTENT_DATA = {
       "published": true,
       "hero_title": "AI 教育訓練與情境對練",
       "hero_subtitle": "由 AI 扮演真實客戶，讓客服專員上線前先練過",
-      "content": "本服務使用動態一頁式介紹頁（/ipcc-day/），內容請洽直效行銷部 Tara 統一調整。",
+      "content": "AI 教育訓練與情境對練：由 AI 扮演真實客戶，依考核重點即時提醒與評分，讓客服專員上線前先練過。頁面為自訂動態頁（/ipcc-day/），內容請洽直效行銷部 Tara 統一調整。",
       "pain_points": [],
       "features": [],
       "industries": [],

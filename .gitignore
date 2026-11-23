@@ -12,3 +12,4 @@ sync-from-ipccowb.bat
 sync-to-ipccowb.bat
 *.log
 .vercel
+services/

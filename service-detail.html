@@ -594,14 +594,16 @@ function toggleMenu() {
   document.getElementById('pageTitle').textContent = svc.seo_title || (svc.title + ' — IPCC 東州集團');
   document.getElementById('pageDesc').setAttribute('content', svc.seo_desc || svc.desc || '');
 
+  // 結構化資料：部署時已預先寫進 HTML（有 canonical）就不重複加
+  if (!document.querySelector('link[rel="canonical"]')) {
   // Breadcrumb JSON-LD
   var breadcrumbLd = {
     '@context': 'https://schema.org',
     '@type': 'BreadcrumbList',
     'itemListElement': [
-      {'@type':'ListItem','position':1,'name':'首頁','item':'https://ipcc-website.vercel.app/'},
-      {'@type':'ListItem','position':2,'name':'專案服務','item':'https://ipcc-website.vercel.app/services.html'},
-      {'@type':'ListItem','position':3,'name': svc.title,'item':'https://ipcc-website.vercel.app/services/' + svc.slug}
+      {'@type':'ListItem','position':1,'name':'首頁','item':'https://www.phonecenter.com.tw/'},
+      {'@type':'ListItem','position':2,'name':'專案服務','item':'https://www.phonecenter.com.tw/services.html'},
+      {'@type':'ListItem','position':3,'name': svc.title,'item':'https://www.phonecenter.com.tw/services/' + svc.slug}
     ]
   };
   (function(ld){ var s=document.createElement('script'); s.type='application/ld+json'; s.textContent=JSON.stringify(ld); document.head.appendChild(s); })(breadcrumbLd);
@@ -615,10 +617,10 @@ function toggleMenu() {
     'provider': {
       '@type': 'Organization',
       'name': '東州集團',
-      'url': 'https://ipcc-website.vercel.app/'
+      'url': 'https://www.phonecenter.com.tw/'
     },
     'serviceType': svc.tags ? svc.tags.join(', ') : '',
-    'url': 'https://ipcc-website.vercel.app/services/' + svc.slug
+    'url': 'https://www.phonecenter.com.tw/services/' + svc.slug
   };
   (function(ld){ var s=document.createElement('script'); s.type='application/ld+json'; s.textContent=JSON.stringify(ld); document.head.appendChild(s); })(serviceLd);
 
@@ -639,6 +641,8 @@ function toggleMenu() {
     script.type = 'application/ld+json';
     script.textContent = JSON.stringify(faqLd);
     document.head.appendChild(script);
+  }
+
   }
 
   // Hero

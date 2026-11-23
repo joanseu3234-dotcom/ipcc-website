@@ -1,4 +1,6 @@
 {
+  "buildCommand": "npm run build",
+  "outputDirectory": ".",
   "cleanUrls": false,
   "redirects": [
     {
@@ -8,10 +10,6 @@
     }
   ],
   "rewrites": [
-    {
-      "source": "/services/ai-training",
-      "destination": "/ipcc-day/index.html"
-    },
     {
       "source": "/services/:slug",
       "destination": "/service-detail.html"

@@ -35,6 +35,21 @@
     .slug-row { display:flex; align-items:center; gap:8px; }
     .slug-preview { font-size:0.78rem; color:var(--text-sub); padding:6px 10px; background:rgba(0,0,0,0.2); border-radius:6px; flex:1; word-break:break-all; }
   </style>
+  <style>
+    .st-help{font-size:0.82rem;color:var(--text-sub);background:rgba(99,102,241,0.08);border:1px solid rgba(99,102,241,0.25);border-radius:8px;padding:10px 12px;margin-bottom:16px;line-height:1.6}
+    .sb-card{border:1px solid rgba(255,255,255,0.12);border-radius:10px;padding:14px;margin-bottom:12px;background:rgba(255,255,255,0.02)}
+    .sb-head{display:flex;align-items:center;gap:8px;margin-bottom:10px}
+    .sb-head b{flex:1;font-size:0.9rem}
+    .sb-head button{min-width:30px}
+    .sb-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+    .sb-grid .sb-wide{grid-column:1/-1}
+    .sb-f label{display:block;font-size:0.74rem;color:var(--text-sub);margin-bottom:3px}
+    .sb-items{margin-top:10px;border-top:1px dashed rgba(255,255,255,0.12);padding-top:10px}
+    .sb-items-title{font-size:0.78rem;font-weight:700;color:var(--text-sub);margin-bottom:6px}
+    .sb-item{display:grid;gap:6px;align-items:start;margin-bottom:6px;padding:8px;border-radius:8px;background:rgba(255,255,255,0.03)}
+    .sb-item textarea{min-height:38px}
+    @media (max-width:640px){.sb-grid{grid-template-columns:1fr}.sb-item{grid-template-columns:1fr!important}}
+  </style>
 </head>
 <body>
   <div class="admin-layout">
@@ -118,6 +133,7 @@
         <div class="modal-tabs">
           <button class="modal-tab active" onclick="switchTab('basic')">基本資訊</button>
           <button class="modal-tab" onclick="switchTab('detail')">詳情內容</button>
+          <button class="modal-tab" onclick="switchTab('layout')">版型與動態內容</button>
           <button class="modal-tab" onclick="switchTab('seo')">SEO 設定</button>
         </div>
 
@@ -208,6 +224,43 @@
           </div>
         </div>
 
+        <!-- 版型與動態內容 -->
+        <div class="tab-panel" id="tab-layout">
+          <div class="st-help">選「動態故事版」可做出像《AI 教育訓練》那樣的捲動動態頁：依序排列下方區塊，每個區塊都能增減、調整順序。部署時會自動產生靜態頁，Google 與 AI 搜尋都讀得到。</div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;">
+            <div class="form-group">
+              <label class="form-label">呈現方式</label>
+              <select class="form-control" id="svcLayout" onchange="onLayoutChange()">
+                <option value="standard">標準版（原本的服務詳情頁）</option>
+                <option value="story">動態故事版（共用動態版型）</option>
+                <option value="custom">自訂頁面（放一份做好的 HTML 資料夾）</option>
+              </select>
+            </div>
+            <div class="form-group" id="svcThemeGroup">
+              <label class="form-label">主題色（導覽列與頁尾固定品牌紅）</label>
+              <select class="form-control" id="svcTheme"></select>
+            </div>
+            <div class="form-group" id="svcCustomGroup" style="display:none;">
+              <label class="form-label">自訂頁面資料夾</label>
+              <input type="text" class="form-control" id="svcCustomPath" placeholder="/ipcc-day/">
+              <div style="font-size:0.78rem;color:var(--text-sub);margin-top:4px;">資料夾需由工程端放進網站（內含 index.html）</div>
+            </div>
+          </div>
+          <div id="storyEditorWrap">
+            <div class="form-group" style="display:flex;align-items:center;gap:10px;">
+              <input type="checkbox" id="svcShowIntro" style="width:18px;height:18px;">
+              <label for="svcShowIntro" class="form-label" style="margin:0;">在主視覺下方顯示「詳情內容」的服務介紹正文（建議保留，有助 SEO）</label>
+            </div>
+            <div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin:4px 0 14px;">
+              <select class="form-control" id="storyAddType" style="max-width:300px;"></select>
+              <button type="button" class="btn-outline btn-sm" onclick="addStoryBlock()">+ 新增區塊</button>
+              <button type="button" class="btn-outline btn-sm" onclick="applyStoryTemplate()">套用建議範本</button>
+              <button type="button" class="btn-primary btn-sm" style="margin-left:auto;" onclick="saveSvc(true)">儲存並預覽</button>
+            </div>
+            <div id="storyBlocks"></div>
+          </div>
+        </div>
+
         <!-- SEO -->
         <div class="tab-panel" id="tab-seo">
           <div class="form-group">
@@ -233,6 +286,7 @@
     </div>
   </div>
 
+  <script src="../service-story.js"></script>
   <script src="users-config.js"></script>
   <script src="admin.js"></script>
   <script>
@@ -242,7 +296,7 @@
     // ── Tab switching ────────────────────────────────────────────
     function switchTab(name) {
       document.querySelectorAll('.modal-tab').forEach(function(t, i) {
-        var names = ['basic','detail','seo'];
+        var names = ['basic','detail','layout','seo'];
         t.classList.toggle('active', names[i] === name);
       });
       document.querySelectorAll('.tab-panel').forEach(function(p) {
@@ -267,7 +321,8 @@
           + '<td>'+pub+'</td>'
           + '<td style="white-space:nowrap;">'
           + '<button class="btn-outline btn-sm" onclick="editSvc(\''+s.id+'\')">編輯</button>'
-          + (s.slug ? ' <a href="../services/'+s.slug+'" target="_blank" class="btn-outline btn-sm" style="font-size:0.72rem;">預覽</a>' : '')
+          + (s.slug ? ' <a href="'+(s.layout==='story' ? '../service-story.html?preview=1&slug='+encodeURIComponent(s.slug) : '../services/'+s.slug)+'" target="_blank" class="btn-outline btn-sm" style="font-size:0.72rem;">預覽</a>' : '')
+          + (s.layout==='story' ? ' <span title="動態故事版" style="font-size:0.72rem;color:#A5B4FC;">✦動態</span>' : s.layout==='custom' ? ' <span title="自訂頁面" style="font-size:0.72rem;color:#A5B4FC;">✦自訂</span>' : '')
           + (!['svc-1','svc-2','svc-3','svc-4','svc-5'].includes(s.id) ? ' <button class="btn-red btn-sm" onclick="deleteSvc(\''+s.id+'\')">刪除</button>' : '')
           + '</td>'
           + '</tr>';
@@ -397,6 +452,87 @@
       return (s||'').replace(/&/g,'&amp;').replace(/"/g,'&quot;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
     }
 
+    // ── 動態故事版：區塊編輯器 ─────────────────────────────────────
+    var storyBlocks = [];
+    function asList(v) { return (window.IPCCStory ? IPCCStory.arr(v) : (Array.isArray(v) ? v : [])); }
+    function initLayoutControls() {
+      var th = document.getElementById('svcTheme');
+      if (!th.options.length) Object.keys(IPCCStory.THEMES).forEach(function(k) { var o = document.createElement('option'); o.value = k; o.textContent = IPCCStory.THEMES[k].name; th.appendChild(o); });
+      var at = document.getElementById('storyAddType');
+      if (!at.options.length) Object.keys(IPCCStory.BLOCKS).forEach(function(k) { var o = document.createElement('option'); o.value = k; o.textContent = IPCCStory.BLOCKS[k].label; at.appendChild(o); });
+    }
+    function onLayoutChange() {
+      var v = document.getElementById('svcLayout').value;
+      document.getElementById('storyEditorWrap').style.display = v === 'story' ? '' : 'none';
+      document.getElementById('svcThemeGroup').style.display = v === 'story' ? '' : 'none';
+      document.getElementById('svcCustomGroup').style.display = v === 'custom' ? '' : 'none';
+    }
+    function sbField(f, val, attrs) {
+      var v = escHtml(val == null ? '' : String(val));
+      return f.type === 'textarea'
+        ? '<textarea class="form-control form-textarea" rows="2" ' + attrs + ' placeholder="' + escHtml(f.ph || '') + '">' + v + '</textarea>'
+        : '<input type="text" class="form-control" ' + attrs + ' value="' + v + '" placeholder="' + escHtml(f.ph || '') + '">';
+    }
+    function renderStoryEditor() {
+      var box = document.getElementById('storyBlocks');
+      if (!storyBlocks.length) { box.innerHTML = '<div style="color:var(--text-sub);font-size:0.85rem;padding:12px 0;">尚未加入區塊。可按「套用建議範本」快速開始；若不加區塊，前台會用基本版面（主視覺＋痛點＋產業＋FAQ＋行動呼籲）。</div>'; return; }
+      box.innerHTML = storyBlocks.map(function(b, i) {
+        var def = IPCCStory.BLOCKS[b.type];
+        if (!def) return '';
+        var fields = def.fields.map(function(f) {
+          return '<div class="sb-f' + (f.type === 'textarea' ? ' sb-wide' : '') + '"><label>' + escHtml(f.label) + '</label>' + sbField(f, b[f.key], 'data-b="' + i + '" data-k="' + f.key + '"') + '</div>';
+        }).join('');
+        var items = '';
+        if (def.items) {
+          var list = asList(b[def.items.key]);
+          var cols = def.items.fields.map(function(f){ return f.type === 'textarea' ? '2fr' : '1fr'; }).join(' ') + ' 32px';
+          items = '<div class="sb-items"><div class="sb-items-title">' + escHtml(def.items.label) + '</div>'
+            + list.map(function(it, j) {
+              return '<div class="sb-item" style="grid-template-columns:' + cols + '">' + def.items.fields.map(function(f) {
+                return sbField(f, it[f.key], 'data-b="' + i + '" data-i="' + j + '" data-k="' + f.key + '" title="' + escHtml(f.label) + '"');
+              }).join('') + '<button type="button" class="dyn-del-btn" onclick="sbDelItem(' + i + ',' + j + ')">✕</button></div>';
+            }).join('')
+            + '<button type="button" class="dyn-add-btn" onclick="sbAddItem(' + i + ')">+ 新增一列</button></div>';
+        }
+        return '<div class="sb-card"><div class="sb-head"><b>' + (i + 1) + '. ' + escHtml(def.label) + '</b>'
+          + '<button type="button" class="btn-outline btn-sm" onclick="sbMove(' + i + ',-1)" title="上移">↑</button>'
+          + '<button type="button" class="btn-outline btn-sm" onclick="sbMove(' + i + ',1)" title="下移">↓</button>'
+          + '<button type="button" class="btn-red btn-sm" onclick="sbDel(' + i + ')" title="刪除區塊">✕</button></div>'
+          + '<div class="sb-grid">' + fields + '</div>' + items + '</div>';
+      }).join('');
+    }
+    document.addEventListener('input', function(e) {
+      var el = e.target;
+      if (!el.dataset || el.dataset.b == null || !el.closest('#storyBlocks')) return;
+      var b = storyBlocks[+el.dataset.b]; if (!b) return;
+      if (el.dataset.i != null) {
+        var key = IPCCStory.BLOCKS[b.type].items.key;
+        b[key] = asList(b[key]); b[key][+el.dataset.i][el.dataset.k] = el.value;
+      } else b[el.dataset.k] = el.value;
+    });
+    function addStoryBlock() {
+      var t = document.getElementById('storyAddType').value, b = { type: t };
+      var def = IPCCStory.BLOCKS[t]; if (def.items) b[def.items.key] = [{}];
+      storyBlocks.push(b); renderStoryEditor();
+    }
+    function sbMove(i, d) { var j = i + d; if (j < 0 || j >= storyBlocks.length) return; var t = storyBlocks[i]; storyBlocks[i] = storyBlocks[j]; storyBlocks[j] = t; renderStoryEditor(); }
+    function sbDel(i) { if (!confirm('刪除這個區塊？')) return; storyBlocks.splice(i, 1); renderStoryEditor(); }
+    function sbAddItem(i) { var b = storyBlocks[i], k = IPCCStory.BLOCKS[b.type].items.key; b[k] = asList(b[k]); b[k].push({}); renderStoryEditor(); }
+    function sbDelItem(i, j) { var b = storyBlocks[i], k = IPCCStory.BLOCKS[b.type].items.key; b[k] = asList(b[k]); b[k].splice(j, 1); renderStoryEditor(); }
+    function applyStoryTemplate() {
+      if (storyBlocks.length && !confirm('套用範本會取代目前的區塊，確定？')) return;
+      var title = document.getElementById('svcTitle').value.trim();
+      storyBlocks = [
+        { type: 'hero', eyebrow: '東州集團｜' + title, title: document.getElementById('svcHeroTitle').value.trim() || title, highlight: '', lead: document.getElementById('svcHeroSub').value.trim() || document.getElementById('svcDesc').value.trim(), primary_text: '立即諮詢', primary_link: '/contact.html', secondary_text: '查看所有服務', secondary_link: '/services.html', panel_title: '', panel_items: [] },
+        { type: 'timeline', eyebrow: 'HOW WE WORK', title: '從導入到上線，', highlight: '每一步都有人負責', hint: '往下捲動，看我們怎麼做', steps: [{ time: 'STEP 1', title: '需求訪談', desc: '' }, { time: 'STEP 2', title: '規劃與建置', desc: '' }, { time: 'STEP 3', title: '上線與優化', desc: '' }] },
+        { type: 'pain_solution' },
+        { type: 'stats', eyebrow: 'RESULTS', title: '用數據說話', highlight: '', note: '＊數字為示意，請改成實際數據並註明統計期間', items: [{ num: '', unit: '', label: '' }] },
+        { type: 'industries' }, { type: 'faq' },
+        { type: 'cta', title: '準備好開始了嗎？', desc: '讓我們的專家了解您的需求，為您量身規劃最適合的解決方案。', primary_text: '免費諮詢', primary_link: '/contact.html', secondary_text: 'LINE 官方帳號', secondary_link: 'https://lin.ee/rp9TNMU' }
+      ];
+      renderStoryEditor();
+    }
+
     // ── Modal open/close ──────────────────────────────────────────
     function openSvcModal(s) {
       switchTab('basic');
@@ -423,11 +559,20 @@
       document.getElementById('faqList').innerHTML = '';
 
       if (s) {
-        (s.pain_points||[]).forEach(addPainPoint);
-        (s.features||[]).forEach(addFeature);
-        (s.industries||[]).forEach(addIndustry);
-        (s.faq||[]).forEach(addFaq);
+        asList(s.pain_points).forEach(function(x){ addPainPoint(x); });
+        asList(s.features).forEach(function(x){ addFeature(x); });
+        asList(s.industries).forEach(function(x){ addIndustry(x); });
+        asList(s.faq).forEach(function(x){ addFaq(x); });
       }
+
+      initLayoutControls();
+      document.getElementById('svcLayout').value = (s && s.layout) || 'standard';
+      document.getElementById('svcTheme').value = (s && s.theme) || 'navy';
+      document.getElementById('svcCustomPath').value = (s && s.custom_path) || '';
+      document.getElementById('svcShowIntro').checked = !(s && s.story_show_intro === false);
+      storyBlocks = JSON.parse(JSON.stringify(asList(s && s.story)));
+      renderStoryEditor();
+      onLayoutChange();
 
       updateSlugPreview();
       document.getElementById('svcModal').classList.add('open');
@@ -440,7 +585,7 @@
       renderTable();
     }
 
-    function saveSvc() {
+    function saveSvc(preview) {
       var id = document.getElementById('svcId').value || genId();
       var svcs = getServices();
       var idx = svcs.findIndex(function(s){ return s.id===id; });
@@ -471,10 +616,23 @@
         seo_title: document.getElementById('svcSeoTitle').value.trim(),
         seo_desc: document.getElementById('svcSeoDesc').value.trim(),
         image: document.getElementById('svcImage').value.trim(),
-        order: idx >= 0 ? svcs[idx].order : svcs.length
+        order: idx >= 0 ? svcs[idx].order : svcs.length,
+        layout: document.getElementById('svcLayout').value,
+        theme: document.getElementById('svcTheme').value,
+        custom_path: document.getElementById('svcCustomPath').value.trim(),
+        story_show_intro: document.getElementById('svcShowIntro').checked,
+        story: JSON.parse(JSON.stringify(storyBlocks))
       };
+      if (idx >= 0) item = Object.assign({}, svcs[idx], item);
       if (idx >= 0) svcs[idx] = item; else svcs.push(item);
       saveServices(svcs);
+      if (preview) {
+        var url = item.layout === 'story' ? '../service-story.html?preview=1&slug=' + encodeURIComponent(item.slug)
+          : item.layout === 'custom' && item.custom_path ? '..' + item.custom_path : '../services/' + item.slug;
+        window.open(url, '_blank');
+        renderTable();
+        return;
+      }
       closeSvcModal();
       renderTable();
     }
