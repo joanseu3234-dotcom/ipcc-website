@@ -311,7 +311,7 @@ function renderContent(text) {
     if (relCase) tags.push('<span class="detail-tag detail-tag-case">'+esc(relCase.client)+'</span>');
   }
   if (item.relatedService) {
-    var svcMap = {'services.html':'客服委外','services-training.html':'客服服務訓練','services-it.html':'資訊服務'};
+    var svcMap = {'services.html':'客服委外','services-training.html':'AI 教育訓練','/services/ai-training':'AI 教育訓練','services-it.html':'資訊服務'};
     tags.push('<span class="detail-tag detail-tag-service">'+esc(svcMap[item.relatedService] || item.relatedService)+'</span>');
   }
   if (tags.length) html += '<div class="detail-tags">'+tags.join('')+'</div>';

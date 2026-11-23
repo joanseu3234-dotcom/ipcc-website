@@ -457,7 +457,7 @@ function openMediaModal(item) {
     relatedTags += '<a href="cases.html" class="media-tag media-tag-case">🏆 ' + item.relatedCaseLabel + '</a>';
   }
   if (item.relatedService) {
-    var svcLabels = { 'services.html':'客服委外', 'services-training.html':'客服服務訓練', 'services-it.html':'資訊服務' };
+    var svcLabels = { 'services.html':'客服委外', 'services-training.html':'AI 教育訓練', '/services/ai-training':'AI 教育訓練', 'services-it.html':'資訊服務' };
     relatedTags += '<a href="' + item.relatedService + '" class="media-tag media-tag-service">🛠 ' + (svcLabels[item.relatedService]||'服務') + '</a>';
   }
   if (relatedTags) {
@@ -531,7 +531,7 @@ var _mediaItemsStore = [];
       var tagsHtml = '';
       if (caseLabel) tagsHtml += '<span class="media-tag media-tag-case">🏆 ' + esc(caseLabel) + '</span>';
       if (n.relatedService) {
-        var svcLabels = { 'services.html':'客服委外', 'services-training.html':'客服服務訓練', 'services-it.html':'資訊服務' };
+        var svcLabels = { 'services.html':'客服委外', 'services-training.html':'AI 教育訓練', '/services/ai-training':'AI 教育訓練', 'services-it.html':'資訊服務' };
         tagsHtml += '<span class="media-tag media-tag-service">🛠 ' + esc(svcLabels[n.relatedService]||'服務') + '</span>';
       }
 
