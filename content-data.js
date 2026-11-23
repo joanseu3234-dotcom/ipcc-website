@@ -2,7 +2,7 @@
 // 最後發布：2026/11/23 13:50:37
 
 window.IPCC_CONTENT_DATA = {
-  "__ts": 1795413037956,
+  "__ts": 1795416914275,
   "__published": "2026/11/23 13:50:37",
   "ipcc_news": [
     {
@@ -1653,7 +1653,133 @@ window.IPCC_CONTENT_DATA = {
       "seo_title": "多渠道客服委外｜LINE、FB、電話與社群客服整合服務｜東州集團",
       "seo_desc": "東州集團提供 Omnichannel 多渠道客服委外服務，整合電話、LINE、Facebook、社群與文字客服，協助企業建立一致性的顧客互動體驗與 CRM 客戶管理流程。",
       "image": "",
-      "order": 1
+      "order": 1,
+      "layout": "story",
+      "theme": "teal",
+      "story_show_intro": true,
+      "story": [
+        {
+          "type": "hero",
+          "eyebrow": "東州集團｜多渠道顧客互動服務",
+          "title": "客戶在哪裡留言，",
+          "highlight": "我們就在哪裡回覆",
+          "lead": "電話、LINE、Facebook、Messenger、Email 與文字客服整合在同一套流程裡——集中管理每一則顧客互動，不漏訊、不重複，回覆標準一致。",
+          "primary_text": "立即諮詢",
+          "primary_link": "/contact.html",
+          "secondary_text": "看訊息怎麼被接住 ↓",
+          "secondary_link": "#flow",
+          "panel_title": "整合收件匣",
+          "note": "＊畫面為示意",
+          "panel_items": [
+            {
+              "left": "電話",
+              "label": "訂單進度查詢",
+              "right": "已回覆"
+            },
+            {
+              "left": "LINE",
+              "label": "會員點數兌換",
+              "right": "處理中"
+            },
+            {
+              "left": "FB",
+              "label": "活動留言詢問",
+              "right": "已分流"
+            },
+            {
+              "left": "Messenger",
+              "label": "商品規格諮詢",
+              "right": "已回覆"
+            },
+            {
+              "left": "Email",
+              "label": "退換貨申請",
+              "right": "已建單"
+            },
+            {
+              "left": "文字客服",
+              "label": "付款方式問題",
+              "right": "已回覆"
+            }
+          ]
+        },
+        {
+          "type": "flow",
+          "eyebrow": "HOW IT WORKS",
+          "title": "一則訊息，",
+          "highlight": "從進來到結案只走一條路",
+          "sub": "不論客戶從哪個平台聯繫，都進入同一套分流、回覆與紀錄流程。",
+          "steps": [
+            {
+              "label": "01",
+              "title": "全渠道收件",
+              "desc": "電話、LINE、Facebook、Messenger、Email 與文字客服集中到同一平台。"
+            },
+            {
+              "label": "02",
+              "title": "即時分流",
+              "desc": "依問題類型與急迫程度分派，建立快速回應機制。"
+            },
+            {
+              "label": "03",
+              "title": "標準化回覆",
+              "desc": "依統一的客服 SOP 回覆，每個渠道的服務口徑一致。"
+            },
+            {
+              "label": "04",
+              "title": "寫入 CRM",
+              "desc": "互動紀錄與服務歷程集中保存，下次聯繫不必重講一次。"
+            },
+            {
+              "label": "05",
+              "title": "AI 輔助分析",
+              "desc": "分析常見問題與客戶需求，回饋到 FAQ 與服務流程。"
+            }
+          ]
+        },
+        {
+          "type": "pain_solution"
+        },
+        {
+          "type": "stats",
+          "eyebrow": "ONE VIEW",
+          "title": "所有渠道，",
+          "highlight": "一個視角看客戶",
+          "note": "",
+          "items": [
+            {
+              "num": "6",
+              "unit": "種",
+              "label": "電話・LINE・FB・Messenger・Email・文字客服"
+            },
+            {
+              "num": "1",
+              "unit": "套",
+              "label": "統一的客服 SOP 與服務流程"
+            },
+            {
+              "num": "1",
+              "unit": "份",
+              "label": "完整的 CRM 客戶互動紀錄"
+            }
+          ]
+        },
+        {
+          "type": "industries"
+        },
+        {
+          "type": "faq"
+        },
+        {
+          "type": "cta",
+          "title": "讓每一個渠道都有一致的好服務",
+          "desc": "告訴我們您目前經營的平台與訊息量，顧問將為您規劃全渠道客服整合方案。",
+          "primary_text": "免費諮詢",
+          "secondary_text": "LINE 官方帳號",
+          "secondary_link": "https://lin.ee/rp9TNMU",
+          "primary_link": "/contact.html"
+        }
+      ]
     },
     {
       "id": "svc-3",
@@ -1799,7 +1925,138 @@ window.IPCC_CONTENT_DATA = {
       "seo_title": "AI Agent 建置與維運｜企業 AI 知識庫與 AI 客服助理導入｜東州集團",
       "seo_desc": "東州集團協助企業建立 AI 知識庫、AI 客服助理與 AI Agent，從 AI 就緒度評估、知識庫建置到上線後的資料更新與模型維運，讓 AI 真正落地並持續準確。",
       "image": "",
-      "order": 2
+      "order": 2,
+      "layout": "story",
+      "theme": "indigo",
+      "story_show_intro": true,
+      "story": [
+        {
+          "type": "hero",
+          "eyebrow": "東州集團｜AI Agent 建置與維運",
+          "title": "讓 AI 真正懂您的企業，",
+          "highlight": "而且一直懂下去",
+          "lead": "從 AI 就緒度評估、知識庫建置、AI Agent 導入到上線後的資料更新與模型監控——我們重視的不只是導入，而是 AI 能否真正落地、持續運作。",
+          "primary_text": "立即諮詢",
+          "primary_link": "/contact.html",
+          "secondary_text": "看導入流程 ↓",
+          "secondary_link": "#flow",
+          "panel_title": "AI Agent 處理一則提問",
+          "note": "＊畫面為示意",
+          "panel_items": [
+            {
+              "left": "提問",
+              "label": "「會員退貨要準備什麼？」",
+              "right": "收到"
+            },
+            {
+              "left": "理解",
+              "label": "辨識意圖：退換貨流程",
+              "right": "✓"
+            },
+            {
+              "left": "檢索",
+              "label": "比對企業知識庫 SOP",
+              "right": "✓"
+            },
+            {
+              "left": "回覆",
+              "label": "依最新規定回答步驟",
+              "right": "已回覆"
+            },
+            {
+              "left": "協作",
+              "label": "特殊案件轉交真人客服",
+              "right": "人機協作"
+            },
+            {
+              "left": "維運",
+              "label": "新增問題回寫知識庫",
+              "right": "已更新"
+            }
+          ]
+        },
+        {
+          "type": "flow",
+          "eyebrow": "FROM ZERO TO RUNNING",
+          "title": "從評估到維運，",
+          "highlight": "一路陪企業走完",
+          "sub": "AI 上線不是終點；資料持續更新，回答才會持續準確。",
+          "steps": [
+            {
+              "label": "01",
+              "title": "AI 就緒度評估",
+              "desc": "盤點現有資料、流程與 IT 架構，找出最適合先導入的場景。"
+            },
+            {
+              "label": "02",
+              "title": "知識庫建置",
+              "desc": "整理 FAQ、SOP 與企業知識，轉成 AI 可學習的資料。"
+            },
+            {
+              "label": "03",
+              "title": "AI Agent 導入",
+              "desc": "建置客服助理與 AI 自動化流程。"
+            },
+            {
+              "label": "04",
+              "title": "系統整合",
+              "desc": "串接 CRM、客服系統與既有企業流程。"
+            },
+            {
+              "label": "05",
+              "title": "監控與維運",
+              "desc": "持續更新資料、優化回答品質，避免 AI 逐漸失準。"
+            }
+          ]
+        },
+        {
+          "type": "pain_solution"
+        },
+        {
+          "type": "features",
+          "eyebrow": "HUMAN + AI",
+          "title": "AI 處理重複，",
+          "highlight": "人專注在需要判斷的事",
+          "sub": "",
+          "items": [
+            {
+              "icon": "💬",
+              "title": "自動化客服",
+              "desc": "常見問題由 AI 即時回覆，降低重複性人工作業。"
+            },
+            {
+              "icon": "📚",
+              "title": "知識查詢",
+              "desc": "員工與客戶都能快速查到正確、最新的企業知識。"
+            },
+            {
+              "icon": "🤝",
+              "title": "人機協作",
+              "desc": "建立 AI 與人工客服的協同作業流程，複雜案件交給真人。"
+            },
+            {
+              "icon": "⚙️",
+              "title": "內部流程管理",
+              "desc": "把 AI 用在企業內部流程，提升營運效率。"
+            }
+          ]
+        },
+        {
+          "type": "industries"
+        },
+        {
+          "type": "faq"
+        },
+        {
+          "type": "cta",
+          "title": "從一個場景開始，讓 AI 真正落地",
+          "desc": "告訴我們您想導入 AI 的情境與現有資料，顧問將協助評估可行性與導入步驟。",
+          "primary_text": "預約 AI 導入諮詢",
+          "secondary_text": "LINE 官方帳號",
+          "secondary_link": "https://lin.ee/rp9TNMU",
+          "primary_link": "/contact.html"
+        }
+      ]
     },
     {
       "id": "mp5794gebcw85",
@@ -1922,7 +2179,109 @@ window.IPCC_CONTENT_DATA = {
       "seo_title": "數據標註與資料結構化｜AI訓練數據與語音標註服務｜東州集團",
       "seo_desc": "提供 AI 數據標註與資料結構化服務，包含語音標註、文字標註、NLP 語意分析與 STT 語音轉文字，協助企業建立高品質 AI 訓練數據與可分析資料。",
       "image": "",
-      "order": 3
+      "order": 3,
+      "layout": "story",
+      "theme": "graphite",
+      "story_show_intro": true,
+      "story": [
+        {
+          "type": "hero",
+          "eyebrow": "東州集團｜AI 數據標註與資料結構化",
+          "title": "把沉睡的資料，",
+          "highlight": "變成 AI 學得會的數據",
+          "lead": "語音、文字、文件與客服紀錄經過分類、標記與結構化，才能成為 AI 可學習、可分析、可應用的數據資產。我們結合 AI 預標註與人工 QA 複審，兼顧效率與精準度。",
+          "primary_text": "立即諮詢",
+          "primary_link": "/contact.html",
+          "secondary_text": "看標註流程 ↓",
+          "secondary_link": "#flow",
+          "panel_title": "標註作業看板",
+          "note": "＊畫面為示意",
+          "panel_items": [
+            {
+              "left": "語音",
+              "label": "客服錄音轉文字 STT",
+              "right": "完成"
+            },
+            {
+              "left": "意圖",
+              "label": "對話意圖辨識分類",
+              "right": "預標註"
+            },
+            {
+              "left": "情緒",
+              "label": "客戶情緒標記",
+              "right": "人工標註"
+            },
+            {
+              "left": "語意",
+              "label": "NLP 語意分類",
+              "right": "人工標註"
+            },
+            {
+              "left": "QA",
+              "label": "多重驗證複審",
+              "right": "複審中"
+            },
+            {
+              "left": "交付",
+              "label": "結構化訓練數據",
+              "right": "✓ 可用"
+            }
+          ]
+        },
+        {
+          "type": "flow",
+          "eyebrow": "LABELING PIPELINE",
+          "title": "AI 先做一輪，",
+          "highlight": "人再把關一輪",
+          "sub": "AI 預標註提升效率，人工 QA 複審確保品質。",
+          "steps": [
+            {
+              "label": "01",
+              "title": "資料盤點",
+              "desc": "整理錄音、對話、文件等非結構化資料與標註需求。"
+            },
+            {
+              "label": "02",
+              "title": "AI 預標註",
+              "desc": "由 AI 先完成語音轉文字與初步分類，加快處理速度。"
+            },
+            {
+              "label": "03",
+              "title": "人工標註",
+              "desc": "標註情緒、意圖與語意，補上 AI 不懂的企業專業知識。"
+            },
+            {
+              "label": "04",
+              "title": "QA 複審",
+              "desc": "建立多重驗證流程，提升訓練資料的一致性與精準度。"
+            },
+            {
+              "label": "05",
+              "title": "結構化交付",
+              "desc": "交付 AI 可直接學習與分析的高品質數據。"
+            }
+          ]
+        },
+        {
+          "type": "pain_solution"
+        },
+        {
+          "type": "industries"
+        },
+        {
+          "type": "faq"
+        },
+        {
+          "type": "cta",
+          "title": "讓您的資料成為 AI 的養分",
+          "desc": "告訴我們資料類型、數量與用途，顧問將為您規劃標註與結構化方案。",
+          "primary_text": "免費諮詢",
+          "secondary_text": "LINE 官方帳號",
+          "secondary_link": "https://lin.ee/rp9TNMU",
+          "primary_link": "/contact.html"
+        }
+      ]
     },
     {
       "id": "mp57ej8wos3qu",
@@ -2068,7 +2427,120 @@ window.IPCC_CONTENT_DATA = {
       "seo_title": "客服數據分析與營運優化｜Customer Intelligence 與語音分析｜東州集團",
       "seo_desc": "透過客服錄音分析、CRM 數據整合與 AI Customer Intelligence 技術，協助企業掌握客戶需求、分析顧客情緒、優化客服流程並提升營運效率。",
       "image": "",
-      "order": 4
+      "order": 4,
+      "layout": "story",
+      "theme": "navy",
+      "story_show_intro": true,
+      "story": [
+        {
+          "type": "hero",
+          "eyebrow": "東州集團｜客服數據分析與營運優化",
+          "title": "客戶真正想要什麼，",
+          "highlight": "都在客服對話裡",
+          "lead": "「一般市場調查是問出來的，但我們分析的是客戶在真正要消費時說出的真實需求。」透過 Voice Data、CRM 與 AI 分析，把客服對話轉化為營運決策依據。",
+          "primary_text": "立即諮詢",
+          "primary_link": "/contact.html",
+          "secondary_text": "看一通電話如何變成洞察 ↓",
+          "secondary_link": "#timeline",
+          "panel_title": "客戶洞察儀表板",
+          "note": "＊畫面為示意",
+          "panel_items": [
+            {
+              "left": "需求",
+              "label": "本週詢問最多的主題",
+              "right": "已彙整"
+            },
+            {
+              "left": "情緒",
+              "label": "負面情緒對話追蹤",
+              "right": "追蹤中"
+            },
+            {
+              "left": "流失",
+              "label": "取消原因歸類",
+              "right": "已分析"
+            },
+            {
+              "left": "成交",
+              "label": "成交關鍵話術比對",
+              "right": "已分析"
+            },
+            {
+              "left": "KPI",
+              "label": "客服績效指標",
+              "right": "已更新"
+            },
+            {
+              "left": "建議",
+              "label": "流程優化建議",
+              "right": "✓ 已提出"
+            }
+          ]
+        },
+        {
+          "type": "timeline",
+          "eyebrow": "FROM VOICE TO DECISION",
+          "title": "一通電話，",
+          "highlight": "如何變成一個決策",
+          "hint": "往下捲動，看客戶的聲音如何被分析",
+          "steps": [
+            {
+              "time": "01",
+              "title": "收集客戶的真實聲音",
+              "desc": "客服錄音、對話內容與顧客互動紀錄，是客戶最真實的需求來源。",
+              "tag": "客服語音分析"
+            },
+            {
+              "time": "02",
+              "title": "整合 CRM 服務歷程",
+              "desc": "把分散的顧客互動資料與服務歷程整合在一起。",
+              "tag": "CRM 數據整合"
+            },
+            {
+              "time": "03",
+              "title": "分析情緒與滿意度",
+              "desc": "透過 AI 分析客戶情緒，找出不滿與流失的原因。",
+              "tag": "客戶情緒分析"
+            },
+            {
+              "time": "04",
+              "title": "找出成交關鍵",
+              "desc": "比對成交與未成交的對話，找出影響決策的關鍵因素與服務痛點。",
+              "tag": "銷售與服務洞察"
+            },
+            {
+              "time": "05",
+              "title": "量化客服績效",
+              "desc": "建立客服 KPI 與營運指標，讓優化有依據。",
+              "tag": "客服 KPI 與營運分析"
+            },
+            {
+              "time": "06",
+              "title": "轉化為營運決策",
+              "desc": "把分析結果回饋到話術、流程與銷售策略。",
+              "tag": "Customer Intelligence"
+            }
+          ]
+        },
+        {
+          "type": "pain_solution"
+        },
+        {
+          "type": "industries"
+        },
+        {
+          "type": "faq"
+        },
+        {
+          "type": "cta",
+          "title": "讓客戶的聲音成為您的競爭優勢",
+          "desc": "告訴我們您的客服資料來源與想解決的營運問題，顧問將為您規劃分析方案。",
+          "primary_text": "免費諮詢",
+          "secondary_text": "LINE 官方帳號",
+          "secondary_link": "https://lin.ee/rp9TNMU",
+          "primary_link": "/contact.html"
+        }
+      ]
     },
     {
       "id": "svc-ai-training",
