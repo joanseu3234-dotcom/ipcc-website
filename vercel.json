@@ -7,6 +7,16 @@
       "source": "/cases-gov.html",
       "destination": "/cases-cx.html",
       "permanent": true
+    },
+    {
+      "source": "/services-training.html",
+      "destination": "/services/ai-training",
+      "permanent": true
+    },
+    {
+      "source": "/services-training",
+      "destination": "/services/ai-training",
+      "permanent": true
     }
   ],
   "rewrites": [
