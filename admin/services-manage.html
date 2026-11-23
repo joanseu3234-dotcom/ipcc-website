@@ -469,6 +469,11 @@
     }
     function sbField(f, val, attrs) {
       var v = escHtml(val == null ? '' : String(val));
+      if (f.type === 'select') {
+        return '<select class="form-control" ' + attrs + '>' + f.options.map(function(o){
+          return '<option value="' + escHtml(o[0]) + '"' + (String(val || f.options[0][0]) === o[0] ? ' selected' : '') + '>' + escHtml(o[1]) + '</option>';
+        }).join('') + '</select>';
+      }
       return f.type === 'textarea'
         ? '<textarea class="form-control form-textarea" rows="2" ' + attrs + ' placeholder="' + escHtml(f.ph || '') + '">' + v + '</textarea>'
         : '<input type="text" class="form-control" ' + attrs + ' value="' + v + '" placeholder="' + escHtml(f.ph || '') + '">';

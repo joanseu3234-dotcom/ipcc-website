@@ -34,9 +34,12 @@
         { key: 'secondary_text', label: '次按鈕文字（選填）' },
         { key: 'secondary_link', label: '次按鈕連結（選填）' },
         { key: 'panel_title', label: '右側看板標題（選填）', ph: '今日營運看板' },
-        { key: 'note', label: '看板下方註記（選填）', ph: '＊數字為示意' }
+        { key: 'note', label: '看板下方註記（選填）', ph: '＊數字為示意' },
+        { key: 'visual', label: '右側動畫樣式', type: 'select', options: [
+          ['panel', '營運看板（逐列亮起）'], ['orbit', '渠道匯流（左＝渠道名稱）'], ['chat', '對話視窗（左＝客戶／AI／專員）'],
+          ['tokens', '文字標註（左＝標籤、中＝文字片段、右＝標註值）'], ['wave', '語音波形＋逐字稿（左＝說話者、右＝洞察）']] }
       ],
-      items: { key: 'panel_items', label: '看板項目（逐列跳動顯示）', fields: [
+      items: { key: 'panel_items', label: '看板項目（依右側動畫樣式解讀，見上方說明）', fields: [
         { key: 'left', label: '左（時間/代號）', ph: '08:30' },
         { key: 'label', label: '中（說明）', ph: '排班完成' },
         { key: 'right', label: '右（數字/狀態）', ph: '1,248 通' }
@@ -99,6 +102,72 @@
         { key: 'desc', label: '說明', type: 'textarea' }
       ] }
     },
+    omni: {
+      label: '★ 全渠道匯流（整合前／整合後切換）',
+      fields: [
+        { key: 'eyebrow', label: '英文小標', ph: 'BEFORE / AFTER' },
+        { key: 'title', label: '標題' }, { key: 'highlight', label: '標題（主題色）' },
+        { key: 'sub', label: '說明', type: 'textarea' },
+        { key: 'before_label', label: '整合前按鈕文字', ph: '各平台分開經營' },
+        { key: 'after_label', label: '整合後按鈕文字', ph: '全渠道整合' },
+        { key: 'before_note', label: '整合前結論', ph: '同一位客戶，被拆成好幾筆互不相關的紀錄' },
+        { key: 'after_note', label: '整合後結論', ph: '同一位客戶，一條完整的服務歷程' },
+        { key: 'hub', label: '中心名稱', ph: '統一客服平台' }
+      ],
+      items: { key: 'channels', label: '渠道（整合前顯示訊息；整合後依序串成客戶歷程）', fields: [
+        { key: 'name', label: '渠道', ph: 'LINE' },
+        { key: 'msg', label: '整合前：該平台的訊息', ph: '會員點數怎麼兌換？' },
+        { key: 'when', label: '整合後：時間點', ph: '週二' },
+        { key: 'action', label: '整合後：歷程說明', ph: '追問點數兌換，專員已看到前一天的留言' }
+      ] }
+    },
+    agent_chat: {
+      label: '★ AI Agent 互動示範（點問題看 AI 怎麼處理）',
+      fields: [
+        { key: 'eyebrow', label: '英文小標', ph: 'TRY IT' },
+        { key: 'title', label: '標題' }, { key: 'highlight', label: '標題（主題色）' },
+        { key: 'sub', label: '說明', type: 'textarea' },
+        { key: 'note', label: '註記', ph: '＊對話內容為示意' }
+      ],
+      items: { key: 'cases', label: '示範問題', fields: [
+        { key: 'q', label: '客戶問題' },
+        { key: 'intent', label: '①辨識意圖', ph: '退換貨流程' },
+        { key: 'source', label: '②引用知識', ph: '《退換貨 SOP》第 3 條' },
+        { key: 'answer', label: '③AI 回覆', type: 'textarea' },
+        { key: 'handoff', label: '④轉真人原因（空白＝AI 直接完成）' }
+      ] }
+    },
+    label_demo: {
+      label: '★ 數據標註示範（原始→AI 預標→人工 QA→結構化）',
+      fields: [
+        { key: 'eyebrow', label: '英文小標', ph: 'SEE IT WORK' },
+        { key: 'title', label: '標題' }, { key: 'highlight', label: '標題（主題色）' },
+        { key: 'sub', label: '說明', type: 'textarea' },
+        { key: 'source', label: '資料來源說明', ph: '客服錄音逐字稿（示意）' }
+      ],
+      items: { key: 'segs', label: '句子片段（依序組成一句話；文字空白＝整句標註）', fields: [
+        { key: 'text', label: '文字片段' },
+        { key: 'tag', label: '標籤（空白＝不標）', ph: '意圖' },
+        { key: 'ai', label: 'AI 預標結果', ph: '詢問訂閱' },
+        { key: 'qa', label: '人工 QA 修正（空白＝AI 正確）', ph: '取消訂閱' }
+      ] }
+    },
+    voice_insight: {
+      label: '★ 對話洞察示範（逐句播放、自動歸類洞察）',
+      fields: [
+        { key: 'eyebrow', label: '英文小標', ph: 'VOICE OF CUSTOMER' },
+        { key: 'title', label: '標題' }, { key: 'highlight', label: '標題（主題色）' },
+        { key: 'sub', label: '說明', type: 'textarea' },
+        { key: 'call', label: '通話標題', ph: '來電｜保健食品訂購專線（示意）' },
+        { key: 'note', label: '註記', ph: '＊對話內容為示意' }
+      ],
+      items: { key: 'lines', label: '對話（類別相同的洞察會歸到同一欄）', fields: [
+        { key: 'who', label: '說話者', ph: '客戶' },
+        { key: 'text', label: '內容', type: 'textarea' },
+        { key: 'kind', label: '洞察類別（空白＝無）', ph: '流失訊號' },
+        { key: 'insight', label: '洞察', ph: '物流體驗不佳' }
+      ] }
+    },
     pain_solution: {
       label: '痛點 × 解決方案（沿用「詳情內容」的痛點與特色）',
       fields: [
@@ -151,17 +220,66 @@
     return text && h ? '<a class="st-btn ' + cls + '" href="' + h + '">' + esc(text) + '</a>' : '';
   }
 
+  // 主視覺右側動畫（依 b.visual 切換）
+  var VIS = {};
+  VIS.panel = function (b, items) {
+    return '<div class="st-panel" data-st-panel>'
+      + '<div class="st-panel-head"><b>' + esc(b.panel_title || '') + '</b><span><i class="st-live"></i>即時</span></div>'
+      + '<ul>' + items.map(function (it, i) {
+        return '<li' + (i === 0 ? ' class="on"' : '') + '><em>' + esc(it.left) + '</em><span>' + esc(it.label) + '</span><strong>' + esc(it.right) + '</strong></li>';
+      }).join('') + '</ul></div>';
+  };
+  VIS.orbit = function (b, items) {
+    var n = items.length || 1;
+    return '<div class="st-orbit" data-st-sync>'
+      + '<div class="st-orb-ring"></div><div class="st-orb-ring st-orb-ring2"></div>'
+      + items.map(function (it, i) {
+        var a = (360 * i / n - 90) + 'deg';
+        return '<i class="st-orb-dot" style="--a:' + a + ';--d:' + (i * 0.45) + 's"></i>'
+          + '<span class="st-orb-node' + (i === 0 ? ' on' : '') + '" style="--a:' + a + '"><b>' + esc(it.left) + '</b></span>';
+      }).join('')
+      + '<div class="st-orb-hub"><b>' + esc(b.panel_title || '統一客服平台') + '</b></div></div>'
+      + '<div class="st-orb-feed" data-st-cycle>' + items.map(function (it, i) {
+        return '<div' + (i === 0 ? ' class="on"' : '') + '><em>' + esc(it.left) + '</em><span>' + esc(it.label) + '</span><strong>' + esc(it.right) + '</strong></div>';
+      }).join('') + '</div>';
+  };
+  function who(w) { w = String(w || ''); return /AI/i.test(w) ? 'ai' : /專員|真人|客服/.test(w) ? 'agent' : 'user'; }
+  VIS.chat = function (b, items) {
+    return '<div class="st-chatwin" data-st-chat><div class="st-chat-head"><i class="st-live"></i><b>' + esc(b.panel_title || 'AI 客服助理') + '</b><span>線上</span></div>'
+      + '<div class="st-chat-body">' + items.map(function (it) {
+        return '<div class="st-msg st-msg-' + who(it.left) + '"><small>' + esc(it.left) + '</small><p>' + esc(it.label) + '</p>' + (it.right ? '<em>' + esc(it.right) + '</em>' : '') + '</div>';
+      }).join('') + '<div class="st-typing"><i></i><i></i><i></i></div></div></div>';
+  };
+  VIS.tokens = function (b, items) {
+    var tagged = items.filter(function (it) { return it.left; });
+    return '<div class="st-tokwin" data-st-tokens><div class="st-chat-head"><i class="st-live"></i><b>' + esc(b.panel_title || '標註作業') + '</b><span data-st-tok-stage>AI 預標註中</span></div>'
+      + '<p class="st-tok-text">' + items.map(function (it) {
+        return it.left ? '<span class="st-tok" data-tag="' + esc(it.left) + '">' + esc(it.label) + '<sup>' + esc(it.left) + '</sup></span>' : esc(it.label);
+      }).join('') + '</p>'
+      + '<pre class="st-tok-json">' + '{\n' + tagged.map(function (it, i) {
+        return '<span class="st-tok-row">  "' + esc(it.left) + '": "' + esc(it.right || it.label) + '"' + (i < tagged.length - 1 ? ',' : '') + '\n</span>';
+      }).join('') + '}</pre></div>';
+  };
+  VIS.wave = function (b, items) {
+    var bars = '';
+    for (var i = 0; i < 44; i++) {
+      var h = 18 + Math.round(Math.abs(Math.sin(i * 1.7) * Math.cos(i * 0.6)) * 70);
+      bars += '<i style="--h:' + h + '%;--d:' + ((i % 11) * 0.09).toFixed(2) + 's"></i>';
+    }
+    return '<div class="st-wavewin"><div class="st-chat-head"><i class="st-live"></i><b>' + esc(b.panel_title || '通話分析') + '</b><span>分析中</span></div>'
+      + '<div class="st-wave">' + bars + '</div>'
+      + '<div class="st-wave-feed" data-st-cycle>' + items.map(function (it, i) {
+        return '<div' + (i === 0 ? ' class="on"' : '') + '><small>' + esc(it.left) + '</small><p>' + esc(it.label) + '</p>' + (it.right ? '<em>' + esc(it.right) + '</em>' : '') + '</div>';
+      }).join('') + '</div></div>';
+  };
+
   var R = {};
   R.hero = function (b, svc) {
     var items = arr(b.panel_items);
+    var vis = VIS[b.visual] ? b.visual : 'panel';
     var panel = '';
     if (b.panel_title || items.length) {
-      panel = '<div class="st-panel" data-st-panel>'
-        + '<div class="st-panel-head"><b>' + esc(b.panel_title || '') + '</b><span><i class="st-live"></i>即時</span></div>'
-        + '<ul>' + items.map(function (it, i) {
-          return '<li' + (i === 0 ? ' class="on"' : '') + '><em>' + esc(it.left) + '</em><span>' + esc(it.label) + '</span><strong>' + esc(it.right) + '</strong></li>';
-        }).join('') + '</ul></div>'
-        + (b.note ? '<div class="st-note">' + esc(b.note) + '</div>' : '');
+      panel = VIS[vis](b, items) + (b.note ? '<div class="st-note">' + esc(b.note) + '</div>' : '');
     }
     return '<section class="st-hero st-dark"><div class="st-wrap st-hero-grid' + (panel ? '' : ' st-hero-solo') + '">'
       + '<div class="st-hero-text">'
@@ -171,7 +289,122 @@
       + '<p class="st-lead">' + txt(b.lead || svc.hero_subtitle || svc.desc) + '</p>'
       + '<div class="st-ctas">' + btn(b.primary_text || '立即諮詢', b.primary_link || '/contact.html', 'st-btn-main') + btn(b.secondary_text, b.secondary_link, 'st-btn-ghost') + '</div>'
       + '</div>'
-      + (panel ? '<div class="st-hero-visual">' + panel + '</div>' : '')
+      + (panel ? '<div class="st-hero-visual st-vis-' + vis + '">' + panel + '</div>' : '')
+      + '</div></section>';
+  };
+
+  // ★ 全渠道匯流
+  R.omni = function (b) {
+    var ch = arr(b.channels);
+    if (!ch.length) return '';
+    var n = ch.length;
+    var st = ['未讀', '等待回覆', '已回覆', '未讀', '轉給其他部門', '等待回覆'];
+    return '<section class="st-sec st-dark st-omni" data-st-omni data-mode="after"><div class="st-wrap">'
+      + eyebrow(b) + heading(b) + (b.sub ? '<p class="st-sub">' + txt(b.sub) + '</p>' : '')
+      + '<div class="st-tabs" role="tablist"><button type="button" data-st-mode="before">' + esc(b.before_label || '各平台分開經營') + '</button>'
+      + '<button type="button" data-st-mode="after" class="on">' + esc(b.after_label || '全渠道整合') + '</button></div>'
+      + '<div class="st-omni-grid">'
+      + '<div class="st-omni-map">'
+      + '<svg viewBox="-200 -200 400 400" aria-hidden="true">' + ch.map(function (c, i) {
+        var a = (2 * Math.PI * i / n) - Math.PI / 2, x = Math.round(Math.cos(a) * 150), y = Math.round(Math.sin(a) * 150);
+        return '<path class="st-omni-line" d="M' + x + ' ' + y + ' L0 0"/><circle class="st-omni-pkt" r="4"><animateMotion dur="2.4s" begin="' + (i * 0.4).toFixed(1) + 's" repeatCount="indefinite" path="M' + x + ' ' + y + ' L0 0"/></circle>';
+      }).join('') + '</svg>'
+      + ch.map(function (c, i) {
+        var a = (2 * Math.PI * i / n) - Math.PI / 2;
+        return '<span class="st-omni-node" style="left:' + (50 + Math.cos(a) * 37.5).toFixed(2) + '%;top:' + (50 + Math.sin(a) * 37.5).toFixed(2) + '%">' + esc(c.name) + '</span>';
+      }).join('')
+      + '<div class="st-omni-hub"><b>' + esc(b.hub || '統一客服平台') + '</b><span class="st-omni-q">?</span></div></div>'
+      + '<div class="st-omni-panel">'
+      + '<div class="st-omni-before"><h3>' + esc(n) + ' 個收件匣，各自處理</h3><ul>' + ch.map(function (c, i) {
+        return '<li style="--d:' + (i * 0.08) + 's"><b>' + esc(c.name) + '</b><span>' + esc(c.msg) + '</span><em class="s' + (i % 3) + '">' + st[i % st.length] + '</em></li>';
+      }).join('') + '</ul><p class="st-omni-note bad">' + esc(b.before_note || '同一位客戶，被拆成好幾筆互不相關的紀錄') + '</p></div>'
+      + '<div class="st-omni-after"><h3>同一位客戶的完整歷程</h3><ol>' + ch.map(function (c, i) {
+        return '<li style="--d:' + (i * 0.12) + 's"><i>' + esc(c.when) + '</i><b>' + esc(c.name) + '</b><span>' + esc(c.action) + '</span></li>';
+      }).join('') + '</ol><p class="st-omni-note good">' + esc(b.after_note || '同一位客戶，一條完整的服務歷程') + '</p></div>'
+      + '</div></div></div></section>';
+  };
+
+  // ★ AI Agent 互動示範
+  R.agent_chat = function (b) {
+    var cs = arr(b.cases).filter(function (c) { return c && c.q; });
+    if (!cs.length) return '';
+    return '<section class="st-sec st-light st-agent" data-st-agent><div class="st-wrap">'
+      + eyebrow(b) + heading(b) + (b.sub ? '<p class="st-sub st-sub-dark">' + txt(b.sub) + '</p>' : '')
+      + '<div class="st-ag-qs">' + cs.map(function (c, i) {
+        return '<button type="button" data-st-case="' + i + '"' + (i === 0 ? ' class="on"' : '') + '>' + esc(c.q) + '</button>';
+      }).join('') + '</div>'
+      + '<div class="st-ag-grid">' + cs.map(function (c, i) {
+        var hand = String(c.handoff || '').trim();
+        return '<div class="st-ag-case st-s4' + (i === 0 ? ' on' : '') + '" data-i="' + i + '">'
+          + '<div class="st-ag-chat"><div class="st-chat-head"><i class="st-live"></i><b>AI 客服助理</b><span>示範</span></div>'
+          + '<div class="st-ag-body"><div class="st-msg st-msg-user"><small>客戶</small><p>' + esc(c.q) + '</p></div>'
+          + '<div class="st-msg st-msg-ai st-ag-ans"><small>AI</small><p data-st-type>' + txt(c.answer) + '</p></div>'
+          + (hand ? '<div class="st-msg st-msg-agent st-ag-hand"><small>專員</small><p>已接手，您好，我是客服專員，這件事由我為您處理。</p></div>' : '')
+          + '</div></div>'
+          + '<ol class="st-ag-steps">'
+          + '<li class="k1"><b>理解意圖</b><span>' + esc(c.intent) + '</span></li>'
+          + '<li class="k2"><b>檢索企業知識庫</b><span>' + esc(c.source) + '</span></li>'
+          + '<li class="k3"><b>依知識產生回覆</b><span>只根據企業資料回答，不自行編造</span></li>'
+          + '<li class="k4' + (hand ? ' hand' : '') + '"><b>' + (hand ? '轉交真人專員' : 'AI 直接完成') + '</b><span>' + esc(hand || '問題已解決，紀錄寫回 CRM') + '</span></li>'
+          + '</ol></div>';
+      }).join('') + '</div>'
+      + (b.note ? '<p class="st-note-dark">' + esc(b.note) + '</p>' : '')
+      + '</div></section>';
+  };
+
+  // ★ 數據標註示範
+  R.label_demo = function (b) {
+    var sg = arr(b.segs);
+    if (!sg.length) return '';
+    var tagged = sg.filter(function (x) { return x.tag; });
+    function val(x) { return x.qa || x.ai || x.text; }
+    var stages = ['原始資料', 'AI 預標註', '人工 QA 複審', '結構化輸出'];
+    return '<section class="st-sec st-warm st-label" data-st-label data-stage="4"><div class="st-wrap">'
+      + eyebrow(b) + heading(b) + (b.sub ? '<p class="st-sub st-sub-dark">' + txt(b.sub) + '</p>' : '')
+      + '<div class="st-stepper">' + stages.map(function (t, i) {
+        return '<button type="button" data-st-stage="' + (i + 1) + '"><i>' + (i + 1) + '</i>' + t + '</button>';
+      }).join('') + '<button type="button" class="st-replay" data-st-replay aria-label="重播">↻ 重播</button></div>'
+      + '<div class="st-lb-grid"><div class="st-lb-card">'
+      + '<div class="st-lb-src">' + esc(b.source || '客服錄音逐字稿（示意）') + '</div>'
+      + '<p class="st-lb-text">' + sg.filter(function (x) { return x.text; }).map(function (x) {
+        if (!x.tag) return '<span>' + esc(x.text) + '</span>';
+        var fix = x.qa && x.qa !== x.ai;
+        return '<span class="st-lb-seg' + (fix ? ' fix' : '') + (!x.ai ? ' add' : '') + '" data-tag="' + esc(x.tag) + '">' + esc(x.text)
+          + '<span class="st-lb-chip"><b>' + esc(x.tag) + '</b>'
+          + (x.ai ? '<s>' + esc(x.ai) + '</s>' : '') + (fix || !x.ai ? '<ins>' + esc(x.qa) + '</ins>' : '') + '</span></span>';
+      }).join('') + '</p>'
+      + (sg.some(function (x) { return x.tag && !x.text; }) ? '<div class="st-lb-whole">整句標註：' + sg.filter(function (x) { return x.tag && !x.text; }).map(function (x) {
+        var fix = x.qa && x.qa !== x.ai;
+        return '<span class="st-lb-seg' + (fix ? ' fix' : '') + (!x.ai ? ' add' : '') + '"><span class="st-lb-chip"><b>' + esc(x.tag) + '</b>' + (x.ai ? '<s>' + esc(x.ai) + '</s>' : '') + (fix || !x.ai ? '<ins>' + esc(x.qa) + '</ins>' : '') + '</span></span>';
+      }).join('') + '</div>' : '')
+      + '<div class="st-lb-legend"><span class="l-ai">AI 預標</span><span class="l-fix">人工修正</span><span class="l-add">人工補標</span></div>'
+      + '</div>'
+      + '<pre class="st-lb-json"><code>{\n' + tagged.map(function (x, i) {
+        return '  <span class="k">"' + esc(x.tag) + '"</span>: <span class="v">"' + esc(val(x)) + '"</span>' + (i < tagged.length - 1 ? ',' : '') + '\n';
+      }).join('') + '}</code><small>AI 可直接學習的結構化資料</small></pre>'
+      + '</div></div></section>';
+  };
+
+  // ★ 對話洞察示範
+  R.voice_insight = function (b) {
+    var ln = arr(b.lines).filter(function (x) { return x && x.text; });
+    if (!ln.length) return '';
+    var kinds = [];
+    ln.forEach(function (x) { if (x.kind && kinds.indexOf(x.kind) < 0) kinds.push(x.kind); });
+    return '<section class="st-sec st-dark st-voice" data-st-voice><div class="st-wrap">'
+      + eyebrow(b) + heading(b) + (b.sub ? '<p class="st-sub">' + txt(b.sub) + '</p>' : '')
+      + '<div class="st-vo-grid"><div class="st-vo-call">'
+      + '<div class="st-chat-head"><i class="st-live"></i><b>' + esc(b.call || '客服來電（示意）') + '</b><button type="button" data-st-replay>↻ 重播</button></div>'
+      + '<div class="st-vo-bar"><i data-st-progress></i></div>'
+      + '<div class="st-vo-lines">' + ln.map(function (x, i) {
+        return '<div class="st-vo-line ' + (who(x.who) === 'user' ? 'cust' : 'agent') + (x.kind ? ' has' : '') + '" data-i="' + i + '"><small>' + esc(x.who) + '</small><p>' + esc(x.text) + '</p></div>';
+      }).join('') + '</div></div>'
+      + '<div class="st-vo-board">' + kinds.map(function (k) {
+        return '<div class="st-vo-col"><h3>' + esc(k) + '</h3>' + ln.map(function (x, i) {
+          return x.kind === k ? '<span class="st-vo-chip" data-i="' + i + '">' + esc(x.insight || x.text) + '</span>' : '';
+        }).join('') + '</div>';
+      }).join('') + '</div></div>'
+      + (b.note ? '<p class="st-note-dark st-note-light">' + esc(b.note) + '</p>' : '')
       + '</div></section>';
   };
   R.timeline = function (b) {
