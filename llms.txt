@@ -1,0 +1,40 @@
+# IPCC 東州集團（顯榮國際）
+
+> 東州集團深耕台灣客服產業近三十年，提供智能客服中心營運（客服委外）、多渠道顧客互動、AI Agent 建置與維運、AI 數據標註、客服數據分析，以及 AI 教育訓練與 AI 情境對練服務。免付費專線 0800-666-080。
+
+## 專案服務
+
+- [智能客服中心營運](https://www.phonecenter.com.tw/services/ai-contact-center)：受理電話、LINE、FB、文字客服與人機智能服務，提供 7×24H 顧客服務、Inbound / Outbound、話術設計與 AI 智能系統導入。
+- [多渠道顧客互動服務](https://www.phonecenter.com.tw/services/multichannel-cx)：協助企業整合電話、社群、文字與即時通訊平台，建立一致性的客戶互動體驗。
+- [AI Agent 建置與維運](https://www.phonecenter.com.tw/services/ai-agent)：協助企業建立 AI 知識庫、客服助理與 AI Agent，並提供後續模型維運與資料更新
+- [AI 數據標註與資料結構化服務](https://www.phonecenter.com.tw/services/data-labeling)：AI 數據標註是將非結構化資料進行分類、標記與結構化，讓 AI 模型能理解語意、情緒與商業邏輯。
+- [客服數據分析與營運優化](https://www.phonecenter.com.tw/services/customer-intelligence)：透過語音分析、CRM 與客戶互動數據，協助企業洞察客戶需求與提升營運效率。
+- [AI 教育訓練與情境對練](https://www.phonecenter.com.tw/services/ai-training)：以 AI 扮演真實客戶，依考核重點即時提醒與評分，讓專員上線前先練過；提供課程製作與 AI 情境對練，開放免費試用。
+
+## AI 教育訓練重點
+
+- 由 AI 扮演真實客戶，依考核重點即時提醒與評分，讓客服專員上線前先練過。
+- 將品質稽核發現的問題轉成練習情境：稽核發現問題 → 轉成練習情境 → 專員先練 → 上線服務。
+- 提供客服培訓課程製作、新人訓練與 AI 情境對練，開放免費試用（洽 0800-666-080 或官網留言）。
+- 介紹頁：https://www.phonecenter.com.tw/services/ai-training
+
+## 產業洞察
+
+- [七成企業 AI 客服上線後悄悄喊停：7 大焦點與台灣企業導入實務指引](https://www.phonecenter.com.tw/insights/enterprise-ai-customer-service-guide)
+- [全渠道CX 2026 年重整：Zendesk 按成效計費、Salesforce 揭 AI 採用率飆至 66%、BT NPS 創歷史新高——客戶體驗的三個新基準線](https://www.phonecenter.com.tw/insights/cx-omnichannel-restructure-may-2026)
+- [AI 都上了，客服中心的管理功課還沒做完：AHT 逆勢爬升、WFM 進入彈性排班時代、FCR 才是真正的成本指標——2026 客服 KPI 基準全面解析](https://www.phonecenter.com.tw/insights/contact-center-kpi-wfm-benchmark-2026)
+- [客服數據分析的轉折點：對話分析從抽樣 2% 到全量、合成資料正式進場、Liveops 揭三分之一顧客因人機交接斷點流失信任](https://www.phonecenter.com.tw/insights/customer-service-data-analytics-conversation-intelligence-2026)
+- [電銷與客服委外的重定價時刻：資本市場提前對 BPO 巨頭喊停、菲律賓用升級人力接招、台灣委外逆勢闖上櫃](https://www.phonecenter.com.tw/insights/outbound-telemarketing-bpo-outsourcing-ai-repricing-2026)
+- [AI 客服品質的治理轉向：當 QA 從抽查真人變成監督 AI，教育訓練與資料合規成為 2026 下半年新戰場](https://www.phonecenter.com.tw/insights/ai-qa-governance-coaching-data-compliance-2026)
+- [從展示走向成效：2026 下半年 AI 客服的定價與信任轉折點—OpenAI Presence、成效計費與台灣企業的導入次序](https://www.phonecenter.com.tw/insights/ai-agent-customer-service-outcome-pricing-trust-2026)
+- [AI 落地的成敗分水嶺：Forrester 預測 2030 年客服職缺砍半、75% 企業撤回 AI 客服、但 Costco 個人化一季貢獻近 5 億美元——CX 成熟度差距的真相](https://www.phonecenter.com.tw/insights/cx-ai-reality-check-forrester-rollback-personalization-2026)
+- [AI 進客服中心後，營運長要重管的三件事：可見度、混合人力 KPI，與排班決定的過勞](https://www.phonecenter.com.tw/insights/contact-center-operations-blended-workforce-kpi-wfm-2026)
+- [九成消費者仍要真人、美國客訴創十年新高：2026 下半年客戶體驗的三個信任缺口，與台灣企業的全通路落地解法](https://www.phonecenter.com.tw/insights/cx-omnichannel-trust-gap-human-handoff-2026)
+- [53% 企業的資料還餵不動 AI、只有 2.5% 做到全自動化：2026 下半年客服數據分析的資料治理落差與台灣企業的落地解法](https://www.phonecenter.com.tw/insights/contact-center-data-analytics-governance-2026)
+- [AI 客服比照員工訓練考核、通話分析接回教育訓練、對話紀錄成為訴訟風險：2026 第四季客服品質與資料治理的三項功課](https://www.phonecenter.com.tw/insights/ai-agent-qa-coaching-knowledge-data-retention-2026)
+
+## 聯絡
+
+- 官網留言：https://www.phonecenter.com.tw/contact.html
+- LINE 官方帳號：https://lin.ee/rp9TNMU
+- 免付費專線：0800-666-080

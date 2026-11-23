@@ -1,23 +1,43 @@
 {
   "cleanUrls": false,
   "redirects": [
-    {"source": "/cases-gov.html", "destination": "/cases-cx.html", "permanent": true}
+    {
+      "source": "/cases-gov.html",
+      "destination": "/cases-cx.html",
+      "permanent": true
+    }
   ],
   "rewrites": [
-    {"source": "/services/:slug", "destination": "/service-detail.html"},
-    {"source": "/insights/:slug", "destination": "/insight-detail.html"}
+    {
+      "source": "/services/ai-training",
+      "destination": "/ipcc-day/index.html"
+    },
+    {
+      "source": "/services/:slug",
+      "destination": "/service-detail.html"
+    },
+    {
+      "source": "/insights/:slug",
+      "destination": "/insight-detail.html"
+    }
   ],
   "headers": [
     {
       "source": "/admin/(.*)",
       "headers": [
-        { "key": "Cache-Control", "value": "no-store, no-cache" }
+        {
+          "key": "Cache-Control",
+          "value": "no-store, no-cache"
+        }
       ]
     },
     {
       "source": "/content-data.js",
       "headers": [
-        { "key": "Cache-Control", "value": "no-store, no-cache" }
+        {
+          "key": "Cache-Control",
+          "value": "no-store, no-cache"
+        }
       ]
     }
   ]

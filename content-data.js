@@ -1,9 +1,9 @@
 // IPCC 內容資料 — 由後台管理系統自動產生，請勿手動修改
-// 最後發布：2026/11/9 10:24:40
+// 最後發布：2026/11/23 13:35:50
 
 window.IPCC_CONTENT_DATA = {
-  "__ts": 1794191080119,
-  "__published": "2026/11/9 10:24:40",
+  "__ts": 1795412150307,
+  "__published": "2026/11/23 13:35:50",
   "ipcc_news": [
     {
       "tab": "news",
@@ -1932,6 +1932,34 @@ window.IPCC_CONTENT_DATA = {
       "seo_desc": "透過客服錄音分析、CRM 數據整合與 AI Customer Intelligence 技術，協助企業掌握客戶需求、分析顧客情緒、優化客服流程並提升營運效率。",
       "image": "",
       "order": 4
+    },
+    {
+      "id": "svc-ai-training",
+      "num": "Service 06",
+      "icon": "🎯",
+      "title": "AI 教育訓練與情境對練",
+      "slug": "ai-training",
+      "desc": "以 AI 扮演真實客戶，依考核重點即時提醒與評分，讓專員上線前先練過；提供課程製作與 AI 情境對練，開放免費試用。",
+      "tags": [
+        "AI 教育訓練",
+        "AI 情境對練",
+        "客服培訓",
+        "新人訓練",
+        "課程製作",
+        "免費試用"
+      ],
+      "published": true,
+      "hero_title": "AI 教育訓練與情境對練",
+      "hero_subtitle": "由 AI 扮演真實客戶，讓客服專員上線前先練過",
+      "content": "本服務使用動態一頁式介紹頁（/ipcc-day/），內容請洽直效行銷部 Tara 統一調整。",
+      "pain_points": [],
+      "features": [],
+      "industries": [],
+      "faq": [],
+      "seo_title": "AI 教育訓練與 AI 情境對練｜客服人員培訓・新人訓練｜東州集團",
+      "seo_desc": "東州集團 AI 教育訓練：由 AI 扮演真實客戶，依考核重點即時提醒與評分，讓客服專員上線前先練過。提供客服培訓課程製作、新人訓練與 AI 情境對練，開放免費試用。",
+      "image": "",
+      "order": 5
     }
   ]
 };

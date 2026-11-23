@@ -1,0 +1,20 @@
+# IPCC 東州集團官網
+User-agent: *
+Allow: /
+Disallow: /admin/
+Disallow: /api/
+
+# AI 搜尋與助理（允許引用官網內容）
+User-agent: GPTBot
+User-agent: OAI-SearchBot
+User-agent: ChatGPT-User
+User-agent: ClaudeBot
+User-agent: Claude-SearchBot
+User-agent: Claude-User
+User-agent: PerplexityBot
+User-agent: Google-Extended
+Allow: /
+Disallow: /admin/
+Disallow: /api/
+
+Sitemap: https://www.phonecenter.com.tw/sitemap.xml

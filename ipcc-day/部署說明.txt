@@ -1,0 +1,33 @@
+《客服的一天》一頁式介紹頁｜部署說明
+
+一、放在哪裡
+把整個「ipcc-day」資料夾放進官網專案的 public 資料夾（與 index.html、contact.html 同一層的上層 public 內）：
+  public/
+    ipcc-day/
+      index.html
+      assets/（Logo、對練示意圖）
+部署到 Vercel 後網址為：https://www.phonecenter.com.tw/ipcc-day/
+（若官網檔案不是放在 public 資料夾，就放在與 index.html 同一層即可。）
+
+二、從官網連過來（擇一或都做）
+- 「專案服務」頁或首頁加一個按鈕／橫幅，連到 /ipcc-day/
+- 導覽列可加一項「客服的一天」
+
+三、已與官網對齊的部分
+- 導覽列、頁尾：使用官網相同的版型與連結
+- 服務連結：/services/ai-contact-center、/services/ai-agent、/services/customer-intelligence
+- 聯絡：/contact.html、LINE https://lin.ee/rp9TNMU、電話 0800-666-080
+- 追蹤碼：已加入官網相同的 Google Tag Manager（GTM-WKSXVPWL）
+
+四、注意
+- 頁面不含影片，總大小約 0.15 MB。
+- 「畫面為示意」「數字為示意」與成效數據統計期間的註記，請保留。
+- 「AI 教育訓練 免費試用」為對外承諾，上線前請確認試用範圍已核准。
+
+五、加到「專案服務」（第 6 項）
+- 後台新增服務：標題「AI 教育訓練與情境對練」，代稱（slug）ai-training
+- 說明：以 AI 扮演真實客戶，依考核重點即時提醒與評分，讓專員上線前先練過；提供課程製作與 AI 情境對練，開放免費試用。
+- 標籤：AI 教育訓練、AI 情境對練、客服培訓、新人訓練、課程製作、免費試用
+- vercel.json 加轉址，讓卡片的「了解更多」進到這頁：
+  { "redirects": [ { "source": "/services/ai-training", "destination": "/ipcc-day/" } ] }
+  （若已有 redirects，加進原本清單即可）
