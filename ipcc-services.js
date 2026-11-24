@@ -114,10 +114,74 @@
     addFx(el);
   }
 
+
+  // 成功案例卡片（cases*.html 的 #caseGrid .cn-card）：與服務卡片同系列的動態效果
+  var CASE_CSS = ''
+    + '.cn-fx{--c:30,42,94;--mx:50%;--my:0%;position:relative;isolation:isolate;transition:transform .45s cubic-bezier(.2,.8,.2,1),box-shadow .45s,border-color .45s!important}'
+    + '.cn-fx::before{content:"";position:absolute;left:0;top:0;right:0;height:4px;z-index:3;background:linear-gradient(90deg,rgb(var(--c)),rgba(var(--c),.35));transform:scaleX(0);transform-origin:left;transition:transform .5s cubic-bezier(.2,.8,.2,1)}'
+    + '.cn-fx:hover::before{transform:scaleX(1)}'
+    + '.cn-fx::after{content:"";position:absolute;inset:0;z-index:2;pointer-events:none;opacity:0;transition:opacity .4s;background:radial-gradient(380px circle at var(--mx) var(--my),rgba(var(--c),.12),transparent 60%)}'
+    + '.cn-fx:hover::after{opacity:1}'
+    + '.cn-fx:hover{transform:translateY(-8px)!important;border-color:rgba(var(--c),.4)!important;box-shadow:0 22px 48px -18px rgba(var(--c),.5),0 2px 8px rgba(0,0,0,.06)!important}'
+    + '.cn-fx .cn-card-img img,.cn-fx .cn-card-emoji{transition:transform .7s cubic-bezier(.2,.8,.2,1)}'
+    + '.cn-fx:hover .cn-card-img img{transform:scale(1.06)}'
+    + '.cn-fx:hover .cn-card-emoji{animation:cn-fx-wig 1.2s ease-in-out}'
+    + '@keyframes cn-fx-wig{0%{transform:none}25%{transform:translateY(-6px) rotate(-8deg) scale(1.12)}50%{transform:translateY(-2px) rotate(5deg) scale(1.08)}75%{transform:translateY(-4px) rotate(-2deg) scale(1.1)}100%{transform:none}}'
+    + '.cn-fx .cn-card-badge{transition:transform .35s,box-shadow .35s}'
+    + '.cn-fx:hover .cn-card-badge{transform:translateY(-2px);box-shadow:0 6px 16px -4px rgba(var(--c),.7)}'
+    + '.cn-fx .cn-card-client,.cn-fx .cn-read-btn{transition:color .35s,letter-spacing .35s}'
+    + '.cn-fx:hover .cn-card-client{color:rgb(var(--c))}'
+    + '.cn-fx .cn-read-btn{display:inline-block;transition:color .35s,transform .35s}'
+    + '.cn-fx:hover .cn-read-btn{color:rgb(var(--c));transform:translateX(5px)}'
+    + '.cn-fx-js .cn-fx{opacity:0;transform:translateY(28px)}'
+    + '.cn-fx-js .cn-fx.in{opacity:1;transform:none;transition:opacity .7s ease var(--d,0s),transform .7s cubic-bezier(.2,.8,.2,1) var(--d,0s)!important}'
+    + '.cn-fx-js .cn-fx.in.done{transition:transform .45s cubic-bezier(.2,.8,.2,1),box-shadow .45s,border-color .45s!important}'
+    + '@media (hover:none){.cn-fx:hover{transform:none!important}}'
+    + '@media (prefers-reduced-motion:reduce){.cn-fx-js .cn-fx{opacity:1;transform:none}.cn-fx:hover{transform:none!important}.cn-fx:hover .cn-card-emoji{animation:none}.cn-fx:hover .cn-card-img img{transform:none}}';
+
+  function caseCardFx() {
+    var grid = document.getElementById('caseGrid');
+    if (!grid) return;
+    var cards = grid.querySelectorAll('.cn-card');
+    if (!cards.length) return;
+    if (!document.getElementById('cnFxCss')) {
+      var st = document.createElement('style'); st.id = 'cnFxCss'; st.textContent = CASE_CSS; document.head.appendChild(st);
+    }
+    // 主題色取自該頁徽章顏色（客服委外＝深藍、客服訓練＝綠、客戶服務整合＝藍）
+    var rgb = '30,42,94';
+    var b = grid.querySelector('.cn-card-badge');
+    if (b) {
+      var m = getComputedStyle(b).backgroundColor.match(/(\d+),\s*(\d+),\s*(\d+)/);
+      if (m) rgb = m[1] + ',' + m[2] + ',' + m[3];
+    }
+    grid.style.setProperty('--c', rgb);
+    var reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    var io = !reduce && 'IntersectionObserver' in window ? new IntersectionObserver(function (es) {
+      es.forEach(function (e) {
+        if (!e.isIntersecting) return;
+        io.unobserve(e.target);
+        e.target.classList.add('in');
+        setTimeout(function () { e.target.classList.add('done'); }, 1400);
+      });
+    }, { threshold: 0.12 }) : null;
+    if (io) grid.classList.add('cn-fx-js');
+    Array.prototype.forEach.call(cards, function (c, i) {
+      c.classList.add('cn-fx');
+      c.style.setProperty('--c', rgb);
+      if (io) { c.style.setProperty('--d', (i % 3) * 0.12 + 's'); io.observe(c); }
+      c.addEventListener('mousemove', function (ev) {
+        var r = c.getBoundingClientRect();
+        c.style.setProperty('--mx', (ev.clientX - r.left) + 'px');
+        c.style.setProperty('--my', (ev.clientY - r.top) + 'px');
+      });
+    });
+  }
+
   if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', function() { renderFooterSvcList(); renderHomeSvcGrid(); });
+    document.addEventListener('DOMContentLoaded', function() { renderFooterSvcList(); renderHomeSvcGrid(); caseCardFx(); });
   } else {
     renderFooterSvcList();
     renderHomeSvcGrid();
+    caseCardFx();
   }
 })();
