@@ -115,46 +115,45 @@
   }
 
 
-  // 成功案例卡片（cases*.html 的 #caseGrid .cn-card）：與服務卡片同系列的動態效果
-  var CASE_CSS = ''
-    + '.cn-fx{--c:30,42,94;--mx:50%;--my:0%;position:relative;isolation:isolate;transition:transform .45s cubic-bezier(.2,.8,.2,1),box-shadow .45s,border-color .45s!important}'
-    + '.cn-fx::before{content:"";position:absolute;left:0;top:0;right:0;height:4px;z-index:3;background:linear-gradient(90deg,rgb(var(--c)),rgba(var(--c),.35));transform:scaleX(0);transform-origin:left;transition:transform .5s cubic-bezier(.2,.8,.2,1)}'
-    + '.cn-fx:hover::before{transform:scaleX(1)}'
-    + '.cn-fx::after{content:"";position:absolute;inset:0;z-index:2;pointer-events:none;opacity:0;transition:opacity .4s;background:radial-gradient(380px circle at var(--mx) var(--my),rgba(var(--c),.12),transparent 60%)}'
-    + '.cn-fx:hover::after{opacity:1}'
-    + '.cn-fx:hover{transform:translateY(-8px)!important;border-color:rgba(var(--c),.4)!important;box-shadow:0 22px 48px -18px rgba(var(--c),.5),0 2px 8px rgba(0,0,0,.06)!important}'
-    + '.cn-fx .cn-card-img img,.cn-fx .cn-card-emoji{transition:transform .7s cubic-bezier(.2,.8,.2,1)}'
-    + '.cn-fx:hover .cn-card-img img{transform:scale(1.06)}'
-    + '.cn-fx:hover .cn-card-emoji{animation:cn-fx-wig 1.2s ease-in-out}'
-    + '@keyframes cn-fx-wig{0%{transform:none}25%{transform:translateY(-6px) rotate(-8deg) scale(1.12)}50%{transform:translateY(-2px) rotate(5deg) scale(1.08)}75%{transform:translateY(-4px) rotate(-2deg) scale(1.1)}100%{transform:none}}'
-    + '.cn-fx .cn-card-badge{transition:transform .35s,box-shadow .35s}'
-    + '.cn-fx:hover .cn-card-badge{transform:translateY(-2px);box-shadow:0 6px 16px -4px rgba(var(--c),.7)}'
-    + '.cn-fx .cn-card-client,.cn-fx .cn-read-btn{transition:color .35s,letter-spacing .35s}'
-    + '.cn-fx:hover .cn-card-client{color:rgb(var(--c))}'
-    + '.cn-fx .cn-read-btn{display:inline-block;transition:color .35s,transform .35s}'
-    + '.cn-fx:hover .cn-read-btn{color:rgb(var(--c));transform:translateX(5px)}'
-    + '.cn-fx-js .cn-fx{opacity:0;transform:translateY(28px)}'
-    + '.cn-fx-js .cn-fx.in{opacity:1;transform:none;transition:opacity .7s ease var(--d,0s),transform .7s cubic-bezier(.2,.8,.2,1) var(--d,0s)!important}'
-    + '.cn-fx-js .cn-fx.in.done{transition:transform .45s cubic-bezier(.2,.8,.2,1),box-shadow .45s,border-color .45s!important}'
-    + '@media (hover:none){.cn-fx:hover{transform:none!important}}'
-    + '@media (prefers-reduced-motion:reduce){.cn-fx-js .cn-fx{opacity:1;transform:none}.cn-fx:hover{transform:none!important}.cn-fx:hover .cn-card-emoji{animation:none}.cn-fx:hover .cn-card-img img{transform:none}}';
+  // 內容卡片（成功案例 / 最新消息 / 媒體採訪 / 活動 / 首頁消息）：與服務卡片同系列的動態效果
+  var CX_CSS = ''
+    + '.cx-fx{--c:30,42,94;--mx:50%;--my:0%;position:relative;isolation:isolate;transition:transform .45s cubic-bezier(.2,.8,.2,1),box-shadow .45s,border-color .45s!important}'
+    + '.cx-fx::before{content:"";position:absolute;left:0;top:0;right:0;height:4px;z-index:3;background:linear-gradient(90deg,rgb(var(--c)),rgba(var(--c),.35));transform:scaleX(0);transform-origin:left;transition:transform .5s cubic-bezier(.2,.8,.2,1)}'
+    + '.cx-fx:hover::before{transform:scaleX(1)}'
+    + '.cx-fx::after{content:"";position:absolute;inset:0;z-index:2;pointer-events:none;opacity:0;transition:opacity .4s;background:radial-gradient(380px circle at var(--mx) var(--my),rgba(var(--c),.12),transparent 60%)}'
+    + '.cx-fx:hover::after{opacity:1}'
+    + '.cx-fx:hover{transform:translateY(-8px)!important;border-color:rgba(var(--c),.4)!important;box-shadow:0 22px 48px -18px rgba(var(--c),.5),0 2px 8px rgba(0,0,0,.06)!important}'
+    + '.cx-fx .cx-img{overflow:hidden}'
+    + '.cx-fx .cx-img img,.cx-fx .cx-img video,.cx-fx .cx-ph{transition:transform .7s cubic-bezier(.2,.8,.2,1)}'
+    + '.cx-fx:hover .cx-img img,.cx-fx:hover .cx-img video{transform:scale(1.06)}'
+    + '.cx-fx:hover .cx-ph{animation:cx-fx-wig 1.2s ease-in-out}'
+    + '@keyframes cx-fx-wig{0%{transform:none}25%{transform:translateY(-6px) rotate(-8deg) scale(1.12)}50%{transform:translateY(-2px) rotate(5deg) scale(1.08)}75%{transform:translateY(-4px) rotate(-2deg) scale(1.1)}100%{transform:none}}'
+    + '.cx-fx .cx-badge{transition:transform .35s,box-shadow .35s}'
+    + '.cx-fx:hover .cx-badge{transform:translateY(-2px);box-shadow:0 6px 16px -4px rgba(var(--c),.7)}'
+    + '.cx-fx .cx-title{transition:color .35s}'
+    + '.cx-fx:hover .cx-title{color:rgb(var(--c))}'
+    + '.cx-fx .cx-btn{display:inline-block;transition:color .35s,transform .35s}'
+    + '.cx-fx:hover .cx-btn{color:rgb(var(--c));transform:translateX(5px)}'
+    + '.cx-fx-js .cx-fx{opacity:0;transform:translateY(28px)}'
+    + '.cx-fx-js .cx-fx.in{opacity:1;transform:none;transition:opacity .7s ease var(--d,0s),transform .7s cubic-bezier(.2,.8,.2,1) var(--d,0s)!important}'
+    + '.cx-fx-js .cx-fx.in.done{transition:transform .45s cubic-bezier(.2,.8,.2,1),box-shadow .45s,border-color .45s!important}'
+    + '@media (hover:none){.cx-fx:hover{transform:none!important}}'
+    + '@media (prefers-reduced-motion:reduce){.cx-fx-js .cx-fx{opacity:1;transform:none}.cx-fx:hover{transform:none!important}.cx-fx:hover .cx-ph{animation:none}.cx-fx:hover .cx-img img,.cx-fx:hover .cx-img video{transform:none}}';
 
-  function caseCardFx() {
-    var grid = document.getElementById('caseGrid');
+  // grid：容器；pre：卡片 class 前綴（cn / news / media / event）；rgb：主題色（省略則取徽章顏色）
+  function cardFx(grid, pre, rgb) {
     if (!grid) return;
-    var cards = grid.querySelectorAll('.cn-card');
+    var cards = grid.querySelectorAll('.' + pre + '-card');
     if (!cards.length) return;
-    if (!document.getElementById('cnFxCss')) {
-      var st = document.createElement('style'); st.id = 'cnFxCss'; st.textContent = CASE_CSS; document.head.appendChild(st);
+    if (!document.getElementById('cxFxCss')) {
+      var st = document.createElement('style'); st.id = 'cxFxCss'; st.textContent = CX_CSS; document.head.appendChild(st);
     }
-    // 主題色取自該頁徽章顏色（客服委外＝深藍、客服訓練＝綠、客戶服務整合＝藍）
-    var rgb = '30,42,94';
-    var b = grid.querySelector('.cn-card-badge');
-    if (b) {
-      var m = getComputedStyle(b).backgroundColor.match(/(\d+),\s*(\d+),\s*(\d+)/);
+    if (!rgb) {
+      rgb = '30,42,94';
+      var b = grid.querySelector('.' + pre + '-card-badge');
+      var m = b && getComputedStyle(b).backgroundColor.match(/(\d+),\s*(\d+),\s*(\d+)/);
       if (m) rgb = m[1] + ',' + m[2] + ',' + m[3];
     }
-    grid.style.setProperty('--c', rgb);
     var reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
     var io = !reduce && 'IntersectionObserver' in window ? new IntersectionObserver(function (es) {
       es.forEach(function (e) {
@@ -164,10 +163,17 @@
         setTimeout(function () { e.target.classList.add('done'); }, 1400);
       });
     }, { threshold: 0.12 }) : null;
-    if (io) grid.classList.add('cn-fx-js');
+    if (io) grid.classList.add('cx-fx-js');
+    function tag(c, sel, cls) { Array.prototype.forEach.call(c.querySelectorAll(sel), function (x) { x.classList.add(cls); }); }
     Array.prototype.forEach.call(cards, function (c, i) {
-      c.classList.add('cn-fx');
+      if (c.classList.contains('cx-fx')) return;
+      c.classList.add('cx-fx');
       c.style.setProperty('--c', rgb);
+      tag(c, '.' + pre + '-card-img', 'cx-img');
+      tag(c, '.' + pre + '-card-emoji,.' + pre + '-card-placeholder', 'cx-ph');
+      tag(c, '.' + pre + '-card-client,.' + pre + '-card-title,h4', 'cx-title');
+      tag(c, '.' + pre + '-read-btn', 'cx-btn');
+      tag(c, '.' + pre + '-card-badge', 'cx-badge');
       if (io) { c.style.setProperty('--d', (i % 3) * 0.12 + 's'); io.observe(c); }
       c.addEventListener('mousemove', function (ev) {
         var r = c.getBoundingClientRect();
@@ -177,11 +183,21 @@
     });
   }
 
+  function contentCardFx() {
+    cardFx(document.getElementById('caseGrid'), 'cn');           // 成功案例三頁（色取自徽章）
+    cardFx(document.getElementById('newsGrid'), 'news', '30,42,94');   // 最新消息
+    cardFx(document.getElementById('mediaGrid'), 'media', '30,42,94'); // 媒體採訪
+    cardFx(document.getElementById('eventGrid'), 'event', '30,42,94'); // 活動
+    Array.prototype.forEach.call(document.querySelectorAll('[id^="tab-"] .news-grid'), function (g) {
+      cardFx(g, 'news', '200,22,29');                              // 首頁「最新消息」分頁（品牌紅）
+    });
+  }
+
   if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', function() { renderFooterSvcList(); renderHomeSvcGrid(); caseCardFx(); });
+    document.addEventListener('DOMContentLoaded', function() { renderFooterSvcList(); renderHomeSvcGrid(); contentCardFx(); });
   } else {
     renderFooterSvcList();
     renderHomeSvcGrid();
-    caseCardFx();
+    contentCardFx();
   }
 })();
