@@ -132,7 +132,7 @@
     + '.cx-fx:hover .cx-badge{transform:translateY(-2px);box-shadow:0 6px 16px -4px rgba(var(--c),.7)}'
     + '.cx-fx .cx-title{transition:color .35s}'
     + '.cx-fx:hover .cx-title{color:rgb(var(--c))}'
-    + '.cx-fx .cx-btn{display:inline-block;transition:color .35s,transform .35s}'
+    + '.cx-fx .cx-btn{transition:color .35s,transform .35s}'
     + '.cx-fx:hover .cx-btn{color:rgb(var(--c));transform:translateX(5px)}'
     + '.cx-fx-js .cx-fx{opacity:0;transform:translateY(28px)}'
     + '.cx-fx-js .cx-fx.in{opacity:1;transform:none;transition:opacity .7s ease var(--d,0s),transform .7s cubic-bezier(.2,.8,.2,1) var(--d,0s)!important}'
@@ -140,19 +140,18 @@
     + '@media (hover:none){.cx-fx:hover{transform:none!important}}'
     + '@media (prefers-reduced-motion:reduce){.cx-fx-js .cx-fx{opacity:1;transform:none}.cx-fx:hover{transform:none!important}.cx-fx:hover .cx-ph{animation:none}.cx-fx:hover .cx-img img,.cx-fx:hover .cx-img video{transform:none}}';
 
-  // grid：容器；pre：卡片 class 前綴（cn / news / media / event）；rgb：主題色（省略則取徽章顏色）
+  // grid：容器；pre：卡片 class 前綴（cn / news / media / event / insight），或自訂選擇器物件；rgb：主題色（省略則取徽章顏色）
   function cardFx(grid, pre, rgb) {
     if (!grid) return;
-    var cards = grid.querySelectorAll('.' + pre + '-card');
-    if (!cards.length) return;
+    var q = typeof pre === 'string' ? {
+      card: '.' + pre + '-card', img: '.' + pre + '-card-img',
+      ph: '.' + pre + '-card-emoji,.' + pre + '-card-placeholder',
+      title: '.' + pre + '-card-client,.' + pre + '-card-title,h4',
+      btn: '.' + pre + '-read-btn,.' + pre + '-card-cta',
+      badge: '.' + pre + '-card-badge,.' + pre + '-card-cat'
+    } : pre;
     if (!document.getElementById('cxFxCss')) {
       var st = document.createElement('style'); st.id = 'cxFxCss'; st.textContent = CX_CSS; document.head.appendChild(st);
-    }
-    if (!rgb) {
-      rgb = '30,42,94';
-      var b = grid.querySelector('.' + pre + '-card-badge');
-      var m = b && getComputedStyle(b).backgroundColor.match(/(\d+),\s*(\d+),\s*(\d+)/);
-      if (m) rgb = m[1] + ',' + m[2] + ',' + m[3];
     }
     var reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
     var io = !reduce && 'IntersectionObserver' in window ? new IntersectionObserver(function (es) {
@@ -165,22 +164,45 @@
     }, { threshold: 0.12 }) : null;
     if (io) grid.classList.add('cx-fx-js');
     function tag(c, sel, cls) { Array.prototype.forEach.call(c.querySelectorAll(sel), function (x) { x.classList.add(cls); }); }
-    Array.prototype.forEach.call(cards, function (c, i) {
-      if (c.classList.contains('cx-fx')) return;
-      c.classList.add('cx-fx');
-      c.style.setProperty('--c', rgb);
-      tag(c, '.' + pre + '-card-img', 'cx-img');
-      tag(c, '.' + pre + '-card-emoji,.' + pre + '-card-placeholder', 'cx-ph');
-      tag(c, '.' + pre + '-card-client,.' + pre + '-card-title,h4', 'cx-title');
-      tag(c, '.' + pre + '-read-btn', 'cx-btn');
-      tag(c, '.' + pre + '-card-badge', 'cx-badge');
-      if (io) { c.style.setProperty('--d', (i % 3) * 0.12 + 's'); io.observe(c); }
-      c.addEventListener('mousemove', function (ev) {
-        var r = c.getBoundingClientRect();
-        c.style.setProperty('--mx', (ev.clientX - r.left) + 'px');
-        c.style.setProperty('--my', (ev.clientY - r.top) + 'px');
+    function apply() {
+      var cards = grid.querySelectorAll(q.card);
+      if (!cards.length) return;
+      var color = rgb;
+      if (!color) {
+        color = '30,42,94';
+        var b = grid.querySelector(q.badge);
+        var m = b && getComputedStyle(b).backgroundColor.match(/(\d+),\s*(\d+),\s*(\d+)/);
+        if (m) color = m[1] + ',' + m[2] + ',' + m[3];
+      }
+      Array.prototype.forEach.call(cards, function (c, i) {
+        if (c.classList.contains('cx-fx')) return;
+        c.classList.add('cx-fx');
+        c.style.setProperty('--c', color);
+        tag(c, q.img, 'cx-img');
+        tag(c, q.ph, 'cx-ph');
+        tag(c, q.title, 'cx-title');
+        tag(c, q.btn, 'cx-btn');
+        tag(c, q.badge, 'cx-badge');
+        // 圖片區只有 emoji 文字時，包成可晃動的元素
+        Array.prototype.forEach.call(c.querySelectorAll('.cx-img'), function (im) {
+          if (!im.children.length && im.textContent.trim()) {
+            im.innerHTML = '<span class="cx-ph" style="display:inline-block">' + im.innerHTML + '</span>';
+          }
+        });
+        Array.prototype.forEach.call(c.querySelectorAll('.cx-btn'), function (x) {
+          if (getComputedStyle(x).display === 'inline') x.style.display = 'inline-block';
+        });
+        if (io) { c.style.setProperty('--d', (i % 3) * 0.12 + 's'); io.observe(c); }
+        c.addEventListener('mousemove', function (ev) {
+          var r = c.getBoundingClientRect();
+          c.style.setProperty('--mx', (ev.clientX - r.left) + 'px');
+          c.style.setProperty('--my', (ev.clientY - r.top) + 'px');
+        });
       });
-    });
+    }
+    apply();
+    // 卡片重新渲染（例如切換分類）時自動補上效果
+    if ('MutationObserver' in window) new MutationObserver(apply).observe(grid, { childList: true });
   }
 
   function contentCardFx() {
@@ -188,6 +210,11 @@
     cardFx(document.getElementById('newsGrid'), 'news', '30,42,94');   // 最新消息
     cardFx(document.getElementById('mediaGrid'), 'media', '30,42,94'); // 媒體採訪
     cardFx(document.getElementById('eventGrid'), 'event', '30,42,94'); // 活動
+    cardFx(document.getElementById('insightsGrid'), 'insight', '200,22,29'); // 產業新知列表
+    cardFx(document.getElementById('homeInsightsGrid'), {           // 首頁「客服產業新知」
+      card: '.insight-home-card', img: '.insight-home-img', ph: '.cx-none', title: '.insight-home-title',
+      btn: '.insight-home-link', badge: '.insight-home-cat'
+    }, '200,22,29');
     Array.prototype.forEach.call(document.querySelectorAll('[id^="tab-"] .news-grid'), function (g) {
       cardFx(g, 'news', '200,22,29');                              // 首頁「最新消息」分頁（品牌紅）
     });
