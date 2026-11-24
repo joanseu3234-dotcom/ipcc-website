@@ -199,6 +199,8 @@ html{scroll-padding-top:90px}
 /* 主視覺：對話視窗 */
 .st-chatwin,.st-tokwin,.st-wavewin,.st-ag-chat,.st-vo-call{background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.12);border-radius:22px;backdrop-filter:blur(8px);overflow:hidden}
 .st-chat-body{padding:18px;display:flex;flex-direction:column;gap:12px;min-height:380px}
+.st-chat-run{height:400px;min-height:0;justify-content:flex-end;overflow:hidden;-webkit-mask-image:linear-gradient(transparent 0,#000 48px);mask-image:linear-gradient(transparent 0,#000 48px)}
+.st-chat-run>*{flex-shrink:0}
 .st-msg{max-width:84%;display:flex;flex-direction:column;gap:4px;transition:all .45s var(--st-ease)}
 .st-msg small{font-size:11px;color:var(--st-sub)}
 .st-msg p{margin:0;padding:11px 15px;border-radius:16px;font-size:14px;line-height:1.65}

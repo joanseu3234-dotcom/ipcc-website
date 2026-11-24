@@ -35,3 +35,5 @@
 - 後台「專案服務 → 版型與動態內容」分頁的表單依 BLOCKS 自動產生；新增區塊類型只要在 service-story.js 加 BLOCKS 定義與 R 渲染函式。
 - `robots.txt` 開放 Google 與 AI 搜尋爬蟲；正式網域 https://www.phonecenter.com.tw （canonical 一律指向此網域）。
 - 本機驗證：`node tools/build-static.js` 後檢查 `services/`；不要把產物 commit。
+- 主題專屬區塊（2026-11-24）：`omni`（全渠道整合前後切換）、`agent_chat`（AI Agent 問答示範）、`label_demo`（數據標註四階段）、`voice_insight`（對話洞察歸類）；hero 的 `visual` 可選 panel／orbit／chat／tokens／wave。示範內容一律標「示意」，不放未經證實的數字。
+- 後台 admin.js 開啟時若線上 content-data.js 的 `__ts` 比本機 `ipcc_deploy_ts` 新，會自動同步線上內容；發布成功後會更新 `ipcc_deploy_ts`。
