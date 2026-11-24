@@ -120,6 +120,40 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
     }
     .svc-card:hover .svc-card-cta::after { transform: translateX(4px); }
 
+
+    /* ── 卡片動態效果（依各服務主題色） ── */
+    .svc-card { --c: 200,22,29; --mx: 50%; --my: 0%; isolation: isolate;
+      transition: transform .45s cubic-bezier(.2,.8,.2,1), box-shadow .45s, border-color .45s; }
+    .svc-card::after { content: ''; position: absolute; inset: 0; z-index: -1; opacity: 0; transition: opacity .4s;
+      background: radial-gradient(420px circle at var(--mx) var(--my), rgba(var(--c),.10), transparent 60%); }
+    .svc-card::before { background: linear-gradient(90deg, rgba(var(--c),1), rgba(var(--c),.45)); height: 4px; }
+    .svc-card:hover { border-color: rgba(var(--c),.45); transform: translateY(-8px);
+      box-shadow: 0 22px 48px -18px rgba(var(--c),.45), 0 6px 18px rgba(0,0,0,.05); }
+    .svc-card:hover::after { opacity: 1; }
+    .svc-card-icon { display: inline-block; width: fit-content; transform-origin: 50% 80%; transition: transform .5s cubic-bezier(.2,.8,.2,1); }
+    .svc-card:hover .svc-card-icon { animation: svc-icon 1.2s ease-in-out; }
+    @keyframes svc-icon { 0%{transform:none} 25%{transform:translateY(-6px) rotate(-8deg) scale(1.12)} 50%{transform:translateY(-2px) rotate(5deg) scale(1.08)} 75%{transform:translateY(-4px) rotate(-2deg) scale(1.1)} 100%{transform:none} }
+    .svc-card-num, .svc-card-title, .svc-card-cta { transition: color .35s; }
+    .svc-card:hover .svc-card-num, .svc-card:hover .svc-card-cta { color: rgb(var(--c)); }
+    .svc-card:hover .svc-card-title { color: rgb(var(--c)); }
+    .svc-card:hover .svc-card-cta::after { transform: translateX(6px); }
+    .svc-tag { transition: all .35s; }
+    .svc-card:hover .svc-tag { background: rgba(var(--c),.08); color: rgb(var(--c)); border-color: rgba(var(--c),.22); }
+    .svc-card-badge { position: absolute; top: 22px; right: 22px; display: inline-flex; align-items: center; gap: 6px;
+      font-size: .7rem; font-weight: 700; letter-spacing: .04em; padding: 4px 10px; border-radius: 100px;
+      color: rgb(var(--c)); background: rgba(var(--c),.08); border: 1px solid rgba(var(--c),.2); }
+    .svc-card-badge i { width: 6px; height: 6px; border-radius: 50%; background: rgb(var(--c)); animation: svc-pulse 1.8s infinite; }
+    @keyframes svc-pulse { 0%{box-shadow:0 0 0 0 rgba(var(--c),.55)} 70%{box-shadow:0 0 0 7px rgba(var(--c),0)} 100%{box-shadow:0 0 0 0 rgba(var(--c),0)} }
+    .svc-js .svc-card { opacity: 0; transform: translateY(28px); }
+    .svc-js .svc-card.in { opacity: 1; transform: none;
+      transition: opacity .7s ease var(--d,0s), transform .7s cubic-bezier(.2,.8,.2,1) var(--d,0s), box-shadow .45s, border-color .45s; }
+    .svc-js .svc-card.in.done { transition: transform .45s cubic-bezier(.2,.8,.2,1), box-shadow .45s, border-color .45s; }
+    .svc-js .svc-card.in.done:hover { transform: translateY(-8px); }
+    @media (prefers-reduced-motion: reduce) {
+      .svc-js .svc-card { opacity: 1; transform: none; }
+      .svc-card:hover .svc-card-icon, .svc-card-badge i { animation: none; }
+      .svc-card:hover { transform: none; }
+    }
     @media (max-width: 900px) {
       .svc-grid, .svc-grid-5 {
         grid-template-columns: repeat(2, 1fr);
@@ -298,6 +332,7 @@ function toggleMenu() {
     return;
   }
 
+  var SVC_THEME_RGB = { navy: '47,123,255', teal: '15,165,151', graphite: '184,137,46', indigo: '99,102,241', red: '200,22,29' };
   var published = svcs.filter(function(s){ return s.published; }).sort(function(a,b){ return a.order - b.order; });
   var count = published.length;
   var gridClass = count === 5 ? 'svc-grid-5' : 'svc-grid';
@@ -306,7 +341,9 @@ function toggleMenu() {
   published.forEach(function(s) {
     var tags = (s.tags || []).map(function(t) { return '<span class="svc-tag">' + t + '</span>'; }).join('');
     var link = s.slug ? '/services/' + s.slug : 'services.html';
-    html += '<a href="' + link + '" class="svc-card">'
+    var rgb = SVC_THEME_RGB[s.theme] || SVC_THEME_RGB[s.layout === 'custom' ? 'navy' : 'red'];
+    var badge = s.layout === 'story' || s.layout === 'custom' ? '<span class="svc-card-badge"><i></i>互動體驗</span>' : '';
+    html += '<a href="' + link + '" class="svc-card" style="--c:' + rgb + '">' + badge
       + '<div class="svc-card-num">' + (s.num || '') + '</div>'
       + '<div class="svc-card-icon">' + (s.icon || '📋') + '</div>'
       + '<div class="svc-card-title">' + (s.title || '') + '</div>'
@@ -317,6 +354,32 @@ function toggleMenu() {
   });
   html += '</div>';
   document.getElementById('svcListContainer').innerHTML = html;
+
+  // 卡片動態：捲動進場（依序出現）、滑鼠光暈跟隨
+  (function () {
+    var box = document.getElementById('svcListContainer');
+    var cards = box.querySelectorAll('.svc-card');
+    var reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if (!reduce && 'IntersectionObserver' in window) {
+      box.classList.add('svc-js');
+      var io = new IntersectionObserver(function (es) {
+        es.forEach(function (e) {
+          if (!e.isIntersecting) return;
+          io.unobserve(e.target);
+          e.target.classList.add('in');
+          setTimeout(function () { e.target.classList.add('done'); }, 1400);
+        });
+      }, { threshold: 0.12 });
+      cards.forEach(function (c, i) { c.style.setProperty('--d', (i % 3) * 0.12 + 's'); io.observe(c); });
+    }
+    cards.forEach(function (c) {
+      c.addEventListener('mousemove', function (ev) {
+        var r = c.getBoundingClientRect();
+        c.style.setProperty('--mx', (ev.clientX - r.left) + 'px');
+        c.style.setProperty('--my', (ev.clientY - r.top) + 'px');
+      });
+    });
+  })();
 
   // 更新 footer 服務列表
   var footerList = document.getElementById('footerSvcList');
