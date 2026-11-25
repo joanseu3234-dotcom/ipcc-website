@@ -122,7 +122,7 @@
     + '.cx-fx:hover::before{transform:scaleX(1)}'
     + '.cx-fx::after{content:"";position:absolute;inset:0;z-index:2;pointer-events:none;opacity:0;transition:opacity .4s;background:radial-gradient(380px circle at var(--mx) var(--my),rgba(var(--c),.12),transparent 60%)}'
     + '.cx-fx:hover::after{opacity:1}'
-    + '.cx-fx:hover{transform:translateY(-8px)!important;border-color:rgba(var(--c),.4)!important;box-shadow:0 22px 48px -18px rgba(var(--c),.5),0 2px 8px rgba(0,0,0,.06)!important}'
+    + '.cx-fx:not(.cx-soft):hover{transform:translateY(-8px)!important;border-color:rgba(var(--c),.4)!important;box-shadow:0 22px 48px -18px rgba(var(--c),.5),0 2px 8px rgba(0,0,0,.06)!important}'
     + '.cx-fx .cx-img{overflow:hidden}'
     + '.cx-fx .cx-img img,.cx-fx .cx-img video,.cx-fx .cx-ph{transition:transform .7s cubic-bezier(.2,.8,.2,1)}'
     + '.cx-fx:hover .cx-img img,.cx-fx:hover .cx-img video{transform:scale(1.06)}'
@@ -147,7 +147,7 @@
       card: '.' + pre + '-card', img: '.' + pre + '-card-img',
       ph: '.' + pre + '-card-emoji,.' + pre + '-card-placeholder',
       title: '.' + pre + '-card-client,.' + pre + '-card-title,h4',
-      btn: '.' + pre + '-read-btn,.' + pre + '-card-cta',
+      btn: '.' + pre + '-read-btn,.' + pre + '-card-cta,.' + pre + '-card-read',
       badge: '.' + pre + '-card-badge,.' + pre + '-card-cat'
     } : pre;
     if (!document.getElementById('cxFxCss')) {
@@ -177,6 +177,7 @@
       Array.prototype.forEach.call(cards, function (c, i) {
         if (c.classList.contains('cx-fx')) return;
         c.classList.add('cx-fx');
+        if (q.soft) c.classList.add('cx-soft');
         c.style.setProperty('--c', color);
         tag(c, q.img, 'cx-img');
         tag(c, q.ph, 'cx-ph');
@@ -214,6 +215,27 @@
     cardFx(document.getElementById('homeInsightsGrid'), {           // 首頁「客服產業新知」
       card: '.insight-home-card', img: '.insight-home-img', ph: '.cx-none', title: '.insight-home-title',
       btn: '.insight-home-link', badge: '.insight-home-cat'
+    }, '200,22,29');
+    // 關於我們
+    cardFx(document.getElementById('awards-main-grid'), {           // 獲獎事蹟：主要獎項（獎項橘）
+      card: '.award-card', img: '.award-card-img', ph: '.cx-none', title: '.award-card-title',
+      btn: '.award-card-read', badge: '.cx-none'
+    }, '217,119,6');
+    cardFx(document.getElementById('awards-certs-grid'), {          // 獲獎事蹟：認證（深色區，金色）
+      card: '#awards-certs-grid > div', img: ':scope > div:first-child', ph: '.cx-none', title: '.cx-none',
+      btn: '.cx-none', badge: '.cx-none'
+    }, '255,200,100');
+    cardFx(document.getElementById('security-principles-grid'), {   // 資訊安全：六大原則（保留原本的深藍反色）
+      card: '.sec-principle-card', img: '.cx-none', ph: '.sec-icon-wrap', title: '.cx-none',
+      btn: '.cx-none', badge: '.cx-none'
+    }, '200,22,29');
+    cardFx(document.querySelector('.core-values-grid'), {           // 願景：核心價值（格狀相連，不浮起）
+      card: '.core-value-card', img: '.cx-none', ph: '.cx-none', title: '.cx-none',
+      btn: '.cx-none', badge: '.cx-none', soft: true
+    }, '200,22,29');
+    cardFx(document.querySelector('.about-stats-row'), {            // 關於我們：統計小卡
+      card: '.about-stat-card', img: '.cx-none', ph: '.cx-none', title: '.about-stat-num',
+      btn: '.cx-none', badge: '.cx-none'
     }, '200,22,29');
     Array.prototype.forEach.call(document.querySelectorAll('[id^="tab-"] .news-grid'), function (g) {
       cardFx(g, 'news', '200,22,29');                              // 首頁「最新消息」分頁（品牌紅）
