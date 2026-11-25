@@ -1275,3 +1275,7 @@ img { max-width: 100%; display: block; }
 /* 麵包屑：前面的「首頁／成功案例」不被壓扁，最後一段（標題）過長時以「…」截斷 */
 .breadcrumb > * { flex-shrink: 0; white-space: nowrap; }
 .breadcrumb > :last-child { flex-shrink: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; }
+/* 消息／案例內文的 ## 標題（mdLite 產生） */
+.md-h { display: block; font-weight: 800; color: var(--navy-dark, #12193A); line-height: 1.6; margin: 18px 0 2px; }
+.md-h1, .md-h2 { font-size: 1.12em; padding-left: 12px; border-left: 3px solid var(--red, #C8161D); }
+.md-h3, .md-h4 { font-size: 1.02em; }

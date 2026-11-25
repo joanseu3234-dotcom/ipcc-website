@@ -287,6 +287,18 @@ function toggleMenu() {
 }
 
 function esc(s) { return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
+// 後台內文的簡易 Markdown：## 標題、**粗體**（其餘照原樣顯示）
+function mdLite(html) {
+  var out = '', lines = html.split('\n');
+  for (var i = 0; i < lines.length; i++) {
+    var m = lines[i].match(/^\s*(#{1,4})\s+(.+?)\s*#*\s*$/);
+    // 標題本身是區塊，後面的換行不再多算一行
+    if (m) out += '<span class="md-h md-h' + m[1].length + '">' + m[2] + '</span>';
+    else out += lines[i] + (i < lines.length - 1 ? '\n' : '');
+  }
+  return out.replace(/\*\*([^*\n]+?)\*\*/g, '<strong>$1</strong>');
+}
+
 function renderContent(text) {
   if (!text) return '';
   var re = /\[([^\]]*)\]\((https?:\/\/[^)]+)\)|(https?:\/\/[^\s<>"&]+)/g;
@@ -303,7 +315,7 @@ function renderContent(text) {
     lastIdx = m.index + m[0].length;
   }
   if (lastIdx < text.length) result += esc(text.slice(lastIdx));
-  return result;
+  return mdLite(result);
 }
 
 var c = null;
