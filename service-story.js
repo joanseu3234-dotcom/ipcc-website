@@ -475,8 +475,8 @@
     return '<section class="st-sec st-warm"><div class="st-wrap">'
       + '<div class="st-eyebrow">PAIN × SOLUTION</div><h2>' + txt(b.title || '痛點解析 × ') + (b.title ? '' : '<em>解決方案</em>') + '</h2>'
       + '<div class="st-compare">'
-      + '<div class="st-col st-col-pain st-reveal"><h3>企業常見痛點</h3><ul>' + pains.map(function (p) { return '<li>' + esc(p.desc) + '</li>'; }).join('') + '</ul></div>'
-      + '<div class="st-col st-col-sol st-reveal"><h3>我們的解決方案</h3><ul>' + feats.map(function (f) { return '<li><b>' + esc(f.title) + '</b>' + (f.desc ? '<span>' + esc(f.desc) + '</span>' : '') + '</li>'; }).join('') + '</ul></div>'
+      + '<div class="st-col st-col-pain st-reveal"><h3>企業常見痛點</h3><ul>' + pains.map(function (p) { return '<li>' + txt(p.desc) + '</li>'; }).join('') + '</ul></div>'
+      + '<div class="st-col st-col-sol st-reveal"><h3>我們的解決方案</h3><ul>' + feats.map(function (f) { return '<li><b>' + esc(f.title) + '</b>' + (f.desc ? '<span>' + txt(f.desc) + '</span>' : '') + '</li>'; }).join('') + '</ul></div>'
       + '</div></div></section>';
   };
   R.industries = function (b, svc) {
@@ -485,7 +485,7 @@
     return '<section class="st-sec st-light"><div class="st-wrap">'
       + '<div class="st-eyebrow">INDUSTRIES</div><h2>' + txt(b.title || '適用產業') + '</h2>'
       + '<div class="st-inds">' + inds.map(function (x) {
-        return '<div class="st-ind st-reveal">' + (x.icon ? '<i>' + esc(x.icon) + '</i>' : '') + '<b>' + esc(x.name) + '</b>' + (x.desc ? '<span>' + esc(x.desc) + '</span>' : '') + '</div>';
+        return '<div class="st-ind st-reveal">' + (x.icon ? '<i>' + esc(x.icon) + '</i>' : '') + '<b>' + esc(x.name) + '</b>' + (x.desc ? '<span>' + txt(x.desc) + '</span>' : '') + '</div>';
       }).join('') + '</div></div></section>';
   };
   R.faq = function (b, svc) {
