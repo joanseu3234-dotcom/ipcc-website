@@ -10,10 +10,25 @@
     var reveals = root.querySelectorAll('.st-reveal');
     if ('IntersectionObserver' in window && !reduce) {
       var io = new IntersectionObserver(function (es) {
-        es.forEach(function (e) { if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); } });
+        es.forEach(function (e) {
+          if (!e.isIntersecting) return;
+          var t = e.target;
+          t.classList.add('in'); io.unobserve(t);
+          setTimeout(function () { t.classList.add('st-done'); }, 1500); // 進場完成後，懸停反應不再延遲
+        });
       }, { threshold: 0.15, rootMargin: '0px 0px -40px 0px' });
       reveals.forEach(function (el) { io.observe(el); });
-    } else reveals.forEach(function (el) { el.classList.add('in'); });
+    } else reveals.forEach(function (el) { el.classList.add('in', 'st-done'); });
+
+    // 卡片懸停：滑鼠光暈跟隨（與網站其他卡片一致）
+    root.querySelectorAll('.st-card,.st-ind,.st-stat,.st-flow-step,.st-col,.st-other-grid a').forEach(function (c) {
+      c.classList.add('st-hv');
+      c.addEventListener('mousemove', function (ev) {
+        var r = c.getBoundingClientRect();
+        c.style.setProperty('--mx', (ev.clientX - r.left) + 'px');
+        c.style.setProperty('--my', (ev.clientY - r.top) + 'px');
+      });
+    });
 
     // 主視覺看板逐列亮起
     root.querySelectorAll('[data-st-panel]').forEach(function (p) {

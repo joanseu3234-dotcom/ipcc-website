@@ -371,3 +371,24 @@ html{scroll-padding-top:90px}
   .st-orb-ring,.st-orb-dot,.st-orb-hub,.st-wave i,.st-typing i{animation:none}
   .st-omni-pkt{display:none}
 }
+
+/* ── 卡片懸停動態（與網站其他卡片一致：主題色浮起、頂部色條、滑鼠光暈、圖示晃動）── */
+.st-hv{position:relative;isolation:isolate;--mx:50%;--my:0%}
+.st-hv::before{content:"";position:absolute;left:18px;right:18px;top:-1px;height:3px;border-radius:0 0 3px 3px;background:linear-gradient(90deg,var(--st-accent),rgba(var(--st-rgb),.3));transform:scaleX(0);transform-origin:left;transition:transform .5s var(--st-ease);z-index:1}
+.st-hv::after{content:"";position:absolute;inset:0;border-radius:inherit;z-index:-1;pointer-events:none;opacity:0;transition:opacity .4s;background:radial-gradient(360px circle at var(--mx) var(--my),rgba(var(--st-rgb),.13),transparent 62%)}
+.st-hv:hover::before{transform:scaleX(1)}
+.st-hv:hover::after{opacity:1}
+.st-hv,.st-js .st-hv.st-reveal.in.st-done{transition:transform .45s var(--st-ease),box-shadow .45s,border-color .45s,background .45s}
+.st-hv:hover,.st-js .st-hv.st-reveal.in:hover{transform:translateY(-8px);border-color:rgba(var(--st-rgb),.45);box-shadow:0 22px 48px -18px rgba(var(--st-rgb),.5),0 2px 8px rgba(20,30,50,.05)}
+.st-flow-step.st-hv:hover{border-color:var(--st-light);box-shadow:0 22px 50px -16px rgba(var(--st-rgb),.6)}
+.st-col.st-hv:hover,.st-js .st-col.st-hv.st-reveal.in:hover{transform:translateY(-5px)}
+.st-card i,.st-ind i{transform-origin:50% 80%;transition:background .45s,color .45s,box-shadow .45s}
+.st-ind i{display:inline-block;width:max-content}
+.st-card.st-hv:hover i{background:linear-gradient(135deg,rgba(var(--st-rgb),.75),var(--st-accent));color:#fff;box-shadow:0 10px 24px -6px rgba(var(--st-rgb),.7);animation:st-wig 1.2s ease-in-out}
+.st-ind.st-hv:hover i,.st-other-grid a.st-hv:hover i{animation:st-wig 1.2s ease-in-out}
+.st-other-grid a.st-hv i{display:inline-block}
+.st-card h3,.st-ind b,.st-stat .st-num{transition:color .35s}
+.st-card.st-hv:hover h3,.st-ind.st-hv:hover b,.st-stat.st-hv:hover .st-num{color:var(--st-accent)}
+@keyframes st-wig{0%{transform:none}25%{transform:translateY(-6px) rotate(-8deg) scale(1.12)}50%{transform:translateY(-2px) rotate(5deg) scale(1.08)}75%{transform:translateY(-4px) rotate(-2deg) scale(1.1)}100%{transform:none}}
+@media (hover:none){.st-hv:hover,.st-js .st-hv.st-reveal.in:hover{transform:none}}
+@media (prefers-reduced-motion:reduce){.st-hv:hover,.st-js .st-hv.st-reveal.in:hover{transform:none}.st-hv:hover i{animation:none}}
