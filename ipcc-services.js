@@ -132,6 +132,7 @@
     + '.cx-fx:hover .cx-icobg{background:linear-gradient(135deg,rgba(var(--c),.75),rgb(var(--c)));box-shadow:0 8px 20px -6px rgba(var(--c),.7)}'
     + '.about-card-main.cx-fx::before{transition:transform .8s cubic-bezier(.2,.8,.2,1)}.about-card-main.cx-fx:hover::before{transform:scale(1.7)}'
     + '.about-card-main.cx-fx [style*="rgba(255,255,255,0.07)"]{position:relative;z-index:1;transition:background .35s,transform .35s}.about-card-main.cx-fx [style*="rgba(255,255,255,0.07)"]:hover{background:rgba(255,255,255,.13)!important;transform:translateX(6px)}'
+    + '.challenge-item.cx-fx,.compare-item.cx-fx{transition:transform .35s,color .35s,background .35s!important}.challenge-item.cx-fx:hover{transform:translateX(5px)!important;color:rgb(var(--c))}.compare-item.cx-fx:hover{transform:translateX(5px)!important}'
     + '.cx-fx .cx-badge{transition:transform .35s,box-shadow .35s}'
     + '.cx-fx:hover .cx-badge{transform:translateY(-2px);box-shadow:0 6px 16px -4px rgba(var(--c),.7)}'
     + '.cx-fx .cx-title{transition:color .35s}'
@@ -261,6 +262,31 @@
       card: '.contact-form-card', img: '.cx-none', ph: '.cx-none', title: '.cx-none',
       btn: '.cx-none', badge: '.cx-none', soft: true, plain: true
     }, '200,22,29');
+    // 關於我們：集團沿革時間軸
+    cardFx(document.getElementById('about-timeline'), {
+      card: '.timeline-content', img: '.cx-none', ph: '.cx-none', title: 'h4',
+      btn: '.cx-none', badge: '.cx-none'
+    }, '200,22,29');
+    // 資訊服務頁：服務模組卡、常見挑戰
+    cardFx(document.querySelector('.module-grid'), {
+      card: '.module-card', img: '.cx-none', ph: '.module-icon', icobg: '.module-icon', title: '.module-name',
+      btn: '.cx-none', badge: '.cx-none'
+    }, '200,22,29');
+    cardFx(document.querySelector('.challenge-list'), {
+      card: '.challenge-item', img: '.cx-none', ph: '.cx-none', title: '.cx-none',
+      btn: '.cx-none', badge: '.cx-none', soft: true, plain: true
+    }, '200,22,29');
+    // 標準版服務頁（service-detail.html）：痛點／解決方案項目、適用產業
+    ['painItems', 'solutionItems'].forEach(function (id) {
+      cardFx(document.getElementById(id), {
+        card: '.compare-item', img: '.cx-none', ph: '.compare-item-icon', title: '.cx-none',
+        btn: '.cx-none', badge: '.cx-none', soft: true, plain: true
+      }, id === 'painItems' ? '200,22,29' : '60,160,255');
+    });
+    cardFx(document.getElementById('industriesGrid'), {
+      card: '.industry-card', img: '.industry-img-wrap', ph: '.industry-img-icon span', title: '.cx-none',
+      btn: '.cx-none', badge: '.cx-none', plain: true
+    }, '60,160,255');
     // 成功案例詳細頁：執行成果數字卡、其他成功案例
     cardFx(document.getElementById('detailResults'), {
       card: '.detail-result', img: '.cx-none', ph: '.cx-none', title: '.cx-none',
@@ -269,6 +295,9 @@
     cardFx(document.getElementById('moreCasesGrid'), 'news', '30,42,94');
     // 最新消息詳細頁：延伸閱讀
     cardFx(document.getElementById('moreNewsGrid'), 'news', '30,42,94');
+    cardFx(document.getElementById('moreEventGrid'), 'news', '30,42,94');   // 活動詳細頁
+    cardFx(document.getElementById('moreMediaGrid'), 'news', '30,42,94');   // 媒體報導詳細頁
+    cardFx(document.getElementById('moreAwardGrid'), 'news', '217,119,6');  // 獲獎詳細頁（獎項橘）
     // 產業新知文章頁：延伸閱讀卡片、常見問題
     cardFx(document.getElementById('relatedGrid'), 'related', '200,22,29');
     cardFx(document.getElementById('faqList'), {
