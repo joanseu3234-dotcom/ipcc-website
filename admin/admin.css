@@ -126,6 +126,7 @@ body {
   z-index: 100;
   box-shadow: 0 1px 24px rgba(0,0,0,0.35);
 }
+.hamburger { display: none; background: none; border: none; cursor: pointer; padding: 4px; font-size: 22px; line-height: 1; color: var(--text-main); }
 .topbar-hamburger { display: none; background: none; border: none; cursor: pointer; padding: 4px; font-size: 22px; color: var(--text-main); }
 .topbar-title { font-size: 18px; font-weight: 700; color: #00C8FF; flex: 1; }
 .topbar-user { display: flex; align-items: center; gap: 8px; font-size: 13px; color: var(--text-sub); }
@@ -323,6 +324,38 @@ tr.drag-over td { background: rgba(0,200,255,0.08) !important; border-top: 2px s
   .page-header-row { flex-direction: column; align-items: stretch; }
   .modal { border-radius: 10px 10px 0 0; align-self: flex-end; max-height: 85vh; }
   .modal-overlay { padding: 0; align-items: flex-end; }
+}
+
+/* ---- 手機版修正 ---- */
+@media (max-width: 768px) {
+  /* 部分頁面的選單按鈕用 .hamburger */
+  .hamburger { display: flex; align-items: center; justify-content: center; }
+  /* 側欄要蓋在遮罩之上（遮罩在 admin-layout 外層，原本會蓋住側欄） */
+  .admin-layout { z-index: auto; }
+  .main-content { position: relative; z-index: 1; }
+  .sidebar { z-index: 300; }
+  .sidebar-overlay { z-index: 250; }
+  /* 沒有內距的卡片：內容不要貼邊 */
+  .section-card:not(:has(> .section-card-header)):not(:has(> .section-card-body)) { padding: 16px; }
+  /* 表格：欄位不要擠成直排，改成左右滑動 */
+  .data-table, .ins-table, .user-table, .contact-table, .svc-list-table { min-width: 720px; }
+  .data-table th, .ins-table th, .user-table th, .contact-table th, .svc-list-table th { white-space: nowrap; }
+  /* 編輯列：三欄以上改成堆疊 */
+  .editor-row-grid3, .editor-row [style*="1fr 2fr"] { grid-template-columns: 1fr !important; }
+  .dyn-row-3, [style*="60px 1fr 1fr 32px"] { grid-template-columns: 56px 1fr 32px !important; }
+  .dyn-row-3 > :nth-child(3), [style*="60px 1fr 1fr 32px"] > :nth-child(3) { grid-column: 1 / -1; grid-row: 2; }
+  /* 頁首按鈕列 */
+  .page-header-row { flex-wrap: wrap; gap: 12px; }
+  /* 格式工具列在手機上縮小 */
+  .fmt-bar { gap: 4px !important; }
+  .fmt-bar button { padding: 2px 7px !important; }
+}
+@media (max-width: 480px) {
+  /* 編輯視窗：左右並排的欄位改成上下排 */
+  .modal [style*="1fr 1fr"]:not([style*="32px"]), .modal [style*="2fr 1fr"]:not([style*="32px"]) { grid-template-columns: 1fr !important; }
+  .stats-edit-grid { grid-template-columns: 1fr; }
+  /* 頁首：標題靠左、按鈕滿版（部分頁面有 inline 置中） */
+  .page-header-row { align-items: stretch !important; }
 }
 
 /* Alert messages */
