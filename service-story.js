@@ -198,7 +198,18 @@
   function esc(s) {
     return String(s == null ? '' : s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
   }
-  function txt(s) { return esc(s).replace(/\n/g, '<br>'); }
+  // 內文格式：換行、## 標題、**粗體**（與消息、案例、產業新知一致）
+  function txt(s) {
+    var lines = esc(s).split('\n'), out = '';
+    for (var i = 0; i < lines.length; i++) {
+      var m = lines[i].match(/^\s*(#{1,4})\s+(.+?)\s*#*\s*$/);
+      if (m) out += '<strong class="st-md-h st-md-h' + m[1].length + '">' + m[2] + '</strong>';
+      else out += lines[i] + (i < lines.length - 1 ? '<br>' : '');
+    }
+    return out.replace(/\*\*([^*\n]+?)\*\*/g, '<strong>$1</strong>');
+  }
+  // 純文字（SEO 描述、卡片摘要用）：拿掉格式符號
+  function plain(s) { return String(s == null ? '' : s).replace(/^\s*#{1,4}\s+/gm, '').replace(/\*\*([^*\n]+?)\*\*/g, '$1'); }
   function arr(v) {
     if (Array.isArray(v)) return v;
     if (typeof v === 'string' && v.trim()) { try { var p = JSON.parse(v); return Array.isArray(p) ? p : []; } catch (e) { return []; } }
@@ -540,7 +551,7 @@
   function headTags(svc) {
     var url = SITE + '/services/' + svc.slug;
     var title = svc.seo_title || (svc.title + '｜IPCC 東州集團');
-    var desc = svc.seo_desc || svc.desc || '';
+    var desc = plain(svc.seo_desc || svc.desc || '');
     var img = svc.image && /^https?:/.test(svc.image) ? svc.image : SITE + '/IPCCLOGO.png';
     var ld = [{
       '@context': 'https://schema.org', '@type': 'Service', name: svc.title, description: desc, url: url,
@@ -553,7 +564,7 @@
         { '@type': 'ListItem', position: 3, name: svc.title, item: url }]
     }];
     var faq = arr(svc.faq).filter(function (f) { return f && f.q && f.a; });
-    if (faq.length) ld.push({ '@context': 'https://schema.org', '@type': 'FAQPage', mainEntity: faq.map(function (f) { return { '@type': 'Question', name: f.q, acceptedAnswer: { '@type': 'Answer', text: f.a } }; }) });
+    if (faq.length) ld.push({ '@context': 'https://schema.org', '@type': 'FAQPage', mainEntity: faq.map(function (f) { return { '@type': 'Question', name: plain(f.q), acceptedAnswer: { '@type': 'Answer', text: plain(f.a) } }; }) });
     return '<title>' + esc(title) + '</title>\n'
       + '<meta name="description" content="' + esc(desc) + '">\n'
       + (arr(svc.tags).length ? '<meta name="keywords" content="' + esc(arr(svc.tags).join(',')) + '">\n' : '')
@@ -565,5 +576,5 @@
       + '<script type="application/ld+json">' + JSON.stringify(ld).replace(/</g, '\\u003c') + '</script>\n';
   }
 
-  return { SITE: SITE, THEMES: THEMES, BLOCKS: BLOCKS, render: render, headTags: headTags, defaultBlocks: defaultBlocks, arr: arr, esc: esc };
+  return { SITE: SITE, THEMES: THEMES, BLOCKS: BLOCKS, render: render, headTags: headTags, defaultBlocks: defaultBlocks, arr: arr, esc: esc, txt: txt, plain: plain };
 });

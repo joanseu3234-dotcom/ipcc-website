@@ -347,7 +347,7 @@ function toggleMenu() {
       + '<div class="svc-card-num">' + (s.num || '') + '</div>'
       + '<div class="svc-card-icon">' + (s.icon || '📋') + '</div>'
       + '<div class="svc-card-title">' + (s.title || '') + '</div>'
-      + '<div class="svc-card-desc">' + (s.desc || '') + '</div>'
+      + '<div class="svc-card-desc">' + (s.desc || '').replace(/^\s*#{1,4}\s+/gm, '').replace(/\*\*([^*\n]+?)\*\*/g, '$1') + '</div>'
       + '<div class="svc-card-tags">' + tags + '</div>'
       + '<span class="svc-card-cta">了解更多</span>'
       + '</a>';

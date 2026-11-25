@@ -78,6 +78,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 
     /* ── Service Overview ────────────────────────── */
     .svc-content-section { padding: 100px 0; text-align: center; }
+    .svc-content-text .st-md-h { display: block; font-weight: 900; font-size: 1.12em; margin: 18px 0 6px; color: inherit; }
     .svc-content-text {
       font-size: 1.1rem;
       color: var(--text-sub);
@@ -656,7 +657,11 @@ function toggleMenu() {
   // Content
   if (svc.content) {
     document.getElementById('contentHeading').textContent = svc.title || '';
-    document.getElementById('contentText').innerHTML = svc.content.replace(/\n/g, '<br>');
+    // ## 標題、**粗體**（內文可能含 HTML，這裡只轉格式不跳脫）
+    document.getElementById('contentText').innerHTML = svc.content.split('\n').map(function (l) {
+      var m = l.match(/^\s*(#{1,4})\s+(.+?)\s*#*\s*$/);
+      return m ? '<strong class="st-md-h">' + m[2] + '</strong>' : l + '<br>';
+    }).join('').replace(/(<br>)+$/, '').replace(/\*\*([^*\n]+?)\*\*/g, '<strong>$1</strong>');
     document.getElementById('svcContentSection').style.display = '';
   }
 

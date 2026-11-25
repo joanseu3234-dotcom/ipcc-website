@@ -392,3 +392,9 @@ html{scroll-padding-top:90px}
 @keyframes st-wig{0%{transform:none}25%{transform:translateY(-6px) rotate(-8deg) scale(1.12)}50%{transform:translateY(-2px) rotate(5deg) scale(1.08)}75%{transform:translateY(-4px) rotate(-2deg) scale(1.1)}100%{transform:none}}
 @media (hover:none){.st-hv:hover,.st-js .st-hv.st-reveal.in:hover{transform:none}}
 @media (prefers-reduced-motion:reduce){.st-hv:hover,.st-js .st-hv.st-reveal.in:hover{transform:none}.st-hv:hover i{animation:none}}
+
+/* 內文格式：## 標題（txt() 產生；標準版 service-detail 也共用這個 class） */
+.st-md-h{display:block;font-weight:900;font-size:1.12em;line-height:1.5;margin:20px 0 6px;color:var(--st-text,#12193A)}
+.st-md-h:first-child{margin-top:0}
+.st-md-h3,.st-md-h4{font-size:1.02em}
+.st-dark .st-md-h,.st-hero .st-md-h{color:#fff}

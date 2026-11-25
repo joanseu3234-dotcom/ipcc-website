@@ -49,11 +49,11 @@ function buildStandard(svc) {
   set('heroNum', esc(svc.num));
   set('heroIcon', esc(svc.icon));
   set('heroTitle', esc(svc.hero_title || svc.title));
-  set('heroSub', esc(svc.hero_subtitle || svc.desc));
+  set('heroSub', esc(Story.plain(svc.hero_subtitle || svc.desc)));
   show('svcHero');
   if (svc.content) {
     set('contentHeading', esc(svc.title));
-    set('contentText', esc(svc.content).replace(/\n/g, '<br>'));
+    set('contentText', Story.txt(svc.content));
     show('svcContentSection');
   }
   const faq = arr(svc.faq);
@@ -104,7 +104,7 @@ fs.writeFileSync(path.join(ROOT, 'sitemap.xml'), '<?xml version="1.0" encoding="
 const one = (s) => String(s || '').replace(/\s+/g, ' ').trim();
 const svcBlock = services.map((s) => {
   const faq = arr(s.faq).filter((f) => f && f.q && f.a).slice(0, 4).map((f) => `  - 問：${one(f.q)} 答：${one(f.a)}`).join('\n');
-  return `### [${s.title}](${SITE}/services/${s.slug})\n\n${one(s.seo_desc || s.desc)}\n${arr(s.tags).length ? `\n關鍵字：${arr(s.tags).join('、')}\n` : ''}${faq ? `\n${faq}\n` : ''}`;
+  return `### [${s.title}](${SITE}/services/${s.slug})\n\n${one(Story.plain(s.seo_desc || s.desc))}\n${arr(s.tags).length ? `\n關鍵字：${arr(s.tags).join('、')}\n` : ''}${faq ? `\n${faq}\n` : ''}`;
 }).join('\n');
 fs.writeFileSync(path.join(ROOT, 'llms.txt'), `# IPCC 東州集團（東州互聯網實業／顯榮國際）
 
