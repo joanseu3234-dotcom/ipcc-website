@@ -39,6 +39,9 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
     }
     .article-breadcrumb a { color: rgba(255,255,255,0.55); transition: color 0.2s; text-decoration: none; }
     .article-breadcrumb a:hover { color: #fff; }
+    /* 麵包屑：首頁／產業新知不被壓扁，文章標題過長時以「…」截斷 */
+    .article-breadcrumb > a, .article-breadcrumb > span:not(#heroBreadcrumb) { flex-shrink: 0; white-space: nowrap; }
+    #heroBreadcrumb { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 
     /* Split grid: single col by default, becomes 2-col when cover image exists */
     .article-hero-split { display: grid; grid-template-columns: 1fr; align-items: center; }

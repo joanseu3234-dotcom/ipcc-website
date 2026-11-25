@@ -1179,6 +1179,7 @@ img { max-width: 100%; display: block; }
   .timeline-dot { left: 20px; }
   .timeline-item:nth-child(even) .timeline-content:first-child { order: unset; }
   .timeline-item:nth-child(even) .timeline-content:last-child  { order: unset; }
+  .timeline-item > div:empty:not(.timeline-dot) { display: none; }
   .form-row { grid-template-columns: 1fr; }
   .page-hero-signal { display: none; }
   .page-hero { padding: 120px 0 48px; }
@@ -1189,6 +1190,9 @@ img { max-width: 100%; display: block; }
 
   /* ── 成功案例數字列 ── */
   #caseStats { grid-template-columns: repeat(2,1fr) !important; }
+
+  /* ── 關於我們子頁：桌機三欄／兩欄的格狀，手機改單欄（避免畫面被撐寬） ── */
+  #security-principles-grid, .sec-measures, #future-directions { grid-template-columns: 1fr !important; }
 
   /* ── 關於我們視覺區 ── */
   .about-visual { display: none; }
@@ -1203,11 +1207,17 @@ img { max-width: 100%; display: block; }
   #caseStats { grid-template-columns: 1fr 1fr !important; }
   .news-full-card { grid-template-columns: 1fr !important; }
   .news-full-img { min-height: 100px; }
-  .core-values-grid { grid-template-columns: repeat(2,1fr); }
-  .core-value-card:nth-child(3n)   { border-right: 1px solid var(--border); }
-  .core-value-card:nth-child(2n)   { border-right: none; }
-  .core-value-card:nth-last-child(-n+3) { border-bottom: 1px solid var(--border); }
-  .core-value-card:nth-last-child(-n+2) { border-bottom: none; }
+  /* 核心價值：手機兩欄太窄，改單欄 */
+  .core-values-grid { grid-template-columns: 1fr; }
+  .core-value-card, .core-value-card:nth-child(3n), .core-value-card:nth-child(2n) { border-right: none; }
+  .core-value-card, .core-value-card:nth-last-child(-n+3), .core-value-card:nth-last-child(-n+2) { border-bottom: 1px solid var(--border); }
+  .core-value-card:last-child { border-bottom: none; }
+  .core-value-card { padding: 28px 24px; }
+  /* 導覽列 Logo：公司名稱不換行 */
+  .nav-logo img { height: 56px; }
+  .nav-logo-right { margin-left: 8px; }
+  .nav-logo-group { font-size: 1rem; }
+  .nav-logo-companies span { font-size: 0.62rem; white-space: nowrap; }
   .footer-socials { justify-content: flex-start; }
 }
 
@@ -1252,3 +1262,16 @@ img { max-width: 100%; display: block; }
   box-shadow:0 4px 18px rgba(0,0,0,0.3); pointer-events:none;
 }
 .card-video { width:100%; height:100%; object-fit:cover; display:block; background:#000; pointer-events:none; }
+
+/* ── 手機版修正（2026-11-25） ── */
+/* 文章內的長網址自動換行，不撐破畫面 */
+.content-link, .detail-content a, .detail-text a, .article-body a { overflow-wrap: anywhere; word-break: break-word; }
+@media (max-width: 768px) {
+  /* 首頁最新消息分頁：不換行，放不下就左右滑動 */
+  .news-tabs { width: auto; max-width: 100%; overflow-x: auto; scrollbar-width: none; -webkit-overflow-scrolling: touch; }
+  .news-tabs::-webkit-scrollbar { display: none; }
+  .news-tab { flex-shrink: 0; white-space: nowrap; padding: 10px 16px; }
+}
+/* 麵包屑：前面的「首頁／成功案例」不被壓扁，最後一段（標題）過長時以「…」截斷 */
+.breadcrumb > * { flex-shrink: 0; white-space: nowrap; }
+.breadcrumb > :last-child { flex-shrink: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; }
