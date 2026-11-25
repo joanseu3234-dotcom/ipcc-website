@@ -60,6 +60,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 <!-- End Google Tag Manager (noscript) -->
 <script src="content-data.js"></script>
+<script src="card-video.js"></script>
 
 <nav class="navbar" id="navbar">
   <div class="container">
@@ -104,6 +105,17 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     <div class="detail-body" id="detailBody">
       <div class="not-found"><p>載入中…</p></div>
     </div>
+  </div>
+</section>
+
+<!-- 延伸閱讀：同分類的其他消息（由下方腳本填入，無資料時不顯示） -->
+<section class="section section-alt" id="moreNewsSection" style="display:none;">
+  <div class="container">
+    <div class="text-center" style="margin-bottom:40px;">
+      <span class="section-label">More News</span>
+      <h2 class="section-title" style="margin-top:8px;">延伸閱讀</h2>
+    </div>
+    <div class="news-grid" id="moreNewsGrid"></div>
   </div>
 </section>
 
@@ -245,6 +257,26 @@ function renderContent(text) {
   if (tags.length) html += '<div class="detail-tags">'+tags.join('')+'</div>';
 
   document.getElementById('detailBody').innerHTML = html || '<p>（無內容）</p>';
+
+  // 延伸閱讀：同分頁（最新消息／媒體／活動）優先，再補其他已發布消息，最多 3 則
+  var others = all.filter(function(n){ return n.published && n.id !== item.id; })
+    .sort(function(a, b){ return (b.tab === item.tab) - (a.tab === item.tab) || (b.createdAt || 0) - (a.createdAt || 0); })
+    .slice(0, 3);
+  if (others.length) {
+    var icons = { news: '📢', media: '📰', event: '🎪' };
+    document.getElementById('moreNewsGrid').innerHTML = others.map(function(n) {
+      var img = n.image ? '<img src="'+esc(n.image)+'" alt="" loading="lazy">' : (icons[n.tab] || '📢');
+      if (n.videoUrl && window.ipccCardVideoHtml) img = ipccCardVideoHtml(n.videoUrl, n.image) || img;
+      return '<a href="news-detail.html?id='+encodeURIComponent(n.id || '')+'" class="news-card" style="text-decoration:none;color:inherit;">'
+        + '<div class="news-card-img">'+img+'</div>'
+        + '<div class="news-card-body"><div class="news-card-meta">'
+        + (n.badge ? '<span class="news-card-badge">'+esc(n.badge.split('、')[0])+'</span>' : '')
+        + (n.date ? '<span class="news-card-date">'+esc(n.date)+'</span>' : '')
+        + '</div><h4>'+esc(n.title || '')+'</h4>'
+        + '<span class="news-read-btn" style="display:inline-block;margin-top:14px;font-size:0.8rem;font-weight:700;color:#1E2A5E;">閱讀詳情 →</span></div></a>';
+    }).join('');
+    document.getElementById('moreNewsSection').style.display = '';
+  }
 })();
 
 function showNotFound() {

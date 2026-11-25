@@ -261,6 +261,8 @@
       card: '.contact-form-card', img: '.cx-none', ph: '.cx-none', title: '.cx-none',
       btn: '.cx-none', badge: '.cx-none', soft: true, plain: true
     }, '200,22,29');
+    // 最新消息詳細頁：延伸閱讀
+    cardFx(document.getElementById('moreNewsGrid'), 'news', '30,42,94');
     // 產業新知文章頁：延伸閱讀卡片、常見問題
     cardFx(document.getElementById('relatedGrid'), 'related', '200,22,29');
     cardFx(document.getElementById('faqList'), {
