@@ -184,7 +184,7 @@
         if (q.soft) c.classList.add('cx-soft');
         if (q.plain) c.classList.add('cx-plain');
         if (q.icobg) tag(c, q.icobg, 'cx-icobg');
-        c.style.setProperty('--c', color);
+        c.style.setProperty('--c', c.getAttribute('data-fx-c') || color);
         tag(c, q.img, 'cx-img');
         tag(c, q.ph, 'cx-ph');
         tag(c, q.title, 'cx-title');
@@ -251,6 +251,15 @@
     cardFx(document.querySelector('.about-visual') || document.querySelector('.about-card-main') && document.querySelector('.about-card-main').parentNode, {
       card: '.about-card-main', img: '.cx-none', ph: '.cx-none', title: '.cx-none',
       btn: '.cx-none', badge: '.cx-none', plain: true
+    }, '200,22,29');
+    // 聯絡我們：聯絡方式（各自品牌色）、表單卡進場
+    cardFx(document.querySelector('.contact-list'), {
+      card: '.contact-item', img: '.cx-none', ph: '.contact-ico', title: '.cx-none',
+      btn: '.cx-none', badge: '.cx-none', soft: true, plain: true
+    }, '200,22,29');
+    cardFx(document.querySelector('.contact-layout'), {
+      card: '.contact-form-card', img: '.cx-none', ph: '.cx-none', title: '.cx-none',
+      btn: '.cx-none', badge: '.cx-none', soft: true, plain: true
     }, '200,22,29');
     Array.prototype.forEach.call(document.querySelectorAll('[id^="tab-"] .news-grid'), function (g) {
       cardFx(g, 'news', '200,22,29');                              // 首頁「最新消息」分頁（品牌紅）

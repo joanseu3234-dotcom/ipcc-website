@@ -37,6 +37,19 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
     .form-group textarea { resize: vertical; min-height: 140px; }
     .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
     @media (max-width: 640px) { .form-row { grid-template-columns: 1fr; } }
+    /* 聯絡我們：卡片動態（與網站其他卡片一致；進場由 ipcc-services.js 控制） */
+    .contact-item.cx-fx { padding:12px; margin:-12px; border-radius:14px; transition:background .35s, transform .35s !important; }
+    .cx-fx-js .contact-item.cx-fx.in.done { transition:background .35s, transform .35s !important; }
+    .cx-fx-js .contact-form-card.cx-fx.in.done { transition:border-color .45s, box-shadow .45s !important; }
+    .contact-item.cx-fx:hover { background:rgba(var(--c),.06); transform:translateX(4px) !important; }
+    .contact-item .contact-ico { transition:background .45s, box-shadow .45s, color .45s; }
+    .contact-item.cx-fx:hover .contact-ico { background:linear-gradient(135deg,rgba(var(--c),.75),rgb(var(--c))) !important; box-shadow:0 8px 20px -6px rgba(var(--c),.7); }
+    .contact-item.cx-fx:hover .contact-ico svg { fill:#fff; }
+    .contact-social { transition:transform .35s cubic-bezier(.2,.8,.2,1), border-color .35s, box-shadow .35s, background .35s; }
+    .contact-social:hover { transform:translateY(-4px) rotate(-4deg); border-color:rgba(200,22,29,.4) !important; background:#fff !important; box-shadow:0 12px 24px -10px rgba(200,22,29,.45); }
+    .contact-form-card { transition:border-color .45s, box-shadow .45s; }
+    .contact-form-card:hover, .contact-form-card:focus-within { border-color:rgba(200,22,29,.3) !important; box-shadow:0 26px 60px -26px rgba(200,22,29,.4), 0 2px 8px rgba(0,0,0,.04) !important; }
+    @media (prefers-reduced-motion:reduce) { .contact-item.cx-fx:hover, .contact-social:hover { transform:none !important; } }
   </style>
 </head>
 <body>
@@ -104,9 +117,9 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
         <h2 class="section-title" style="margin-top:8px;">立即諮詢</h2>
         <p style="color:var(--text-sub); line-height:1.9; margin-bottom:40px;">無論您是需要客服委外、訓練服務或資訊技術支援，我們的顧問團隊將在 24 小時內與您聯繫。</p>
 
-        <div style="display:flex; flex-direction:column; gap:24px;">
-          <div style="display:flex; align-items:flex-start; gap:16px;">
-            <div style="width:48px; height:48px; background:rgba(27,43,94,0.07); border-radius:12px; display:flex; align-items:center; justify-content:center; font-size:1.2rem; flex-shrink:0;">📞</div>
+        <div class="contact-list" style="display:flex; flex-direction:column; gap:24px;">
+          <div class="contact-item" data-fx-c="200,22,29" style="display:flex; align-items:flex-start; gap:16px;">
+            <div class="contact-ico" style="width:48px; height:48px; background:rgba(27,43,94,0.07); border-radius:12px; display:flex; align-items:center; justify-content:center; font-size:1.2rem; flex-shrink:0;">📞</div>
             <div>
               <div style="font-size:0.78rem; font-weight:700; color:var(--text-muted); text-transform:uppercase; letter-spacing:0.1em; margin-bottom:4px;">免付費客服專線</div>
               <a id="contactPhone" href="tel:0800666080" style="font-size:1.3rem; font-weight:800; color:var(--navy-dark);">0800-666-080</a>
@@ -114,8 +127,8 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
             </div>
           </div>
 
-          <div style="display:flex; align-items:flex-start; gap:16px;">
-            <div style="width:48px; height:48px; background:rgba(6,199,85,0.1); border-radius:12px; display:flex; align-items:center; justify-content:center; font-size:1.2rem; flex-shrink:0;">💬</div>
+          <div class="contact-item" data-fx-c="6,199,85" style="display:flex; align-items:flex-start; gap:16px;">
+            <div class="contact-ico" style="width:48px; height:48px; background:rgba(6,199,85,0.1); border-radius:12px; display:flex; align-items:center; justify-content:center; font-size:1.2rem; flex-shrink:0;">💬</div>
             <div>
               <div style="font-size:0.78rem; font-weight:700; color:var(--text-muted); text-transform:uppercase; letter-spacing:0.1em; margin-bottom:4px;">LINE 官方帳號</div>
               <a id="lineLink" href="#" style="font-size:1rem; font-weight:700; color:var(--navy-dark); text-decoration:none;">加入官方帳號諮詢</a>
@@ -123,8 +136,8 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
             </div>
           </div>
 
-          <div style="display:flex; align-items:flex-start; gap:16px;">
-            <div style="width:48px; height:48px; background:rgba(0,120,255,0.1); border-radius:12px; display:flex; align-items:center; justify-content:center; flex-shrink:0;">
+          <div class="contact-item" data-fx-c="0,120,255" style="display:flex; align-items:flex-start; gap:16px;">
+            <div class="contact-ico" style="width:48px; height:48px; background:rgba(0,120,255,0.1); border-radius:12px; display:flex; align-items:center; justify-content:center; flex-shrink:0;">
               <svg width="22" height="22" viewBox="0 0 24 24" fill="#0078FF"><path d="M12 2C6.477 2 2 6.145 2 11.25c0 2.857 1.317 5.41 3.396 7.126V22l3.102-1.704A10.56 10.56 0 0 0 12 20.5c5.523 0 10-4.145 10-9.25S17.523 2 12 2zm1.04 12.46-2.55-2.72-4.98 2.72 5.48-5.82 2.61 2.72 4.92-2.72-5.48 5.82z"/></svg>
             </div>
             <div>
@@ -134,8 +147,8 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
             </div>
           </div>
 
-          <div style="display:flex; align-items:flex-start; gap:16px;">
-            <div style="width:48px; height:48px; background:rgba(27,43,94,0.07); border-radius:12px; display:flex; align-items:center; justify-content:center; font-size:1.2rem; flex-shrink:0;">📍</div>
+          <div class="contact-item" data-fx-c="217,119,6" style="display:flex; align-items:flex-start; gap:16px;">
+            <div class="contact-ico" style="width:48px; height:48px; background:rgba(27,43,94,0.07); border-radius:12px; display:flex; align-items:center; justify-content:center; font-size:1.2rem; flex-shrink:0;">📍</div>
             <div>
               <div style="font-size:0.78rem; font-weight:700; color:var(--text-muted); text-transform:uppercase; letter-spacing:0.1em; margin-bottom:8px;">辦公地點</div>
               <div style="margin-bottom:8px;">
@@ -153,16 +166,16 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
         <!-- 社群 -->
         <div style="margin-top:40px; padding-top:32px; border-top:1px solid var(--border);">
           <div style="font-size:0.78rem; font-weight:700; color:var(--text-muted); text-transform:uppercase; letter-spacing:0.1em; margin-bottom:16px;">追蹤我們</div>
-          <div style="display:flex; gap:12px;">
-            <a href="https://www.facebook.com/easy.ipcc/" target="_blank" rel="noopener" style="width:44px; height:44px; background:var(--bg-light); border:1px solid var(--border); border-radius:10px; display:flex; align-items:center; justify-content:center; font-size:1rem; color:var(--navy); transition:var(--transition);" onmouseover="this.style.background='#1877F2'; this.style.color='#fff'; this.style.borderColor='#1877F2';" onmouseout="this.style.background='var(--bg-light)'; this.style.color='var(--navy)'; this.style.borderColor='var(--border)';">f</a>
-            <a href="https://lin.ee/rp9TNMU" target="_blank" rel="noopener" title="LINE 官方帳號" aria-label="LINE 官方帳號" style="width:44px; height:44px; background:var(--bg-light); border:1px solid var(--border); border-radius:10px; display:flex; align-items:center; justify-content:center; font-size:1rem; color:var(--navy); transition:var(--transition);" onmouseover="this.style.background='#06C755'; this.style.color='#fff'; this.style.borderColor='#06C755';" onmouseout="this.style.background='var(--bg-light)'; this.style.color='var(--navy)'; this.style.borderColor='var(--border)';"><svg viewBox="0 0 24 24" width="22" height="22" fill="currentColor" aria-hidden="true"><path d="M24 10.3c0-5.37-5.39-9.74-12-9.74S0 4.93 0 10.3c0 4.82 4.27 8.85 10.04 9.61.39.09.92.26 1.06.59.12.3.08.77.04 1.08l-.17 1.02c-.05.3-.24 1.18 1.03.64s6.87-4.04 9.37-6.92h-.01C22.98 14.44 24 12.5 24 10.3zM7.75 13.6H5.36c-.35 0-.63-.28-.63-.63V8.19c0-.34.28-.63.63-.63s.63.29.63.63v4.15h1.76c.35 0 .63.28.63.63s-.28.63-.63.63zm2.46-.63c0 .35-.28.63-.63.63s-.63-.28-.63-.63V8.19c0-.34.28-.63.63-.63s.63.29.63.63v4.78zm5.77 0c0 .27-.17.51-.43.6-.07.02-.14.03-.2.03-.21 0-.4-.09-.51-.25l-2.44-3.32v2.94c0 .35-.29.63-.63.63s-.63-.28-.63-.63V8.19c0-.27.17-.51.43-.6.06-.02.13-.03.2-.03.2 0 .38.1.5.26l2.46 3.33V8.19c0-.34.28-.63.63-.63s.63.29.63.63v4.78zm3.88-3.02c.35 0 .63.29.63.63 0 .35-.28.63-.63.63h-1.75v1.13h1.75c.35 0 .63.28.63.63s-.28.63-.63.63h-2.39c-.34 0-.63-.28-.63-.63V8.19c0-.34.29-.63.63-.63h2.39c.35 0 .63.29.63.63 0 .35-.28.63-.63.63h-1.75v1.13h1.75z"/></svg></a>
-            <a href="https://www.1111.com.tw" target="_blank" style="width:44px; height:44px; background:var(--bg-light); border:1px solid var(--border); border-radius:10px; display:flex; align-items:center; justify-content:center; font-size:0.75rem; font-weight:700; color:var(--navy); transition:var(--transition);" onmouseover="this.style.background='var(--orange)'; this.style.color='#fff'; this.style.borderColor='var(--orange)';" onmouseout="this.style.background='var(--bg-light)'; this.style.color='var(--navy)'; this.style.borderColor='var(--border)';">1111</a>
+          <div class="contact-socials" style="display:flex; gap:12px;">
+            <a class="contact-social" href="https://www.facebook.com/easy.ipcc/" target="_blank" rel="noopener" style="width:44px; height:44px; background:var(--bg-light); border:1px solid var(--border); border-radius:10px; display:flex; align-items:center; justify-content:center; font-size:1rem; color:var(--navy); transition:var(--transition);" onmouseover="this.style.background='#1877F2'; this.style.color='#fff'; this.style.borderColor='#1877F2';" onmouseout="this.style.background='var(--bg-light)'; this.style.color='var(--navy)'; this.style.borderColor='var(--border)';">f</a>
+            <a class="contact-social" href="https://lin.ee/rp9TNMU" target="_blank" rel="noopener" title="LINE 官方帳號" aria-label="LINE 官方帳號" style="width:44px; height:44px; background:var(--bg-light); border:1px solid var(--border); border-radius:10px; display:flex; align-items:center; justify-content:center; font-size:1rem; color:var(--navy); transition:var(--transition);" onmouseover="this.style.background='#06C755'; this.style.color='#fff'; this.style.borderColor='#06C755';" onmouseout="this.style.background='var(--bg-light)'; this.style.color='var(--navy)'; this.style.borderColor='var(--border)';"><svg viewBox="0 0 24 24" width="22" height="22" fill="currentColor" aria-hidden="true"><path d="M24 10.3c0-5.37-5.39-9.74-12-9.74S0 4.93 0 10.3c0 4.82 4.27 8.85 10.04 9.61.39.09.92.26 1.06.59.12.3.08.77.04 1.08l-.17 1.02c-.05.3-.24 1.18 1.03.64s6.87-4.04 9.37-6.92h-.01C22.98 14.44 24 12.5 24 10.3zM7.75 13.6H5.36c-.35 0-.63-.28-.63-.63V8.19c0-.34.28-.63.63-.63s.63.29.63.63v4.15h1.76c.35 0 .63.28.63.63s-.28.63-.63.63zm2.46-.63c0 .35-.28.63-.63.63s-.63-.28-.63-.63V8.19c0-.34.28-.63.63-.63s.63.29.63.63v4.78zm5.77 0c0 .27-.17.51-.43.6-.07.02-.14.03-.2.03-.21 0-.4-.09-.51-.25l-2.44-3.32v2.94c0 .35-.29.63-.63.63s-.63-.28-.63-.63V8.19c0-.27.17-.51.43-.6.06-.02.13-.03.2-.03.2 0 .38.1.5.26l2.46 3.33V8.19c0-.34.28-.63.63-.63s.63.29.63.63v4.78zm3.88-3.02c.35 0 .63.29.63.63 0 .35-.28.63-.63.63h-1.75v1.13h1.75c.35 0 .63.28.63.63s-.28.63-.63.63h-2.39c-.34 0-.63-.28-.63-.63V8.19c0-.34.29-.63.63-.63h2.39c.35 0 .63.29.63.63 0 .35-.28.63-.63.63h-1.75v1.13h1.75z"/></svg></a>
+            <a class="contact-social" href="https://www.1111.com.tw" target="_blank" style="width:44px; height:44px; background:var(--bg-light); border:1px solid var(--border); border-radius:10px; display:flex; align-items:center; justify-content:center; font-size:0.75rem; font-weight:700; color:var(--navy); transition:var(--transition);" onmouseover="this.style.background='var(--orange)'; this.style.color='#fff'; this.style.borderColor='var(--orange)';" onmouseout="this.style.background='var(--bg-light)'; this.style.color='var(--navy)'; this.style.borderColor='var(--border)';">1111</a>
           </div>
         </div>
       </div>
 
       <!-- 右側表單 -->
-      <div style="background:var(--white); border:1px solid var(--border); border-radius:var(--radius-lg); padding:48px; box-shadow:var(--shadow-sm);">
+      <div class="contact-form-card" style="background:var(--white); border:1px solid var(--border); border-radius:var(--radius-lg); padding:48px; box-shadow:var(--shadow-sm);">
         <h3 style="font-size:1.2rem; font-weight:800; color:var(--navy-dark); margin-bottom:8px;">填寫諮詢表單</h3>
         <p style="font-size:0.85rem; color:var(--text-muted); margin-bottom:32px;">我們將在 1 個工作日內回覆您的需求</p>
 
