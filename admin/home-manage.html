@@ -197,6 +197,7 @@
 
   <script src="users-config.js"></script>
   <script src="admin.js"></script>
+  <script src="format-help.js"></script>
   <script>
     requireLogin();
     initAdminUI();
@@ -219,7 +220,7 @@
           <span class="svc-drag-icon">${s.icon||'📋'}</span>
           <div class="svc-drag-info">
             <div class="svc-drag-title">${s.num} — ${s.title}</div>
-            <div class="svc-drag-desc">${s.desc||''}</div>
+            <div class="svc-drag-desc">${(s.desc||'').replace(/^\s*#{1,4}\s+/gm, '').replace(/\*\*([^*\n]+?)\*\*/g, '$1')}</div>
             <div class="svc-drag-tags">${(s.tags||[]).map(t=>'<span class="svc-tag-chip">'+t+'</span>').join('')}</div>
           </div>
           <span style="font-size:0.75rem; padding:3px 10px; border-radius:100px; ${s.published?'background:#D1FAE5;color:#065F46':'background:#F3F4F6;color:#6B7280'}">${s.published?'已發布':'草稿'}</span>

@@ -9,6 +9,8 @@
     '#fIntro', '#fChallenge', '#fSolution', '#fBenefits', '#fHighlights', '#fDescription',
     // 專案服務：服務簡介、常見問題答案、版型與動態內容的說明欄
     '#svcContent', '#storyBlocks .sb-f textarea',
+    // 服務卡片說明（首頁管理、專案服務共用）
+    '#svcDesc',
     // 獲獎事蹟：簡短說明、完整內容
     'textarea[placeholder^="簡短說明文字（80~120字）"]', 'textarea[placeholder^="可輸入完整的獲獎背景"]'
   ].join(',');
@@ -58,7 +60,14 @@
     }
     return out.replace(/\*\*([^*\n]+?)\*\*/g, '<strong>$1</strong>');
   }
-  function paint(box, ta) { box.innerHTML = '<span class="fmt-prev-t">前台預覽</span>' + render(ta ? ta.value : ''); }
+  // 卡片型欄位（服務卡片說明）：標題在卡片上顯示成粗體一行
+  var CARD = ['svcDesc'];
+  function paint(box, ta) {
+    var card = ta && CARD.indexOf(ta.id) >= 0;
+    var h = render(ta ? ta.value : '');
+    if (card) h = h.replace(/<span class="md-h md-h\d">([\s\S]*?)<\/span>/g, '<strong style="display:block">$1</strong>');
+    box.innerHTML = '<span class="fmt-prev-t">' + (card ? '前台預覽（服務卡片）' : '前台預覽') + '</span>' + h;
+  }
 
   var HELP = '<table>'
     + '<tr><td><code>## 標題文字</code></td><td><span class="fmt-ex-h">標題文字</span>（整行，前面加兩個 # 和一個空格）</td></tr>'

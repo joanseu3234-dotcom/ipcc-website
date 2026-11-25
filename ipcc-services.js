@@ -105,7 +105,7 @@
             + '<div><span class="service-num">' + (s.num || '') + '</span></div>'
             + '<div class="service-icon">' + (s.icon || '📋') + '</div>'
             + '<div><h3 class="service-title">' + (s.title || '') + '</h3>'
-            + '<p class="service-desc">' + (s.desc || '').replace(/^\s*#{1,4}\s+/gm, '').replace(/\*\*([^*\n]+?)\*\*/g, '$1') + '</p></div>'
+            + '<p class="service-desc">' + (s.desc || '').replace(/^\s*#{1,4}\s+(.+?)\s*#*\s*$/gm, '<strong style="display:block">$1</strong>').replace(/\*\*([^*\n]+?)\*\*/g, '<strong>$1</strong>') + '</p></div>'
             + '<div class="service-tags">' + tags + '</div>'
             + '<span class="service-link">了解更多 →</span>'
             + '</a>';
