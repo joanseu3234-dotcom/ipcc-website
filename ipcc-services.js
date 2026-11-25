@@ -261,6 +261,12 @@
       card: '.contact-form-card', img: '.cx-none', ph: '.cx-none', title: '.cx-none',
       btn: '.cx-none', badge: '.cx-none', soft: true, plain: true
     }, '200,22,29');
+    // 產業新知文章頁：延伸閱讀卡片、常見問題
+    cardFx(document.getElementById('relatedGrid'), 'related', '200,22,29');
+    cardFx(document.getElementById('faqList'), {
+      card: '.faq-item', img: '.cx-none', ph: '.cx-none', title: '.faq-q',
+      btn: '.cx-none', badge: '.cx-none', soft: true, plain: true
+    }, '200,22,29');
     Array.prototype.forEach.call(document.querySelectorAll('[id^="tab-"] .news-grid'), function (g) {
       cardFx(g, 'news', '200,22,29');                              // 首頁「最新消息」分頁（品牌紅）
     });
