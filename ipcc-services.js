@@ -317,3 +317,34 @@
     contentCardFx();
   }
 })();
+
+// 關於我們各頁：後台欄位的 ## 標題、**粗體** 格式（只處理含格式符號的文字，不影響其他內容）
+(function () {
+  if (!/\/about/.test(location.pathname)) return;
+  var HAS = /\*\*[^*\n]+?\*\*|(^|\n)[ \t]*#{1,4}[ \t]+\S/;
+  function escH(t) { return t.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;'); }
+  function run() {
+    var root = document.querySelector('main') || document.body;
+    var w = document.createTreeWalker(root, NodeFilter.SHOW_TEXT, {
+      acceptNode: function (n) {
+        var p = n.parentNode;
+        if (!p || /^(SCRIPT|STYLE|TEXTAREA|NAV|FOOTER)$/.test(p.nodeName) || p.closest('nav,footer')) return NodeFilter.FILTER_REJECT;
+        return HAS.test(n.nodeValue) ? NodeFilter.FILTER_ACCEPT : NodeFilter.FILTER_SKIP;
+      }
+    });
+    var list = [];
+    while (w.nextNode()) list.push(w.currentNode);
+    list.forEach(function (n) {
+      var lines = escH(n.nodeValue.replace(/^\s*\n|\n\s*$/g, '')).split('\n'), out = '';
+      for (var i = 0; i < lines.length; i++) {
+        var m = lines[i].match(/^\s*(#{1,4})\s+(.+?)\s*#*\s*$/);
+        if (m) out += '<span class="md-h md-h' + m[1].length + '">' + m[2] + '</span>';
+        else out += lines[i] + (i < lines.length - 1 ? '<br>' : '');
+      }
+      var span = document.createElement('span');
+      span.innerHTML = out.replace(/\*\*([^*\n]+?)\*\*/g, '<strong>$1</strong>');
+      n.parentNode.replaceChild(span, n);
+    });
+  }
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', run); else run();
+})();

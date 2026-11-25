@@ -13,7 +13,7 @@
     '#svcDesc',
     // 獲獎事蹟：簡短說明、完整內容
     'textarea[placeholder^="簡短說明文字（80~120字）"]', 'textarea[placeholder^="可輸入完整的獲獎背景"]'
-  ].join(',');
+  ].concat(/about-manage/.test(location.pathname) ? ['.form-textarea'] : []).join(',');  // 關於我們：所有文字欄位
 
   // 一列一列的清單（欄位很窄、放不下工具列）：在清單上方放一行格式提示
   var NOTES = ['#painPointsList', '#featuresList', '#industriesList', '#faqList', '#storyBlocks'];
@@ -52,7 +52,7 @@
   // 與前台一致的轉換：## 標題、**粗體**、換行
   function render(v) {
     if (!v || !v.trim()) return '<span class="fmt-prev-empty">（尚未輸入內容）</span>';
-    var lines = escH(v).split('\n'), out = '';
+    var lines = escH(v).replace(/&lt;br\s*\/?&gt;/gi, '<br>').split('\n'), out = '';
     for (var i = 0; i < lines.length; i++) {
       var m = lines[i].match(/^\s*(#{1,4})\s+(.+?)\s*#*\s*$/);
       if (m) out += '<span class="md-h md-h' + m[1].length + '">' + m[2] + '</span>';
@@ -114,8 +114,14 @@
   }
 
   function attach(ta) {
-    if (ta.__fmt) return;
+    if (ta.__fmt || !ta.parentNode) return;
     ta.__fmt = true;
+    var pd = getComputedStyle(ta.parentNode).display;
+    if (/grid|flex/.test(pd)) {
+      var w = document.createElement('div'); w.className = 'fmt-wrap'; w.style.minWidth = '0';
+      ta.parentNode.style.alignItems = 'start';  // 旁邊的欄位不要跟著預覽拉高
+      ta.parentNode.insertBefore(w, ta); w.appendChild(ta);
+    }
     var bar = document.createElement('div');
     bar.className = 'fmt-bar';
     bar.innerHTML = '<span>格式：</span>'
