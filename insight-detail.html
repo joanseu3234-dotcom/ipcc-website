@@ -757,7 +757,7 @@ function toggleFaq(idx) {
     document.getElementById('faqList').innerHTML = article.faq.map(function(f, i) {
       return '<div class="faq-item" id="afaq'+i+'">'
         +'<button class="faq-q" onclick="toggleFaq('+i+')">'+(f.q||'')+'</button>'
-        +'<div class="faq-a"><div class="faq-a-inner">'+(f.a||'')+'</div></div>'
+        +'<div class="faq-a"><div class="faq-a-inner">'+(f.a||'').replace(/\*\*([^*\n]+?)\*\*/g, '<strong>$1</strong>')+'</div></div>'
         +'</div>';
     }).join('');
     document.getElementById('faqSection').style.display = '';
