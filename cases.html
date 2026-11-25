@@ -280,7 +280,8 @@ function openCaseDetail(c) {
       var imgHtml = c.image
         ? '<img src="' + c.image + '" alt="' + esc(c.client||'') + '" loading="lazy">'
         : '<div class="cn-card-emoji">' + (c.emoji || '🏆') + '</div>';
-      var summary = c.description || c.challenge || '';
+      // 卡片摘要不顯示 ## 與 ** 符號
+      var summary = (c.description || c.challenge || '').replace(/^\s*#{1,4}\s+/gm, '').replace(/\*\*([^*\n]+?)\*\*/g, '$1');
       var caseData = JSON.stringify({
         client: c.client||'', category: c.category||'', emoji: c.emoji||'🏆',
         image: c.image||'', challenge: c.challenge||'', solution: c.solution||'',

@@ -413,7 +413,7 @@ document.addEventListener('keydown', function(e) { if (e.key === 'Escape') close
         + '</div>'
         + pillsHtml
         + '<h3 class="event-card-title">' + esc(n.title||'') + '</h3>'
-        + '<p class="event-card-desc">' + esc(n.description||'') + '</p>'
+        + '<p class="event-card-desc">' + esc((n.description||'').replace(/^\s*#{1,4}\s+/gm, '').replace(/\*\*([^*\n]+?)\*\*/g, '$1')) + '</p>'
         + '<div class="event-card-footer"><span class="event-read-btn">查看詳情 →</span></div>'
         + '</div></div>';
     }).join('');

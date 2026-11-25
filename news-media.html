@@ -544,7 +544,7 @@ var _mediaItemsStore = [];
         + '</div>'
         + pillsHtml
         + '<h3 class="media-card-title">' + esc(n.title||'') + '</h3>'
-        + '<p class="media-card-desc">' + esc(n.description||'') + '</p>'
+        + '<p class="media-card-desc">' + esc((n.description||'').replace(/^\s*#{1,4}\s+/gm, '').replace(/\*\*([^*\n]+?)\*\*/g, '$1')) + '</p>'
         + '<div class="media-card-footer">'
         + '<div class="media-card-tags">' + tagsHtml + '</div>'
         + '<span class="media-read-btn">' + (n.mediaType==='podcast' ? '收聽 →' : '閱讀詳情 →') + '</span>'
