@@ -261,6 +261,12 @@
       card: '.contact-form-card', img: '.cx-none', ph: '.cx-none', title: '.cx-none',
       btn: '.cx-none', badge: '.cx-none', soft: true, plain: true
     }, '200,22,29');
+    // 成功案例詳細頁：執行成果數字卡、其他成功案例
+    cardFx(document.getElementById('detailResults'), {
+      card: '.detail-result', img: '.cx-none', ph: '.cx-none', title: '.cx-none',
+      btn: '.cx-none', badge: '.cx-none'
+    }, '232,93,4');
+    cardFx(document.getElementById('moreCasesGrid'), 'news', '30,42,94');
     // 最新消息詳細頁：延伸閱讀
     cardFx(document.getElementById('moreNewsGrid'), 'news', '30,42,94');
     // 產業新知文章頁：延伸閱讀卡片、常見問題
