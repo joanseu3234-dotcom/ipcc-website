@@ -118,16 +118,20 @@
   // 內容卡片（成功案例 / 最新消息 / 媒體採訪 / 活動 / 首頁消息）：與服務卡片同系列的動態效果
   var CX_CSS = ''
     + '.cx-fx{--c:30,42,94;--mx:50%;--my:0%;position:relative;isolation:isolate;transition:transform .45s cubic-bezier(.2,.8,.2,1),box-shadow .45s,border-color .45s!important}'
-    + '.cx-fx::before{content:"";position:absolute;left:0;top:0;right:0;height:4px;z-index:3;background:linear-gradient(90deg,rgb(var(--c)),rgba(var(--c),.35));transform:scaleX(0);transform-origin:left;transition:transform .5s cubic-bezier(.2,.8,.2,1)}'
-    + '.cx-fx:hover::before{transform:scaleX(1)}'
-    + '.cx-fx::after{content:"";position:absolute;inset:0;z-index:2;pointer-events:none;opacity:0;transition:opacity .4s;background:radial-gradient(380px circle at var(--mx) var(--my),rgba(var(--c),.12),transparent 60%)}'
-    + '.cx-fx:hover::after{opacity:1}'
+    + '.cx-fx:not(.cx-plain)::before{content:"";position:absolute;left:0;top:0;right:0;height:4px;z-index:3;background:linear-gradient(90deg,rgb(var(--c)),rgba(var(--c),.35));transform:scaleX(0);transform-origin:left;transition:transform .5s cubic-bezier(.2,.8,.2,1)}'
+    + '.cx-fx:not(.cx-plain):hover::before{transform:scaleX(1)}'
+    + '.cx-fx:not(.cx-plain)::after{content:"";position:absolute;inset:0;z-index:2;pointer-events:none;opacity:0;transition:opacity .4s;background:radial-gradient(380px circle at var(--mx) var(--my),rgba(var(--c),.12),transparent 60%)}'
+    + '.cx-fx:not(.cx-plain):hover::after{opacity:1}'
     + '.cx-fx:not(.cx-soft):hover{transform:translateY(-8px)!important;border-color:rgba(var(--c),.4)!important;box-shadow:0 22px 48px -18px rgba(var(--c),.5),0 2px 8px rgba(0,0,0,.06)!important}'
     + '.cx-fx .cx-img{overflow:hidden}'
     + '.cx-fx .cx-img img,.cx-fx .cx-img video,.cx-fx .cx-ph{transition:transform .7s cubic-bezier(.2,.8,.2,1)}'
     + '.cx-fx:hover .cx-img img,.cx-fx:hover .cx-img video{transform:scale(1.06)}'
     + '.cx-fx:hover .cx-ph{animation:cx-fx-wig 1.2s ease-in-out}'
     + '@keyframes cx-fx-wig{0%{transform:none}25%{transform:translateY(-6px) rotate(-8deg) scale(1.12)}50%{transform:translateY(-2px) rotate(5deg) scale(1.08)}75%{transform:translateY(-4px) rotate(-2deg) scale(1.1)}100%{transform:none}}'
+    + '.cx-fx .cx-icobg{transition:background .45s,box-shadow .45s}'
+    + '.cx-fx:hover .cx-icobg{background:linear-gradient(135deg,rgba(var(--c),.75),rgb(var(--c)));box-shadow:0 8px 20px -6px rgba(var(--c),.7)}'
+    + '.about-card-main.cx-fx::before{transition:transform .8s cubic-bezier(.2,.8,.2,1)}.about-card-main.cx-fx:hover::before{transform:scale(1.7)}'
+    + '.about-card-main.cx-fx [style*="rgba(255,255,255,0.07)"]{position:relative;z-index:1;transition:background .35s,transform .35s}.about-card-main.cx-fx [style*="rgba(255,255,255,0.07)"]:hover{background:rgba(255,255,255,.13)!important;transform:translateX(6px)}'
     + '.cx-fx .cx-badge{transition:transform .35s,box-shadow .35s}'
     + '.cx-fx:hover .cx-badge{transform:translateY(-2px);box-shadow:0 6px 16px -4px rgba(var(--c),.7)}'
     + '.cx-fx .cx-title{transition:color .35s}'
@@ -178,6 +182,8 @@
         if (c.classList.contains('cx-fx')) return;
         c.classList.add('cx-fx');
         if (q.soft) c.classList.add('cx-soft');
+        if (q.plain) c.classList.add('cx-plain');
+        if (q.icobg) tag(c, q.icobg, 'cx-icobg');
         c.style.setProperty('--c', color);
         tag(c, q.img, 'cx-img');
         tag(c, q.ph, 'cx-ph');
@@ -236,6 +242,15 @@
     cardFx(document.querySelector('.about-stats-row'), {            // 關於我們：統計小卡
       card: '.about-stat-card', img: '.cx-none', ph: '.cx-none', title: '.about-stat-num',
       btn: '.cx-none', badge: '.cx-none'
+    }, '200,22,29');
+    // 首頁「我們是誰」：四個價值項目、雙核心大卡（保留原本裝飾，不加光暈層）
+    cardFx(document.querySelector('.about-values'), {
+      card: '.value-item', img: '.cx-none', ph: '.value-icon', icobg: '.value-icon', title: '.value-title',
+      btn: '.cx-none', badge: '.cx-none', soft: true, plain: true
+    }, '200,22,29');
+    cardFx(document.querySelector('.about-visual') || document.querySelector('.about-card-main') && document.querySelector('.about-card-main').parentNode, {
+      card: '.about-card-main', img: '.cx-none', ph: '.cx-none', title: '.cx-none',
+      btn: '.cx-none', badge: '.cx-none', plain: true
     }, '200,22,29');
     Array.prototype.forEach.call(document.querySelectorAll('[id^="tab-"] .news-grid'), function (g) {
       cardFx(g, 'news', '200,22,29');                              // 首頁「最新消息」分頁（品牌紅）
