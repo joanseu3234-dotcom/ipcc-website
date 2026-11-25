@@ -378,6 +378,27 @@ body{padding-top:96px}
   .brand span{display:none}
 }
 @media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}.rv{opacity:1;transform:none;transition:none}.dot{animation:none}}
+/* 卡片動態（與網站其他卡片一致：依序進場、浮起發光、頂部色條、滑鼠光暈、圖示晃動） */
+.fx{position:relative;isolation:isolate;--mx:50%;--my:0%;--fxc:47,123,255}
+.c-card.fx,.flow-step.fx{--fxc:127,176,255}
+.fx::before{content:"";position:absolute;left:18px;right:18px;top:-1px;height:3px;border-radius:0 0 3px 3px;background:linear-gradient(90deg,rgb(var(--fxc)),rgba(var(--fxc),.3));transform:scaleX(0);transform-origin:left;transition:transform .5s var(--ease);z-index:2}
+.fx:hover::before{transform:scaleX(1)}
+.fx-glow{position:absolute;inset:0;border-radius:inherit;z-index:-1;pointer-events:none;opacity:0;transition:opacity .4s;background:radial-gradient(360px circle at var(--mx) var(--my),rgba(var(--fxc),.16),transparent 62%)}
+.fx:hover .fx-glow{opacity:1}
+.fx.rv.in{transition:opacity .7s var(--ease),transform .45s var(--ease),box-shadow .45s,border-color .45s,background .45s}
+.fx.rv.in:hover{transform:translateY(-8px);border-color:rgba(var(--fxc),.5);box-shadow:0 22px 48px -18px rgba(var(--fxc),.55)}
+.c-card.fx.rv.in:hover,.flow-step.fx.rv.in:hover{border-color:var(--red-light);box-shadow:0 22px 50px -16px rgba(47,123,255,.6)}
+.mod.fx .chk{transform-origin:50% 80%;transition:box-shadow .4s}
+.mod.fx:hover .chk{animation:fx-wig 1.2s ease-in-out;box-shadow:0 8px 20px -6px rgba(47,123,255,.7)}
+.mod.fx .more,.c-card.fx .act{transition:transform .35s var(--ease)}
+.mod.fx:hover .more,.c-card.fx:hover .act{transform:translateX(5px)}
+.mod.fx h3,.stat.fx .lb{transition:color .35s}
+.mod.fx:hover h3,.stat.fx:hover .lb{color:var(--red)}
+.stat.fx .num{display:inline-block;transform-origin:0 80%}
+.stat.fx:hover .num{animation:fx-wig 1.2s ease-in-out}
+@keyframes fx-wig{0%{transform:none}25%{transform:translateY(-6px) rotate(-6deg) scale(1.1)}50%{transform:translateY(-2px) rotate(4deg) scale(1.06)}75%{transform:translateY(-4px) rotate(-2deg) scale(1.08)}100%{transform:none}}
+@media (hover:none){.fx.rv.in:hover{transform:none}}
+@media (prefers-reduced-motion:reduce){.fx.rv.in:hover{transform:none}.fx:hover .chk,.fx:hover .num{animation:none}}
 </style>
 </head>
 <body>
@@ -687,6 +708,25 @@ var D=[
   document.getElementById('dAgain').onclick=reset;
   var started=false,dio=new IntersectionObserver(function(es){if(es[0].isIntersecting&&!started){started=true;ask();dio.disconnect()}},{threshold:.3});
   dio.observe(document.getElementById('demo'));
+})();
+</script>
+<script>
+/* 卡片動態：同一排依序進場、滑鼠光暈跟隨 */
+(function(){
+  var reduce=window.matchMedia&&window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  document.querySelectorAll('.stat,.mod,.c-card,.flow-step').forEach(function(c){
+    c.classList.add('fx');
+    var g=document.createElement('span');g.className='fx-glow';c.insertBefore(g,c.firstChild);
+    if(!reduce&&c.parentNode&&!c.classList.contains('in')){
+      var i=[].indexOf.call(c.parentNode.querySelectorAll(':scope > .rv'),c);
+      if(i>0){
+        c.style.transitionDelay=(i%4*0.12)+'s';
+        // 進場後清掉延遲，懸停反應才不會慢半拍
+        new MutationObserver(function(m,o){if(c.classList.contains('in')){o.disconnect();setTimeout(function(){c.style.transitionDelay='';},1300);}}).observe(c,{attributes:true,attributeFilter:['class']});
+      }
+    }
+    c.addEventListener('mousemove',function(e){var r=c.getBoundingClientRect();c.style.setProperty('--mx',(e.clientX-r.left)+'px');c.style.setProperty('--my',(e.clientY-r.top)+'px');});
+  });
 })();
 </script>
 </body>
