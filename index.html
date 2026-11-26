@@ -15,6 +15,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="style.css">
+<script>/* 標籤可用「、」「，」或空白分隔，拆成多個 */function splitTags(s){s=String(s||'');var p;if(/[、,，;；]/.test(s))p=s.split(/[、,，;；]/);else{p=s.split(/\s+/);if(!p.every(function(t){return !t||/[\u4e00-\u9fff]/.test(t);}))p=[s];}return p.map(function(t){return t.trim();}).filter(Boolean);}</script>
 </head>
 <body>
 <!-- Google Tag Manager (noscript) -->
@@ -549,7 +550,7 @@ if (aboutStats) aboutObserver.observe(aboutStats);
         return '<a href="' + n.link + '" class="news-card">'
           + '<div class="news-card-img">' + imgHtml + '</div>'
           + '<div class="news-card-body"><div class="news-card-meta">'
-          + (n.badge ? '<span class="news-card-badge">' + n.badge + '</span>' : '')
+          + (n.badge ? '<span class="news-card-badge">' + (splitTags(n.badge)[0] || '') + '</span>' : '')
           + '<span class="news-card-date">' + n.date + '</span>'
           + '</div><h4>' + n.title + '</h4></div></a>';
       }).join('');

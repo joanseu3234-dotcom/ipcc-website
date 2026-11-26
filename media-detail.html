@@ -83,6 +83,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
     .media-play-btn.btn-radio   { background:#059669; color:#fff; }
     .media-play-btn.btn-link    { background:#12193A; color:#fff; }
   </style>
+<script>/* 標籤可用「、」「，」或空白分隔，拆成多個 */function splitTags(s){s=String(s||'');var p;if(/[、,，;；]/.test(s))p=s.split(/[、,，;；]/);else{p=s.split(/\s+/);if(!p.every(function(t){return !t||/[\u4e00-\u9fff]/.test(t);}))p=[s];}return p.map(function(t){return t.trim();}).filter(Boolean);}</script>
 </head>
 <body>
 <!-- Google Tag Manager (noscript) -->
@@ -337,7 +338,7 @@ function renderContent(text) {
   if (item.content) html += (item.description && !descDup ? '<hr class="detail-divider">' : '') + '<div class="detail-content">'+renderContent(item.content)+'</div>';
   // 5. Tags at bottom as oval pills
   var tags = [];
-  if (item.badge) tags.push('<span class="detail-tag detail-tag-badge">'+esc(item.badge)+'</span>');
+  if (item.badge) splitTags(item.badge).forEach(function(t){ tags.push('<span class="detail-tag detail-tag-badge">'+esc(t)+'</span>'); });
   if (mt.label) tags.push('<span class="detail-tag detail-tag-media">'+esc(mt.label)+'</span>');
   if (item.relatedCaseId) {
     var cases = JSON.parse(localStorage.getItem('ipcc_cases') || '[]');
@@ -362,7 +363,7 @@ function renderContent(text) {
       return '<a href="media-detail.html?id='+encodeURIComponent(n.id || '')+'" class="news-card" style="text-decoration:none;color:inherit;">'
         + '<div class="news-card-img">'+img+'</div>'
         + '<div class="news-card-body"><div class="news-card-meta">'
-        + (n.badge ? '<span class="news-card-badge">'+esc(n.badge.split('、')[0])+'</span>' : '')
+        + (n.badge ? '<span class="news-card-badge">'+esc(splitTags(n.badge)[0] || '')+'</span>' : '')
         + (n.date ? '<span class="news-card-date">'+esc(n.date)+'</span>' : '')
         + '</div><h4>'+esc(n.title || '')+'</h4>'
         + '<span class="news-read-btn" style="display:inline-block;margin-top:14px;font-size:0.8rem;font-weight:700;color:#1E2A5E;">查看詳情 →</span></div></a>';

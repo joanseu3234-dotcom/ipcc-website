@@ -142,6 +142,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
     .content-link { color: #1E2A5E; font-weight: 600; text-decoration: underline; text-underline-offset: 2px; }
     .content-link:hover { color: #E85D04; }
   </style>
+<script>/* 標籤可用「、」「，」或空白分隔，拆成多個 */function splitTags(s){s=String(s||'');var p;if(/[、,，;；]/.test(s))p=s.split(/[、,，;；]/);else{p=s.split(/\s+/);if(!p.every(function(t){return !t||/[\u4e00-\u9fff]/.test(t);}))p=[s];}return p.map(function(t){return t.trim();}).filter(Boolean);}</script>
 </head>
 <body>
 <!-- Google Tag Manager (noscript) -->
@@ -411,7 +412,7 @@ document.addEventListener('keydown', function(e) { if (e.key === 'Escape') close
       // badge 用「、」分隔成多個 pill
       var pillsHtml = '';
       if (n.badge) {
-        var tags = n.badge.split('、').map(function(t){ return t.trim(); }).filter(Boolean);
+        var tags = splitTags(n.badge);
         if (tags.length) pillsHtml = '<div class="tags-row">' + tags.map(function(t){ return '<span class="tag-pill">' + esc(t) + '</span>'; }).join('') + '</div>';
       }
 

@@ -55,6 +55,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
     .not-found { text-align: center; padding: 80px 20px; color: #6B7280; }
     .not-found h2 { font-size: 1.3rem; font-weight: 700; margin-bottom: 16px; color: #374151; }
   </style>
+<script>/* 標籤可用「、」「，」或空白分隔，拆成多個 */function splitTags(s){s=String(s||'');var p;if(/[、,，;；]/.test(s))p=s.split(/[、,，;；]/);else{p=s.split(/\s+/);if(!p.every(function(t){return !t||/[\u4e00-\u9fff]/.test(t);}))p=[s];}return p.map(function(t){return t.trim();}).filter(Boolean);}</script>
 </head>
 <body>
 <!-- Google Tag Manager (noscript) -->
@@ -239,7 +240,7 @@ function renderContent(text) {
   document.getElementById('pageTitle').textContent = (item.title || '文章詳情') + ' — IPCC 東州集團';
 
   if (item.badge) {
-    document.getElementById('detailBadgeWrap').innerHTML = '<span class="detail-badge">'+esc(item.badge)+'</span>';
+    document.getElementById('detailBadgeWrap').innerHTML = splitTags(item.badge).slice(0, 3).map(function(t){ return '<span class="detail-badge">'+esc(t)+'</span>'; }).join(' ');
   }
   document.getElementById('detailTitle').textContent = item.title || '';
   document.getElementById('detailMeta').textContent = item.date || '';
@@ -266,7 +267,7 @@ function renderContent(text) {
   if (item.content) html += (item.description && !descDup ? '<hr class="detail-divider">' : '') + '<div class="detail-content">'+renderContent(item.content)+'</div>';
   // 5. Tags at bottom as oval pills
   var tags = [];
-  if (item.badge) tags.push('<span class="detail-tag detail-tag-badge">'+esc(item.badge)+'</span>');
+  if (item.badge) splitTags(item.badge).forEach(function(t){ tags.push('<span class="detail-tag detail-tag-badge">'+esc(t)+'</span>'); });
   if (item.relatedCaseId) {
     var cases = JSON.parse(localStorage.getItem('ipcc_cases') || '[]');
     var relCase = cases.find(function(c){ return c.id === item.relatedCaseId; });
@@ -292,7 +293,7 @@ function renderContent(text) {
       return '<a href="news-detail.html?id='+encodeURIComponent(n.id || '')+'" class="news-card" style="text-decoration:none;color:inherit;">'
         + '<div class="news-card-img">'+img+'</div>'
         + '<div class="news-card-body"><div class="news-card-meta">'
-        + (n.badge ? '<span class="news-card-badge">'+esc(n.badge.split('、')[0])+'</span>' : '')
+        + (n.badge ? '<span class="news-card-badge">'+esc(splitTags(n.badge)[0] || '')+'</span>' : '')
         + (n.date ? '<span class="news-card-date">'+esc(n.date)+'</span>' : '')
         + '</div><h4>'+esc(n.title || '')+'</h4>'
         + '<span class="news-read-btn" style="display:inline-block;margin-top:14px;font-size:0.8rem;font-weight:700;color:#1E2A5E;">閱讀詳情 →</span></div></a>';

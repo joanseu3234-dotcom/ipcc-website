@@ -362,7 +362,7 @@ html{scroll-padding-top:90px}
 }
 @media (max-width:560px){
   .st-omni-node{padding:7px 10px;font-size:12px}
-  .st-omni-before li{grid-template-columns:70px 1fr;}
+  .st-omni-before li{grid-template-columns:80px 1fr;gap:10px}
   .st-omni-before em{grid-column:2;justify-self:start}
   .st-omni-after li{grid-template-columns:44px 1fr}
   .st-omni-after li span{grid-column:1/-1}
@@ -373,7 +373,7 @@ html{scroll-padding-top:90px}
   /* 數據標註示範：手機上標籤改成行內，避免相鄰標籤互相重疊 */
   .st-lb-card{padding:20px}
   .st-lb-text{line-height:2.1}
-  .st-lb-text .st-lb-chip{position:static;display:none;flex-wrap:wrap;white-space:normal;margin:0 4px 0 0;vertical-align:3px;transform:none;font-size:11px;padding:3px 6px}
+  .st-lb-text .st-lb-chip{position:static;display:none;flex-wrap:wrap;white-space:normal;margin:0 4px 0 0;vertical-align:3px;transform:none;font-size:12px;padding:3px 7px}
   .st-label[data-stage="2"] .st-lb-text .st-lb-seg:not(.add) .st-lb-chip,.st-label[data-stage="3"] .st-lb-text .st-lb-chip,.st-label[data-stage="4"] .st-lb-text .st-lb-chip{display:inline-flex}
 }
 @media (prefers-reduced-motion:reduce){

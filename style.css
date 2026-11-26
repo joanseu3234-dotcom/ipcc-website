@@ -779,7 +779,7 @@ img { max-width: 100%; display: block; }
   line-height: 1.7;
 }
 
-.footer-brand p { line-height: 1.8; color: rgba(255,255,255,0.4); }
+.footer-brand p { line-height: 1.8; color: rgba(255,255,255,0.55); }
 
 .footer-socials { display: flex; gap: 12px; margin-top: 24px; }
 .footer-social {
@@ -808,7 +808,7 @@ img { max-width: 100%; display: block; }
   transform: translateY(-1px);
 }
 
-.footer-col h4 { font-size: 0.8rem; font-weight: 700; color: rgba(255,255,255,0.35); letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 20px; }
+.footer-col h4 { font-size: 0.8rem; font-weight: 700; color: rgba(255,255,255,0.58); letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 20px; }
 .footer-col ul { display: flex; flex-direction: column; gap: 12px; }
 .footer-col ul li a { color: rgba(255,255,255,0.5); transition: var(--transition); font-size: 0.88rem; }
 .footer-col ul li a:hover { color: var(--red-soft); }

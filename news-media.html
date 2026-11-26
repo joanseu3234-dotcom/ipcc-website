@@ -167,6 +167,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
     .media-modal-related { margin-top:20px; display:flex; gap:8px; flex-wrap:wrap; align-items:center; }
     .media-modal-related-label { font-size:0.78rem; color:#9CA3AF; }
   </style>
+<script>/* 標籤可用「、」「，」或空白分隔，拆成多個 */function splitTags(s){s=String(s||'');var p;if(/[、,，;；]/.test(s))p=s.split(/[、,，;；]/);else{p=s.split(/\s+/);if(!p.every(function(t){return !t||/[\u4e00-\u9fff]/.test(t);}))p=[s];}return p.map(function(t){return t.trim();}).filter(Boolean);}</script>
 </head>
 <body>
 <!-- Google Tag Manager (noscript) -->
@@ -518,7 +519,7 @@ var _mediaItemsStore = [];
       var pillTags = [];
       if (n.mediaType && mt.label) pillTags.push('<span class="tag-pill ' + (MT_PILL_CLS[n.mediaType]||'') + '">' + esc(mt.label) + '</span>');
       if (n.badge) {
-        n.badge.split('、').forEach(function(t){ t = t.trim(); if(t) pillTags.push('<span class="tag-pill">' + esc(t) + '</span>'); });
+        splitTags(n.badge).forEach(function(t){ t = t.trim(); if(t) pillTags.push('<span class="tag-pill">' + esc(t) + '</span>'); });
       }
       var pillsHtml = pillTags.length ? '<div class="tags-row">' + pillTags.join('') + '</div>' : '';
 

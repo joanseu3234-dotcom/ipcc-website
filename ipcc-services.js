@@ -364,7 +364,7 @@
       nav.classList.toggle('sn-l', box.scrollLeft > 4);
       nav.classList.toggle('sn-r', box.scrollLeft + box.clientWidth < box.scrollWidth - 4);
     }
-    box.addEventListener('scroll', upd, { passive: true }); window.addEventListener('resize', upd); upd();
+    box.addEventListener('scroll', upd, { passive: true }); window.addEventListener('resize', upd); window.addEventListener('load', upd); upd(); setTimeout(upd, 600);
     // 捲到頁尾的聯絡區塊時收起，避免蓋住 CTA 與頁尾
     var end = document.querySelector('.cta-section') || document.querySelector('footer.footer');
     if (end) {
@@ -385,6 +385,7 @@
     + '.cn-card-img:has(img.ipcc-logo-fit),.news-card-img:has(img.ipcc-logo-fit){background:#fff!important;border-bottom:1px solid #EEF0F3}'
     + '#detailImg.ipcc-logo-fit{width:auto!important;max-width:100%!important;max-height:220px!important;padding:32px 40px!important}'
     + '#detailImgWrap:has(#detailImg.ipcc-logo-fit){background:#fff!important;border:1px solid #EEF0F3}';
+  st.textContent += 'img.ipcc-sq-fit{object-fit:contain!important;background:#F3F4F6!important}';
   document.head.appendChild(st);
   function fit(img) {
     if (!img || img.tagName !== 'IMG' || !img.matches || !img.matches(SEL)) return;
@@ -392,6 +393,10 @@
     if (!w || !h) return;
     var logo = (w / h >= 2.4) || (Math.max(w, h) <= 320);
     img.classList.toggle('ipcc-logo-fit', logo);
+    // 方形封面（如 Podcast 封面）放進寬版卡片時改完整顯示，不裁掉上下文字
+    var box = img.parentElement, br = box ? box.getBoundingClientRect() : null;
+    var sq = !logo && w / h < 1.2 && br && br.height > 0 && br.width / br.height > 1.45 && img.id !== 'detailImg';
+    img.classList.toggle('ipcc-sq-fit', !!sq);
   }
   document.addEventListener('load', function (e) { fit(e.target); }, true);
   function scan() { Array.prototype.forEach.call(document.querySelectorAll(SEL), function (i) { if (i.complete) fit(i); }); }

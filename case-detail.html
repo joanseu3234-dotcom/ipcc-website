@@ -152,7 +152,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     <div id="detailResultsWrap" class="detail-section" style="display:none;">
       <div style="background:#F8FAFF; border-radius:16px; padding:28px 32px;">
         <div class="detail-label">執行成果</div>
-        <div id="detailResults" style="display:flex; gap:16px; flex-wrap:wrap; margin-top:16px;"></div>
+        <div id="detailResults" style="display:grid; grid-template-columns:repeat(auto-fit,minmax(150px,1fr)); gap:16px; margin-top:16px;"></div>
       </div>
     </div>
 
@@ -346,7 +346,6 @@ document.getElementById('breadcrumbClient').textContent = c.client || '案例詳
 if (c.category) {
   document.getElementById('heroBadge').textContent = c.category;
   document.getElementById('heroBadge').style.display = '';
-  document.getElementById('heroSubtitle').textContent = c.category;
 }
 
 if (c.emoji && !c.image) {
