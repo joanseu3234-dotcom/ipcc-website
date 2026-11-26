@@ -212,7 +212,7 @@ function openCaseDetail(c) {
 })();
 
 // 2026-11-26：客戶服務整合案例暫時顯示「籌備中」（案例資料保留在後台，要恢復把 CX_COMING_SOON 改成 false）
-var CX_COMING_SOON = true;
+var CX_COMING_SOON = false;
 (function () {
   if (CX_COMING_SOON) return;
   try {
@@ -241,7 +241,7 @@ var CX_COMING_SOON = true;
       return '<div class="cn-card" onclick=\'openCaseDetail(' + caseData.replace(/'/g,'&#39;') + ')\'>'
         + '<div class="cn-card-img">' + imgHtml + '<span class="cn-card-badge">客戶服務整合</span></div>'
         + '<div class="cn-card-body">'
-        + '<div class="cn-card-cat">' + esc(c.category||'') + '</div>'
+        + '<div class="cn-card-cat">' + esc(c.category||'') + (c.ongoing ? ' <span style="display:inline-block;margin-left:6px;padding:2px 8px;border-radius:100px;font-size:0.68rem;letter-spacing:0;text-transform:none;background:rgba(16,185,129,0.12);color:#047857;">● 持續進行中</span>' : '') + '</div>'
         + '<div class="cn-card-client">' + esc(c.client||'') + '</div>'
         + '<p class="cn-card-desc">' + esc(summary) + '</p>'
         + '<div class="cn-card-footer"><span class="cn-read-btn">查看詳情 →</span></div>'
