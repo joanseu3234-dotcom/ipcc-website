@@ -322,9 +322,17 @@ function renderContent(text) {
   // 2. Image
   if (item.image && !(item.videoUrl && item.imageFromVideo)) html += '<img class="detail-img" src="'+esc(item.image)+'" alt="">';
   // 3. Description
-  if (item.description) html += '<p class="detail-desc">'+renderContent(item.description)+'</p>';
+  // 摘要若只是內文開頭的節錄（後台「自動摘要」產生），就不重複顯示
+  var descDup = (function () {
+    if (!item.description || !item.content) return false;
+    var norm = function (t) { return String(t).replace(/<[^>]+>/g, '').replace(/[#*\s]/g, '').replace(/(…|\.\.\.)+$/, ''); };
+    var d = norm(item.description), c = norm(item.content);
+    var head = d.slice(0, Math.min(d.length, 40));
+    return head.length >= 10 && c.indexOf(head) === 0;
+  })();
+  if (item.description && !descDup) html += '<p class="detail-desc">'+renderContent(item.description)+'</p>';
   // 4. Full content
-  if (item.content) html += '<hr class="detail-divider"><div class="detail-content">'+renderContent(item.content)+'</div>';
+  if (item.content) html += (item.description && !descDup ? '<hr class="detail-divider">' : '') + '<div class="detail-content">'+renderContent(item.content)+'</div>';
   // 5. Tags at bottom as oval pills
   var tags = [];
   if (item.badge) tags.push('<span class="detail-tag detail-tag-badge">'+esc(item.badge)+'</span>');

@@ -111,6 +111,9 @@ img { max-width: 100%; display: block; }
   background: rgba(255,255,255,0.1); border-color: var(--white);
   transform: translateY(-2px);
 }
+/* 淺色背景上用的外框按鈕（原本的 btn-outline 是白字，放在白底會看不見） */
+.btn-outline.btn-on-light { color: var(--navy-dark, #12193A); border-color: #D5D9E2; }
+.btn-outline.btn-on-light:hover { background: #F5F6F8; border-color: var(--red, #C8161D); color: var(--red, #C8161D); }
 
 .btn-dark {
   background: var(--dark); color: var(--white);
@@ -733,13 +736,12 @@ img { max-width: 100%; display: block; }
 }
 .footer-grid {
   display: grid;
-  grid-template-columns: 250px 140px 140px 210px;
-  gap: 32px;
+  grid-template-columns: minmax(240px, 1.3fr) minmax(110px, 0.8fr) minmax(190px, 1.2fr) minmax(220px, 1.4fr);
+  gap: 48px;
   margin-bottom: 40px;
-  justify-content: center;
 }
 
-.footer-brand { max-width: 250px; }
+.footer-brand { max-width: 300px; }
 
 /* Footer LOGO */
 .footer-logo { display: flex; align-items: center; gap: 12px; margin-bottom: 20px; }
