@@ -105,6 +105,11 @@ body {
 .btn-view-site:hover { background: rgba(0,200,255,0.08); color: #00C8FF; }
 .btn-logout { color: #FC8181; }
 .btn-logout:hover { background: rgba(224,69,69,0.15); color: #FCA5A5; }
+/* 部分頁面側欄底部用另一組 class */
+.view-site-btn { color: rgba(255,255,255,0.5) !important; }
+.view-site-btn:hover { background: rgba(0,200,255,0.08) !important; color: #00C8FF !important; }
+.logout-btn { color: #FC8181 !important; }
+.logout-btn:hover { background: rgba(224,69,69,0.15) !important; color: #FCA5A5 !important; }
 
 /* ---- Sidebar Overlay ---- */
 .sidebar-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.7); z-index: 199; }
@@ -326,6 +331,22 @@ tr.drag-over td { background: rgba(0,200,255,0.08) !important; border-top: 2px s
   .modal-overlay { padding: 0; align-items: flex-end; }
 }
 
+/* ---- 桌機版修正 ---- */
+/* 卡片內距：各頁卡片結構不同，分三種情況補內距 */
+.section-card:not(:has(> .section-card-header)):not(:has(> .section-card-body)):not(:has(> .table-wrapper, > [style*="overflow"])) { padding: 22px 24px; }
+.section-card:not(:has(> .section-card-header)):has(> .table-wrapper, > [style*="overflow"]) > div:not(.table-wrapper):not([style*="overflow"]):not(.empty-state) { padding: 16px 20px 0; }
+.section-card:has(> .section-card-header) > :not(.section-card-header):not(.section-card-body):not(.table-wrapper):not([style*="overflow"]) { margin-left: 24px; margin-right: 24px; }
+.section-card:has(> .section-card-header) > .section-card-header + :not(.section-card-body):not(.table-wrapper):not([style*="overflow"]) { margin-top: 16px; }
+.section-card:has(> .section-card-header) > :last-child:not(.section-card-body):not(.table-wrapper):not([style*="overflow"]) { margin-bottom: 24px; }
+/* 表格裡的狀態標籤不要斷行 */
+td > span[style*="border-radius:100px"], td .badge { white-space: nowrap; }
+/* 空狀態裡的連結、表格裡的「預覽」連結 */
+.empty-state a { color: #00C8FF; }
+a.btn-outline, a.btn-sm { text-decoration: none; display: inline-block; }
+/* 系統設定頁用到、但原本沒有樣式的次要按鈕 */
+.btn-secondary { background: transparent; color: #00C8FF; border: 1.5px solid rgba(0,200,255,0.35); padding: 9px 18px; border-radius: 7px; font-size: 14px; font-weight: 600; cursor: pointer; font-family: inherit; transition: border-color 0.2s, background 0.2s; }
+.btn-secondary:hover { border-color: #00C8FF; background: rgba(0,200,255,0.08); }
+
 /* ---- 手機版修正 ---- */
 @media (max-width: 768px) {
   /* 部分頁面的選單按鈕用 .hamburger */
@@ -336,7 +357,9 @@ tr.drag-over td { background: rgba(0,200,255,0.08) !important; border-top: 2px s
   .sidebar { z-index: 300; }
   .sidebar-overlay { z-index: 250; }
   /* 沒有內距的卡片：內容不要貼邊 */
-  .section-card:not(:has(> .section-card-header)):not(:has(> .section-card-body)) { padding: 16px; }
+  .section-card:not(:has(> .section-card-header)):not(:has(> .section-card-body)):not(:has(> .table-wrapper, > [style*="overflow"])) { padding: 16px; }
+  .section-card:not(:has(> .section-card-header)):has(> .table-wrapper, > [style*="overflow"]) > div:not(.table-wrapper):not([style*="overflow"]):not(.empty-state) { padding: 14px 16px 0; }
+  .section-card:has(> .section-card-header) > :not(.section-card-header):not(.section-card-body):not(.table-wrapper):not([style*="overflow"]) { margin-left: 16px; margin-right: 16px; }
   /* 表格：欄位不要擠成直排，改成左右滑動 */
   .data-table, .ins-table, .user-table, .contact-table, .svc-list-table { min-width: 720px; }
   .data-table th, .ins-table th, .user-table th, .contact-table th, .svc-list-table th { white-space: nowrap; }
