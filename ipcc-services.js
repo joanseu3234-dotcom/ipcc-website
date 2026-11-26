@@ -354,6 +354,10 @@
   function init() {
     var nav = document.querySelector('.about-subnav'); if (!nav) return;
     var box = nav.querySelector('.container'); if (!box) return;
+    // 黏在導覽列正下方（導覽列高度依 Logo 行數而不同，改用實際高度）
+    var bar = document.querySelector('nav.navbar');
+    function stick() { if (bar && getComputedStyle(bar).position === 'fixed') nav.style.top = Math.round(bar.getBoundingClientRect().height) + 'px'; }
+    stick(); window.addEventListener('resize', stick); window.addEventListener('load', stick);
     var act = box.querySelector('a.active');
     if (act && box.scrollWidth > box.clientWidth) box.scrollLeft = Math.max(0, act.offsetLeft - (box.clientWidth - act.offsetWidth) / 2);
     function upd() {
@@ -365,7 +369,7 @@
     var end = document.querySelector('.cta-section') || document.querySelector('footer.footer');
     if (end) {
       var tk = false;
-      var chk = function () { tk = false; nav.classList.toggle('sn-hide', end.getBoundingClientRect().top < (parseFloat(getComputedStyle(nav).top) || 0) + nav.offsetHeight + 8 && window.scrollY > 200); };
+      var chk = function () { tk = false; stick(); nav.classList.toggle('sn-hide', end.getBoundingClientRect().top < (parseFloat(getComputedStyle(nav).top) || 0) + nav.offsetHeight + 8 && window.scrollY > 200); };
       window.addEventListener('scroll', function () { if (!tk) { tk = true; requestAnimationFrame(chk); } }, { passive: true }); chk();
     }
   }
@@ -395,4 +399,29 @@
   window.addEventListener('load', scan);
   var pend = false;
   if ('MutationObserver' in window) new MutationObserver(function () { if (pend) return; pend = true; requestAnimationFrame(function () { pend = false; scan(); }); }).observe(document.documentElement, { childList: true, subtree: true });
+})();
+
+// 卡片數少於欄數時（例如三欄只有 1～2 張），改成置中排列，避免右側整片空白
+(function () {
+  var SEL = '#eventGrid, #mediaGrid, #caseGrid, #relatedGrid, #moreMediaGrid, #moreAwardGrid, #moreNewsGrid, #moreEventGrid, #moreCasesGrid';
+  function fix() {
+    Array.prototype.forEach.call(document.querySelectorAll(SEL), function (g) {
+      g.style.gridTemplateColumns = ''; g.style.justifyContent = '';
+      var cs = getComputedStyle(g);
+      if (cs.display !== 'grid') return;
+      var cols = cs.gridTemplateColumns.split(' ').filter(Boolean);
+      var n = Array.prototype.filter.call(g.children, function (c) { return getComputedStyle(c).display !== 'none'; }).length;
+      if (n && cols.length > 1 && n < cols.length) {
+        g.style.gridTemplateColumns = 'repeat(' + n + ', minmax(0, ' + Math.round(parseFloat(cols[0])) + 'px))';
+        g.style.justifyContent = 'center';
+      }
+    });
+  }
+  var pend = false;
+  function later() { if (pend) return; pend = true; setTimeout(function () { pend = false; fix(); }, 60); }
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', later); else later();
+  window.addEventListener('load', later); window.addEventListener('resize', later);
+  if ('MutationObserver' in window) new MutationObserver(function (ms) {
+    for (var i = 0; i < ms.length; i++) { var t = ms[i].target; if (t.nodeType === 1 && t.matches && t.matches(SEL)) { later(); return; } }
+  }).observe(document.documentElement, { childList: true, subtree: true });
 })();

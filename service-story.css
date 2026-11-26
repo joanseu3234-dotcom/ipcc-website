@@ -135,7 +135,7 @@
 
 /* 其他服務 */
 .st-others{background:#fff;padding:72px 0}
-.st-other-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:14px;margin-top:24px}
+.st-other-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px;margin-top:24px}
 .st-other-grid a{display:flex;gap:12px;align-items:center;padding:16px 18px;border:1px solid var(--st-border);border-radius:14px;text-decoration:none;color:var(--st-text);font-weight:700;transition:all .2s}
 .st-other-grid a:hover{border-color:var(--st-accent)}
 .st-other-grid a.cur{background:var(--st-tint);border-color:rgba(var(--st-rgb),.5)}
@@ -410,3 +410,5 @@ html{scroll-padding-top:90px}
 
 /* 標題換行平均分配 */
 .st h1, .st h2, .st h3, h1, h2, h3 { text-wrap: balance; }
+@media (max-width:900px){.st-other-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media (max-width:560px){.st-other-grid{grid-template-columns:1fr}}
