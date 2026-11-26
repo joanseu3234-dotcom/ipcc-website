@@ -565,7 +565,7 @@ if (aboutStats) aboutObserver.observe(aboutStats);
   try { var r = localStorage.getItem('ipcc_insights'); if (r) insights = JSON.parse(r); } catch(e) {}
   if (!insights.length && window.IPCC_CONTENT_DATA && window.IPCC_CONTENT_DATA.ipcc_insights)
     insights = window.IPCC_CONTENT_DATA.ipcc_insights;
-  var items = insights.filter(function(a){ return a.published; }).sort(function(a,b){ return a.order-b.order; }).slice(0,3);
+  var items = insights.filter(function(a){ return a.published; }).sort(function(a,b){ var d=(b.publish_date||'').localeCompare(a.publish_date||''); return d || ((b.order||0)-(a.order||0)); }).slice(0,3); // 首頁顯示最新三篇
   if (!items.length) return;
   document.getElementById('homeInsightsSection').style.display = '';
   document.getElementById('homeInsightsGrid').innerHTML = items.map(function(a) {

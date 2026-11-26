@@ -283,7 +283,7 @@
             <label for="insIsFeatured" class="form-label" style="margin:0;cursor:pointer;">⭐ 精選文章</label>
           </div>
           <div style="display:flex;align-items:center;gap:8px;">
-            <label class="form-label" style="margin:0;white-space:nowrap;">排序值</label>
+            <label class="form-label" style="margin:0;white-space:nowrap;" title="文章依發布日期新的在前；同一天發布時，數字大的排前面">排序值 <span style="opacity:.6;font-weight:400;">（同日期時大的在前）</span></label>
             <input type="number" class="form-control" id="insSortOrder" value="0" min="0" style="width:80px;">
           </div>
           <div style="display:flex;align-items:center;gap:10px;">
@@ -721,9 +721,12 @@ function renderTable() {
     if (filterSearch && (a.title || '').toLowerCase().indexOf(filterSearch) === -1) return false;
     return true;
   }).sort(function(a, b) {
+    // 與前台一致：發布日期新的在前，同日期依排序值大者在前
+    var d = (b.publish_date || '').localeCompare(a.publish_date || '');
+    if (d) return d;
     var sa = a.sort_order !== undefined ? a.sort_order : (a.order || 0);
     var sb = b.sort_order !== undefined ? b.sort_order : (b.order || 0);
-    return sa - sb;
+    return sb - sa;
   });
 
   document.getElementById('insCount').textContent = items.length + ' / ' + all.length + ' 篇';
