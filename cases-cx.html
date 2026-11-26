@@ -211,7 +211,10 @@ function openCaseDetail(c) {
   } catch (e) {}
 })();
 
+// 2026-11-26：客戶服務整合案例暫時顯示「籌備中」（案例資料保留在後台，要恢復把 CX_COMING_SOON 改成 false）
+var CX_COMING_SOON = true;
 (function () {
+  if (CX_COMING_SOON) return;
   try {
     var all = JSON.parse(localStorage.getItem('ipcc_cases') || '[]');
     var items = all.filter(function (c) {
