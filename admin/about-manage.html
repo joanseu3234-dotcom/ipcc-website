@@ -15,9 +15,10 @@
     .sub-page { display:none; }
     .sub-page.active { display:block; }
     .row-editor { display:flex; flex-direction:column; gap:10px; }
-    .editor-row { background:#FAFAF9; border:1px solid var(--border); border-radius:8px; padding:12px; position:relative; }
+    .editor-row { background:rgba(255,255,255,0.04); border:1px solid var(--border); border-radius:8px; padding:12px; position:relative; }
     .editor-row-grid2 { display:grid; grid-template-columns:1fr 2fr; gap:10px; }
-    .editor-row-grid3 { display:grid; grid-template-columns:100px 1fr 2fr; gap:10px; }
+    .editor-row-grid3 { display:grid; grid-template-columns:110px minmax(180px,1.3fr) minmax(0,2fr); gap:10px; }
+    .editor-row-grid2 > *, .editor-row-grid3 > *, .editor-row-grid4 > *, .editor-row-icon-title-desc > * { min-width:0; }
     .editor-row-grid4 { display:grid; grid-template-columns:70px 120px 1fr 2fr; gap:10px; }
     .editor-row-icon-title-desc { display:grid; grid-template-columns:64px 1fr 2fr; gap:10px; }
     .editor-row-header { font-size:0.78rem; font-weight:700; color:var(--text-sub); margin-bottom:8px; letter-spacing:0.03em; }

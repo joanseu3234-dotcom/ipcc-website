@@ -385,3 +385,6 @@ a.btn-outline, a.btn-sm { text-decoration: none; display: inline-block; }
 .alert { padding: 10px 14px; border-radius: 8px; font-size: 0.88rem; margin-bottom: 12px; }
 .alert-error { background: rgba(224,69,69,0.1); border: 1px solid rgba(224,69,69,0.3); color: #FC8181; }
 .alert-success { background: rgba(72,187,120,0.1); border: 1px solid rgba(72,187,120,0.3); color: #68D391; }
+
+/* 表頭不拆字（桌機也適用） */
+table th { white-space: nowrap; }

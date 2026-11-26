@@ -24,8 +24,18 @@
     .svc-drag-title { font-weight:700; color:var(--navy-dark); font-size:0.95rem; }
     .svc-drag-desc { font-size:0.8rem; color:var(--text-sub); margin-top:3px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
     .svc-drag-tags { display:flex; flex-wrap:wrap; gap:4px; margin-top:6px; }
+    .svc-drag-tags > * { white-space:nowrap; }
     .svc-tag-chip { background:rgba(30,42,94,0.08); color:var(--navy); padding:2px 8px; border-radius:100px; font-size:0.72rem; font-weight:600; }
     .svc-drag-actions { display:flex; gap:8px; flex-shrink:0; }
+    /* 深色主題＋手機：卡片改深色，動作按鈕換到下一行，避免文字欄被擠到只剩幾個字寬 */
+    .svc-drag-item { background:rgba(255,255,255,0.04) !important; }
+    .svc-drag-title { color:#D0E0F4 !important; }
+    @media (max-width: 600px) {
+      .svc-drag-item { flex-wrap:wrap; gap:10px 12px; padding:14px; }
+      .svc-drag-icon { font-size:1.5rem; }
+      .svc-drag-info { flex:1 1 calc(100% - 80px); }
+      .svc-drag-actions { width:100%; justify-content:flex-end; flex-wrap:wrap; }
+    }
     .news-picker-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(260px,1fr)); gap:12px; }
     .news-picker-card { border:2px solid var(--border); border-radius:10px; padding:0; cursor:pointer; transition:border-color 0.2s, background 0.2s; overflow:hidden; display:flex; flex-direction:column; }
     .news-picker-card:hover { border-color:var(--navy); }

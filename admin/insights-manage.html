@@ -191,7 +191,7 @@
       <h3 id="insModalTitle">新增文章</h3>
       <button class="modal-close" onclick="closeInsModal()">✕</button>
     </div>
-    <div class="modal-body" style="max-height:76vh;overflow-y:auto;padding-right:4px;">
+    <div class="modal-body" style="max-height:76vh;overflow-y:auto;padding-right:24px;">
       <input type="hidden" id="insId">
 
       <div class="modal-tabs">
@@ -737,12 +737,12 @@ function renderTable() {
       : '<span style="font-size:0.75rem;padding:3px 10px;border-radius:100px;background:rgba(80,80,80,0.2);color:var(--text-sub);">草稿</span>';
     var feat = a.is_featured ? '<span class="star-feat">⭐</span>' : '<span style="color:var(--text-muted);">—</span>';
     return '<tr>'
-      + '<td><strong>' + escHtml(a.title || '') + '</strong>'
+      + '<td style="min-width:280px;"><strong>' + escHtml(a.title || '') + '</strong>'
       + '<div style="font-size:0.74rem;color:var(--text-sub);margin-top:2px;font-family:monospace;">' + (a.slug ? '/insights/' + a.slug : '—') + '</div></td>'
-      + '<td style="font-size:0.82rem;color:var(--text-sub);">' + escHtml(a.author || '—') + '</td>'
-      + '<td style="font-size:0.85rem;">' + escHtml(a.category || '—') + '</td>'
+      + '<td style="font-size:0.82rem;color:var(--text-sub);white-space:nowrap;">' + escHtml(a.author || '—') + '</td>'
+      + '<td style="font-size:0.85rem;white-space:nowrap;">' + escHtml(a.category || '—') + '</td>'
       + '<td style="text-align:center;">' + feat + '</td>'
-      + '<td style="font-size:0.82rem;color:var(--text-sub);">' + (a.publish_date || '—') + '</td>'
+      + '<td style="font-size:0.82rem;color:var(--text-sub);white-space:nowrap;">' + (a.publish_date || '—') + '</td>'
       + '<td>' + pub + '</td>'
       + '<td style="white-space:nowrap;">'
       + '<button class="btn-outline btn-sm" onclick="editIns(\'' + a.id + '\')">編輯</button>'
