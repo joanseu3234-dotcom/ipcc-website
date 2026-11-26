@@ -2,7 +2,7 @@
 // 最後發布：2026/11/26 13:58:54
 
 window.IPCC_CONTENT_DATA = {
-  "__ts": 1795673830799,
+  "__ts": 1795677150684,
   "__published": "2026/11/26 13:58:54",
   "ipcc_news": [
     {
@@ -1583,7 +1583,7 @@ window.IPCC_CONTENT_DATA = {
     {
       "id": "svc-2",
       "num": "Service 02",
-      "icon": "🎓",
+      "icon": "💬",
       "title": "多渠道顧客互動服務",
       "slug": "multichannel-cx",
       "desc": "協助企業整合電話、社群、文字與即時通訊平台，建立一致性的客戶互動體驗。",
@@ -2101,7 +2101,7 @@ window.IPCC_CONTENT_DATA = {
     {
       "id": "mp5794gebcw85",
       "num": "Service 04",
-      "icon": "📋",
+      "icon": "🏷️",
       "title": "AI 數據標註與資料結構化服務",
       "slug": "data-labeling",
       "desc": "AI 數據標註是將非結構化資料進行分類、標記與結構化，讓 AI 模型能理解語意、情緒與商業邏輯。",
@@ -2336,7 +2336,7 @@ window.IPCC_CONTENT_DATA = {
     {
       "id": "mp57ej8wos3qu",
       "num": "Service 05",
-      "icon": "📋",
+      "icon": "📊",
       "title": "客服數據分析與營運優化",
       "slug": "customer-intelligence",
       "desc": "透過語音分析、CRM 與客戶互動數據，協助企業洞察客戶需求與提升營運效率。",
