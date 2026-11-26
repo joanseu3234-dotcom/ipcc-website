@@ -87,6 +87,8 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
     }
     @media (max-width: 768px) {
       #awards-main-grid, #awards-certs-grid { grid-template-columns: 1fr !important; }
+      .certs-panel { padding: 32px 16px !important; }
+      #awards-certs-grid { gap: 16px !important; }
     }
     @media (min-width: 769px) and (max-width: 1024px) {
       #awards-main-grid, #awards-certs-grid { grid-template-columns: repeat(2,1fr) !important; }
@@ -177,7 +179,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     <!-- 主要獎項 -->
     <div id="awards-main-grid" style="display:grid; grid-template-columns:repeat(3,1fr); gap:28px; margin-bottom:56px;">
       <div class="award-card" onclick="location.href='award-detail.html?idx=0'">
-        <div class="award-card-img"><div class="award-card-placeholder" style="background:#e5e7eb;position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:0.9rem;color:#9ca3af;font-weight:600;">獎項圖片</div></div>
+        <div class="award-card-img"><div class="award-card-placeholder" style="background:linear-gradient(135deg,#FFF7E6,#FDE8C8);position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:3.2rem;" aria-hidden="true">🏆</div></div>
         <div class="award-card-body">
           <div class="award-card-sub">NATIONAL BRAND AWARD</div>
           <h4 class="award-card-title">玉山國家品牌獎</h4>
@@ -186,7 +188,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
         </div>
       </div>
       <div class="award-card" onclick="location.href='award-detail.html?idx=1'">
-        <div class="award-card-img"><div class="award-card-placeholder" style="background:#e5e7eb;position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:0.9rem;color:#9ca3af;font-weight:600;">獎項圖片</div></div>
+        <div class="award-card-img"><div class="award-card-placeholder" style="background:linear-gradient(135deg,#FFF7E6,#FDE8C8);position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:3.2rem;" aria-hidden="true">🏆</div></div>
         <div class="award-card-body">
           <div class="award-card-sub">INNOVATION AWARD</div>
           <h4 class="award-card-title">智慧行銷系統創新獎</h4>
@@ -195,7 +197,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
         </div>
       </div>
       <div class="award-card" onclick="location.href='award-detail.html?idx=2'">
-        <div class="award-card-img"><div class="award-card-placeholder" style="background:#e5e7eb;position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:0.9rem;color:#9ca3af;font-weight:600;">獎項圖片</div></div>
+        <div class="award-card-img"><div class="award-card-placeholder" style="background:linear-gradient(135deg,#FFF7E6,#FDE8C8);position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:3.2rem;" aria-hidden="true">🏆</div></div>
         <div class="award-card-body">
           <div class="award-card-sub">SERVICE EXCELLENCE</div>
           <h4 class="award-card-title">服務品質卓越認證</h4>
@@ -224,7 +226,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     </div>
 
     <!-- 認證資格區塊 -->
-    <div style="background:linear-gradient(135deg, var(--navy-dark), var(--navy)); border-radius:var(--radius-lg); padding:48px; color:white; margin-bottom:48px;">
+    <div class="certs-panel" style="background:linear-gradient(135deg, var(--navy-dark), var(--navy)); border-radius:var(--radius-lg); padding:48px; color:white; margin-bottom:48px;">
       <div class="text-center" style="margin-bottom:40px;">
         <div style="font-size:0.8rem; font-weight:700; letter-spacing:0.15em; color:rgba(255,255,255,0.5); margin-bottom:12px;">CERTIFICATIONS</div>
         <h3 style="font-size:1.4rem; font-weight:900; margin-bottom:8px;">專業認證與資格</h3>
@@ -391,7 +393,7 @@ function jsStr(s) { return "'" + String(s).replace(/\\/g,'\\\\').replace(/'/g,"\
       if (ag) ag.innerHTML = d.awards.map(function(a, aidx) {
         var imgHtml = a.image
           ? '<img src="'+a.image+'" alt="'+esc(a.name||'')+'" style="width:100%;height:100%;object-fit:cover;display:block;">'
-          : '<div class="award-card-placeholder" style="background:#e5e7eb;position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:0.9rem;color:#9ca3af;font-weight:600;">獎項圖片</div>';
+          : '<div class="award-card-placeholder" style="background:linear-gradient(135deg,#FFF7E6,#FDE8C8);position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:3.2rem;" aria-hidden="true">🏆</div>';
         var detailUrl = a.id
           ? 'award-detail.html?id=' + encodeURIComponent(a.id)
           : 'award-detail.html?idx=' + aidx;
@@ -410,9 +412,9 @@ function jsStr(s) { return "'" + String(s).replace(/\\/g,'\\\\').replace(/'/g,"\
       if (cg) cg.innerHTML = d.certs.map(function(c) {
         var imgAreaHtml = c.image
           ? '<img src="'+c.image+'" style="width:100%;height:100%;object-fit:cover;display:block;" alt="">'
-          : '<div style="width:80px;height:80px;background:rgba(255,255,255,0.12);border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:0.72rem;color:rgba(255,255,255,0.4);">圖片</div>';
+          : '<div style="width:64px;height:64px;background:rgba(255,200,100,0.14);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:2rem;" aria-hidden="true">🎖️</div>';
         return '<div style="background:rgba(255,255,255,0.07);border-radius:var(--radius-lg,12px);overflow:hidden;display:flex;flex-direction:column;">'
-          + '<div style="width:100%;height:200px;background:rgba(255,255,255,0.05);display:flex;align-items:center;justify-content:center;flex-shrink:0;">'
+          + '<div style="width:100%;height:'+(c.image?'200px':'120px')+';background:rgba(255,255,255,0.05);display:flex;align-items:center;justify-content:center;flex-shrink:0;">'
           + imgAreaHtml
           + '</div>'
           + '<div style="padding:24px;flex:1;display:flex;flex-direction:column;">'

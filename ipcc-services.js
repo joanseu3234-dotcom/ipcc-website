@@ -348,3 +348,26 @@
   }
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', run); else run();
 })();
+
+// 子選單（關於我們／案例／消息等）：目前分頁自動捲到可見處，左右還有分頁時顯示淡出提示
+(function () {
+  function init() {
+    var nav = document.querySelector('.about-subnav'); if (!nav) return;
+    var box = nav.querySelector('.container'); if (!box) return;
+    var act = box.querySelector('a.active');
+    if (act && box.scrollWidth > box.clientWidth) box.scrollLeft = Math.max(0, act.offsetLeft - (box.clientWidth - act.offsetWidth) / 2);
+    function upd() {
+      nav.classList.toggle('sn-l', box.scrollLeft > 4);
+      nav.classList.toggle('sn-r', box.scrollLeft + box.clientWidth < box.scrollWidth - 4);
+    }
+    box.addEventListener('scroll', upd, { passive: true }); window.addEventListener('resize', upd); upd();
+    // 捲到頁尾的聯絡區塊時收起，避免蓋住 CTA 與頁尾
+    var end = document.querySelector('.cta-section') || document.querySelector('footer.footer');
+    if (end) {
+      var tk = false;
+      var chk = function () { tk = false; nav.classList.toggle('sn-hide', end.getBoundingClientRect().top < (parseFloat(getComputedStyle(nav).top) || 0) + nav.offsetHeight + 8 && window.scrollY > 200); };
+      window.addEventListener('scroll', function () { if (!tk) { tk = true; requestAnimationFrame(chk); } }, { passive: true }); chk();
+    }
+  }
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', init); else init();
+})();

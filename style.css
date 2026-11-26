@@ -910,6 +910,8 @@ img { max-width: 100%; display: block; }
   letter-spacing: 0.02em;
 }
 .about-subnav a:hover { color: #CE0000; }
+.about-subnav { transition: transform .3s ease, opacity .3s ease; }
+.about-subnav.sn-hide { transform: translateY(-110%); opacity: 0; pointer-events: none; }
 .about-subnav a.active { color: #CE0000; border-bottom-color: #CE0000; }
 .breadcrumb a:hover { color: var(--red-soft); }
 
@@ -1139,6 +1141,10 @@ img { max-width: 100%; display: block; }
   /* ── 子導覽列 ── */
   .about-subnav { top: 96px; }
   .about-subnav .container { justify-content: flex-start; }
+  .about-subnav a { padding: 14px 16px; }
+  .about-subnav.sn-r .container { -webkit-mask-image: linear-gradient(90deg,#000 78%,transparent); mask-image: linear-gradient(90deg,#000 78%,transparent); }
+  .about-subnav.sn-l .container { -webkit-mask-image: linear-gradient(90deg,transparent,#000 22%); mask-image: linear-gradient(90deg,transparent,#000 22%); }
+  .about-subnav.sn-l.sn-r .container { -webkit-mask-image: linear-gradient(90deg,transparent,#000 18%,#000 82%,transparent); mask-image: linear-gradient(90deg,transparent,#000 18%,#000 82%,transparent); }
   .about-subnav a { padding: 14px 18px; font-size: 0.82rem; }
 
   /* ── Hero ── */
@@ -1201,9 +1207,16 @@ img { max-width: 100%; display: block; }
 }
 
 @media (max-width: 480px) {
-  .hero-stats { grid-template-columns: 1fr 1fr; display: grid; gap: 12px; }
+  .hero-stats { grid-template-columns: repeat(3, minmax(0,1fr)); display: grid; gap: 6px; }
+  .hero-stat { min-width: 0; padding: 0 4px !important; text-align: center; }
+  .hero-stat-num { font-size: 1.55rem; }
+  .hero-stat-label { font-size: 0.72rem; }
   .about-stats-row { grid-template-columns: 1fr; }
-  .process-steps { grid-template-columns: 1fr; }
+  .process-steps { grid-template-columns: 1fr; gap: 14px; max-width: 320px; margin-left: auto; margin-right: auto; }
+  .process-steps::before { display: block; top: 24px; bottom: 24px; left: 21px; right: auto; width: 2px; height: auto; background: linear-gradient(180deg, var(--red-dark), var(--red-light)); }
+  .process-step { display: flex; align-items: center; gap: 16px; text-align: left; padding: 0; }
+  .process-step .step-num { width: 44px; height: 44px; margin: 0; flex-shrink: 0; }
+  .process-step .step-label { font-size: 0.95rem; }
   .hero-title { font-size: 1.6rem; }
   .section-title { font-size: 1.5rem; }
   #caseStats { grid-template-columns: 1fr 1fr !important; }
@@ -1281,3 +1294,6 @@ img { max-width: 100%; display: block; }
 .md-h { display: block; font-weight: 800; color: var(--navy-dark, #12193A); line-height: 1.6; margin: 18px 0 2px; }
 .md-h1, .md-h2 { font-size: 1.12em; padding-left: 12px; border-left: 3px solid var(--red, #C8161D); }
 .md-h3, .md-h4 { font-size: 1.02em; }
+
+/* 標題換行平均分配，避免最後一行只剩一兩個字（手機尤其明顯） */
+h1, h2, h3, .section-title, .hero-title { text-wrap: balance; }

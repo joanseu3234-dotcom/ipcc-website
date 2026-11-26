@@ -167,6 +167,9 @@
   .st-tl-board{grid-template-columns:1fr}
   .st-tl-ring{display:none}
   .st-tl-cap{font-size:14px}
+  .st-tl-board .st-chips{flex-wrap:nowrap;gap:4px}
+  .st-tl-board .st-chips button{flex:1 1 0;min-width:0;padding:4px 2px;font-size:11.5px}
+  .st-tl-steps{gap:10vh}
 }
 html{scroll-padding-top:90px}
 
@@ -364,8 +367,14 @@ html{scroll-padding-top:90px}
   .st-omni-after li{grid-template-columns:44px 1fr}
   .st-omni-after li span{grid-column:1/-1}
   .st-vo-board{grid-template-columns:1fr}
+  .st-vo-col{min-height:84px}
   .st-tok-text{font-size:16px}
   .st-orbit{--r:118px}
+  /* 數據標註示範：手機上標籤改成行內，避免相鄰標籤互相重疊 */
+  .st-lb-card{padding:20px}
+  .st-lb-text{line-height:2.1}
+  .st-lb-text .st-lb-chip{position:static;display:none;flex-wrap:wrap;white-space:normal;margin:0 4px 0 0;vertical-align:3px;transform:none;font-size:11px;padding:3px 6px}
+  .st-label[data-stage="2"] .st-lb-text .st-lb-seg:not(.add) .st-lb-chip,.st-label[data-stage="3"] .st-lb-text .st-lb-chip,.st-label[data-stage="4"] .st-lb-text .st-lb-chip{display:inline-flex}
 }
 @media (prefers-reduced-motion:reduce){
   .st-orb-ring,.st-orb-dot,.st-orb-hub,.st-wave i,.st-typing i{animation:none}
@@ -398,3 +407,6 @@ html{scroll-padding-top:90px}
 .st-md-h:first-child{margin-top:0}
 .st-md-h3,.st-md-h4{font-size:1.02em}
 .st-dark .st-md-h,.st-hero .st-md-h{color:#fff}
+
+/* 標題換行平均分配 */
+.st h1, .st h2, .st h3, h1, h2, h3 { text-wrap: balance; }

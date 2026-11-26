@@ -549,7 +549,7 @@ if (aboutStats) aboutObserver.observe(aboutStats);
         return '<a href="' + n.link + '" class="news-card">'
           + '<div class="news-card-img">' + imgHtml + '</div>'
           + '<div class="news-card-body"><div class="news-card-meta">'
-          + '<span class="news-card-badge">' + n.badge + '</span>'
+          + (n.badge ? '<span class="news-card-badge">' + n.badge + '</span>' : '')
           + '<span class="news-card-date">' + n.date + '</span>'
           + '</div><h4>' + n.title + '</h4></div></a>';
       }).join('');
