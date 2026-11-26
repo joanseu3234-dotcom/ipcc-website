@@ -371,3 +371,28 @@
   }
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', init); else init();
 })();
+
+// 案例／消息封面：Logo 類圖片（橫幅比例或尺寸很小）改成白底置中、四周留白，避免 Logo 貼邊或被放大到糊
+(function () {
+  var SEL = '.cn-card-img img, .news-card-img img, #detailImg, [class*="card-img"] img';
+  var st = document.createElement('style');
+  st.textContent = 'img.ipcc-logo-fit{object-fit:contain!important;background:#fff!important;padding:22px 30px!important;box-sizing:border-box!important}'
+    + '.cn-card-img img.ipcc-logo-fit{padding:46px 30px 20px!important}'
+    + '.cn-card-img:has(img.ipcc-logo-fit),.news-card-img:has(img.ipcc-logo-fit){background:#fff!important;border-bottom:1px solid #EEF0F3}'
+    + '#detailImg.ipcc-logo-fit{width:auto!important;max-width:100%!important;max-height:220px!important;padding:32px 40px!important}'
+    + '#detailImgWrap:has(#detailImg.ipcc-logo-fit){background:#fff!important;border:1px solid #EEF0F3}';
+  document.head.appendChild(st);
+  function fit(img) {
+    if (!img || img.tagName !== 'IMG' || !img.matches || !img.matches(SEL)) return;
+    var w = img.naturalWidth, h = img.naturalHeight;
+    if (!w || !h) return;
+    var logo = (w / h >= 2.4) || (Math.max(w, h) <= 320);
+    img.classList.toggle('ipcc-logo-fit', logo);
+  }
+  document.addEventListener('load', function (e) { fit(e.target); }, true);
+  function scan() { Array.prototype.forEach.call(document.querySelectorAll(SEL), function (i) { if (i.complete) fit(i); }); }
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', scan); else scan();
+  window.addEventListener('load', scan);
+  var pend = false;
+  if ('MutationObserver' in window) new MutationObserver(function () { if (pend) return; pend = true; requestAnimationFrame(function () { pend = false; scan(); }); }).observe(document.documentElement, { childList: true, subtree: true });
+})();
