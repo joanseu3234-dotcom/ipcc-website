@@ -241,7 +241,8 @@ footer .wrap{display:flex;justify-content:space-between;flex-wrap:wrap;gap:12px}
 .nav-link:hover,.nav-link.active{color:var(--brand)}
 .nav-cta{padding:10px 24px;background:var(--brand);color:#fff;border-radius:100px;font-size:.88rem;font-weight:700;transition:all .3s}
 .nav-cta:hover{background:var(--brand-light);transform:translateY(-1px);box-shadow:0 4px 16px rgba(200,22,29,.35)}
-.nav-hamburger{display:none;flex-direction:column;gap:5px;cursor:pointer;padding:8px}
+.nav-hamburger{display:none;flex-direction:column;gap:5px;cursor:pointer;padding:8px;border:0;background:none;border-radius:8px}
+.nav-hamburger:focus-visible{outline:2px solid #C8161D;outline-offset:2px}
 .nav-hamburger span{display:block;width:24px;height:2px;background:var(--text-main);border-radius:2px}
 .nav-end{display:flex;align-items:center;gap:8px}
 .footer{background:#0D0203;padding:64px 0 32px;color:rgba(255,255,255,.55);font-size:.88rem}
@@ -424,7 +425,7 @@ body{padding-top:96px}
       </ul>
       <div class="nav-end">
         <a href="/contact.html" class="nav-cta">與我們聯繫</a>
-        <div class="nav-hamburger" onclick="document.getElementById('navMenu').classList.toggle('open')"><span></span><span></span><span></span></div>
+        <button type="button" class="nav-hamburger" aria-label="選單" aria-expanded="false" aria-controls="navMenu" onclick="document.getElementById('navMenu').classList.toggle('open')"><span></span><span></span><span></span></button>
       </div>
     </div>
   </div>

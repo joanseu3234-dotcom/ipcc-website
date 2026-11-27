@@ -51,9 +51,9 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 
       <div class="nav-end">
         <a href="contact.html" class="nav-cta">與我們聯繫</a>
-        <div class="nav-hamburger" onclick="toggleMenu()">
+        <button type="button" class="nav-hamburger" aria-label="選單" aria-expanded="false" aria-controls="navMenu" onclick="toggleMenu()">
           <span></span><span></span><span></span>
-        </div>
+        </button>
       </div>
     </div>
   </div>
@@ -107,15 +107,15 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 
       <div class="hero-stats">
         <div class="hero-stat">
-          <span class="hero-stat-num counter" data-founded="1996">0</span><span class="hero-stat-num">+</span>
+          <span class="hero-stat-num counter" data-founded="1996">30</span><span class="hero-stat-num">+</span>
           <div class="hero-stat-label">集團年資</div>
         </div>
         <div class="hero-stat">
-          <span class="hero-stat-num counter" data-target="50">0</span><span class="hero-stat-num">+</span>
+          <span class="hero-stat-num counter" data-target="50">50</span><span class="hero-stat-num">+</span>
           <div class="hero-stat-label">累計服務客戶</div>
         </div>
         <div class="hero-stat">
-          <span class="hero-stat-num counter" data-target="5000">0</span><span class="hero-stat-num">通</span>
+          <span class="hero-stat-num counter" data-target="5000">5000</span><span class="hero-stat-num">通</span>
           <div class="hero-stat-label">每日集團話務量</div>
         </div>
       </div>
@@ -289,15 +289,15 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 
         <div class="about-stats-row">
           <div class="about-stat-card">
-            <span class="about-stat-num counter" data-founded="1996">0</span><span class="about-stat-unit">年</span>
+            <span class="about-stat-num counter" data-founded="1996">30</span><span class="about-stat-unit">年</span>
             <div class="about-stat-label">集團年資</div>
           </div>
           <div class="about-stat-card">
-            <span class="about-stat-num counter" data-target="5000">0</span><span class="about-stat-unit">通</span>
+            <span class="about-stat-num counter" data-target="5000">5000</span><span class="about-stat-unit">通</span>
             <div class="about-stat-label">每日話務量</div>
           </div>
           <div class="about-stat-card">
-            <span class="about-stat-num counter" data-target="50">0</span><span class="about-stat-unit">+</span>
+            <span class="about-stat-num counter" data-target="50">50</span><span class="about-stat-unit">+</span>
             <div class="about-stat-label">服務客戶數</div>
           </div>
         </div>
@@ -429,6 +429,7 @@ document.querySelectorAll('.counter[data-founded]').forEach(el => {
 
 // 數字計數動畫
 function animateCounters() {
+  if (window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches) return;
   document.querySelectorAll('.counter:not([data-animated])').forEach(el => {
     el.dataset.animated = '1';
     const target = parseInt(el.dataset.target);

@@ -92,6 +92,7 @@
       new MutationObserver(function () {
         var open = menu.classList.contains('open');
         ham.classList.toggle('nfx-x', open);
+        ham.setAttribute('aria-expanded', open);
         if (open) Array.prototype.forEach.call(menu.querySelectorAll('li'), function (li, i) { li.style.animationDelay = (i * 0.05) + 's'; });
       }).observe(menu, { attributes: true, attributeFilter: ['class'] });
     }
