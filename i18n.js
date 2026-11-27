@@ -22,7 +22,7 @@
       'footer.outsource': '客服委外',
       'footer.training': '客服訓練',
       'footer.it': '資訊服務',
-      'footer.copyright': '© 2025 東州互聯網實業股份有限公司 / 顯榮國際股份有限公司 版權所有',
+      'footer.copyright': '© 2026 東州互聯網實業股份有限公司 / 顯榮國際股份有限公司 版權所有',
       'footer.slogan': 'IPCC Group — 創新服務．永續經營',
       'footer.follow-us': '追蹤我們',
 
@@ -198,7 +198,7 @@
       'footer.outsource': 'Outsourced CS',
       'footer.training': 'CS Training',
       'footer.it': 'IT Services',
-      'footer.copyright': '© 2025 East Zhou Internet Industrial Co., Ltd. / Xian Rong International Co., Ltd. All Rights Reserved.',
+      'footer.copyright': '© 2026 East Zhou Internet Industrial Co., Ltd. / Xian Rong International Co., Ltd. All Rights Reserved.',
       'footer.slogan': 'IPCC Group — Innovation & Sustainability',
       'footer.follow-us': 'Follow Us',
 
@@ -379,7 +379,7 @@
       'footer.outsource': 'CS委託',
       'footer.training': 'CS研修',
       'footer.it': 'ITサービス',
-      'footer.copyright': '© 2025 東州インターネット実業有限公司 / 顕栄インターナショナル株式会社 All Rights Reserved.',
+      'footer.copyright': '© 2026 東州インターネット実業有限公司 / 顕栄インターナショナル株式会社 All Rights Reserved.',
       'footer.slogan': 'IPCC Group — 革新サービス・持続的経営',
       'footer.follow-us': 'フォローする',
 
